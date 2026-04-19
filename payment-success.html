@@ -204,22 +204,17 @@
     font-weight: 500;
   }
 
-  /* Secondary fallback CTA - shown via JS after auto-redirect attempt */
+  /* Secondary fallback CTA - always in flow, fades in after delay */
   .fallback {
     margin-top: 8px;
-    display: none;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.6s ease;
   }
 
   .fallback.visible {
-    display: block;
-    animation: fadeIn 0.5s ease forwards;
-  }
-
-  .fallback-text {
-    display: block;
-    font-size: 13px;
-    color: var(--text-secondary);
-    margin-bottom: 10px;
+    opacity: 1;
+    visibility: visible;
   }
 
   .btn-secondary {
@@ -296,7 +291,6 @@
   </div>
 
   <div class="fallback">
-    <span class="fallback-text">&#1500;&#1488; &#1492;&#1493;&#1506;&#1489;&#1512;&#1514; &#1488;&#1493;&#1496;&#1493;&#1502;&#1496;&#1497;&#1514;&#63;</span>
     <a id="returnBtn" class="btn-secondary" href="#">
       &#1495;&#1494;&#1512;&#1492; &#1500;&#1488;&#1508;&#1500;&#1497;&#1511;&#1510;&#1497;&#1492;
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
