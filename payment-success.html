@@ -1,63 +1,330 @@
 <!DOCTYPE html>
-<html dir="rtl" lang="he">
+<html lang="he" dir="rtl">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>&#1492;&#1514;&#1513;&#1500;&#1493;&#1501; &#1492;&#1493;&#1513;&#1500;&#1501;</title>
-  <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      min-height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 20px;
-    }
-    .card {
-      background: white;
-      border-radius: 24px;
-      padding: 40px;
-      text-align: center;
-      max-width: 400px;
-      width: 100%;
-      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
-    }
-    .icon {
-      width: 80px;
-      height: 80px;
-      background: #4CAF50;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin: 0 auto 24px;
-    }
-    .icon svg { width: 40px; height: 40px; fill: white; }
-    h1 { color: #333; font-size: 24px; margin-bottom: 12px; }
-    p { color: #666; font-size: 16px; margin-bottom: 24px; line-height: 1.5; }
-    .btn {
-      display: inline-block;
-      background: #667eea;
-      color: white;
-      padding: 14px 32px;
-      border-radius: 12px;
-      text-decoration: none;
-      font-weight: 600;
-      font-size: 16px;
-    }
-    .btn:hover { background: #5a6fd6; }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>&#1513;&#1499;&#1493;&#1504;&#1492; &#8211; &#1492;&#1514;&#1513;&#1500;&#1493;&#1501; &#1492;&#1493;&#1513;&#1500;&#1501;</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;700;900&amp;family=Frank+Ruhl+Libre:wght@500;700;900&amp;display=swap" rel="stylesheet">
+
+<style>
+  :root {
+    --bg-deep: #0B1628;
+    --bg-mid: #13233F;
+    --brand-blue: #3498DB;
+    --brand-blue-dim: #2C3E50;
+    --accent: #F4C15C;
+    --text-primary: #ECF0F1;
+    --text-secondary: rgba(236, 240, 241, 0.65);
+    --success: #4ADE80;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html, body {
+    height: 100%;
+    overflow: hidden;
+  }
+
+  body {
+    font-family: 'Heebo', -apple-system, system-ui, sans-serif;
+    background: var(--bg-deep);
+    color: var(--text-primary);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* Atmospheric background layers */
+  .bg-gradient {
+    position: fixed;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 80% 60% at 50% 0%, rgba(52, 152, 219, 0.35) 0%, transparent 60%),
+      radial-gradient(ellipse 60% 40% at 20% 100%, rgba(244, 193, 92, 0.12) 0%, transparent 55%),
+      radial-gradient(ellipse 70% 50% at 100% 80%, rgba(74, 222, 128, 0.15) 0%, transparent 60%),
+      linear-gradient(180deg, var(--bg-deep) 0%, var(--bg-mid) 100%);
+    z-index: 0;
+  }
+
+  /* Subtle grain texture */
+  .bg-grain {
+    position: fixed;
+    inset: 0;
+    opacity: 0.035;
+    z-index: 1;
+    pointer-events: none;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+
+  /* Floating houses silhouette - ambient decoration */
+  .bg-houses {
+    position: fixed;
+    bottom: -20px;
+    left: 0;
+    right: 0;
+    height: 180px;
+    z-index: 1;
+    opacity: 0.08;
+    pointer-events: none;
+  }
+
+  .card {
+    position: relative;
+    z-index: 10;
+    width: min(88%, 420px);
+    padding: 44px 28px 32px;
+    text-align: center;
+    opacity: 0;
+    transform: translateY(16px);
+    animation: riseIn 0.8s cubic-bezier(0.22, 1, 0.36, 1) 0.15s forwards;
+  }
+
+  @keyframes riseIn {
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* App logo with success badge */
+  .logo-wrap {
+    width: 124px;
+    height: 124px;
+    margin: 0 auto 28px;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .logo-glow {
+    position: absolute;
+    inset: -20px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(52, 152, 219, 0.35) 0%, transparent 65%);
+    animation: pulse 2.8s ease-in-out infinite;
+    z-index: 0;
+  }
+
+  @keyframes pulse {
+    0%, 100% { transform: scale(1); opacity: 0.8; }
+    50% { transform: scale(1.1); opacity: 0.4; }
+  }
+
+  .app-logo {
+    width: 108px;
+    height: 108px;
+    box-shadow:
+      0 12px 40px rgba(11, 22, 40, 0.5);
+    position: relative;
+    z-index: 1;
+    display: block;
+    border-radius: 24px;
+  }
+
+  .success-badge {
+    position: absolute;
+    bottom: -4px;
+    left: -4px;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #4ADE80 0%, #22C55E 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow:
+      0 6px 16px rgba(34, 197, 94, 0.45),
+      0 0 0 3px var(--bg-deep);
+    z-index: 2;
+    transform: scale(0);
+    animation: badgePop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) 0.7s forwards;
+  }
+
+  @keyframes badgePop {
+    to { transform: scale(1); }
+  }
+
+  .success-badge svg {
+    width: 20px;
+    height: 20px;
+    stroke: white;
+    stroke-width: 3.5;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    fill: none;
+    stroke-dasharray: 50;
+    stroke-dashoffset: 50;
+    animation: drawCheck 0.4s cubic-bezier(0.65, 0, 0.35, 1) 1.05s forwards;
+  }
+
+  @keyframes drawCheck {
+    to { stroke-dashoffset: 0; }
+  }
+
+  h1 {
+    font-family: 'Frank Ruhl Libre', serif;
+    font-size: 32px;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+    margin-bottom: 10px;
+    background: linear-gradient(180deg, var(--text-primary) 0%, rgba(236, 240, 241, 0.75) 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .subtitle {
+    font-size: 15px;
+    color: var(--text-secondary);
+    line-height: 1.6;
+    margin-bottom: 36px;
+    font-weight: 400;
+  }
+
+  .order-id {
+    display: inline-block;
+    font-family: 'Heebo', monospace;
+    font-size: 12px;
+    color: var(--text-secondary);
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    padding: 6px 14px;
+    border-radius: 20px;
+    margin-bottom: 32px;
+    letter-spacing: 0.5px;
+  }
+
+  .order-id span {
+    color: var(--accent);
+    font-weight: 500;
+  }
+
+  /* Secondary fallback CTA - appears only after auto-redirect attempt */
+  .fallback {
+    margin-top: 8px;
+    opacity: 0;
+    animation: fadeIn 0.6s ease 3s forwards;
+  }
+
+  .fallback-text {
+    display: block;
+    font-size: 13px;
+    color: var(--text-secondary);
+    margin-bottom: 10px;
+  }
+
+  .btn-secondary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 10px 18px;
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--brand-blue);
+    background: transparent;
+    border: 1px solid rgba(52, 152, 219, 0.5);
+    border-radius: 10px;
+    cursor: pointer;
+    text-decoration: none;
+    transition: background 0.15s ease, border-color 0.15s ease;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .btn-secondary:active {
+    background: rgba(52, 152, 219, 0.1);
+    border-color: var(--brand-blue);
+  }
+
+  .btn-secondary svg {
+    width: 14px;
+    height: 14px;
+  }
+
+  @media (max-height: 600px) {
+    .card { padding: 24px 24px; }
+    .logo-wrap { width: 96px; height: 96px; margin-bottom: 20px; }
+    .app-logo { width: 84px; height: 84px; }
+    .success-badge { width: 32px; height: 32px; }
+    .success-badge svg { width: 16px; height: 16px; }
+    h1 { font-size: 26px; }
+  }
+</style>
 </head>
 <body>
-  <div class="card">
-    <div class="icon">
-      <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+
+<div class="bg-gradient"></div>
+<div class="bg-grain"></div>
+
+<svg class="bg-houses" viewBox="0 0 400 180" preserveAspectRatio="xMidYEnd slice" aria-hidden="true">
+  <g fill="none" stroke="#ECF0F1" stroke-width="1.5" stroke-linejoin="round">
+    <path d="M40 180 L40 90 L90 50 L140 90 L140 180 Z"/>
+    <path d="M140 180 L140 70 L200 30 L260 70 L260 180 Z"/>
+    <path d="M260 180 L260 100 L310 65 L360 100 L360 180 Z"/>
+    <line x1="85" y1="110" x2="95" y2="110"/>
+    <line x1="195" y1="90" x2="205" y2="90"/>
+    <line x1="305" y1="120" x2="315" y2="120"/>
+  </g>
+</svg>
+
+<main class="card">
+  <div class="logo-wrap">
+    <div class="logo-glow"></div>
+    <img class="app-logo" src="app_icon.png" alt="&#1513;&#1499;&#1493;&#1504;&#1492;">
+    <div class="success-badge" aria-label="&#1492;&#1510;&#1500;&#1497;&#1495;">
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M5 12.5 L10 17.5 L19 7"/>
+      </svg>
     </div>
-    <h1>&#1492;&#1514;&#1513;&#1500;&#1493;&#1501; &#1489;&#1493;&#1510;&#1506; &#1489;&#1492;&#1510;&#1500;&#1495;&#1492;!</h1>
-   <p>&#1492;&#1512;&#1499;&#1497;&#1513;&#1492; &#1513;&#1500;&#1498; &#1492;&#1493;&#1513;&#1500;&#1502;&#1492;.<br>&#1504;&#1497;&#1514;&#1503; &#1500;&#1505;&#1490;&#1493;&#1512; &#1495;&#1500;&#1493;&#1503; &#1494;&#1492; &#1493;&#1500;&#1495;&#1494;&#1493;&#1512; &#1500;&#1488;&#1508;&#1500;&#1497;&#1511;&#1510;&#1497;&#1492;.</p>
-   <a href="com.shchuna.app://payment-return?order_id=TEST-123" class="btn">&#1495;&#1494;&#1512;&#1492; &#1500;&#1488;&#1508;&#1500;&#1497;&#1511;&#1510;&#1497;&#1492;</a>
   </div>
+
+  <h1>&#1492;&#1514;&#1513;&#1500;&#1493;&#1501; &#1492;&#1514;&#1511;&#1489;&#1500;</h1>
+  <p class="subtitle">&#1514;&#1493;&#1491;&#1492; &#1506;&#1500; &#1492;&#1512;&#1499;&#1497;&#1513;&#1492;&#33;</p>
+
+  <div class="order-id" id="orderIdWrap" hidden>
+    &#1502;&#1505;&#1508;&#1512; &#1492;&#1494;&#1502;&#1504;&#1492;&#58; <span id="orderIdText"></span>
+  </div>
+
+  <div class="fallback">
+    <span class="fallback-text">&#1500;&#1488; &#1492;&#1493;&#1506;&#1489;&#1512;&#1514; &#1488;&#1493;&#1496;&#1493;&#1502;&#1496;&#1497;&#1514;&#63;</span>
+    <a id="returnBtn" class="btn-secondary" href="#">
+      &#1495;&#1494;&#1512;&#1492; &#1500;&#1488;&#1508;&#1500;&#1497;&#1511;&#1510;&#1497;&#1492;
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M15 18l-6-6 6-6"/>
+      </svg>
+    </a>
+  </div>
+</main>
+
+<script>
+  (function() {
+    var params = new URLSearchParams(window.location.search);
+    var orderId = params.get('order_id') || '';
+
+    var deepLink = 'com.shchuna.app://payment-return' + (orderId ? '?order_id=' + encodeURIComponent(orderId) : '');
+
+    var btn = document.getElementById('returnBtn');
+    btn.setAttribute('href', deepLink);
+
+    if (orderId) {
+      document.getElementById('orderIdText').textContent = orderId;
+      document.getElementById('orderIdWrap').removeAttribute('hidden');
+    }
+
+    // Try auto-redirect quickly. Chrome may block this without a user gesture
+    // (especially after returning from an external app like Bit) - if so,
+    // the fallback button will appear after 3 seconds.
+    setTimeout(function() {
+      window.location.href = deepLink;
+    }, 1800);
+  })();
+</script>
+
 </body>
 </html>
