@@ -204,11 +204,15 @@
     font-weight: 500;
   }
 
-  /* Secondary fallback CTA - appears only after auto-redirect attempt */
+  /* Secondary fallback CTA - shown via JS after auto-redirect attempt */
   .fallback {
     margin-top: 8px;
-    opacity: 0;
-    animation: fadeIn 0.6s ease 3s forwards;
+    display: none;
+  }
+
+  .fallback.visible {
+    display: block;
+    animation: fadeIn 0.5s ease forwards;
   }
 
   .fallback-text {
@@ -323,6 +327,12 @@
     setTimeout(function() {
       window.location.href = deepLink;
     }, 1800);
+
+    // Show fallback button after 3 seconds if we're still here
+    setTimeout(function() {
+      var fb = document.querySelector('.fallback');
+      if (fb) fb.classList.add('visible');
+    }, 3000);
   })();
 </script>
 
