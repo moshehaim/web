@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>שכונה - אפליקציה קהילתית</title>
+    <meta name="description" content="שכונה - מה שקרוב אליך. אפליקציה קהילתית שמחברת אותך לכל מה שקורה בשכונה.">
+    <link rel="icon" type="image/png" href="app_icon.png">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Rubik', 'Assistant', sans-serif;
+            background: linear-gradient(135deg, #244782 0%, #1a3563 100%);
+            color: white;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .container {
+            max-width: 600px;
+            text-align: center;
+            background: rgba(255,255,255,0.08);
+            padding: 60px 40px;
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        .logo {
+            width: 120px;
+            height: 120px;
+            margin: 0 auto 30px;
+            border-radius: 24px;
+            object-fit: cover;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+        h1 {
+            font-size: 48px;
+            margin-bottom: 16px;
+            font-weight: 700;
+        }
+        .tagline {
+            font-size: 22px;
+            opacity: 0.9;
+            margin-bottom: 30px;
+        }
+        .description {
+            font-size: 16px;
+            line-height: 1.7;
+            opacity: 0.85;
+            margin-bottom: 30px;
+        }
+        .features {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            margin: 30px 0;
+            text-align: right;
+        }
+        .feature {
+            background: rgba(255,255,255,0.05);
+            padding: 12px 16px;
+            border-radius: 10px;
+            font-size: 14px;
+        }
+        .coming-soon {
+            background: rgba(255,255,255,0.15);
+            padding: 16px 28px;
+            border-radius: 12px;
+            display: inline-block;
+            margin-bottom: 30px;
+            font-size: 15px;
+            font-weight: 500;
+        }
+        .links {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 30px;
+            padding-top: 30px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+        }
+        .links a {
+            color: white;
+            text-decoration: none;
+            opacity: 0.8;
+            font-size: 14px;
+            border-bottom: 1px solid transparent;
+            transition: all 0.2s;
+        }
+        .links a:hover {
+            opacity: 1;
+            border-bottom-color: white;
+        }
+        .footer {
+            margin-top: 30px;
+            font-size: 13px;
+            opacity: 0.6;
+        }
+        @media (max-width: 480px) {
+            .container { padding: 40px 24px; }
+            h1 { font-size: 36px; }
+            .tagline { font-size: 18px; }
+            .features { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <img src="app_icon.png" alt="שכונה" class="logo">
+        <h1>שכונה</h1>
+        <p class="tagline">מה שקרוב אליך</p>
+        
+        <p class="description">
+            אפליקציה קהילתית שמחברת אותך לכל מה שקורה סביבך — 
+            הכל במקום אחד, לפי המיקום שלך.
+        </p>
+        
+        <div class="features">
+            <div class="feature">🏪 בעלי עסקים בשכונה</div>
+            <div class="feature">👨‍🔧 אנשי מקצוע</div>
+            <div class="feature">🎫 קופונים ומבצעים</div>
+            <div class="feature">🤝 עזרה הדדית</div>
+            <div class="feature">🕍 בתי כנסת וזמני תפילה</div>
+            <div class="feature">📅 אירועים בקהילה</div>
+        </div>
+        
+        <div class="coming-soon">
+            📱 בקרוב ב-Google Play
+        </div>
+        
+        <div class="links">
+            <a href="mailto:info@shchuna.co.il">יצירת קשר</a>
+        </div>
+        
+        <div class="footer">
+            © 2026 שכונה. כל הזכויות שמורות.
+        </div>
+    </div>
+</body>
+</html>
