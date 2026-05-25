@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>בקשת מחיקת חשבון - שכונה</title>
+    <style>
+        body {
+            font-family: 'Rubik', 'Segoe UI', Arial, sans-serif;
+            line-height: 1.7;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            color: #333;
+            background: #f9fafb;
+        }
+        .container {
+            background: white;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+        h1 {
+            color: #1e40af;
+            border-bottom: 3px solid #1e40af;
+            padding-bottom: 10px;
+        }
+        h2 {
+            color: #1e40af;
+            margin-top: 30px;
+        }
+        h3 {
+            color: #374151;
+            margin-top: 20px;
+        }
+        ul, ol {
+            padding-right: 25px;
+        }
+        li {
+            margin-bottom: 8px;
+        }
+        .info-box {
+            background: #eff6ff;
+            padding: 20px;
+            border-radius: 8px;
+            border-right: 4px solid #1e40af;
+            margin: 20px 0;
+        }
+        .warning-box {
+            background: #fef3c7;
+            padding: 20px;
+            border-radius: 8px;
+            border-right: 4px solid #f59e0b;
+            margin: 20px 0;
+        }
+        .success-box {
+            background: #f0fdf4;
+            padding: 20px;
+            border-radius: 8px;
+            border-right: 4px solid #16a34a;
+            margin: 20px 0;
+        }
+        .button {
+            display: inline-block;
+            background: #1e40af;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: bold;
+            margin: 10px 5px 10px 0;
+            transition: background 0.2s;
+        }
+        .button:hover {
+            background: #1e3a8a;
+        }
+        .button-secondary {
+            background: #6b7280;
+        }
+        .button-secondary:hover {
+            background: #4b5563;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        th, td {
+            padding: 12px;
+            text-align: right;
+            border-bottom: 1px solid #e5e7eb;
+        }
+        th {
+            background: #f3f4f6;
+            font-weight: bold;
+        }
+        a {
+            color: #1e40af;
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+        .footer {
+            text-align: center;
+            margin-top: 40px;
+            color: #6b7280;
+            font-size: 0.9em;
+        }
+        .steps {
+            counter-reset: step;
+        }
+        .step {
+            counter-increment: step;
+            background: #f9fafb;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 8px;
+            position: relative;
+            padding-right: 60px;
+        }
+        .step:before {
+            content: counter(step);
+            background: #1e40af;
+            color: white;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🗑️ בקשת מחיקת חשבון - שכונה</h1>
+
+        <div class="info-box">
+            <strong>📌 הערה חשובה:</strong><br>
+            דף זה מיועד למשתמשים המעוניינים למחוק את חשבונם באפליקציית "שכונה". 
+            יש לכם זכות מלאה לבקש מחיקת המידע שלכם בכל עת.
+        </div>
+
+        <h2>1. מה ניתן למחוק?</h2>
+        
+        <p>בעת בקשת מחיקת חשבון, יימחקו:</p>
+        
+        <table>
+            <thead>
+                <tr>
+                    <th>סוג מידע</th>
+                    <th>נמחק?</th>
+                    <th>זמן מחיקה</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>פרטי חשבון (שם, אימייל, סיסמה)</td>
+                    <td>✅ כן</td>
+                    <td>תוך 90 ימים</td>
+                </tr>
+                <tr>
+                    <td>מספר טלפון</td>
+                    <td>✅ כן</td>
+                    <td>תוך 90 ימים</td>
+                </tr>
+                <tr>
+                    <td>תמונות שהעליתם</td>
+                    <td>✅ כן</td>
+                    <td>תוך 30 ימים</td>
+                </tr>
+                <tr>
+                    <td>פרסומים שיצרתם (יד 2, אירועים וכו')</td>
+                    <td>✅ כן</td>
+                    <td>תוך 30 ימים</td>
+                </tr>
+                <tr>
+                    <td>היסטוריית פעילות</td>
+                    <td>✅ כן</td>
+                    <td>תוך 90 ימים</td>
+                </tr>
+                <tr>
+                    <td>הודעות שלכם במערכת</td>
+                    <td>✅ כן</td>
+                    <td>תוך 30 ימים</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h2>2. מה לא נמחק (לפי דרישות חוק)</h2>
+        
+        <div class="warning-box">
+            <strong>⚠️ הערה משפטית:</strong><br>
+            על פי חוקי המס וחוק הגנת הצרכן, חלק מהמידע נשאר בארכיון:
+        </div>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>סוג מידע</th>
+                    <th>למה נשאר?</th>
+                    <th>תקופת שמירה</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>חשבוניות וקבלות (לבעלי עסקים)</td>
+                    <td>חובת רשות המסים</td>
+                    <td>7 שנים</td>
+                </tr>
+                <tr>
+                    <td>נתוני תשלום (לבעלי עסקים)</td>
+                    <td>חובת חוק</td>
+                    <td>7 שנים</td>
+                </tr>
+                <tr>
+                    <td>לוגים אנונימיים</td>
+                    <td>אבטחת מידע</td>
+                    <td>עד 90 ימים</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <p>
+            <em>המידע השמור הוא <strong>אנונימי</strong> ככל הניתן ואינו ניתן לקישור אליכם.</em>
+        </p>
+
+        <h2>3. איך לבקש מחיקת חשבון?</h2>
+        
+        <h3>אפשרות א' - דרך האפליקציה (מומלץ)</h3>
+        
+        <div class="steps">
+            <div class="step">
+                פתחו את אפליקציית "שכונה" במכשיר שלכם
+            </div>
+            <div class="step">
+                התחברו לחשבון שברצונכם למחוק
+            </div>
+            <div class="step">
+                כנסו ל-<strong>מסך עריכת הפרופיל</strong>
+            </div>
+            <div class="step">
+                בחרו <strong>"מחיקת חשבון"</strong>
+            </div>
+            <div class="step">
+                אשרו את הבקשה
+            </div>
+            <div class="step">
+                החשבון יסומן למחיקה ויימחק תוך 90 ימים
+            </div>
+        </div>
+
+        <h3>אפשרות ב' - דרך אימייל</h3>
+        
+        <div class="success-box">
+            <p>
+                <strong>שלחו אימייל לכתובת:</strong>
+                <a href="mailto:info@shchuna.co.il?subject=בקשת מחיקת חשבון&body=שלום,%0D%0A%0D%0Aאני מבקש/ת למחוק את חשבוני באפליקציית שכונה.%0D%0A%0D%0Aהפרטים:%0D%0A- אימייל החשבון: ___%0D%0A- שם מלא: ___%0D%0A- מספר טלפון רשום (אם קיים): ___%0D%0A%0D%0Aאני מאשר/ת שהבנתי שהמחיקה היא בלתי הפיכה.%0D%0A%0D%0Aתודה">
+                    info@shchuna.co.il
+                </a>
+            </p>
+            
+            <p>הכניסו בנושא: <strong>"בקשת מחיקת חשבון"</strong></p>
+            
+            <p>כללו בגוף האימייל:</p>
+            <ul>
+                <li>כתובת האימייל הרשומה בחשבון</li>
+                <li>שם מלא</li>
+                <li>מספר טלפון רשום (אם זוכרים ואם קיים במערכת)</li>
+                <li>אישור שהבנתם שהמחיקה היא בלתי הפיכה</li>
+            </ul>
+            
+            <a href="mailto:info@shchuna.co.il?subject=בקשת מחיקת חשבון&body=שלום,%0D%0A%0D%0Aאני מבקש/ת למחוק את חשבוני באפליקציית שכונה.%0D%0A%0D%0Aהפרטים:%0D%0A- אימייל החשבון: ___%0D%0A- שם מלא: ___%0D%0A- מספר טלפון רשום (אם קיים): ___%0D%0A%0D%0Aאני מאשר/ת שהבנתי שהמחיקה היא בלתי הפיכה.%0D%0A%0D%0Aתודה" class="button">
+                📧 שליחת אימייל בקשת מחיקה
+            </a>
+        </div>
+
+        <h2>4. תהליך המחיקה</h2>
+        
+        <div class="info-box">
+            <strong>⏰ ציר זמן:</strong>
+            
+            <ul>
+                <li><strong>יום 1:</strong> קבלת הבקשה ושליחת מייל אישור</li>
+                <li><strong>יום 1-7:</strong> אימות זהות (לוודא שאתם בעלי החשבון)</li>
+                <li><strong>יום 7-30:</strong> מחיקת תכנים גלויים (פרסומים, תמונות)</li>
+                <li><strong>יום 30-90:</strong> מחיקת נתוני חשבון מלאה</li>
+                <li><strong>יום 90:</strong> סיום התהליך - יישלח אימייל אישור</li>
+            </ul>
+        </div>
+
+        <h2>5. דברים שכדאי לדעת לפני מחיקה</h2>
+        
+        <div class="warning-box">
+            <strong>⚠️ אזהרות חשובות:</strong>
+            <ul>
+                <li>המחיקה היא <strong>בלתי הפיכה</strong></li>
+                <li>לא ניתן לשחזר את החשבון לאחר המחיקה</li>
+                <li>תאבדו גישה לכל הקופונים שאספתם</li>
+                <li>פרסומים שיצרתם יימחקו (לא ניתן לשחזר)</li>
+                <li>לבעלי עסקים: המנוי שלכם יבוטל</li>
+                <li>קבלות וחשבוניות נשארות בארכיון לפי חובת חוק (7 שנים)</li>
+            </ul>
+        </div>
+
+        <h2>6. שאלות נפוצות</h2>
+
+        <h3>❓ האם אפשר לבטל את הבקשה?</h3>
+        <p>
+            כן, ניתן לבטל בקשת מחיקה בתוך 7 ימים מיום הגשתה. 
+            לאחר 7 ימים תהליך המחיקה מתחיל ולא ניתן לבטל.
+        </p>
+
+        <h3>❓ מה קורה לתשלומים שביצעתי?</h3>
+        <p>
+            תשלומים שבוצעו לא יוחזרו (אלא אם זה לפי מדיניות החזרים שלנו). 
+            חשבוניות נשמרות 7 שנים לפי חוק.
+        </p>
+
+        <h3>❓ מה עם המידע שאחרים העלו עליי?</h3>
+        <p>
+            לא קיים מידע ש"אחרים העלו עליכם" באפליקציה. 
+            כל המידע שיש לנו הוא מה שאתם עצמכם הזנתם.
+        </p>
+
+        <h3>❓ האם המידע מועבר לצדדים שלישיים אחרי המחיקה?</h3>
+        <p>
+            <strong>לא.</strong> אנו לא מוכרים ולא מעבירים מידע אישי לצדדים שלישיים. 
+            לפרטים נוספים: <a href="https://shchuna.co.il/privacy.html">מדיניות פרטיות</a>.
+        </p>
+
+        <h3>❓ אני בעל עסק - מה יקרה לעסק שלי באפליקציה?</h3>
+        <p>
+            העסק שלכם יוסר מהאפליקציה ולא יוצג עוד למשתמשים. 
+            מנויים פעילים יבוטלו ולא יחויבו עוד.
+        </p>
+
+        <h2>7. יצירת קשר</h2>
+        
+        <div class="success-box">
+            <p>
+                <strong>📧 אימייל:</strong> 
+                <a href="mailto:info@shchuna.co.il">info@shchuna.co.il</a><br>
+                <strong>🌐 אתר:</strong> 
+                <a href="https://shchuna.co.il">https://shchuna.co.il</a><br>
+                <strong>📜 מדיניות פרטיות:</strong> 
+                <a href="https://shchuna.co.il/privacy.html">privacy.html</a><br>
+                <strong>📋 תנאי שימוש:</strong> 
+                <a href="https://shchuna.co.il/terms.html">terms.html</a>
+            </p>
+            
+            <p>
+                נשתדל לענות לפנייתכם תוך 7 ימי עסקים.
+            </p>
+        </div>
+
+        <div style="text-align: center; margin-top: 40px;">
+            <a href="https://shchuna.co.il" class="button button-secondary">חזרה לדף הבית</a>
+            <a href="mailto:info@shchuna.co.il?subject=בקשת מחיקת חשבון" class="button">📧 שליחת בקשה</a>
+        </div>
+
+        <div class="footer">
+            <p>עדכון אחרון: 25/05/2026</p>
+            <p>© 2026 שכונה. כל הזכויות שמורות.</p>
+            <p>אפליקציית "שכונה" - מה שקרוב אליך</p>
+        </div>
+    </div>
+</body>
+</html>
