@@ -1122,6 +1122,19 @@ document.getElementById('cancelModal').addEventListener('click', function(e) {
     if (e.target === this) closeModal('cancelModal');
 });
 
+// Handle OAuth callback tokens in URL
+const hashParams = new URLSearchParams(window.location.hash.replace('#', ''));
+const urlParams = new URLSearchParams(window.location.search);
+
+const oauthAccessToken = hashParams.get('access_token') || urlParams.get('access_token');
+const oauthRefreshToken = hashParams.get('refresh_token') || urlParams.get('refresh_token');
+
+if (oauthAccessToken) {
+    localStorage.setItem('sb_access_token', oauthAccessToken);
+    localStorage.setItem('sb_refresh_token', oauthRefreshToken || '');
+    window.history.replaceState({}, '', '/web/account.html');
+}
+
 init();
 </script>
 </body>
