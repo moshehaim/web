@@ -1,0 +1,1128 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>שכונה - החשבון שלי</title>
+    <link rel="icon" type="image/png" href="app_icon.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --blue: #185FA5;
+            --blue-light: #E6F1FB;
+            --blue-dark: #1a3563;
+            --bg: #FAFAF7;
+            --card: #ffffff;
+            --border: rgba(0,0,0,0.10);
+            --text: #1A1A1A;
+            --text-secondary: #6B6B6B;
+            --success-bg: #EAF3DE;
+            --success-text: #27500A;
+            --warning-bg: #FFF8E6;
+            --warning-text: #7A4F00;
+            --error-bg: #FDECEA;
+            --error-text: #8B1A1A;
+            --grey-bg: #F0F0EE;
+            --radius-lg: 12px;
+            --radius-md: 8px;
+        }
+
+        body {
+            font-family: 'Rubik', -apple-system, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+        }
+
+        /* ── Header ── */
+        .header {
+            background: linear-gradient(135deg, #244782 0%, #1a3563 100%);
+            color: white;
+            padding: 20px 20px 28px;
+        }
+
+        .header-inner {
+            max-width: 640px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .header-logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .header-logo img {
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+        }
+
+        .header-logo span {
+            font-size: 20px;
+            font-weight: 700;
+        }
+
+        .btn-signout {
+            background: rgba(255,255,255,0.15);
+            border: 1px solid rgba(255,255,255,0.25);
+            color: white;
+            font-family: 'Rubik', sans-serif;
+            font-size: 13px;
+            padding: 6px 14px;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .btn-signout:hover { background: rgba(255,255,255,0.25); }
+
+        /* ── Entity card in header ── */
+        .entity-card {
+            max-width: 640px;
+            margin: 0 auto;
+            margin-top: 16px;
+            background: rgba(255,255,255,0.12);
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: var(--radius-lg);
+            padding: 14px 16px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .entity-avatar {
+            width: 44px;
+            height: 44px;
+            border-radius: 10px;
+            background: rgba(255,255,255,0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            flex-shrink: 0;
+            overflow: hidden;
+        }
+
+        .entity-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 10px;
+        }
+
+        .entity-name {
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .entity-type {
+            font-size: 12px;
+            opacity: 0.7;
+            margin-top: 2px;
+        }
+
+        /* ── Main content ── */
+        .main {
+            max-width: 640px;
+            margin: 0 auto;
+            padding: 20px 16px 40px;
+        }
+
+        .section-title {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 10px;
+            margin-top: 24px;
+        }
+
+        /* ── Subscription card ── */
+        .sub-card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 16px;
+            margin-bottom: 10px;
+        }
+
+        .sub-card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+
+        .sub-card-title {
+            font-size: 15px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .badge {
+            font-size: 11px;
+            font-weight: 500;
+            padding: 3px 8px;
+            border-radius: 20px;
+        }
+
+        .badge-active { background: var(--success-bg); color: var(--success-text); }
+        .badge-trial { background: var(--blue-light); color: var(--blue); }
+        .badge-cancelled { background: var(--warning-bg); color: var(--warning-text); }
+        .badge-expired { background: var(--grey-bg); color: var(--text-secondary); }
+        .badge-none { background: var(--grey-bg); color: var(--text-secondary); }
+
+        .sub-meta {
+            font-size: 12.5px;
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        .sub-amount {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--blue);
+        }
+
+        .sub-amount span {
+            font-size: 12px;
+            font-weight: 400;
+            color: var(--text-secondary);
+        }
+
+        /* ── Package card (coupons / promotions) ── */
+        .pkg-card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 14px 16px;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .pkg-info { flex: 1; }
+        .pkg-title { font-size: 14px; font-weight: 600; margin-bottom: 3px; }
+        .pkg-meta { font-size: 12px; color: var(--text-secondary); }
+
+        .pkg-count {
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--blue);
+            text-align: center;
+            min-width: 50px;
+        }
+
+        .pkg-count span {
+            display: block;
+            font-size: 11px;
+            font-weight: 400;
+            color: var(--text-secondary);
+        }
+
+        /* ── Action buttons ── */
+        .btn-primary {
+            display: block;
+            width: 100%;
+            padding: 13px;
+            background: var(--blue);
+            color: white;
+            border: none;
+            border-radius: var(--radius-lg);
+            font-family: 'Rubik', sans-serif;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            text-align: center;
+            text-decoration: none;
+            transition: opacity 0.2s, transform 0.1s;
+            margin-top: 10px;
+        }
+        .btn-primary:hover { opacity: 0.88; }
+        .btn-primary:active { transform: scale(0.98); }
+
+        .btn-outline {
+            display: block;
+            width: 100%;
+            padding: 11px;
+            background: transparent;
+            color: var(--blue);
+            border: 1.5px solid var(--blue);
+            border-radius: var(--radius-lg);
+            font-family: 'Rubik', sans-serif;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            text-align: center;
+            text-decoration: none;
+            transition: background 0.2s;
+            margin-top: 8px;
+        }
+        .btn-outline:hover { background: var(--blue-light); }
+
+        .btn-danger-outline {
+            display: block;
+            width: 100%;
+            padding: 11px;
+            background: transparent;
+            color: #B91C1C;
+            border: 1.5px solid #B91C1C;
+            border-radius: var(--radius-lg);
+            font-family: 'Rubik', sans-serif;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            text-align: center;
+            text-decoration: none;
+            transition: background 0.2s;
+            margin-top: 8px;
+        }
+        .btn-danger-outline:hover { background: var(--error-bg); }
+
+        /* ── Purchase options (radio cards) ── */
+        .purchase-section {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            margin-bottom: 10px;
+        }
+
+        .purchase-section-header {
+            padding: 14px 16px 10px;
+            border-bottom: 1px solid var(--border);
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .radio-card {
+            padding: 12px 16px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+            transition: background 0.15s;
+        }
+        .radio-card:last-child { border-bottom: none; }
+        .radio-card:hover { background: var(--bg); }
+        .radio-card.selected { background: var(--blue-light); }
+
+        .radio-dot {
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            border: 2px solid var(--border);
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: border-color 0.15s;
+        }
+        .radio-card.selected .radio-dot {
+            border-color: var(--blue);
+        }
+        .radio-dot-inner {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--blue);
+            display: none;
+        }
+        .radio-card.selected .radio-dot-inner { display: block; }
+
+        .radio-label { flex: 1; }
+        .radio-title { font-size: 14px; font-weight: 500; }
+        .radio-sub { font-size: 12px; color: var(--text-secondary); margin-top: 1px; }
+        .radio-price { font-size: 15px; font-weight: 700; color: var(--blue); white-space: nowrap; }
+
+        /* ── Divider ── */
+        .or-divider {
+            text-align: center;
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin: 4px 0;
+            position: relative;
+        }
+        .or-divider::before, .or-divider::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            width: 42%;
+            height: 1px;
+            background: var(--border);
+        }
+        .or-divider::before { right: 0; }
+        .or-divider::after { left: 0; }
+
+        /* ── Terms checkbox ── */
+        .terms-row {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            padding: 12px 16px;
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            margin-top: 8px;
+            cursor: pointer;
+        }
+
+        .checkbox {
+            width: 18px;
+            height: 18px;
+            border: 2px solid var(--border);
+            border-radius: 4px;
+            flex-shrink: 0;
+            margin-top: 1px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.15s;
+        }
+        .checkbox.checked {
+            background: var(--blue);
+            border-color: var(--blue);
+        }
+        .checkbox.checked::after {
+            content: '✓';
+            color: white;
+            font-size: 11px;
+            font-weight: 700;
+        }
+
+        .terms-text {
+            font-size: 12.5px;
+            color: var(--text-secondary);
+            line-height: 1.5;
+        }
+        .terms-text a { color: var(--blue); text-decoration: none; }
+
+        /* ── Price summary ── */
+        .price-summary {
+            background: var(--blue-light);
+            border-radius: var(--radius-md);
+            padding: 12px 14px;
+            margin-top: 8px;
+        }
+
+        .price-row {
+            display: flex;
+            justify-content: space-between;
+            font-size: 13px;
+            color: var(--text-secondary);
+            margin-bottom: 4px;
+        }
+
+        .price-row.total {
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--text);
+            border-top: 1px solid rgba(0,0,0,0.1);
+            padding-top: 8px;
+            margin-top: 4px;
+        }
+
+        /* ── Loading / Error ── */
+        .loading-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--text-secondary);
+        }
+
+        .spinner {
+            display: inline-block;
+            width: 28px;
+            height: 28px;
+            border: 3px solid var(--border);
+            border-top-color: var(--blue);
+            border-radius: 50%;
+            animation: spin 0.7s linear infinite;
+            margin-bottom: 12px;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        .error-banner {
+            background: var(--error-bg);
+            border: 1px solid rgba(185,28,28,0.2);
+            border-radius: var(--radius-md);
+            padding: 12px 14px;
+            font-size: 13px;
+            color: var(--error-text);
+            margin-bottom: 12px;
+            display: none;
+        }
+
+        .success-banner {
+            background: var(--success-bg);
+            border: 1px solid rgba(39,80,10,0.2);
+            border-radius: var(--radius-md);
+            padding: 12px 14px;
+            font-size: 13px;
+            color: var(--success-text);
+            margin-bottom: 12px;
+            display: none;
+        }
+
+        /* ── Footer ── */
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 32px;
+            padding-top: 20px;
+            border-top: 1px solid var(--border);
+        }
+        .footer-links a {
+            font-size: 12px;
+            color: var(--text-secondary);
+            text-decoration: none;
+        }
+        .footer-links a:hover { color: var(--blue); }
+
+        /* ── Modal overlay ── */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.45);
+            z-index: 100;
+            align-items: flex-end;
+            justify-content: center;
+        }
+        .modal-overlay.open { display: flex; }
+
+        .modal-sheet {
+            background: white;
+            border-radius: 20px 20px 0 0;
+            width: 100%;
+            max-width: 640px;
+            padding: 20px 20px 32px;
+            max-height: 85vh;
+            overflow-y: auto;
+        }
+
+        .modal-handle {
+            width: 36px;
+            height: 4px;
+            background: var(--border);
+            border-radius: 2px;
+            margin: 0 auto 18px;
+        }
+
+        .modal-title {
+            font-size: 17px;
+            font-weight: 700;
+            margin-bottom: 6px;
+        }
+
+        .modal-subtitle {
+            font-size: 13px;
+            color: var(--text-secondary);
+            margin-bottom: 20px;
+        }
+
+        @media (min-width: 640px) {
+            .modal-overlay { align-items: center; }
+            .modal-sheet {
+                border-radius: 20px;
+                margin: 20px;
+                max-height: 80vh;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<!-- ── Header ── -->
+<div class="header">
+    <div class="header-inner">
+        <div class="header-logo">
+            <img src="app_icon.png" alt="שכונה" onerror="this.style.display='none'">
+            <span>שכונה</span>
+        </div>
+        <button class="btn-signout" onclick="signOut()">יציאה</button>
+    </div>
+
+    <div class="entity-card" id="entityCard" style="display:none">
+        <div class="entity-avatar" id="entityAvatar">🏪</div>
+        <div>
+            <div class="entity-name" id="entityName">טוען...</div>
+            <div class="entity-type" id="entityType"></div>
+        </div>
+    </div>
+</div>
+
+<!-- ── Main ── -->
+<div class="main">
+
+    <div id="loadingState" class="loading-state">
+        <div class="spinner"></div>
+        <div>טוען נתונים...</div>
+    </div>
+
+    <div id="errorBanner" class="error-banner"></div>
+    <div id="successBanner" class="success-banner"></div>
+
+    <div id="mainContent" style="display:none">
+
+        <!-- מנוי מבצעים -->
+        <div class="section-title">מנוי מבצעים</div>
+        <div id="promotionsSection"></div>
+
+        <!-- חבילת קופונים -->
+        <div class="section-title">חבילת קופונים</div>
+        <div id="couponsSection"></div>
+
+        <!-- מנוי הבלטה -->
+        <div class="section-title">הבלטה בתוצאות</div>
+        <div id="prominenceSection"></div>
+
+        <div class="footer-links">
+            <a href="/">עמוד הבית</a>
+            <a href="/privacy.html">פרטיות</a>
+            <a href="mailto:info@shchuna.co.il">יצירת קשר</a>
+        </div>
+    </div>
+</div>
+
+<!-- ── Cancel Confirmation Modal ── -->
+<div class="modal-overlay" id="cancelModal">
+    <div class="modal-sheet">
+        <div class="modal-handle"></div>
+        <div class="modal-title">ביטול חידוש אוטומטי</div>
+        <div class="modal-subtitle" id="cancelModalSubtitle"></div>
+        <button class="btn-danger-outline" onclick="confirmCancel()">אישור ביטול חידוש</button>
+        <button class="btn-outline" onclick="closeModal('cancelModal')">חזרה</button>
+    </div>
+</div>
+
+<script>
+const SUPABASE_URL = 'https://mebomrqnfnbqijiuawdh.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1lYm9tcnFuZm5icWlqaXVhd2RoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzkxOTc3MDEsImV4cCI6MjA1NDc3MzcwMX0.OSpzG4pnsgIiOEefWK0Z29ZHOo12bIhp0QXTdk2Hsg4';
+
+let accessToken = null;
+let currentEntityId = null;
+let currentEntityType = null;
+let cancelTarget = null; // { paymentType, subscriptionId, endDate }
+let termsAccepted = { promotions: false, prominence: false, coupons: false };
+let selectedOption = { promotions: null, prominence: null, coupons: null };
+
+// ── prices (loaded from DB) ──
+let prices = {};
+
+// ── Coupon packages ──
+const COUPON_PACKAGES = [
+    { quantity: 50,  price: null, label: '50 קופונים', sub: '30 יום תוקף' },
+    { quantity: 100, price: null, label: '100 קופונים', sub: '30 יום תוקף' },
+    { quantity: 200, price: null, label: '200 קופונים', sub: '30 יום תוקף' },
+];
+
+// ── Init ──
+async function init() {
+    // Check auth
+    accessToken = localStorage.getItem('sb_access_token');
+    if (!accessToken) {
+        window.location.href = '/login.html';
+        return;
+    }
+
+    try {
+        // Get user
+        const user = await supabaseGet('/auth/v1/user');
+        if (!user || user.error) { signOut(); return; }
+
+        // Get entity
+        await loadEntity(user.id);
+        await loadSubscriptions();
+
+        document.getElementById('loadingState').style.display = 'none';
+        document.getElementById('mainContent').style.display = 'block';
+    } catch (e) {
+        showError('שגיאה בטעינת הנתונים. נסה לרענן את הדף.');
+        document.getElementById('loadingState').style.display = 'none';
+    }
+}
+
+async function loadEntity(userId) {
+    // Try business first, then professional
+    let entity = null;
+
+    const biz = await supabaseGet(`/rest/v1/businesses?user_id=eq.${userId}&select=id,name,image_url,business_type&limit=1`);
+    if (biz && biz.length > 0) {
+        entity = { ...biz[0], entityType: 'business' };
+    } else {
+        const pro = await supabaseGet(`/rest/v1/professionals?user_id=eq.${userId}&select=id,name,image_url,profession_type&limit=1`);
+        if (pro && pro.length > 0) {
+            entity = { ...pro[0], entityType: 'professional' };
+        }
+    }
+
+    if (!entity) {
+        showError('לא נמצאה ישות מקושרת לחשבון זה.');
+        return;
+    }
+
+    currentEntityId = entity.id;
+    currentEntityType = entity.entityType;
+
+    // Show entity card
+    document.getElementById('entityCard').style.display = 'flex';
+    document.getElementById('entityName').textContent = entity.name;
+    document.getElementById('entityType').textContent =
+        entity.entityType === 'business' ? 'עסק' : 'בעל מקצוע';
+    if (entity.image_url) {
+        document.getElementById('entityAvatar').innerHTML =
+            `<img src="${entity.image_url}" alt="${entity.name}">`;
+    }
+}
+
+async function loadSubscriptions() {
+    // Load all subscriptions for entity
+    const subs = await supabaseGet(
+        `/rest/v1/subscriptions?entity_id=eq.${currentEntityId}&select=*&order=created_at.desc`
+    );
+
+    // Load packages
+    const promoPkg = await supabaseGet(
+        `/rest/v1/promotion_packages?entity_id=eq.${currentEntityId}&select=*&order=created_at.desc&limit=1`
+    );
+    const couponPkg = await supabaseGet(
+        `/rest/v1/coupon_packages?entity_id=eq.${currentEntityId}&select=*&order=created_at.desc&limit=1`
+    );
+
+    // Load pricing
+    const pricingRows = await supabaseGet(
+        `/rest/v1/pricing_plans?entity_type=eq.${currentEntityType}&select=payment_type,monthly_price,price`
+    );
+    if (pricingRows) {
+        pricingRows.forEach(r => {
+            prices[r.payment_type] = r.monthly_price || r.price || 0;
+        });
+    }
+
+    renderPromotions(subs, promoPkg);
+    renderCoupons(couponPkg);
+    renderProminence(subs);
+}
+
+// ── PROMOTIONS ──
+function renderPromotions(subs, promoPkg) {
+    const el = document.getElementById('promotionsSection');
+
+    const sub = subs?.find(s =>
+        s.payment_type === 'promotions_subscription' &&
+        ['active','trial','cancelled'].includes(s.status)
+    );
+    const pkg = promoPkg?.[0];
+
+    let html = '';
+
+    if (sub) {
+        const isTrial = sub.status === 'trial';
+        const isCancelled = sub.status === 'cancelled';
+        const endDate = formatDate(sub.next_charge_date);
+        const badgeClass = isTrial ? 'badge-trial' : isCancelled ? 'badge-cancelled' : 'badge-active';
+        const badgeLabel = isTrial ? 'תקופת ניסיון' : isCancelled ? 'מבוטל' : 'פעיל';
+
+        html += `
+        <div class="sub-card">
+            <div class="sub-card-header">
+                <div class="sub-card-title">
+                    מנוי מבצעים
+                    <span class="badge ${badgeClass}">${badgeLabel}</span>
+                </div>
+                ${!isTrial ? `<div class="sub-amount">₪${sub.amount}<span>/חודש</span></div>` : ''}
+            </div>
+            <div class="sub-meta">
+                ${isCancelled ? `פעיל עד ${endDate}` : `חידוש הבא: ${endDate}`}
+            </div>
+            ${!isTrial && !isCancelled ? `
+            <button class="btn-danger-outline" onclick="openCancelModal('promotions_subscription','${sub.id}','${endDate}')">
+                ביטול חידוש אוטומטי
+            </button>` : ''}
+        </div>`;
+    }
+
+    // Package
+    if (pkg && pkg.remaining_promotions > 0) {
+        const exp = formatDate(pkg.expires_at);
+        html += `
+        <div class="pkg-card">
+            <div class="pkg-info">
+                <div class="pkg-title">חבילת מבצעים</div>
+                <div class="pkg-meta">פג תוקף: ${exp}</div>
+            </div>
+            <div class="pkg-count">${pkg.remaining_promotions}<span>נותרו</span></div>
+        </div>`;
+    }
+
+    // Purchase section (if no active sub)
+    if (!sub || sub.status === 'cancelled') {
+        const monthlyPrice = prices['promotions_subscription'] || 0;
+        const pkgPrice1 = prices['promotions_package_1'] || prices['promotions_package'] || 0;
+        const pkgPrice4 = prices['promotions_package_4'] || 0;
+
+        html += `
+        <div class="purchase-section">
+            <div class="purchase-section-header">מנוי חודשי</div>
+            <div class="radio-card selected" onclick="selectOption('promotions','subscription',this)">
+                <div class="radio-dot"><div class="radio-dot-inner"></div></div>
+                <div class="radio-label">
+                    <div class="radio-title">מנוי מבצעים חודשי</div>
+                    <div class="radio-sub">פרסום מבצעים ללא הגבלה</div>
+                </div>
+                <div class="radio-price">₪${withVAT(monthlyPrice)}</div>
+            </div>
+        </div>
+
+        <div class="or-divider">או</div>
+
+        <div class="purchase-section">
+            <div class="purchase-section-header">חבילה חד-פעמית</div>
+            <div class="radio-card" onclick="selectOption('promotions','pkg1',this)">
+                <div class="radio-dot"><div class="radio-dot-inner"></div></div>
+                <div class="radio-label">
+                    <div class="radio-title">חבילה בסיסית</div>
+                    <div class="radio-sub">1 מבצע · תוקף 30 יום</div>
+                </div>
+                <div class="radio-price">₪${withVAT(pkgPrice1)}</div>
+            </div>
+            <div class="radio-card" onclick="selectOption('promotions','pkg4',this)">
+                <div class="radio-dot"><div class="radio-dot-inner"></div></div>
+                <div class="radio-label">
+                    <div class="radio-title">חבילה משתלמת</div>
+                    <div class="radio-sub">4 מבצעים · תוקף 60 יום</div>
+                </div>
+                <div class="radio-price">₪${withVAT(pkgPrice4)}</div>
+            </div>
+        </div>
+
+        <div class="terms-row" onclick="toggleTerms('promotions')">
+            <div class="checkbox" id="termsPromotions"></div>
+            <div class="terms-text">קראתי ואני מאשר את <a href="/terms.html" onclick="event.stopPropagation()">תנאי השימוש</a>. אין החזר כספי על חבילות.</div>
+        </div>
+
+        <button class="btn-primary" onclick="purchase('promotions')">המשך לתשלום</button>`;
+    }
+
+    el.innerHTML = html || '<div class="sub-meta" style="padding:8px 0">אין נתונים</div>';
+    selectedOption.promotions = 'subscription';
+}
+
+// ── COUPONS ──
+function renderCoupons(couponPkg) {
+    const el = document.getElementById('couponsSection');
+    const pkg = couponPkg?.[0];
+    let html = '';
+
+    if (pkg && pkg.remaining_coupons > 0) {
+        const exp = formatDate(pkg.expiration_date || pkg.expires_at);
+        html += `
+        <div class="pkg-card">
+            <div class="pkg-info">
+                <div class="pkg-title">חבילת קופונים פעילה</div>
+                <div class="pkg-meta">פג תוקף: ${exp}</div>
+            </div>
+            <div class="pkg-count">${pkg.remaining_coupons}<span>נותרו</span></div>
+        </div>`;
+    }
+
+    // Purchase options
+    const p50  = prices['coupon_package_50']  || prices['coupon_50']  || 0;
+    const p100 = prices['coupon_package_100'] || prices['coupon_100'] || 0;
+    const p200 = prices['coupon_package_200'] || prices['coupon_200'] || 0;
+
+    html += `
+    <div class="purchase-section">
+        <div class="purchase-section-header">רכישת קופונים</div>
+        <div class="radio-card selected" onclick="selectOption('coupons','50',this)">
+            <div class="radio-dot"><div class="radio-dot-inner"></div></div>
+            <div class="radio-label">
+                <div class="radio-title">50 קופונים</div>
+                <div class="radio-sub">תוקף 30 יום</div>
+            </div>
+            <div class="radio-price">₪${withVAT(p50)}</div>
+        </div>
+        <div class="radio-card" onclick="selectOption('coupons','100',this)">
+            <div class="radio-dot"><div class="radio-dot-inner"></div></div>
+            <div class="radio-label">
+                <div class="radio-title">100 קופונים</div>
+                <div class="radio-sub">תוקף 30 יום</div>
+            </div>
+            <div class="radio-price">₪${withVAT(p100)}</div>
+        </div>
+        <div class="radio-card" onclick="selectOption('coupons','200',this)">
+            <div class="radio-dot"><div class="radio-dot-inner"></div></div>
+            <div class="radio-label">
+                <div class="radio-title">200 קופונים</div>
+                <div class="radio-sub">תוקף 30 יום</div>
+            </div>
+            <div class="radio-price">₪${withVAT(p200)}</div>
+        </div>
+    </div>
+
+    <div class="terms-row" onclick="toggleTerms('coupons')">
+        <div class="checkbox" id="termsCoupons"></div>
+        <div class="terms-text">קראתי ואני מאשר את <a href="/terms.html" onclick="event.stopPropagation()">תנאי השימוש</a>. אין החזר כספי על קופונים.</div>
+    </div>
+
+    <button class="btn-primary" onclick="purchase('coupons')">המשך לתשלום</button>`;
+
+    el.innerHTML = html;
+    selectedOption.coupons = '50';
+}
+
+// ── PROMINENCE ──
+function renderProminence(subs) {
+    const el = document.getElementById('prominenceSection');
+
+    const sub = subs?.find(s =>
+        s.payment_type === 'prominence' &&
+        ['active','cancelled'].includes(s.status)
+    );
+
+    const monthlyPrice = prices['prominence'] || 0;
+    let html = '';
+
+    if (sub) {
+        const isCancelled = sub.status === 'cancelled';
+        const endDate = formatDate(sub.next_charge_date);
+        const badgeClass = isCancelled ? 'badge-cancelled' : 'badge-active';
+        const badgeLabel = isCancelled ? 'מבוטל' : 'פעיל';
+
+        html += `
+        <div class="sub-card">
+            <div class="sub-card-header">
+                <div class="sub-card-title">
+                    הבלטה בתוצאות
+                    <span class="badge ${badgeClass}">${badgeLabel}</span>
+                </div>
+                <div class="sub-amount">₪${sub.amount}<span>/חודש</span></div>
+            </div>
+            <div class="sub-meta">
+                ${isCancelled ? `פעיל עד ${endDate}` : `חידוש הבא: ${endDate}`}
+            </div>
+            ${!isCancelled ? `
+            <button class="btn-danger-outline" onclick="openCancelModal('prominence','${sub.id}','${endDate}')">
+                ביטול חידוש אוטומטי
+            </button>` : ''}
+        </div>`;
+    } else {
+        // Purchase
+        html += `
+        <div class="sub-card" style="background:var(--blue-light);border-color:rgba(24,95,165,0.2)">
+            <div class="sub-card-title" style="margin-bottom:8px">⭐ מה זה הבלטה?</div>
+            <div class="sub-meta" style="margin-bottom:0">
+                העסק שלך יופיע ראשון ברשימות הקטגוריה. מנוי חודשי, ניתן לביטול בכל עת.
+            </div>
+        </div>
+
+        <div class="purchase-section">
+            <div class="radio-card selected" onclick="selectOption('prominence','monthly',this)">
+                <div class="radio-dot"><div class="radio-dot-inner"></div></div>
+                <div class="radio-label">
+                    <div class="radio-title">מנוי הבלטה חודשי</div>
+                    <div class="radio-sub">הופעה ראשונה בתוצאות</div>
+                </div>
+                <div class="radio-price">₪${withVAT(monthlyPrice)}</div>
+            </div>
+        </div>
+
+        <div class="price-summary">
+            <div class="price-row"><span>מחיר בסיס</span><span>₪${monthlyPrice}</span></div>
+            <div class="price-row"><span>מע"מ (18%)</span><span>₪${vat(monthlyPrice)}</span></div>
+            <div class="price-row total"><span>סה"כ לתשלום</span><span>₪${withVAT(monthlyPrice)}</span></div>
+        </div>
+
+        <div class="terms-row" onclick="toggleTerms('prominence')">
+            <div class="checkbox" id="termsProminence"></div>
+            <div class="terms-text">קראתי ואני מאשר את <a href="/terms.html" onclick="event.stopPropagation()">תנאי השימוש</a>. המנוי יחודש אוטומטית מדי חודש.</div>
+        </div>
+
+        <button class="btn-primary" onclick="purchase('prominence')">הפעל הבלטה</button>`;
+    }
+
+    el.innerHTML = html;
+    selectedOption.prominence = 'monthly';
+}
+
+// ── UI Helpers ──
+function selectOption(section, value, el) {
+    selectedOption[section] = value;
+    const parent = el.closest('.purchase-section');
+    parent.querySelectorAll('.radio-card').forEach(c => c.classList.remove('selected'));
+    el.classList.add('selected');
+}
+
+function toggleTerms(section) {
+    termsAccepted[section] = !termsAccepted[section];
+    const el = document.getElementById('terms' + section.charAt(0).toUpperCase() + section.slice(1));
+    if (el) el.classList.toggle('checked', termsAccepted[section]);
+}
+
+function openCancelModal(paymentType, subscriptionId, endDate) {
+    cancelTarget = { paymentType, subscriptionId, endDate };
+    document.getElementById('cancelModalSubtitle').textContent =
+        `המנוי יישאר פעיל עד ${endDate} ולא יחודש לאחר מכן.`;
+    document.getElementById('cancelModal').classList.add('open');
+}
+
+function closeModal(id) {
+    document.getElementById(id).classList.remove('open');
+}
+
+async function confirmCancel() {
+    if (!cancelTarget) return;
+    closeModal('cancelModal');
+    try {
+        await supabaseFunction('cancel-subscription', {
+            entity_id: currentEntityId,
+            entity_type: currentEntityType,
+            payment_type: cancelTarget.paymentType,
+        });
+        showSuccess('המנוי בוטל בהצלחה. יישאר פעיל עד ' + cancelTarget.endDate);
+        setTimeout(() => location.reload(), 2000);
+    } catch {
+        showError('שגיאה בביטול המנוי. נסה שוב או פנה לתמיכה.');
+    }
+}
+
+async function purchase(section) {
+    if (!termsAccepted[section]) {
+        showError('יש לאשר את תנאי השימוש לפני המשך לתשלום.');
+        return;
+    }
+
+    const option = selectedOption[section];
+    let paymentType, description, amount, couponItems;
+
+    if (section === 'promotions') {
+        if (option === 'subscription') {
+            paymentType = 'promotions_subscription';
+            description = 'מנוי מבצעים חודשי';
+            amount = withVAT(prices['promotions_subscription'] || 0);
+        } else if (option === 'pkg1') {
+            paymentType = 'promotions_package';
+            description = 'חבילת מבצעים בסיסית';
+            amount = withVAT(prices['promotions_package_1'] || prices['promotions_package'] || 0);
+        } else {
+            paymentType = 'promotions_package';
+            description = 'חבילת מבצעים משתלמת';
+            amount = withVAT(prices['promotions_package_4'] || 0);
+        }
+    } else if (section === 'coupons') {
+        const qty = parseInt(option);
+        paymentType = 'coupon_package';
+        description = `חבילת ${qty} קופונים`;
+        amount = withVAT(prices[`coupon_package_${qty}`] || prices[`coupon_${qty}`] || 0);
+        couponItems = [{ quantity: qty, count: 1 }];
+    } else if (section === 'prominence') {
+        paymentType = 'prominence';
+        description = 'מנוי הבלטה חודשי';
+        amount = withVAT(prices['prominence'] || 0);
+    }
+
+    if (!amount || amount <= 0) {
+        showError('שגיאה בחישוב המחיר. נסה לרענן את הדף.');
+        return;
+    }
+
+    // Call Edge Function to get Invoice4U clearing URL
+    try {
+        const result = await supabaseFunction('create-payment', {
+            entity_id: currentEntityId,
+            entity_type: currentEntityType,
+            payment_type: paymentType,
+            amount,
+            description,
+            coupon_items: couponItems || null,
+            return_url: window.location.origin + '/success.html',
+        });
+
+        if (result?.clearing_url) {
+            window.location.href = result.clearing_url;
+        } else {
+            showError('שגיאה ביצירת התשלום. נסה שוב.');
+        }
+    } catch {
+        showError('שגיאה בחיבור לשרת. נסה שוב.');
+    }
+}
+
+// ── Supabase helpers ──
+async function supabaseGet(path) {
+    const res = await fetch(SUPABASE_URL + path, {
+        headers: {
+            'apikey': SUPABASE_ANON_KEY,
+            'Authorization': 'Bearer ' + accessToken,
+            'Content-Type': 'application/json',
+        }
+    });
+    if (!res.ok) return null;
+    return res.json();
+}
+
+async function supabaseFunction(name, body) {
+    const res = await fetch(`${SUPABASE_URL}/functions/v1/${name}`, {
+        method: 'POST',
+        headers: {
+            'Authorization': 'Bearer ' + accessToken,
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(body),
+    });
+    if (!res.ok) throw new Error(await res.text());
+    return res.json();
+}
+
+function signOut() {
+    localStorage.removeItem('sb_access_token');
+    localStorage.removeItem('sb_refresh_token');
+    window.location.href = '/login.html';
+}
+
+// ── Utils ──
+function withVAT(price) {
+    return Math.round(price * 1.18);
+}
+function vat(price) {
+    return Math.round(price * 0.18);
+}
+function formatDate(d) {
+    if (!d) return '—';
+    const dt = new Date(d);
+    return dt.toLocaleDateString('he-IL', { day: 'numeric', month: 'long', year: 'numeric' });
+}
+function showError(msg) {
+    const el = document.getElementById('errorBanner');
+    el.textContent = msg;
+    el.style.display = 'block';
+    setTimeout(() => el.style.display = 'none', 6000);
+}
+function showSuccess(msg) {
+    const el = document.getElementById('successBanner');
+    el.textContent = msg;
+    el.style.display = 'block';
+    setTimeout(() => el.style.display = 'none', 6000);
+}
+
+// Close modal on overlay click
+document.getElementById('cancelModal').addEventListener('click', function(e) {
+    if (e.target === this) closeModal('cancelModal');
+});
+
+init();
+</script>
+</body>
+</html>
