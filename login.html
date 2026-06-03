@@ -6,332 +6,410 @@
     <title>שכונה - כניסה</title>
     <link rel="icon" type="image/png" href="app_icon.png">
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
-            font-family: 'Rubik', -apple-system, BlinkMacSystemFont, sans-serif;
-            background: linear-gradient(135deg, #244782 0%, #1a3563 100%);
-            color: white;
+            font-family: 'Rubik', -apple-system, sans-serif;
+            background: #F8FAFC;
             min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 20px;
+            padding: 24px;
         }
 
-        .container {
+        .card {
+            background: #fff;
+            border-radius: 24px;
+            box-shadow:
+                0 8px 24px rgba(0,0,0,0.08),
+                0 2px 8px rgba(0,0,0,0.04);
+            padding: 24px;
             width: 100%;
-            max-width: 420px;
-            background: rgba(255,255,255,0.08);
-            padding: 48px 40px;
-            border-radius: 20px;
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255,255,255,0.1);
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            max-width: 400px;
         }
 
+        /* Logo */
         .logo-wrap {
             text-align: center;
-            margin-bottom: 28px;
+            margin-bottom: 20px;
         }
-
-        .logo {
-            width: 72px;
-            height: 72px;
-            border-radius: 18px;
+        .logo-wrap img {
+            width: 80px;
+            height: 80px;
+            border-radius: 20px;
             object-fit: cover;
-            box-shadow: 0 8px 24px rgba(0,0,0,0.3);
-            margin-bottom: 14px;
-            /* fallback if no image */
-            background: rgba(255,255,255,0.15);
-            display: inline-block;
         }
 
-        .logo-wrap h1 {
-            font-size: 26px;
-            font-weight: 700;
-            margin-bottom: 4px;
-        }
-
-        .logo-wrap p {
-            font-size: 14px;
-            opacity: 0.7;
-            font-weight: 300;
-        }
-
-        /* ── Social buttons ── */
-        .social-btn {
+        /* Tab switcher */
+        .tabs {
             display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            width: 100%;
-            padding: 13px 20px;
+            background: #F3F4F6;
             border-radius: 12px;
-            border: 1.5px solid rgba(255,255,255,0.2);
-            background: rgba(255,255,255,0.08);
-            color: white;
+            padding: 4px;
+            margin-bottom: 24px;
+            height: 48px;
+        }
+        .tab {
+            flex: 1;
+            border: none;
+            background: transparent;
+            border-radius: 10px;
             font-family: 'Rubik', sans-serif;
             font-size: 15px;
             font-weight: 500;
+            color: #6B7280;
             cursor: pointer;
-            transition: background 0.2s, border-color 0.2s, transform 0.1s;
-            margin-bottom: 12px;
-            text-decoration: none;
+            transition: all 0.2s;
+        }
+        .tab.active {
+            background: #fff;
+            color: #2563EB;
+            font-weight: 600;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.08);
         }
 
-        .social-btn:hover {
-            background: rgba(255,255,255,0.15);
-            border-color: rgba(255,255,255,0.35);
-        }
-
-        .social-btn:active { transform: scale(0.98); }
-
-        .social-btn svg { flex-shrink: 0; }
-
-        /* Apple button — black per HIG */
-        .btn-apple {
-            background: #000;
-            border-color: #000;
-        }
-        .btn-apple:hover {
-            background: #1a1a1a;
-            border-color: #1a1a1a;
-        }
-
-        /* Google button */
-        .btn-google {
-            background: white;
-            border-color: white;
-            color: #1a1a1a;
-        }
-        .btn-google:hover {
-            background: #f0f0f0;
-            border-color: #f0f0f0;
-        }
-
-        /* ── Divider ── */
-        .divider {
-            display: flex;
+        /* Error */
+        .error-box {
+            display: none;
+            background: #FEE2E2;
+            border-radius: 12px;
+            padding: 12px 16px;
+            margin-bottom: 16px;
+            display: none;
             align-items: center;
-            gap: 12px;
-            margin: 20px 0;
-            opacity: 0.5;
-            font-size: 13px;
-        }
-        .divider::before, .divider::after {
-            content: '';
-            flex: 1;
-            height: 1px;
-            background: rgba(255,255,255,0.3);
-        }
-
-        /* ── Form fields ── */
-        .field {
-            margin-bottom: 14px;
-        }
-
-        label {
-            display: block;
-            font-size: 13px;
+            gap: 10px;
+            font-size: 14px;
             font-weight: 500;
-            opacity: 0.8;
-            margin-bottom: 6px;
+            color: #DC2626;
+        }
+        .error-box.show { display: flex; }
+
+        /* Fields */
+        .field { margin-bottom: 16px; }
+
+        .input-wrap {
+            position: relative;
         }
 
+        .input-icon {
+            position: absolute;
+            right: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #9CA3AF;
+            font-size: 18px;
+            pointer-events: none;
+        }
+
+        input[type="text"],
         input[type="email"],
         input[type="password"] {
             width: 100%;
-            padding: 12px 16px;
-            border-radius: 10px;
-            border: 1.5px solid rgba(255,255,255,0.2);
-            background: rgba(255,255,255,0.08);
-            color: white;
+            padding: 14px 44px 14px 44px;
+            background: #F3F4F6;
+            border: 2px solid transparent;
+            border-radius: 12px;
             font-family: 'Rubik', sans-serif;
-            font-size: 15px;
+            font-size: 16px;
+            color: #1F2937;
             outline: none;
-            transition: border-color 0.2s, background 0.2s;
-            direction: ltr;
-            text-align: right;
+            transition: border-color 0.2s;
+        }
+        input[type="email"],
+        input[type="password"] { direction: ltr; text-align: right; }
+        input:focus { border-color: rgba(25,118,210,0.6); }
+        input.error-field { border-color: #DC2626; }
+        input::placeholder { color: #9CA3AF; }
+
+        .eye-btn {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: #9CA3AF;
+            font-size: 18px;
+            padding: 2px;
+            line-height: 1;
         }
 
-        input::placeholder { opacity: 0.4; }
-
-        input:focus {
-            border-color: rgba(255,255,255,0.5);
-            background: rgba(255,255,255,0.12);
-        }
-
-        .forgot {
+        .forgot-wrap {
             text-align: left;
-            margin-top: 4px;
+            margin-top: 6px;
         }
-
-        .forgot a {
-            font-size: 12px;
-            color: rgba(255,255,255,0.6);
-            text-decoration: none;
-            transition: color 0.2s;
+        .forgot-wrap button {
+            background: none;
+            border: none;
+            font-family: 'Rubik', sans-serif;
+            font-size: 14px;
+            color: #6B7280;
+            cursor: pointer;
         }
-        .forgot a:hover { color: white; }
+        .forgot-wrap button:hover { color: #2563EB; }
 
-        /* ── Submit button ── */
+        /* Name field (register only) */
+        #nameField { display: none; }
+
+        /* Submit button */
         .btn-submit {
             width: 100%;
-            padding: 14px;
-            border-radius: 12px;
+            height: 52px;
             border: none;
-            background: white;
-            color: #244782;
+            border-radius: 12px;
+            background: linear-gradient(135deg, #3B82F6, #1D4ED8);
+            color: white;
             font-family: 'Rubik', sans-serif;
             font-size: 16px;
             font-weight: 600;
             cursor: pointer;
-            margin-top: 8px;
+            margin-bottom: 20px;
             transition: opacity 0.2s, transform 0.1s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
-
-        .btn-submit:hover { opacity: 0.92; }
+        .btn-submit:hover { opacity: 0.9; }
         .btn-submit:active { transform: scale(0.98); }
+        .btn-submit:disabled { background: #93C5FD; cursor: default; }
 
-        /* ── Error message ── */
-        .error-msg {
-            background: rgba(239,68,68,0.2);
-            border: 1px solid rgba(239,68,68,0.4);
-            border-radius: 8px;
-            padding: 10px 14px;
-            font-size: 13px;
-            color: #fca5a5;
-            margin-bottom: 14px;
-            display: none;
+        /* Divider */
+        .divider {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 20px;
         }
+        .divider-line { flex: 1; height: 1px; background: #E5E7EB; }
+        .divider-text { font-size: 14px; color: #9CA3AF; }
 
-        /* ── Loading spinner ── */
+        /* Social buttons */
+        .btn-social {
+            width: 100%;
+            height: 52px;
+            border-radius: 12px;
+            font-family: 'Rubik', sans-serif;
+            font-size: 16px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            transition: background 0.2s, transform 0.1s;
+            margin-bottom: 12px;
+        }
+        .btn-social:active { transform: scale(0.98); }
+
+        .btn-apple {
+            background: #000;
+            border: none;
+            color: white;
+        }
+        .btn-apple:hover { background: #1a1a1a; }
+
+        .btn-google {
+            background: #fff;
+            border: 1.5px solid #E5E7EB;
+            color: #1F2937;
+        }
+        .btn-google:hover { background: #F9FAFB; }
+
+        /* Spinner */
         .spinner {
-            display: inline-block;
-            width: 18px;
-            height: 18px;
-            border: 2px solid rgba(36,71,130,0.3);
-            border-top-color: #244782;
+            width: 22px; height: 22px;
+            border: 2.5px solid rgba(255,255,255,0.4);
+            border-top-color: white;
             border-radius: 50%;
             animation: spin 0.7s linear infinite;
-            vertical-align: middle;
-            margin-left: 8px;
+        }
+        .spinner-dark {
+            border-color: rgba(0,0,0,0.15);
+            border-top-color: #1F2937;
         }
         @keyframes spin { to { transform: rotate(360deg); } }
 
-        /* ── Footer links ── */
+        /* Footer */
         .footer-links {
             display: flex;
             justify-content: center;
             gap: 20px;
-            margin-top: 28px;
-            padding-top: 20px;
-            border-top: 1px solid rgba(255,255,255,0.1);
+            margin-top: 20px;
+            padding-top: 16px;
+            border-top: 1px solid #F3F4F6;
         }
-
         .footer-links a {
             font-size: 12px;
-            color: rgba(255,255,255,0.5);
+            color: #9CA3AF;
             text-decoration: none;
-            transition: color 0.2s;
         }
-        .footer-links a:hover { color: rgba(255,255,255,0.85); }
-
-        @media (max-width: 480px) {
-            .container { padding: 36px 24px; }
-        }
+        .footer-links a:hover { color: #2563EB; }
     </style>
 </head>
 <body>
-<div class="container">
+<div class="card">
 
+    <!-- Logo -->
     <div class="logo-wrap">
-        <img src="app_icon.png" alt="שכונה" class="logo" onerror="this.style.display='none'">
-        <h1>שכונה</h1>
-        <p>ניהול חשבון עסקי</p>
+        <img src="app_icon.png" alt="שכונה" onerror="this.style.display='none'">
+    </div>
+
+    <!-- Tabs -->
+    <div class="tabs">
+        <button class="tab active" id="tabLogin" onclick="setMode(true)">התחברות</button>
+        <button class="tab" id="tabRegister" onclick="setMode(false)">הרשמה</button>
+    </div>
+
+    <!-- Error -->
+    <div class="error-box" id="errorBox">
+        <span>⚠</span>
+        <span id="errorText"></span>
+    </div>
+
+    <!-- Name field (register only) -->
+    <div class="field" id="nameField">
+        <div class="input-wrap">
+            <span class="input-icon">👤</span>
+            <input type="text" id="name" placeholder="שם מלא" autocomplete="name">
+        </div>
+    </div>
+
+    <!-- Email -->
+    <div class="field">
+        <div class="input-wrap">
+            <span class="input-icon">✉</span>
+            <input type="email" id="email" placeholder="דוא״ל" autocomplete="email">
+        </div>
+    </div>
+
+    <!-- Password -->
+    <div class="field">
+        <div class="input-wrap">
+            <span class="input-icon">🔒</span>
+            <input type="password" id="password" placeholder="סיסמה" autocomplete="current-password">
+            <button class="eye-btn" onclick="toggleEye('password', this)" tabindex="-1">👁</button>
+        </div>
+        <div class="forgot-wrap" id="forgotWrap">
+            <button onclick="forgotPassword()">שכחתי סיסמה</button>
+        </div>
+    </div>
+
+    <!-- Confirm password (register only) -->
+    <div class="field" id="confirmField" style="display:none">
+        <div class="input-wrap">
+            <span class="input-icon">🔒</span>
+            <input type="password" id="confirmPassword" placeholder="אימות סיסמה" autocomplete="new-password">
+            <button class="eye-btn" onclick="toggleEye('confirmPassword', this)" tabindex="-1">👁</button>
+        </div>
+    </div>
+
+    <!-- Submit -->
+    <button class="btn-submit" id="submitBtn" onclick="handleSubmit()">
+        <span id="submitLabel">התחבר</span>
+    </button>
+
+    <!-- Divider -->
+    <div class="divider">
+        <div class="divider-line"></div>
+        <span class="divider-text">או</span>
+        <div class="divider-line"></div>
     </div>
 
     <!-- Apple -->
-    <button class="social-btn btn-apple" onclick="signInWithApple()">
-        <svg width="18" height="18" viewBox="0 0 814 1000" fill="white">
-            <path d="M788.1 340.9c-5.8 4.5-108.2 62.2-108.2 190.5 0 148.4 130.3 200.9 134.2 202.2-.6 3.2-20.7 71.9-68.7 141.9-42.8 61.6-87.5 123.1-155.5 123.1s-85.5-39.5-164-39.5c-76 0-103.7 40.8-165.9 40.8s-105-57.8-155.5-127.4C46 389.4 45 280 45 271.2c0-5.9.1-11.8.2-17.7 1-71.7 45.3-134.5 109.6-162.8C195 74.2 232.7 65 271 65c47.3 0 82.7 16.2 121.7 16.2 32 0 78.1-16.2 127-16.2 21.8 0 96.8 2.5 139.6 59.2zm-230-79c12.8-31.7 23.8-86.7 23.8-139C581.9 48.7 572 0 571.4 0h-.6C527.3 1.7 473.7 34.6 445.9 74.9c-16.9 23.3-37.7 72.1-37.7 120.1 0 4.6.3 9.1.6 10.2.2.6 1.4.8 2.4.8 40.2 0 87-27.2 107.9-64.1z"/>
-        </svg>
-        המשך עם Apple
-    </button>
-
-    <!-- Google -->
-    <button class="social-btn btn-google" onclick="signInWithGoogle()">
-        <svg width="18" height="18" viewBox="0 0 48 48">
+    <button class="btn-social btn-google" id="googleBtn" onclick="signInWithGoogle()">
+        <svg width="20" height="20" viewBox="0 0 48 48">
             <path fill="#EA4335" d="M24 9.5c3.5 0 6.6 1.2 9.1 3.2l6.8-6.8C35.8 2.4 30.2 0 24 0 14.6 0 6.6 5.4 2.6 13.3l7.9 6.1C12.4 13.1 17.8 9.5 24 9.5z"/>
             <path fill="#4285F4" d="M46.5 24.5c0-1.6-.1-3.1-.4-4.5H24v8.5h12.7c-.6 3-2.3 5.5-4.8 7.2l7.5 5.8c4.4-4.1 7.1-10.1 7.1-17z"/>
             <path fill="#FBBC05" d="M10.5 28.6c-.6-1.8-.9-3.7-.9-5.6s.3-3.8.9-5.6L2.6 11.3C.9 14.8 0 18.8 0 23s.9 8.2 2.6 11.7l7.9-6.1z"/>
             <path fill="#34A853" d="M24 48c6.2 0 11.4-2 15.2-5.5l-7.5-5.8c-2 1.4-4.6 2.2-7.7 2.2-6.2 0-11.5-4.2-13.4-9.9l-7.9 6.1C6.6 42.6 14.6 48 24 48z"/>
         </svg>
-        המשך עם Google
+        התחבר עם Google
+    </button>
+    <!-- Google -->
+    <button class="btn-social btn-apple" id="appleBtn" onclick="signInWithApple()">
+        <svg width="18" height="18" viewBox="0 0 814 1000" fill="white">
+            <path d="M788.1 340.9c-5.8 4.5-108.2 62.2-108.2 190.5 0 148.4 130.3 200.9 134.2 202.2-.6 3.2-20.7 71.9-68.7 141.9-42.8 61.6-87.5 123.1-155.5 123.1s-85.5-39.5-164-39.5c-76 0-103.7 40.8-165.9 40.8s-105-57.8-155.5-127.4C46 389.4 45 280 45 271.2c0-5.9.1-11.8.2-17.7 1-71.7 45.3-134.5 109.6-162.8C195 74.2 232.7 65 271 65c47.3 0 82.7 16.2 121.7 16.2 32 0 78.1-16.2 127-16.2 21.8 0 96.8 2.5 139.6 59.2zm-230-79c12.8-31.7 23.8-86.7 23.8-139C581.9 48.7 572 0 571.4 0h-.6C527.3 1.7 473.7 34.6 445.9 74.9c-16.9 23.3-37.7 72.1-37.7 120.1 0 4.6.3 9.1.6 10.2.2.6 1.4.8 2.4.8 40.2 0 87-27.2 107.9-64.1z"/>
+        </svg>
+        התחבר עם Apple
     </button>
 
-    <div class="divider">או</div>
 
-    <div class="error-msg" id="errorMsg"></div>
-
-    <div class="field">
-        <label for="email">כתובת מייל</label>
-        <input type="email" id="email" placeholder="name@example.com" autocomplete="email">
-    </div>
-
-    <div class="field">
-        <label for="password">סיסמה</label>
-        <input type="password" id="password" placeholder="••••••••" autocomplete="current-password">
-        <div class="forgot"><a href="/reset-password.html">שכחתי סיסמה</a></div>
-    </div>
-
-    <button class="btn-submit" id="submitBtn" onclick="signInWithEmail()">כניסה</button>
 
     <div class="footer-links">
         <a href="/">עמוד הבית</a>
         <a href="/privacy.html">פרטיות</a>
         <a href="mailto:info@shchuna.co.il">יצירת קשר</a>
     </div>
-
 </div>
 
 <script>
-    // ── Supabase config (replace with real values) ──
-    const SUPABASE_URL = 'https://mebomrqnfnbqijiuawdh.supabase.co';
-    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1lYm9tcnFuZm5icWlqaXVhd2RoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzkxOTc3MDEsImV4cCI6MjA1NDc3MzcwMX0.OSpzG4pnsgIiOEefWK0Z29ZHOo12bIhp0QXTdk2Hsg4';
+const SUPABASE_URL = 'https://mebomrqnfnbqijiuawdh.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1lYm9tcnFuZm5icWlqaXVhd2RoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzkxOTc3MDEsImV4cCI6MjA1NDc3MzcwMX0.OSpzG4pnsgIiOEefWK0Z29ZHOo12bIhp0QXTdk2Hsg4';
 
-    function showError(msg) {
-        const el = document.getElementById('errorMsg');
-        el.textContent = msg;
-        el.style.display = 'block';
+let isLogin = true;
+
+function setMode(login) {
+    isLogin = login;
+    document.getElementById('tabLogin').classList.toggle('active', login);
+    document.getElementById('tabRegister').classList.toggle('active', !login);
+    document.getElementById('nameField').style.display = login ? 'none' : 'block';
+    document.getElementById('confirmField').style.display = login ? 'none' : 'block';
+    document.getElementById('forgotWrap').style.display = login ? 'block' : 'none';
+    document.getElementById('submitLabel').textContent = login ? 'התחבר' : 'הרשם';
+    document.getElementById('password').autocomplete = login ? 'current-password' : 'new-password';
+    hideError();
+}
+
+function toggleEye(fieldId, btn) {
+    const input = document.getElementById(fieldId);
+    const isHidden = input.type === 'password';
+    input.type = isHidden ? 'text' : 'password';
+    btn.textContent = isHidden ? '🙈' : '👁';
+}
+
+function showError(msg) {
+    document.getElementById('errorText').textContent = msg;
+    document.getElementById('errorBox').classList.add('show');
+}
+function hideError() {
+    document.getElementById('errorBox').classList.remove('show');
+}
+
+function setLoading(loading) {
+    const btn = document.getElementById('submitBtn');
+    const label = document.getElementById('submitLabel');
+    btn.disabled = loading;
+    if (loading) {
+        label.innerHTML = '<div class="spinner"></div>';
+    } else {
+        label.textContent = isLogin ? 'התחבר' : 'הרשם';
+    }
+}
+
+async function handleSubmit() {
+    hideError();
+    const email = document.getElementById('email').value.trim();
+    const password = document.getElementById('password').value;
+
+    if (!email || !password) { showError('יש למלא את כל השדות'); return; }
+    if (password.length < 6) { showError('סיסמה חייבת להכיל לפחות 6 תווים'); return; }
+
+    if (!isLogin) {
+        const name = document.getElementById('name').value.trim();
+        const confirm = document.getElementById('confirmPassword').value;
+        if (!name) { showError('יש להזין שם'); return; }
+        if (password !== confirm) { showError('הסיסמאות אינן תואמות'); return; }
     }
 
-    function setLoading(loading) {
-        const btn = document.getElementById('submitBtn');
-        btn.disabled = loading;
-        btn.innerHTML = loading
-            ? 'מתחבר...<span class="spinner"></span>'
-            : 'כניסה';
-    }
-
-    async function signInWithEmail() {
-        document.getElementById('errorMsg').style.display = 'none';
-        const email = document.getElementById('email').value.trim();
-        const password = document.getElementById('password').value;
-
-        if (!email || !password) { showError('נא למלא מייל וסיסמה'); return; }
-
-        setLoading(true);
-        try {
+    setLoading(true);
+    try {
+        if (isLogin) {
             const res = await fetch(`${SUPABASE_URL}/auth/v1/token?grant_type=password`, {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'apikey': SUPABASE_ANON_KEY
-                },
+                headers: { 'Content-Type': 'application/json', 'apikey': SUPABASE_ANON_KEY },
                 body: JSON.stringify({ email, password })
             });
             const data = await res.json();
@@ -342,26 +420,57 @@
             } else {
                 showError('מייל או סיסמה שגויים');
             }
-        } catch {
-            showError('שגיאת חיבור, נסה שוב');
+        } else {
+            const name = document.getElementById('name').value.trim();
+            const res = await fetch(`${SUPABASE_URL}/auth/v1/signup`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'apikey': SUPABASE_ANON_KEY },
+                body: JSON.stringify({ email, password, data: { full_name: name } })
+            });
+            const data = await res.json();
+            if (data.id || data.user) {
+                showError('נשלח מייל אימות. אנא אשר את כתובת המייל שלך.');
+            } else {
+                showError(data.msg || data.message || 'שגיאה בהרשמה');
+            }
         }
-        setLoading(false);
+    } catch {
+        showError('שגיאת חיבור, נסה שוב');
     }
+    setLoading(false);
+}
 
-    function signInWithApple() {
-        window.location.href =
-            `${SUPABASE_URL}/auth/v1/authorize?provider=apple&redirect_to=${encodeURIComponent(window.location.origin + '/account.html')}`;
+function signInWithApple() {
+    window.location.href = `${SUPABASE_URL}/auth/v1/authorize?provider=apple&redirect_to=${encodeURIComponent(window.location.origin + '/account.html')}`;
+}
+
+function signInWithGoogle() {
+    window.location.href = `${SUPABASE_URL}/auth/v1/authorize?provider=google&redirect_to=${encodeURIComponent(window.location.origin + '/account.html')}`;
+}
+
+async function forgotPassword() {
+    const email = document.getElementById('email').value.trim();
+    if (!email) { showError('הזן כתובת מייל בשדה המייל לפני איפוס סיסמה'); return; }
+    try {
+        await fetch(`${SUPABASE_URL}/auth/v1/recover`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'apikey': SUPABASE_ANON_KEY },
+            body: JSON.stringify({ email })
+        });
+        showError('נשלח מייל עם קישור לאיפוס הסיסמה ✓');
+        document.getElementById('errorBox').style.background = '#D1FAE5';
+        document.getElementById('errorBox').style.color = '#065F46';
+    } catch {
+        showError('שגיאה בשליחת המייל');
     }
+}
 
-    function signInWithGoogle() {
-        window.location.href =
-            `${SUPABASE_URL}/auth/v1/authorize?provider=google&redirect_to=${encodeURIComponent(window.location.origin + '/account.html')}`;
-    }
+document.addEventListener('keydown', e => { if (e.key === 'Enter') handleSubmit(); });
 
-    // Allow Enter key to submit
-    document.addEventListener('keydown', e => {
-        if (e.key === 'Enter') signInWithEmail();
-    });
+// Check if already logged in
+if (localStorage.getItem('sb_access_token')) {
+    window.location.href = '/account.html';
+}
 </script>
 </body>
 </html>
