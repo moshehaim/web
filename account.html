@@ -1352,8 +1352,14 @@ init();
         errEl.style.display = 'none';
 
         if (!type) { errEl.textContent = 'נא לבחור סוג רישום'; errEl.style.display = 'block'; return; }
-        if (['licensed','company','nonprofit'].includes(type) && !taxId) {
-            errEl.textContent = 'נא להזין מספר עוסק / ח.פ.'; errEl.style.display = 'block'; return;
+        if (['licensed','company','nonprofit'].includes(type)) {
+            if (!taxId) {
+                errEl.textContent = 'נא להזין מספר עוסק / ח.פ.'; errEl.style.display = 'block'; return;
+            }
+            const digits = taxId.replace(/\D/g, '');
+            if (digits.length !== 9) {
+                errEl.textContent = 'מספר עוסק / ח.פ. חייב להכיל 9 ספרות'; errEl.style.display = 'block'; return;
+            }
         }
 
         const btn = document.getElementById('regSaveBtn');
