@@ -782,7 +782,7 @@ function renderPromotions(subs, promoPkg) {
                     <div class="radio-title">מנוי מבצעים חודשי</div>
                     <div class="radio-sub">פרסום מבצעים ללא הגבלה</div>
                 </div>
-                <div class="radio-price">₪${withVAT(monthlyPrice)}</div>
+                <div class="radio-price">₪${monthlyPrice}</div>
             </div>
         </div>
 
@@ -796,7 +796,7 @@ function renderPromotions(subs, promoPkg) {
                     <div class="radio-title">חבילה בסיסית</div>
                     <div class="radio-sub">1 מבצע · תוקף 30 יום</div>
                 </div>
-                <div class="radio-price">₪${withVAT(pkgPrice1)}</div>
+                <div class="radio-price">₪${pkgPrice1}</div>
             </div>
             <div class="radio-card" onclick="selectOption('promotions','pkg4',this)">
                 <div class="radio-dot"><div class="radio-dot-inner"></div></div>
@@ -804,7 +804,7 @@ function renderPromotions(subs, promoPkg) {
                     <div class="radio-title">חבילה משתלמת</div>
                     <div class="radio-sub">4 מבצעים · תוקף 60 יום</div>
                 </div>
-                <div class="radio-price">₪${withVAT(pkgPrice4)}</div>
+                <div class="radio-price">₪${pkgPrice4}</div>
             </div>
         </div>
 
@@ -852,7 +852,7 @@ function renderCoupons(couponPkg) {
                 <div class="radio-title">50 קופונים</div>
                 <div class="radio-sub">תוקף 30 יום</div>
             </div>
-            <div class="radio-price">₪${withVAT(p50)}</div>
+            <div class="radio-price">₪${p50}</div>
         </div>
         <div class="radio-card" onclick="selectOption('coupons','100',this)">
             <div class="radio-dot"><div class="radio-dot-inner"></div></div>
@@ -860,7 +860,7 @@ function renderCoupons(couponPkg) {
                 <div class="radio-title">100 קופונים</div>
                 <div class="radio-sub">תוקף 30 יום</div>
             </div>
-            <div class="radio-price">₪${withVAT(p100)}</div>
+            <div class="radio-price">₪${p100}</div>
         </div>
         <div class="radio-card" onclick="selectOption('coupons','200',this)">
             <div class="radio-dot"><div class="radio-dot-inner"></div></div>
@@ -868,7 +868,7 @@ function renderCoupons(couponPkg) {
                 <div class="radio-title">200 קופונים</div>
                 <div class="radio-sub">תוקף 30 יום</div>
             </div>
-            <div class="radio-price">₪${withVAT(p200)}</div>
+            <div class="radio-price">₪${p200}</div>
         </div>
     </div>
 
@@ -924,7 +924,7 @@ function renderProminence(subs) {
         <div class="sub-card" style="background:var(--blue-light);border-color:rgba(24,95,165,0.2)">
             <div class="sub-card-title" style="margin-bottom:8px">⭐ מה זה הבלטה?</div>
             <div class="sub-meta" style="margin-bottom:0">
-                העסק שלך יופיע ראשון ברשימות הקטגוריה. מנוי חודשי, ניתן לביטול בכל עת.
+                העסק שלך יופיע בראש הרשימה — לפני עסקים רגילים. עסקים עם מיקום ממומן מופיעים לפניך. מנוי חודשי, ניתן לביטול בכל עת.
             </div>
         </div>
 
@@ -933,16 +933,14 @@ function renderProminence(subs) {
                 <div class="radio-dot"><div class="radio-dot-inner"></div></div>
                 <div class="radio-label">
                     <div class="radio-title">מנוי הבלטה חודשי</div>
-                    <div class="radio-sub">הופעה ראשונה בתוצאות</div>
+                    <div class="radio-sub">הופעה בראש הרשימה, לפני עסקים רגילים</div>
                 </div>
-                <div class="radio-price">₪${withVAT(monthlyPrice)}</div>
+                <div class="radio-price">₪${monthlyPrice}</div>
             </div>
         </div>
 
         <div class="price-summary">
-            <div class="price-row"><span>מחיר בסיס</span><span>₪${monthlyPrice}</span></div>
-            <div class="price-row"><span>מע"מ (18%)</span><span>₪${vat(monthlyPrice)}</span></div>
-            <div class="price-row total"><span>סה"כ לתשלום</span><span>₪${withVAT(monthlyPrice)}</span></div>
+            <div class="price-row"><span>מחיר בסיס</span><span>₪${monthlyPrice}</span></div>            <div class="price-row total"><span>סה"כ לתשלום</span><span>₪${monthlyPrice}</span></div>
         </div>
 
         <div class="terms-row" onclick="toggleTerms('prominence')">
@@ -1011,26 +1009,26 @@ async function purchase(section) {
         if (option === 'subscription') {
             paymentType = 'promotions_subscription';
             description = 'מנוי מבצעים חודשי';
-            amount = withVAT(prices['promotions_subscription'] || 0);
+            amount = prices['promotions_subscription'] || 0;
         } else if (option === 'pkg1') {
             paymentType = 'promotions_package';
             description = 'חבילת מבצעים בסיסית';
-            amount = withVAT(prices['promotions_package_1'] || prices['promotions_package'] || 0);
+            amount = prices['promotions_package_1'] || prices['promotions_package'] || 0;
         } else {
             paymentType = 'promotions_package';
             description = 'חבילת מבצעים משתלמת';
-            amount = withVAT(prices['promotions_package_4'] || 0);
+            amount = prices['promotions_package_4'] || 0;
         }
     } else if (section === 'coupons') {
         const qty = parseInt(option);
         paymentType = 'coupon_package';
         description = `חבילת ${qty} קופונים`;
-        amount = withVAT(prices[`coupon_package_${qty}`] || prices[`coupon_${qty}`] || 0);
+        amount = prices[`coupon_package_${qty}`] || prices[`coupon_${qty}`] || 0;
         couponItems = [{ quantity: qty, count: 1 }];
     } else if (section === 'prominence') {
         paymentType = 'prominence';
         description = 'מנוי הבלטה חודשי';
-        amount = withVAT(prices['prominence'] || 0);
+        amount = prices['prominence'] || 0;
     }
 
     if (!amount || amount <= 0) {
@@ -1093,7 +1091,7 @@ function signOut() {
 }
 
 // ── Utils ──
-function withVAT(price) {
+function price {
     return Math.round(price * 1.18);
 }
 function vat(price) {
