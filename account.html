@@ -615,6 +615,7 @@ let accessToken = null;
 let currentEntityId = null;
 let currentEntityType = null;
 let cancelTarget = null; // { paymentType, subscriptionId, endDate }
+let customerInfo = { name: '', email: '', phone: '' };
 let termsAccepted = { promotions: false, prominence: false, coupons: false };
 let selectedOption = { promotions: null, prominence: null, coupons: null };
 
@@ -658,11 +659,11 @@ async function loadEntity(userId) {
     // Try business first, then professional
     let entity = null;
 
-    const biz = await supabaseGet(`/rest/v1/businesses?user_id=eq.${userId}&select=id,name,image_url,business_type&limit=1`);
+    const biz = await supabaseGet(`/rest/v1/businesses?user_id=eq.${userId}&select=id,name,image_url,business_type,owner_name,owner_phone&limit=1`);
     if (biz && biz.length > 0) {
         entity = { ...biz[0], entityType: 'business' };
     } else {
-        const pro = await supabaseGet(`/rest/v1/professionals?user_id=eq.${userId}&select=id,name,image_url,profession_type&limit=1`);
+        const pro = await supabaseGet(`/rest/v1/professionals?user_id=eq.${userId}&select=id,name,image_url,profession_type,owner_name,phone&limit=1`);
         if (pro && pro.length > 0) {
             entity = { ...pro[0], entityType: 'professional' };
         }
@@ -675,6 +676,12 @@ async function loadEntity(userId) {
 
     currentEntityId = entity.id;
     currentEntityType = entity.entityType;
+
+    // Load customer contact details for payment
+    const user = await supabaseGet('/auth/v1/user');
+    customerInfo.email = user?.email || '';
+    customerInfo.name = entity.owner_name || entity.name || user?.user_metadata?.full_name || '';
+    customerInfo.phone = entity.owner_phone || entity.phone || '';
 
     // Show entity card
     document.getElementById('entityCard').style.display = 'flex';
@@ -1042,10 +1049,12 @@ async function purchase(section) {
             entity_id: currentEntityId,
             entity_type: currentEntityType,
             payment_type: paymentType,
-            amount,
             description,
+            customer_name: customerInfo.name,
+            customer_email: customerInfo.email,
+            customer_phone: customerInfo.phone,
+            save_token: ['promotions_subscription', 'prominence'].includes(paymentType),
             coupon_items: couponItems || null,
-            return_url: window.location.origin + '/success.html',
         });
 
         if (result?.clearing_url) {
