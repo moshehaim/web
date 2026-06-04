@@ -1098,7 +1098,8 @@ async function purchase(section) {
         } else {
             showError('שגיאה ביצירת התשלום. נסה שוב.');
         }
-    } catch {
+    } catch(e) {
+        console.error('create-payment error:', e);
         showError('שגיאה בחיבור לשרת. נסה שוב.');
     }
 }
@@ -1125,7 +1126,11 @@ async function supabaseFunction(name, body) {
         },
         body: JSON.stringify(body),
     });
-    if (!res.ok) throw new Error(await res.text());
+    if (!res.ok) {
+        const errText = await res.text();
+        console.error(`${name} error ${res.status}:`, errText);
+        throw new Error(errText);
+    }
     return res.json();
 }
 
