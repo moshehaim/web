@@ -580,9 +580,11 @@
         <div class="section-title">מנוי מבצעים</div>
         <div id="promotionsSection"></div>
 
-        <!-- חבילת קופונים -->
-        <div class="section-title">חבילת קופונים</div>
-        <div id="couponsSection"></div>
+        <!-- חבילת קופונים — רק לעסקים -->
+        <div id="couponsSectionWrapper" style="display:none">
+            <div class="section-title">חבילת קופונים</div>
+            <div id="couponsSection"></div>
+        </div>
 
         <!-- מנוי הבלטה -->
         <div class="section-title">הבלטה בתוצאות</div>
@@ -650,6 +652,9 @@ async function init() {
 
         document.getElementById('loadingState').style.display = 'none';
         document.getElementById('mainContent').style.display = 'block';
+        if (currentEntityType === 'business') {
+            document.getElementById('couponsSectionWrapper').style.display = 'block';
+        }
     } catch (e) {
         showError('שגיאה בטעינת הנתונים. נסה לרענן את הדף.');
         document.getElementById('loadingState').style.display = 'none';
@@ -657,16 +662,23 @@ async function init() {
 }
 
 async function loadEntity(userId) {
-    // Try business first, then professional
+    // Try all entity types
     let entity = null;
 
-    const biz = await supabaseGet(`/rest/v1/businesses?user_id=eq.${userId}&select=id,name,image_url,business_type,owner_name,owner_phone,pricing_plan_id&limit=1`);
-    if (biz && biz.length > 0) {
-        entity = { ...biz[0], entityType: 'business' };
-    } else {
-        const pro = await supabaseGet(`/rest/v1/professionals?user_id=eq.${userId}&select=id,name,image_url,profession_type,owner_name,phone,pricing_plan_id&limit=1`);
-        if (pro && pro.length > 0) {
-            entity = { ...pro[0], entityType: 'professional' };
+    const searches = [
+        { url: `/rest/v1/businesses?user_id=eq.${userId}&select=id,name,image_url,phone,pricing_plan_id&limit=1`, type: 'business' },
+        { url: `/rest/v1/professionals?user_id=eq.${userId}&select=id,name,image_url,phone,pricing_plan_id&limit=1`, type: 'professional' },
+        { url: `/rest/v1/halls?user_id=eq.${userId}&select=id,name,phone,pricing_plan_id&limit=1`, type: 'hall' },
+        { url: `/rest/v1/hospitality?user_id=eq.${userId}&select=id,name,phone,pricing_plan_id&limit=1`, type: 'hospitality' },
+        { url: `/rest/v1/healthcare_facility?user_id=eq.${userId}&select=id,name,image_url,phone,pricing_plan_id&limit=1`, type: 'healthcare' },
+        { url: `/rest/v1/education_institution?user_id=eq.${userId}&select=id,name,image_url,phone,pricing_plan_id&limit=1`, type: 'education' },
+    ];
+
+    for (const s of searches) {
+        const res = await supabaseGet(s.url);
+        if (res && res.length > 0) {
+            entity = { ...res[0], entityType: s.type };
+            break;
         }
     }
 
@@ -682,8 +694,8 @@ async function loadEntity(userId) {
     // Load customer contact details for payment
     const user = await supabaseGet('/auth/v1/user');
     customerInfo.email = user?.email || '';
-    customerInfo.name = entity.owner_name || entity.name || user?.user_metadata?.full_name || '';
-    customerInfo.phone = entity.owner_phone || entity.phone || '';
+    customerInfo.name = entity.name || user?.user_metadata?.full_name || '';
+    customerInfo.phone = entity.phone || '';
 
     // Show entity card
     document.getElementById('entityCard').style.display = 'flex';
