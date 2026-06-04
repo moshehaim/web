@@ -576,6 +576,15 @@
 
     <div id="mainContent" style="display:none">
 
+        <!-- Edit registration button -->
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;padding:12px 16px;background:var(--card);border:1px solid var(--border);border-radius:var(--radius-lg)">
+            <div>
+                <div style="font-size:13px;font-weight:600;color:var(--text);margin-bottom:2px">פרטי קבלה</div>
+                <div style="font-size:12px;color:var(--text-secondary)" id="regStatusLabel">טוען...</div>
+            </div>
+            <button onclick="openRegistrationModal(false)" style="background:var(--blue-light);border:none;color:var(--blue);font-family:Rubik,sans-serif;font-size:13px;font-weight:500;padding:7px 14px;border-radius:8px;cursor:pointer">עריכה</button>
+        </div>
+
         <!-- מנוי מבצעים -->
         <div class="section-title">מנוי מבצעים</div>
         <div id="promotionsSection"></div>
@@ -590,7 +599,37 @@
         <div class="section-title">הבלטה בתוצאות</div>
         <div id="prominenceSection"></div>
 
-        <!-- Payment Summary Modal -->
+        <!-- Registration Details Modal -->
+    <div class="modal-overlay" id="registrationModal">
+        <div class="modal-sheet">
+            <div class="modal-handle"></div>
+            <div class="modal-title">פרטי קבלה</div>
+            <div class="modal-subtitle" id="regModalSubtitle">הפרטים ישמשו להפקת קבלה עבור העסק</div>
+
+            <div class="field" style="margin-bottom:16px">
+                <label for="regType">סוג רישום עסקי</label>
+                <select id="regType" style="width:100%;padding:13px 16px;border-radius:10px;border:1.5px solid rgba(0,0,0,0.1);background:var(--card);font-family:Rubik,sans-serif;font-size:15px;color:var(--text);outline:none;transition:border-color 0.2s;cursor:pointer;appearance:none;-webkit-appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%236B7280' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:left 14px center;padding-left:36px">
+                    <option value="">בחר סוג רישום</option>
+                    <option value="exempt">עוסק פטור</option>
+                    <option value="licensed">עוסק מורשה</option>
+                    <option value="company">חברה בע"מ</option>
+                    <option value="nonprofit">עמותה / מלכ"ר</option>
+                </select>
+            </div>
+
+            <div class="field" id="regTaxIdField" style="display:none;margin-bottom:16px">
+                <label for="regTaxId" id="regTaxIdLabel">מספר עוסק</label>
+                <input type="text" id="regTaxId" style="direction:ltr;text-align:right" placeholder="000000000">
+            </div>
+
+            <div class="error-msg" id="regError"></div>
+
+            <button class="btn-primary" id="regSaveBtn" onclick="saveRegistration()">שמור והמשך לתשלום</button>
+            <button class="btn-outline" onclick="closeModal('registrationModal')" style="margin-top:8px">ביטול</button>
+        </div>
+    </div>
+
+    <!-- Payment Summary Modal -->
     <div class="modal-overlay" id="paymentSummaryModal">
         <div class="modal-sheet">
             <div class="modal-handle"></div>
@@ -819,6 +858,12 @@ async function loadSubscriptions() {
     renderPromotions(subs, promoPkg);
     renderCoupons(couponPkg);
     renderProminence(subs);
+
+    // Update registration status label
+    const regLabel = document.getElementById('regStatusLabel');
+    if (regLabel) {
+        regLabel.textContent = registrationInfo.type ? getRegTypeLabel(registrationInfo.type) : 'לא הוגדר — לחץ עריכה להגדרה';
+    }
 }
 
 // ── PROMOTIONS ──
@@ -1146,8 +1191,14 @@ async function purchase(section) {
         return;
     }
 
-    // Open payment summary modal
-    openPaymentSummary(paymentType, description, couponItems);
+    // Check if registration info exists
+    if (!registrationInfo.type) {
+        // Open registration modal first, then proceed to payment
+        pendingPayment = { paymentType, description, couponItems };
+        openRegistrationModal(true);
+    } else {
+        openPaymentSummary(paymentType, description, couponItems);
+    }
 }
 
 // ── Supabase helpers ──
@@ -1224,6 +1275,93 @@ if (oauthAccessToken) {
 }
 
 init();
+
+    // ── Registration modal ──
+    let registrationAfterSave = false; // true = proceed to payment after save
+
+    function getRegTypeLabel(type) {
+        const labels = { exempt: 'עוסק פטור', licensed: 'עוסק מורשה', company: 'חברה בע"מ', nonprofit: 'עמותה / מלכ"ר' };
+        return labels[type] || type;
+    }
+
+    function openRegistrationModal(proceedToPayment) {
+        registrationAfterSave = proceedToPayment;
+        document.getElementById('regModalSubtitle').textContent = `הפרטים ישמשו להפקת קבלה`;
+        document.getElementById('regType').value = registrationInfo.type || '';
+        document.getElementById('regTaxId').value = registrationInfo.taxId || '';
+        updateRegTaxIdField(registrationInfo.type || '');
+        document.getElementById('regError').style.display = 'none';
+        document.getElementById('regSaveBtn').textContent = proceedToPayment ? 'שמור והמשך לתשלום' : 'שמור';
+        document.getElementById('registrationModal').classList.add('open');
+    }
+
+    function updateRegTaxIdField(type) {
+        const show = ['licensed','company','nonprofit'].includes(type);
+        document.getElementById('regTaxIdField').style.display = show ? 'block' : 'none';
+        const labels = { licensed: 'מספר עוסק', company: 'ח.פ.', nonprofit: 'מספר עמותה' };
+        document.getElementById('regTaxIdLabel').textContent = labels[type] || 'מספר עוסק';
+    }
+
+    document.getElementById('regType').addEventListener('change', function() {
+        updateRegTaxIdField(this.value);
+    });
+
+    async function saveRegistration() {
+        const type  = document.getElementById('regType').value;
+        const taxId = document.getElementById('regTaxId').value.trim();
+        const errEl = document.getElementById('regError');
+        errEl.style.display = 'none';
+
+        if (!type) { errEl.textContent = 'נא לבחור סוג רישום'; errEl.style.display = 'block'; return; }
+        if (['licensed','company','nonprofit'].includes(type) && !taxId) {
+            errEl.textContent = 'נא להזין מספר עוסק / ח.פ.'; errEl.style.display = 'block'; return;
+        }
+
+        const btn = document.getElementById('regSaveBtn');
+        btn.disabled = true;
+        btn.textContent = 'שומר...';
+
+        try {
+            // Save to DB
+            const tableMap = { business: 'businesses', professional: 'professionals', hall: 'halls', hospitality: 'hospitality', healthcare: 'healthcare_facility', education: 'education_institution' };
+            const table = tableMap[currentEntityType];
+            const res = await fetch(`${SUPABASE_URL}/rest/v1/${table}?id=eq.${currentEntityId}`, {
+                method: 'PATCH',
+                headers: {
+                    'apikey': SUPABASE_ANON_KEY,
+                    'Authorization': 'Bearer ' + accessToken,
+                    'Content-Type': 'application/json',
+                    'Prefer': 'return=minimal',
+                },
+                body: JSON.stringify({
+                    business_registration_type: type,
+                    tax_id: taxId || null,
+                }),
+            });
+
+            if (!res.ok) throw new Error('שגיאה בשמירה');
+
+            // Update local state
+            registrationInfo.type  = type;
+            registrationInfo.taxId = taxId || null;
+
+            // Update label
+            const regLabel = document.getElementById('regStatusLabel');
+            if (regLabel) regLabel.textContent = getRegTypeLabel(type);
+
+            closeModal('registrationModal');
+
+            if (registrationAfterSave) {
+                openPaymentSummary(pendingPayment.paymentType, pendingPayment.description, pendingPayment.couponItems);
+            }
+        } catch(e) {
+            errEl.textContent = 'שגיאה בשמירת הפרטים. נסה שוב.';
+            errEl.style.display = 'block';
+        }
+
+        btn.disabled = false;
+        btn.textContent = registrationAfterSave ? 'שמור והמשך לתשלום' : 'שמור';
+    }
 
     // ── Pending payment state ──
     let pendingPayment = { paymentType: null, description: null, couponItems: null };
