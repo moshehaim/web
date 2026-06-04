@@ -715,12 +715,22 @@ async function loadSubscriptions() {
     );
 
     // Load packages
+    // promotion_packages uses provider_id
     const promoPkg = await supabaseGet(
-        `/rest/v1/promotion_packages?entity_id=eq.${currentEntityId}&select=*&order=created_at.desc&limit=1`
+        `/rest/v1/promotion_packages?provider_id=eq.${currentEntityId}&select=*&order=created_at.desc&limit=1`
     );
-    const couponPkg = await supabaseGet(
-        `/rest/v1/coupon_packages?entity_id=eq.${currentEntityId}&select=*&order=created_at.desc&limit=1`
+    // coupons table - sum active/draft coupons by provider_id
+    const couponRows = await supabaseGet(
+        `/rest/v1/coupons?provider_id=eq.${currentEntityId}&status=in.(draft,active)&select=quantity,current_redemptions,expires_at&order=created_at.desc`
     );
+    // Build coupon summary
+    let couponRemaining = 0;
+    let couponExpiry = null;
+    if (couponRows && couponRows.length > 0) {
+        couponRows.forEach(c => { couponRemaining += (c.quantity - c.current_redemptions); });
+        couponExpiry = couponRows[0].expires_at;
+    }
+    const couponPkg = couponRemaining > 0 ? [{ remaining_coupons: couponRemaining, expires_at: couponExpiry }] : [];
 
     // Load pricing by plan ID
     if (currentPricingPlanId) {
@@ -752,7 +762,12 @@ function renderPromotions(subs, promoPkg) {
         s.payment_type === 'promotions_subscription' &&
         ['active','trial','cancelled'].includes(s.status)
     );
-    const pkg = promoPkg?.[0];
+    // promotion_packages: remaining = total_bought - total_used
+    const rawPkg = promoPkg?.[0];
+    const pkg = rawPkg ? {
+        ...rawPkg,
+        remaining_promotions: (rawPkg.total_promotions_bought || 0) - (rawPkg.total_promotions_used || 0)
+    } : null;
 
     let html = '';
 
@@ -855,7 +870,7 @@ function renderCoupons(couponPkg) {
     let html = '';
 
     if (pkg && pkg.remaining_coupons > 0) {
-        const exp = formatDate(pkg.expiration_date || pkg.expires_at);
+        const exp = formatDate(pkg.expires_at);
         html += `
         <div class="pkg-card">
             <div class="pkg-info">
