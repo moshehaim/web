@@ -599,7 +599,17 @@
         <div class="section-title">הבלטה בתוצאות</div>
         <div id="prominenceSection"></div>
 
-        <!-- Registration Details Modal -->
+        <!-- Entity Selector Modal -->
+    <div class="modal-overlay" id="entitySelectorModal">
+        <div class="modal-sheet">
+            <div class="modal-handle"></div>
+            <div class="modal-title">בחר ישות</div>
+            <div class="modal-subtitle">נמצאו מספר ישויות מקושרות לחשבון שלך</div>
+            <div id="entitySelectorList"></div>
+        </div>
+    </div>
+
+    <!-- Registration Details Modal -->
     <div class="modal-overlay" id="registrationModal">
         <div class="modal-sheet">
             <div class="modal-handle"></div>
@@ -764,12 +774,12 @@ async function loadEntity(userId) {
     let entity = null;
 
     const searches = [
-        { url: `/rest/v1/businesses?user_id=eq.${userId}&select=id,name,image_url,phone,pricing_plan_id,business_registration_type,tax_id,business_registration_type,tax_id&limit=1`, type: 'business' },
+        { url: `/rest/v1/businesses?user_id=eq.${userId}&is_locked=eq.true&select=id,name,image_url,phone,pricing_plan_id,business_registration_type,tax_id`, type: 'business' },
         { url: `/rest/v1/professionals?user_id=eq.${userId}&select=id,name,image_url,phone,pricing_plan_id&limit=1`, type: 'professional' },
         { url: `/rest/v1/halls?user_id=eq.${userId}&select=id,name,phone,pricing_plan_id,business_registration_type,tax_id&limit=1`, type: 'hall' },
         { url: `/rest/v1/hospitality?user_id=eq.${userId}&select=id,name,phone,pricing_plan_id&limit=1`, type: 'hospitality' },
-        { url: `/rest/v1/healthcare_facility?user_id=eq.${userId}&select=id,name,image_url,phone,pricing_plan_id&limit=1`, type: 'healthcare' },
-        { url: `/rest/v1/education_institution?user_id=eq.${userId}&select=id,name,image_url,phone,pricing_plan_id&limit=1`, type: 'education' },
+        { url: `/rest/v1/healthcare_facility?user_id=eq.${userId}&is_locked=eq.true&select=id,name,image_url,phone,pricing_plan_id,business_registration_type,tax_id`, type: 'healthcare' },
+        { url: `/rest/v1/education_institution?user_id=eq.${userId}&is_locked=eq.true&select=id,name,image_url,phone,pricing_plan_id,business_registration_type,tax_id`, type: 'education' },
     ];
 
     for (const s of searches) {
@@ -780,10 +790,7 @@ async function loadEntity(userId) {
         }
     }
 
-    if (!entity) {
-        showError('לא נמצאה ישות מקושרת לחשבון זה.');
-        return;
-    }
+
 
     currentEntityId = entity.id;
     currentEntityType = entity.entityType;
@@ -1275,6 +1282,38 @@ if (oauthAccessToken) {
 }
 
 init();
+
+    // ── Entity selector ──
+    function showEntitySelector(entities) {
+        return new Promise((resolve) => {
+            const typeLabels = { business: 'עסק', professional: 'בעל מקצוע', hall: 'אולם', hospitality: 'אירוח', healthcare: 'מרפאה', education: 'חינוך' };
+            const avatarEmoji = { business: '🏪', professional: '👤', hall: '🏛', hospitality: '🏠', healthcare: '🏥', education: '🎓' };
+
+            const list = document.getElementById('entitySelectorList');
+            list.innerHTML = entities.map((e, i) => `
+                <div onclick="selectEntity(${i})" style="display:flex;align-items:center;gap:12px;padding:14px 16px;border:1.5px solid var(--border);border-radius:var(--radius-lg);margin-bottom:10px;cursor:pointer;transition:background 0.15s;background:var(--card)" onmouseover="this.style.background='var(--blue-light)'" onmouseout="this.style.background='var(--card)'">
+                    <div style="width:44px;height:44px;border-radius:10px;background:var(--blue-light);display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0">
+                        ${e.image_url ? `<img src="${e.image_url}" style="width:44px;height:44px;border-radius:10px;object-fit:cover">` : avatarEmoji[e.entityType] || '🏢'}
+                    </div>
+                    <div>
+                        <div style="font-size:15px;font-weight:600">${e.name}</div>
+                        <div style="font-size:12px;color:var(--text-secondary)">${typeLabels[e.entityType] || e.entityType}</div>
+                    </div>
+                </div>
+            `).join('');
+
+            window._entitySelectorResolve = resolve;
+            window._entitySelectorEntities = entities;
+            document.getElementById('entitySelectorModal').classList.add('open');
+        });
+    }
+
+    function selectEntity(index) {
+        closeModal('entitySelectorModal');
+        if (window._entitySelectorResolve) {
+            window._entitySelectorResolve(window._entitySelectorEntities[index]);
+        }
+    }
 
     // ── Registration modal ──
     let registrationAfterSave = false; // true = proceed to payment after save
