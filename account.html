@@ -590,7 +590,65 @@
         <div class="section-title">הבלטה בתוצאות</div>
         <div id="prominenceSection"></div>
 
-        <div class="footer-links">
+        <!-- Payment Summary Modal -->
+    <div class="modal-overlay" id="paymentSummaryModal">
+        <div class="modal-sheet">
+            <div class="modal-handle"></div>
+            <div class="modal-title">סיכום הזמנה</div>
+
+            <!-- Product summary -->
+            <div class="sub-card" id="summaryProductCard" style="margin-bottom:14px;background:var(--blue-light);border-color:rgba(24,95,165,0.2)">
+                <div class="sub-card-title" id="summaryProductTitle" style="margin-bottom:4px"></div>
+                <div class="sub-meta" id="summaryProductType"></div>
+            </div>
+
+            <!-- Receipt details -->
+            <div style="font-size:13px;font-weight:600;color:var(--text-secondary);margin-bottom:10px">פרטים לקבלה</div>
+
+            <div class="field">
+                <label for="summaryName">שם</label>
+                <input type="text" id="summaryName" autocomplete="name">
+            </div>
+            <div class="field">
+                <label for="summaryEmail">אימייל</label>
+                <input type="email" id="summaryEmail" autocomplete="email" style="direction:ltr;text-align:right">
+            </div>
+            <div class="field">
+                <label for="summaryPhone">טלפון</label>
+                <input type="tel" id="summaryPhone" autocomplete="tel" style="direction:ltr;text-align:right" placeholder="05X-XXXXXXX">
+            </div>
+
+            <!-- Registration type -->
+            <div class="field">
+                <label for="summaryRegType">סוג רישום</label>
+                <select id="summaryRegType" style="width:100%;padding:12px 16px;border-radius:10px;border:1.5px solid rgba(0,0,0,0.1);background:var(--card);font-family:Rubik,sans-serif;font-size:15px;color:var(--text);outline:none">
+                    <option value="">יחיד / לא רשום</option>
+                    <option value="exempt">עוסק פטור</option>
+                    <option value="licensed">עוסק מורשה</option>
+                    <option value="company">חברה בע"מ</option>
+                    <option value="nonprofit">עמותה / מלכ"ר</option>
+                </select>
+            </div>
+
+            <!-- Tax ID (shown for licensed/company/nonprofit) -->
+            <div class="field" id="taxIdField" style="display:none">
+                <label for="summaryTaxId" id="taxIdLabel">מספר עוסק</label>
+                <input type="text" id="summaryTaxId" style="direction:ltr;text-align:right">
+            </div>
+
+            <!-- Token notice for subscriptions -->
+            <div id="tokenNotice" style="display:none;background:var(--blue-light);border-radius:8px;padding:10px 14px;font-size:12px;color:var(--blue);margin-bottom:12px">
+                פרטי הכרטיס ישמרו לחיוב חודשי אוטומטי
+            </div>
+
+            <div class="error-msg" id="summaryError"></div>
+
+            <button class="btn-primary" id="summaryPayBtn" onclick="submitPayment()">המשך לתשלום</button>
+            <button class="btn-outline" onclick="closeModal('paymentSummaryModal')" style="margin-top:8px">ביטול</button>
+        </div>
+    </div>
+
+    <div class="footer-links">
             <a href="/">עמוד הבית</a>
             <a href="/privacy.html">פרטיות</a>
             <a href="mailto:info@shchuna.co.il">יצירת קשר</a>
@@ -619,6 +677,7 @@ let currentEntityType = null;
 let cancelTarget = null; // { paymentType, subscriptionId, endDate }
 let customerInfo = { name: '', email: '', phone: '' };
 let currentPricingPlanId = null;
+let registrationInfo = { type: null, taxId: null };
 let termsAccepted = { promotions: false, prominence: false, coupons: false };
 let selectedOption = { promotions: null, prominence: null, coupons: null };
 
@@ -666,9 +725,9 @@ async function loadEntity(userId) {
     let entity = null;
 
     const searches = [
-        { url: `/rest/v1/businesses?user_id=eq.${userId}&select=id,name,image_url,phone,pricing_plan_id&limit=1`, type: 'business' },
+        { url: `/rest/v1/businesses?user_id=eq.${userId}&select=id,name,image_url,phone,pricing_plan_id,business_registration_type,tax_id,business_registration_type,tax_id&limit=1`, type: 'business' },
         { url: `/rest/v1/professionals?user_id=eq.${userId}&select=id,name,image_url,phone,pricing_plan_id&limit=1`, type: 'professional' },
-        { url: `/rest/v1/halls?user_id=eq.${userId}&select=id,name,phone,pricing_plan_id&limit=1`, type: 'hall' },
+        { url: `/rest/v1/halls?user_id=eq.${userId}&select=id,name,phone,pricing_plan_id,business_registration_type,tax_id&limit=1`, type: 'hall' },
         { url: `/rest/v1/hospitality?user_id=eq.${userId}&select=id,name,phone,pricing_plan_id&limit=1`, type: 'hospitality' },
         { url: `/rest/v1/healthcare_facility?user_id=eq.${userId}&select=id,name,image_url,phone,pricing_plan_id&limit=1`, type: 'healthcare' },
         { url: `/rest/v1/education_institution?user_id=eq.${userId}&select=id,name,image_url,phone,pricing_plan_id&limit=1`, type: 'education' },
@@ -690,12 +749,20 @@ async function loadEntity(userId) {
     currentEntityId = entity.id;
     currentEntityType = entity.entityType;
     currentPricingPlanId = entity.pricing_plan_id;
+    registrationInfo.type  = entity.business_registration_type || null;
+    registrationInfo.taxId = entity.tax_id || null;
 
-    // Load customer contact details for payment
-    const user = await supabaseGet('/auth/v1/user');
-    customerInfo.email = user?.email || '';
-    customerInfo.name = entity.name || user?.user_metadata?.full_name || '';
-    customerInfo.phone = entity.phone || '';
+    // Load customer contact details from userdata table
+    const userData = await supabaseGet(`/rest/v1/userdata?user_id=eq.${userId}&select=owner_name,owner_phone,email&limit=1`);
+    if (userData && userData.length > 0) {
+        customerInfo.name  = userData[0].owner_name  || entity.name || '';
+        customerInfo.phone = userData[0].owner_phone || '';
+        customerInfo.email = userData[0].email       || '';
+    } else {
+        customerInfo.name  = entity.name || '';
+        customerInfo.phone = entity.phone || '';
+        customerInfo.email = '';
+    }
 
     // Show entity card
     document.getElementById('entityCard').style.display = 'flex';
@@ -1079,29 +1146,8 @@ async function purchase(section) {
         return;
     }
 
-    // Call Edge Function to get Invoice4U clearing URL
-    try {
-        const result = await supabaseFunction('create-payment', {
-            entity_id: currentEntityId,
-            entity_type: currentEntityType,
-            payment_type: paymentType,
-            description,
-            customer_name: customerInfo.name,
-            customer_email: customerInfo.email,
-            customer_phone: customerInfo.phone,
-            save_token: ['promotions_subscription', 'prominence'].includes(paymentType),
-            coupon_items: couponItems || null,
-        });
-
-        if (result?.clearing_url) {
-            window.location.href = result.clearing_url;
-        } else {
-            showError('שגיאה ביצירת התשלום. נסה שוב.');
-        }
-    } catch(e) {
-        console.error('create-payment error:', e);
-        showError('שגיאה בחיבור לשרת. נסה שוב.');
-    }
+    // Open payment summary modal
+    openPaymentSummary(paymentType, description, couponItems);
 }
 
 // ── Supabase helpers ──
