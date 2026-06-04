@@ -616,6 +616,7 @@ let currentEntityId = null;
 let currentEntityType = null;
 let cancelTarget = null; // { paymentType, subscriptionId, endDate }
 let customerInfo = { name: '', email: '', phone: '' };
+let currentPricingPlanId = null;
 let termsAccepted = { promotions: false, prominence: false, coupons: false };
 let selectedOption = { promotions: null, prominence: null, coupons: null };
 
@@ -659,11 +660,11 @@ async function loadEntity(userId) {
     // Try business first, then professional
     let entity = null;
 
-    const biz = await supabaseGet(`/rest/v1/businesses?user_id=eq.${userId}&select=id,name,image_url,business_type,owner_name,owner_phone&limit=1`);
+    const biz = await supabaseGet(`/rest/v1/businesses?user_id=eq.${userId}&select=id,name,image_url,business_type,owner_name,owner_phone,pricing_plan_id&limit=1`);
     if (biz && biz.length > 0) {
         entity = { ...biz[0], entityType: 'business' };
     } else {
-        const pro = await supabaseGet(`/rest/v1/professionals?user_id=eq.${userId}&select=id,name,image_url,profession_type,owner_name,phone&limit=1`);
+        const pro = await supabaseGet(`/rest/v1/professionals?user_id=eq.${userId}&select=id,name,image_url,profession_type,owner_name,phone,pricing_plan_id&limit=1`);
         if (pro && pro.length > 0) {
             entity = { ...pro[0], entityType: 'professional' };
         }
@@ -676,6 +677,7 @@ async function loadEntity(userId) {
 
     currentEntityId = entity.id;
     currentEntityType = entity.entityType;
+    currentPricingPlanId = entity.pricing_plan_id;
 
     // Load customer contact details for payment
     const user = await supabaseGet('/auth/v1/user');
@@ -708,14 +710,21 @@ async function loadSubscriptions() {
         `/rest/v1/coupon_packages?entity_id=eq.${currentEntityId}&select=*&order=created_at.desc&limit=1`
     );
 
-    // Load pricing
-    const pricingRows = await supabaseGet(
-        `/rest/v1/pricing_plans?entity_type=eq.${currentEntityType}&select=payment_type,monthly_price,price`
-    );
-    if (pricingRows) {
-        pricingRows.forEach(r => {
-            prices[r.payment_type] = r.monthly_price || r.price || 0;
-        });
+    // Load pricing by plan ID
+    if (currentPricingPlanId) {
+        const plan = await supabaseGet(
+            `/rest/v1/pricing_plans?id=eq.${currentPricingPlanId}&select=*&limit=1`
+        );
+        if (plan && plan.length > 0) {
+            const p = plan[0];
+            prices['promotions_subscription'] = p.promo_monthly || 0;
+            prices['promotions_package_1']    = p.promo_single  || 0;
+            prices['promotions_package_4']    = p.promo_bundle4 || 0;
+            prices['prominence']              = p.prominence    || 0;
+            prices['coupon_50']               = p.coupon_50     || 0;
+            prices['coupon_100']              = p.coupon_100    || 0;
+            prices['coupon_200']              = p.coupon_200    || 0;
+        }
     }
 
     renderPromotions(subs, promoPkg);
