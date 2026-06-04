@@ -1224,6 +1224,107 @@ if (oauthAccessToken) {
 }
 
 init();
+
+    // ── Pending payment state ──
+    let pendingPayment = { paymentType: null, description: null, couponItems: null };
+
+    function openPaymentSummary(paymentType, description, couponItems) {
+        pendingPayment = { paymentType, description, couponItems };
+
+        document.getElementById('summaryName').value  = customerInfo.name  || '';
+        document.getElementById('summaryEmail').value = customerInfo.email || '';
+        document.getElementById('summaryPhone').value = customerInfo.phone || '';
+
+        const regType = registrationInfo.type || '';
+        document.getElementById('summaryRegType').value = regType;
+        document.getElementById('summaryTaxId').value   = registrationInfo.taxId || '';
+
+        updateTaxIdField(regType);
+        updateTokenNotice(paymentType);
+
+        const typeLabels = {
+            'promotions_subscription': 'מנוי מבצעים חודשי',
+            'promotions_package':      'חבילת מבצעים',
+            'coupon_package':          'חבילת קופונים',
+            'prominence':              'מנוי הבלטה חודשי',
+        };
+        const isSubscription = ['promotions_subscription','prominence'].includes(paymentType);
+        document.getElementById('summaryProductTitle').textContent = typeLabels[paymentType] || description;
+        document.getElementById('summaryProductType').textContent  = isSubscription ? 'מנוי חודשי — ניתן לביטול בכל עת' : 'תשלום חד-פעמי';
+
+        document.getElementById('summaryError').style.display = 'none';
+        document.getElementById('summaryPayBtn').disabled = false;
+        document.getElementById('summaryPayBtn').textContent = 'המשך לתשלום';
+        document.getElementById('paymentSummaryModal').classList.add('open');
+    }
+
+    function updateTaxIdField(regType) {
+        const show = ['licensed','company','nonprofit'].includes(regType);
+        document.getElementById('taxIdField').style.display = show ? 'block' : 'none';
+        const labels = { licensed: 'מספר עוסק', company: 'ח.פ.', nonprofit: 'מספר עמותה' };
+        document.getElementById('taxIdLabel').textContent = labels[regType] || 'מספר עוסק';
+    }
+
+    function updateTokenNotice(paymentType) {
+        const isSubscription = ['promotions_subscription','prominence'].includes(paymentType);
+        document.getElementById('tokenNotice').style.display = isSubscription ? 'block' : 'none';
+    }
+
+    document.getElementById('summaryRegType').addEventListener('change', function() {
+        updateTaxIdField(this.value);
+    });
+
+    async function submitPayment() {
+        const name    = document.getElementById('summaryName').value.trim();
+        const email   = document.getElementById('summaryEmail').value.trim();
+        const phone   = document.getElementById('summaryPhone').value.trim();
+        const regType = document.getElementById('summaryRegType').value;
+        const taxId   = document.getElementById('summaryTaxId').value.trim();
+
+        const errEl = document.getElementById('summaryError');
+        errEl.style.display = 'none';
+
+        if (!name)  { errEl.textContent = 'נא להזין שם';     errEl.style.display = 'block'; return; }
+        if (!email) { errEl.textContent = 'נא להזין אימייל'; errEl.style.display = 'block'; return; }
+        if (!phone) { errEl.textContent = 'נא להזין טלפון';  errEl.style.display = 'block'; return; }
+
+        const btn = document.getElementById('summaryPayBtn');
+        btn.disabled = true;
+        btn.textContent = 'מעבד...';
+
+        try {
+            const result = await supabaseFunction('create-payment', {
+                entity_id:   currentEntityId,
+                entity_type: currentEntityType,
+                payment_type: pendingPayment.paymentType,
+                description:  pendingPayment.description,
+                customer_name:  name,
+                customer_email: email,
+                customer_phone: phone,
+                business_registration_type: regType || null,
+                tax_id: taxId || null,
+                save_token: ['promotions_subscription','prominence'].includes(pendingPayment.paymentType),
+                coupon_items: pendingPayment.couponItems || null,
+                web_return: true,
+            });
+
+            if (result?.clearing_url) {
+                window.location.href = result.clearing_url;
+            } else {
+                errEl.textContent = 'שגיאה ביצירת התשלום. נסה שוב.';
+                errEl.style.display = 'block';
+                btn.disabled = false;
+                btn.textContent = 'המשך לתשלום';
+            }
+        } catch(e) {
+            console.error('submitPayment error:', e);
+            errEl.textContent = e.message || 'שגיאה בחיבור לשרת.';
+            errEl.style.display = 'block';
+            btn.disabled = false;
+            btn.textContent = 'המשך לתשלום';
+        }
+    }
+
 </script>
 </body>
 </html>
