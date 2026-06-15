@@ -1,0 +1,565 @@
+{
+  "neighborhood": "חומת שמואל",
+  "stations": [
+    {
+      "name": "אהרן כהן/חנה רחל מלודמיר",
+      "stop_code": "2043",
+      "latitude": 31.723076,
+      "longitude": 35.231142,
+      "city": "ירושלים",
+      "bus_lines": []
+    },
+    {
+      "name": "הקצין יחיאל לנגר/זרח ורהפטיג",
+      "stop_code": "2020",
+      "latitude": 31.725361,
+      "longitude": 35.22783,
+      "city": "ירושלים",
+      "bus_lines": []
+    },
+    {
+      "name": "תחנה תפעולית/היציאה מחניון חומת שמואל",
+      "stop_code": "1702",
+      "latitude": 31.71867,
+      "longitude": 35.220694,
+      "city": "ירושלים",
+      "bus_lines": []
+    },
+    {
+      "name": "הרב מן ההר/הבבא סאלי",
+      "stop_code": "1404",
+      "latitude": 31.722771,
+      "longitude": 35.22766,
+      "city": "ירושלים",
+      "bus_lines": []
+    },
+    {
+      "name": "הרב מן ההר/הקצין יחיאל לנגר",
+      "stop_code": "1403",
+      "latitude": 31.722604,
+      "longitude": 35.229271,
+      "city": "ירושלים",
+      "bus_lines": []
+    },
+    {
+      "name": "אהרון כהן/עמנואל זיסמן",
+      "stop_code": "1142",
+      "latitude": 31.722412,
+      "longitude": 35.231223,
+      "city": "ירושלים",
+      "bus_lines": []
+    },
+    {
+      "name": "הרב רחמים חי חויתה כהן/הרב מן ההר",
+      "stop_code": "1144",
+      "latitude": 31.723391,
+      "longitude": 35.226701,
+      "city": "ירושלים",
+      "bus_lines": []
+    },
+    {
+      "name": "הרב רחמים חי חויתה כהן/הרב מן ההר",
+      "stop_code": "1143",
+      "latitude": 31.723158,
+      "longitude": 35.226555,
+      "city": "ירושלים",
+      "bus_lines": []
+    },
+    {
+      "name": "כביש 398/שדרות שמואל מאיר",
+      "stop_code": "1364",
+      "latitude": 31.730644,
+      "longitude": 35.221125,
+      "city": "ירושלים",
+      "bus_lines": []
+    },
+    {
+      "name": "עמנואל זיסמן",
+      "stop_code": "1136",
+      "latitude": 31.718125,
+      "longitude": 35.230657,
+      "city": "ירושלים",
+      "bus_lines": []
+    },
+    {
+      "name": "עמנואל זיסמן",
+      "stop_code": "1137",
+      "latitude": 31.71911,
+      "longitude": 35.230531,
+      "city": "ירושלים",
+      "bus_lines": []
+    },
+    {
+      "name": "עמנואל זיסמן/אהרון כהן",
+      "stop_code": "1138",
+      "latitude": 31.720627,
+      "longitude": 35.230856,
+      "city": "ירושלים",
+      "bus_lines": []
+    },
+    {
+      "name": "עמנואל זיסמן/אהרון כהן",
+      "stop_code": "1139",
+      "latitude": 31.721599,
+      "longitude": 35.231093,
+      "city": "ירושלים",
+      "bus_lines": []
+    },
+    {
+      "name": "יהודה לאו פיקרד/הממציא",
+      "stop_code": "1124",
+      "latitude": 31.725326,
+      "longitude": 35.222672,
+      "city": "ירושלים",
+      "bus_lines": []
+    },
+    {
+      "name": "הקצין יחיאל לנגר/הרב מן ההר",
+      "stop_code": "6296",
+      "latitude": 31.722628,
+      "longitude": 35.230442,
+      "city": "ירושלים",
+      "bus_lines": []
+    },
+    {
+      "name": "הבבא סאלי/הרב מן ההר",
+      "stop_code": "6297",
+      "latitude": 31.721963,
+      "longitude": 35.229999,
+      "city": "ירושלים",
+      "bus_lines": []
+    },
+    {
+      "name": "הקצין יחיאל לנגר/זרח ורהפטיג",
+      "stop_code": "6298",
+      "latitude": 31.725503,
+      "longitude": 35.227985,
+      "city": "ירושלים",
+      "bus_lines": []
+    },
+    {
+      "name": "הרב כלפון משה הכהן/הרב קרשקש",
+      "stop_code": "6228",
+      "latitude": 31.720923,
+      "longitude": 35.225413,
+      "city": "ירושלים",
+      "bus_lines": []
+    },
+    {
+      "name": "הבבא סאלי/המהר''ל מפראג",
+      "stop_code": "9982",
+      "latitude": 31.721717,
+      "longitude": 35.227213,
+      "city": "ירושלים",
+      "bus_lines": []
+    },
+    {
+      "name": "הרב כלפון משה הכהן/הרב קרשקש",
+      "stop_code": "9980",
+      "latitude": 31.721207,
+      "longitude": 35.225737,
+      "city": "ירושלים",
+      "bus_lines": []
+    },
+    {
+      "name": "הבבא סאלי/המהר''ל מפראג",
+      "stop_code": "9979",
+      "latitude": 31.721593,
+      "longitude": 35.227406,
+      "city": "ירושלים",
+      "bus_lines": []
+    },
+    {
+      "name": "כלפון משה הכהן/קורן",
+      "stop_code": "9910",
+      "latitude": 31.720218,
+      "longitude": 35.223092,
+      "city": "ירושלים",
+      "bus_lines": []
+    },
+    {
+      "name": "אליהו קורן/הרב כלפון משה הכהן",
+      "stop_code": "9820",
+      "latitude": 31.720109,
+      "longitude": 35.221902,
+      "city": "ירושלים",
+      "bus_lines": []
+    },
+    {
+      "name": "הרב יצחק נסים/שמעון בן חמו",
+      "stop_code": "6104",
+      "latitude": 31.722748,
+      "longitude": 35.222307,
+      "city": "ירושלים",
+      "bus_lines": []
+    },
+    {
+      "name": "יצחק ניסים/באום",
+      "stop_code": "6103",
+      "latitude": 31.721889,
+      "longitude": 35.220176,
+      "city": "ירושלים",
+      "bus_lines": []
+    },
+    {
+      "name": "יצחק נסים/אביגור",
+      "stop_code": "6064",
+      "latitude": 31.72454,
+      "longitude": 35.219677,
+      "city": "ירושלים",
+      "bus_lines": []
+    },
+    {
+      "name": "הרב כלפון משה הכהן/אליהו קורן",
+      "stop_code": "6056",
+      "latitude": 31.72057,
+      "longitude": 35.223488,
+      "city": "ירושלים",
+      "bus_lines": []
+    },
+    {
+      "name": "מרינוב א'",
+      "stop_code": "5989",
+      "latitude": 31.719982,
+      "longitude": 35.218691,
+      "city": "ירושלים",
+      "bus_lines": []
+    },
+    {
+      "name": "מרינוב/גלרנטר",
+      "stop_code": "5954",
+      "latitude": 31.719651,
+      "longitude": 35.220214,
+      "city": "ירושלים",
+      "bus_lines": []
+    },
+    {
+      "name": "אליהו קורן/מן ההר",
+      "stop_code": "5894",
+      "latitude": 31.722654,
+      "longitude": 35.225317,
+      "city": "ירושלים",
+      "bus_lines": []
+    },
+    {
+      "name": "בן חמו/בר לביא",
+      "stop_code": "5892",
+      "latitude": 31.723331,
+      "longitude": 35.223654,
+      "city": "ירושלים",
+      "bus_lines": []
+    },
+    {
+      "name": "אביגור",
+      "stop_code": "5880",
+      "latitude": 31.724106,
+      "longitude": 35.221007,
+      "city": "ירושלים",
+      "bus_lines": []
+    },
+    {
+      "name": "שמואל מאיר/יצחק נסים",
+      "stop_code": "5871",
+      "latitude": 31.726916,
+      "longitude": 35.224027,
+      "city": "ירושלים",
+      "bus_lines": []
+    },
+    {
+      "name": "משטרה/שמואל מאיר",
+      "stop_code": "5852",
+      "latitude": 31.730285,
+      "longitude": 35.219951,
+      "city": "ירושלים",
+      "bus_lines": []
+    },
+    {
+      "name": "בן חמו/אבן חן",
+      "stop_code": "5851",
+      "latitude": 31.723808,
+      "longitude": 35.225665,
+      "city": "ירושלים",
+      "bus_lines": []
+    },
+    {
+      "name": "אליהו קורן/הרב כלפון משה הכהן",
+      "stop_code": "5850",
+      "latitude": 31.720946,
+      "longitude": 35.223052,
+      "city": "ירושלים",
+      "bus_lines": []
+    },
+    {
+      "name": "יצחק ניסים ג'",
+      "stop_code": "5829",
+      "latitude": 31.72731,
+      "longitude": 35.220016,
+      "city": "ירושלים",
+      "bus_lines": []
+    },
+    {
+      "name": "מסוף חומת שמואל/אליהו קורן",
+      "stop_code": "5823",
+      "latitude": 31.719727,
+      "longitude": 35.221274,
+      "city": "ירושלים",
+      "bus_lines": []
+    },
+    {
+      "name": "אלמשאהד/נחל דרגה",
+      "stop_code": "5684",
+      "latitude": 31.731654,
+      "longitude": 35.221176,
+      "city": "ירושלים",
+      "bus_lines": []
+    },
+    {
+      "name": "ליכטנשטיין/אביגור",
+      "stop_code": "4020",
+      "latitude": 31.724669,
+      "longitude": 35.224415,
+      "city": "ירושלים",
+      "bus_lines": []
+    },
+    {
+      "name": "יצחק נסים/באום",
+      "stop_code": "4018",
+      "latitude": 31.722035,
+      "longitude": 35.219044,
+      "city": "ירושלים",
+      "bus_lines": []
+    },
+    {
+      "name": "אריה בינה/יצחק רפאל",
+      "stop_code": "4017",
+      "latitude": 31.722304,
+      "longitude": 35.216272,
+      "city": "ירושלים",
+      "bus_lines": []
+    },
+    {
+      "name": "יצחק נסים/בן חמו",
+      "stop_code": "3914",
+      "latitude": 31.722684,
+      "longitude": 35.22214,
+      "city": "ירושלים",
+      "bus_lines": []
+    },
+    {
+      "name": "יצחק ניסים ד'",
+      "stop_code": "3830",
+      "latitude": 31.727393,
+      "longitude": 35.221741,
+      "city": "ירושלים",
+      "bus_lines": []
+    },
+    {
+      "name": "ורשבסקי/אריה בינה",
+      "stop_code": "3828",
+      "latitude": 31.727709,
+      "longitude": 35.218277,
+      "city": "ירושלים",
+      "bus_lines": []
+    },
+    {
+      "name": "אביגור/ליפצין",
+      "stop_code": "3827",
+      "latitude": 31.724838,
+      "longitude": 35.223148,
+      "city": "ירושלים",
+      "bus_lines": []
+    },
+    {
+      "name": "משטרה/שמואל מאיר",
+      "stop_code": "3826",
+      "latitude": 31.730516,
+      "longitude": 35.219718,
+      "city": "ירושלים",
+      "bus_lines": []
+    },
+    {
+      "name": "שמואל מאיר/כביש 398",
+      "stop_code": "3822",
+      "latitude": 31.73193,
+      "longitude": 35.21971,
+      "city": "ירושלים",
+      "bus_lines": []
+    },
+    {
+      "name": "אליהו קורן/בן חמו",
+      "stop_code": "3599",
+      "latitude": 31.723822,
+      "longitude": 35.226637,
+      "city": "ירושלים",
+      "bus_lines": []
+    },
+    {
+      "name": "אליהו קורן/מן ההר",
+      "stop_code": "3597",
+      "latitude": 31.722219,
+      "longitude": 35.223815,
+      "city": "ירושלים",
+      "bus_lines": []
+    },
+    {
+      "name": "אליהו קורן/בן חמו",
+      "stop_code": "3596",
+      "latitude": 31.723652,
+      "longitude": 35.226209,
+      "city": "ירושלים",
+      "bus_lines": []
+    },
+    {
+      "name": "בן חמו/בר לביא",
+      "stop_code": "3585",
+      "latitude": 31.723335,
+      "longitude": 35.223116,
+      "city": "ירושלים",
+      "bus_lines": []
+    },
+    {
+      "name": "ליכטנשטיין/בן חמו",
+      "stop_code": "3480",
+      "latitude": 31.723978,
+      "longitude": 35.222957,
+      "city": "ירושלים",
+      "bus_lines": []
+    },
+    {
+      "name": "ליכטנשטיין",
+      "stop_code": "3476",
+      "latitude": 31.723831,
+      "longitude": 35.223665,
+      "city": "ירושלים",
+      "bus_lines": []
+    },
+    {
+      "name": "שמואל מאיר/ורשבסקי",
+      "stop_code": "3424",
+      "latitude": 31.729519,
+      "longitude": 35.220327,
+      "city": "ירושלים",
+      "bus_lines": []
+    },
+    {
+      "name": "ורשבסקי/אריה בינה",
+      "stop_code": "3421",
+      "latitude": 31.727545,
+      "longitude": 35.217851,
+      "city": "ירושלים",
+      "bus_lines": []
+    },
+    {
+      "name": "מרינוב/וונגרטן",
+      "stop_code": "3420",
+      "latitude": 31.72035,
+      "longitude": 35.218068,
+      "city": "ירושלים",
+      "bus_lines": []
+    },
+    {
+      "name": "אריה בינה/מרינוב",
+      "stop_code": "3419",
+      "latitude": 31.725829,
+      "longitude": 35.21757,
+      "city": "ירושלים",
+      "bus_lines": []
+    },
+    {
+      "name": "מסוף חומת שמואל",
+      "stop_code": "3418",
+      "latitude": 31.719327,
+      "longitude": 35.220711,
+      "city": "ירושלים",
+      "bus_lines": []
+    },
+    {
+      "name": "מרינוב/וונגרטן",
+      "stop_code": "3417",
+      "latitude": 31.721228,
+      "longitude": 35.216478,
+      "city": "ירושלים",
+      "bus_lines": []
+    },
+    {
+      "name": "אריה בינה/ורשבסקי",
+      "stop_code": "3398",
+      "latitude": 31.724972,
+      "longitude": 35.217347,
+      "city": "ירושלים",
+      "bus_lines": []
+    },
+    {
+      "name": "שמואל מאיר/דרך חברון",
+      "stop_code": "3357",
+      "latitude": 31.738016,
+      "longitude": 35.212439,
+      "city": "ירושלים",
+      "bus_lines": []
+    },
+    {
+      "name": "שמואל מאיר/יצחק ניסים",
+      "stop_code": "3257",
+      "latitude": 31.726807,
+      "longitude": 35.224064,
+      "city": "ירושלים",
+      "bus_lines": []
+    },
+    {
+      "name": "ורשבסקי/שמואל מאיר",
+      "stop_code": "3256",
+      "latitude": 31.729396,
+      "longitude": 35.219449,
+      "city": "ירושלים",
+      "bus_lines": []
+    },
+    {
+      "name": "הרב יצחק נסים/פיקרד",
+      "stop_code": "3139",
+      "latitude": 31.726324,
+      "longitude": 35.223475,
+      "city": "ירושלים",
+      "bus_lines": []
+    },
+    {
+      "name": "יצחק ניסים/אביגור",
+      "stop_code": "3138",
+      "latitude": 31.725367,
+      "longitude": 35.219874,
+      "city": "ירושלים",
+      "bus_lines": []
+    },
+    {
+      "name": "יצחק ניסים א'",
+      "stop_code": "3137",
+      "latitude": 31.723233,
+      "longitude": 35.218402,
+      "city": "ירושלים",
+      "bus_lines": []
+    },
+    {
+      "name": "יצחק ניסים א'",
+      "stop_code": "3135",
+      "latitude": 31.72249,
+      "longitude": 35.218347,
+      "city": "ירושלים",
+      "bus_lines": []
+    },
+    {
+      "name": "יצחק ניסים ג'",
+      "stop_code": "3132",
+      "latitude": 31.7268,
+      "longitude": 35.219626,
+      "city": "ירושלים",
+      "bus_lines": []
+    },
+    {
+      "name": "יצחק ניסים/פיקארד",
+      "stop_code": "3131",
+      "latitude": 31.726988,
+      "longitude": 35.222567,
+      "city": "ירושלים",
+      "bus_lines": []
+    }
+  ]
+}
