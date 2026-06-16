@@ -6,6 +6,14 @@
     <title>שכונה - אפליקציה קהילתית</title>
     <meta name="description" content="שכונה - מה שקרוב אליך. אפליקציה קהילתית שמחברת אותך לכל מה שקורה בשכונה.">
     <link rel="icon" type="image/png" href="app_icon.png">
+
+    <!-- ── PWA / iOS Home Screen ── -->
+    <link rel="apple-touch-icon" href="app_icon.png">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-title" content="שכונה">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="theme-color" content="#244782">
+
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
@@ -123,6 +131,41 @@
             transition: opacity 0.2s, border-color 0.2s;
         }
         .btn-sub:hover { opacity: 1; border-bottom-color: rgba(255,255,255,0.6); }
+
+        /* ── באנר הנחיה לאייפון (PWA) ── */
+        .ios-install {
+            display: none;               /* מוסתר כברירת מחדל, מוצג רק ל-iOS Safari */
+            margin: 24px 0 4px;
+            padding: 18px 20px;
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.22);
+            border-radius: 14px;
+            text-align: right;
+            line-height: 1.7;
+            font-size: 15px;
+        }
+        .ios-install .ios-title {
+            font-weight: 700;
+            font-size: 16px;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .ios-install ol {
+            margin: 0;
+            padding-inline-start: 22px;
+        }
+        .ios-install li { margin: 4px 0; }
+        .ios-share-icon {
+            display: inline-flex;
+            vertical-align: middle;
+            width: 20px;
+            height: 20px;
+            margin: 0 2px;
+        }
+        .ios-share-icon svg { width: 100%; height: 100%; }
+
         .links {
             display: flex;
             gap: 20px;
@@ -199,6 +242,18 @@
             </a>
             <a href="/account.html" class="btn-sub">בעל עסק? ניהול מנוי ותשלומים ←</a>
         </div>
+
+        <!-- ── באנר הנחיה לאייפון — מוצג רק ל-iOS Safari ── -->
+        <div class="ios-install" id="iosInstall">
+            <div class="ios-title">📲 משתמשי אייפון — להתקנת האפליקציה:</div>
+            <ol>
+                <li>לחצו על כפתור השיתוף
+                    <span class="ios-share-icon"><svg viewBox="0 0 50 50" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M25 33V8M16 17l9-9 9 9"/><path d="M14 24h-4v18h30V24h-4"/></svg></span>
+                    שבתחתית המסך</li>
+                <li>גללו ובחרו <strong>"הוסף למסך הבית"</strong></li>
+                <li>לחצו <strong>"הוסף"</strong> — וזהו! 🏘️</li>
+            </ol>
+        </div>
         
         <div class="links">
             <a href="privacy.html">מדיניות פרטיות</a>
@@ -216,5 +271,23 @@
             © 2026 שכונה. כל הזכויות שמורות.
         </div>
     </div>
+
+    <script>
+        // הצגת באנר ההתקנה רק ל-iPhone/iPad ב-Safari, ורק אם לא פתוח כבר כ-PWA
+        (function () {
+            var ua = window.navigator.userAgent;
+            var isIOS = /iPhone|iPad|iPod/.test(ua);
+            // Safari אמיתי — לא Chrome (CriOS), לא Firefox (FxiOS), לא Edge (EdgiOS)
+            var isSafari = /Safari/.test(ua) && !/CriOS|FxiOS|EdgiOS/.test(ua);
+            // האם כבר רץ כאפליקציה מותקנת (standalone)
+            var isStandalone = window.navigator.standalone === true ||
+                window.matchMedia('(display-mode: standalone)').matches;
+
+            if (isIOS && isSafari && !isStandalone) {
+                var el = document.getElementById('iosInstall');
+                if (el) el.style.display = 'block';
+            }
+        })();
+    </script>
 </body>
 </html>
