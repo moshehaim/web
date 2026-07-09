@@ -3,212 +3,88 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>שכונה - אפליקציה קהילתית</title>
-    <meta name="description" content="שכונה - מה שקרוב אליך. אפליקציה קהילתית שמחברת אותך לכל מה שקורה בשכונה.">
+    <title>שכונה - מה שקרוב אליך</title>
+    <meta name="description" content="שכונה - מה שקרוב אליך. אפליקציה קהילתית שמחברת אותך לכל מה שקורה בשכונה שלך.">
     <link rel="icon" type="image/png" href="app_icon.png">
 
-    <!-- ── PWA / iOS Home Screen ── -->
-    <link rel="apple-touch-icon" href="app_icon.png">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-title" content="שכונה">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="theme-color" content="#244782">
+    <meta property="og:title" content="שכונה - מה שקרוב אליך">
+    <meta property="og:description" content="אפליקציה קהילתית שמחברת אותך לכל מה שקורה בשכונה שלך — עסקים, אנשי מקצוע, בתי כנסת, קופונים ועוד.">
+    <meta property="og:image" content="app_icon.png">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://shchuna.co.il">
 
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root { --primary: #244782; --primary-dark: #1a3563; --accent: #3b6fd4; }
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Rubik', 'Assistant', sans-serif;
             background: linear-gradient(135deg, #244782 0%, #1a3563 100%);
-            color: white;
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
+            color: white; min-height: 100vh; display: flex;
+            align-items: center; justify-content: center; padding: 24px 20px;
         }
         .container {
-            max-width: 600px;
-            text-align: center;
-            background: rgba(255,255,255,0.08);
-            padding: 60px 40px;
-            border-radius: 20px;
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255,255,255,0.1);
+            max-width: 620px; width: 100%; text-align: center;
+            background: rgba(255,255,255,0.08); padding: 56px 40px;
+            border-radius: 24px; backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255,255,255,0.12); box-shadow: 0 20px 60px rgba(0,0,0,0.25);
         }
         .logo {
-            width: 120px;
-            height: 120px;
-            margin: 0 auto 30px;
-            border-radius: 24px;
-            object-fit: cover;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            width: 110px; height: 110px; margin: 0 auto 24px; border-radius: 24px;
+            object-fit: cover; box-shadow: 0 12px 32px rgba(0,0,0,0.35);
         }
-        h1 {
-            font-size: 48px;
-            margin-bottom: 16px;
-            font-weight: 700;
-        }
-        .tagline {
-            font-size: 22px;
-            opacity: 0.9;
-            margin-bottom: 30px;
-        }
+        h1 { font-size: 46px; margin-bottom: 12px; font-weight: 800; letter-spacing: -0.5px; }
+        .tagline { font-size: 21px; opacity: 0.92; margin-bottom: 24px; font-weight: 500; }
         .description {
-            font-size: 16px;
-            line-height: 1.7;
-            opacity: 0.85;
-            margin-bottom: 30px;
+            font-size: 16px; line-height: 1.7; opacity: 0.85; margin-bottom: 32px;
+            max-width: 480px; margin-inline: auto;
         }
         .features {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 12px;
-            margin: 30px 0;
-            text-align: right;
+            display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px;
+            margin: 0 auto 36px; text-align: right; max-width: 480px;
         }
         .feature {
-            background: rgba(255,255,255,0.05);
-            padding: 12px 16px;
-            border-radius: 10px;
-            font-size: 14px;
+            background: rgba(255,255,255,0.06); padding: 12px 16px; border-radius: 12px;
+            font-size: 14px; border: 1px solid rgba(255,255,255,0.06);
         }
-        /* ── כפתורי פעולה ── */
-        .cta-buttons {
-            display: flex;
-            flex-direction: column;
-            gap: 14px;
-            margin: 36px 0 10px;
+        .download-title { font-size: 17px; font-weight: 600; margin-bottom: 18px; opacity: 0.95; }
+        .store-buttons {
+            display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; margin-bottom: 18px;
         }
-        .btn-app {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            padding: 18px 28px;
-            background: white;
-            color: #1a3563;
-            text-decoration: none;
-            border-radius: 14px;
-            font-size: 18px;
-            font-weight: 700;
-            transition: transform 0.15s, box-shadow 0.2s;
-            box-shadow: 0 8px 24px rgba(0,0,0,0.25);
+        .store-btn {
+            display: inline-flex; align-items: center; gap: 10px; background: #000; color: #fff;
+            text-decoration: none; padding: 12px 22px; border-radius: 14px;
+            transition: transform 0.15s, box-shadow 0.15s; border: 1px solid rgba(255,255,255,0.15);
+            min-width: 180px; justify-content: center;
         }
-        .btn-app:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 12px 32px rgba(0,0,0,0.35);
+        .store-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,0.35); }
+        .store-btn svg { flex-shrink: 0; }
+        .store-btn .btn-text { text-align: left; line-height: 1.15; direction: ltr; }
+        .store-btn .btn-text small { display: block; font-size: 11px; opacity: 0.85; font-weight: 400; }
+        .store-btn .btn-text span { display: block; font-size: 18px; font-weight: 600; }
+        .web-btn {
+            display: inline-flex; align-items: center; gap: 10px; background: rgba(255,255,255,0.12);
+            color: #fff; text-decoration: none; padding: 14px 28px; border-radius: 14px;
+            font-size: 16px; font-weight: 600; border: 1px solid rgba(255,255,255,0.25);
+            transition: background 0.15s, transform 0.15s;
         }
-        .btn-app:active { transform: translateY(0); }
-        .btn-play {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 12px;
-            padding: 16px 28px;
-            background: rgba(255,255,255,0.12);
-            color: white;
-            text-decoration: none;
-            border-radius: 14px;
-            font-size: 16px;
-            font-weight: 600;
-            border: 1px solid rgba(255,255,255,0.25);
-            transition: background 0.2s, transform 0.15s;
-        }
-        .btn-play:hover {
-            background: rgba(255,255,255,0.2);
-            transform: translateY(-2px);
-        }
-        .btn-play:active { transform: translateY(0); }
-        .btn-play svg { width: 22px; height: 22px; flex-shrink: 0; }
-        .btn-sub {
-            display: inline-block;
-            margin-top: 6px;
-            color: white;
-            opacity: 0.75;
-            font-size: 14px;
-            text-decoration: none;
-            border-bottom: 1px solid transparent;
-            transition: opacity 0.2s, border-color 0.2s;
-        }
-        .btn-sub:hover { opacity: 1; border-bottom-color: rgba(255,255,255,0.6); }
-
-        /* ── באנר הנחיה לאייפון (PWA) ── */
-        .ios-install {
-            display: none;               /* מוסתר כברירת מחדל, מוצג רק ל-iOS Safari */
-            margin: 24px 0 4px;
-            padding: 18px 20px;
-            background: rgba(255,255,255,0.1);
-            border: 1px solid rgba(255,255,255,0.22);
-            border-radius: 14px;
-            text-align: right;
-            line-height: 1.7;
-            font-size: 15px;
-        }
-        .ios-install .ios-title {
-            font-weight: 700;
-            font-size: 16px;
-            margin-bottom: 8px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        .ios-install ol {
-            margin: 0;
-            padding-inline-start: 22px;
-        }
-        .ios-install li { margin: 4px 0; }
-        .ios-share-icon {
-            display: inline-flex;
-            vertical-align: middle;
-            width: 20px;
-            height: 20px;
-            margin: 0 2px;
-        }
-        .ios-share-icon svg { width: 100%; height: 100%; }
-
+        .web-btn:hover { background: rgba(255,255,255,0.2); transform: translateY(-2px); }
         .links {
-            display: flex;
-            gap: 20px;
-            justify-content: center;
-            flex-wrap: wrap;
-            margin-top: 30px;
-            padding-top: 30px;
-            border-top: 1px solid rgba(255,255,255,0.1);
+            display: flex; gap: 22px; justify-content: center; flex-wrap: wrap;
+            margin-top: 40px; padding-top: 28px; border-top: 1px solid rgba(255,255,255,0.12);
         }
         .links a {
-            color: white;
-            text-decoration: none;
-            opacity: 0.8;
-            font-size: 14px;
-            border-bottom: 1px solid transparent;
-            transition: all 0.2s;
+            color: white; text-decoration: none; opacity: 0.75; font-size: 14px;
+            border-bottom: 1px solid transparent; transition: all 0.2s;
         }
-        .links a:hover {
-            opacity: 1;
-            border-bottom-color: white;
-        }
-        .company-info {
-            margin-top: 24px;
-            padding-top: 20px;
-            border-top: 1px solid rgba(255,255,255,0.08);
-            font-size: 13px;
-            opacity: 0.7;
-            line-height: 1.8;
-        }
-        .company-info strong {
-            opacity: 0.9;
-        }
-        .footer {
-            margin-top: 20px;
-            font-size: 12px;
-            opacity: 0.5;
-        }
-        @media (max-width: 480px) {
-            .container { padding: 40px 24px; }
+        .links a:hover { opacity: 1; border-bottom-color: white; }
+        .footer { margin-top: 24px; font-size: 13px; opacity: 0.55; }
+        @media (max-width: 520px) {
+            .container { padding: 40px 22px; }
             h1 { font-size: 36px; }
             .tagline { font-size: 18px; }
             .features { grid-template-columns: 1fr; }
-            .links { gap: 14px; }
+            .store-buttons { flex-direction: column; align-items: center; }
+            .store-btn, .web-btn { width: 100%; max-width: 280px; }
         }
     </style>
 </head>
@@ -217,77 +93,51 @@
         <img src="app_icon.png" alt="שכונה" class="logo">
         <h1>שכונה</h1>
         <p class="tagline">מה שקרוב אליך</p>
-        
+
         <p class="description">
-            אפליקציה קהילתית שמחברת אותך לכל מה שקורה סביבך — 
+            אפליקציה קהילתית שמחברת אותך לכל מה שקורה סביבך —
             הכל במקום אחד, לפי המיקום שלך.
         </p>
-        
+
         <div class="features">
-            <div class="feature">🏪 בעלי עסקים בשכונה</div>
+            <div class="feature">🏪 עסקים בשכונה</div>
             <div class="feature">👨‍🔧 אנשי מקצוע</div>
             <div class="feature">🎫 קופונים ומבצעים</div>
-            <div class="feature">🤝 עזרה הדדית</div>
+            <div class="feature">🤝 גמ"חים ועזרה הדדית</div>
             <div class="feature">🕍 בתי כנסת וזמני תפילה</div>
             <div class="feature">📅 אירועים בקהילה</div>
         </div>
-        
-        <div class="cta-buttons">
-            <a href="/app/" class="btn-app">
-                📱 כניסה לאפליקציה
+
+        <p class="download-title">הורידו את האפליקציה</p>
+
+        <div class="store-buttons">
+            <a class="store-btn" href="https://apps.apple.com/il/app/id6785217131" target="_blank" rel="noopener">
+                <svg width="26" height="26" viewBox="0 0 24 24" fill="#fff" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M17.05 12.04c-.03-2.9 2.37-4.29 2.48-4.36-1.35-1.98-3.46-2.25-4.21-2.28-1.79-.18-3.5 1.05-4.41 1.05-.91 0-2.31-1.03-3.8-1-.2 0-.4.01-.6.03-.83.06-2.68.66-3.86 2.5-.85 1.31-1.45 3.7-.62 6.02.61 1.7 1.35 3.61 2.32 3.58.98-.04 1.35-.63 2.53-.63 1.17 0 1.51.63 2.53.61 1.05-.02 1.71-1.53 2.35-3.06.74-1.77 1.05-3.5 1.06-3.59-.02-.01-2.03-.78-2.05-3.09zM14.9 3.6c.52-.63.87-1.51.77-2.39-.75.03-1.65.5-2.19 1.13-.48.55-.9 1.44-.79 2.29.84.07 1.69-.42 2.21-1.03z"/>
+                </svg>
+                <span class="btn-text"><small>הורד ב-</small><span>App Store</span></span>
             </a>
-            <a href="https://play.google.com/store/apps/details?id=com.shchuna.app" class="btn-play" target="_blank" rel="noopener">
-                <svg viewBox="0 0 512 512" fill="currentColor"><path d="M325.3 234.3L104.6 13l280.8 161.2-60.1 60.1zM47 0C34 6.8 25.3 19.2 25.3 35.3v441.3c0 16.1 8.7 28.5 21.7 35.3l256.6-256L47 0zm425.2 225.6l-58.9-34.1-65.7 64.5 65.7 64.5 60.1-34.1c18-14.3 18-46.5-1.2-60.8zM104.6 499l280.8-161.2-60.1-60.1L104.6 499z"/></svg>
-                הורדה מ-Google Play
+
+            <a class="store-btn" href="https://play.google.com/store/apps/details?id=com.shchuna.app" target="_blank" rel="noopener">
+                <svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M3.6 2.2c-.3.3-.5.7-.5 1.2v17.2c0 .5.2.9.5 1.2l.1.1L13.4 12v-.1L3.7 2.1l-.1.1z" fill="#00D8FF"/>
+                    <path d="M17 15.3l-3.2-3.2v-.2L17 8.7l.1.1 3.8 2.2c1.1.6 1.1 1.7 0 2.3l-3.9 2z" fill="#FFBC00"/>
+                    <path d="M17.1 15.2L13.8 12 3.6 21.8c.4.4 1 .4 1.6.1l11.9-6.7z" fill="#FF3333"/>
+                    <path d="M17.1 8.8L5.2 2.1c-.6-.3-1.2-.3-1.6.1L13.8 12l3.3-3.2z" fill="#48FF48"/>
+                </svg>
+                <span class="btn-text"><small>זמין ב-</small><span>Google Play</span></span>
             </a>
-            
         </div>
 
-        <!-- ── באנר הנחיה לאייפון — מוצג רק ל-iOS Safari ── -->
-        <div class="ios-install" id="iosInstall">
-            <div class="ios-title">📲 משתמשי אייפון — להתקנת האפליקציה:</div>
-            <ol>
-                <li>לחצו על כפתור השיתוף
-                    <span class="ios-share-icon"><svg viewBox="0 0 50 50" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M25 33V8M16 17l9-9 9 9"/><path d="M14 24h-4v18h30V24h-4"/></svg></span>
-                    שבתחתית המסך</li>
-                <li>גללו ובחרו <strong>"הוסף למסך הבית"</strong></li>
-                <li>לחצו <strong>"הוסף"</strong> — וזהו! 🏘️</li>
-            </ol>
-        </div>
-        
+        <a class="web-btn" href="/app/">🌐 גלישה באתר</a>
+
         <div class="links">
-            <a href="privacy.html">מדיניות פרטיות</a>
-            <a href="terms.html">תנאי שימוש</a>
+            <a href="/privacy.html">מדיניות פרטיות</a>
+            <a href="/terms.html">תנאי שימוש</a>
             <a href="mailto:info@shchuna.co.il">יצירת קשר</a>
         </div>
-        
-        <div class="company-info">
-            <strong>שכונה (shchuna)</strong><br>
-            ירושלים, ישראל<br>
-            <a href="mailto:info@shchuna.co.il" style="color: inherit; text-decoration: none;">info@shchuna.co.il</a>
-        </div>
-        
-        <div class="footer">
-            © 2026 שכונה. כל הזכויות שמורות.
-        </div>
+
+        <div class="footer">© 2026 שכונה. כל הזכויות שמורות.</div>
     </div>
-
-    <script>
-        // הצגת באנר ההתקנה רק ל-iPhone/iPad ב-Safari, ורק אם לא פתוח כבר כ-PWA
-        (function () {
-            var ua = window.navigator.userAgent;
-            var isIOS = /iPhone|iPad|iPod/.test(ua);
-            // Safari אמיתי — לא Chrome (CriOS), לא Firefox (FxiOS), לא Edge (EdgiOS)
-            var isSafari = /Safari/.test(ua) && !/CriOS|FxiOS|EdgiOS/.test(ua);
-            // האם כבר רץ כאפליקציה מותקנת (standalone)
-            var isStandalone = window.navigator.standalone === true ||
-                window.matchMedia('(display-mode: standalone)').matches;
-
-            if (isIOS && isSafari && !isStandalone) {
-                var el = document.getElementById('iosInstall');
-                if (el) el.style.display = 'block';
-            }
-        })();
-    </script>
 </body>
 </html>
