@@ -51,7 +51,7 @@
         /* ===== Header ===== */
         header {
             display: flex; align-items: center; gap: 12px;
-            padding: 22px 0 8px;
+            padding: 16px 0 4px;
         }
         header img { width: 44px; height: 44px; border-radius: 11px; }
         header .brand { font-family: 'Secular One', sans-serif; font-size: 22px; letter-spacing: 0.5px; }
@@ -68,8 +68,8 @@
             display: grid;
             grid-template-columns: 1.1fr 0.9fr;
             align-items: center;
-            gap: 32px;
-            padding: 44px 0 56px;
+            gap: 24px;
+            padding: 24px 0 36px;
         }
         .hero-text h1 {
             font-family: 'Secular One', sans-serif;
@@ -84,7 +84,7 @@
             color: var(--white-70);
             line-height: 1.65;
             max-width: 30em;
-            margin-bottom: 26px;
+            margin-bottom: 20px;
         }
         .store-buttons { display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 18px; }
         .store-btn {
@@ -117,7 +117,7 @@
         }
         .phone {
             position: relative;
-            width: min(272px, 72vw);
+            width: min(248px, 68vw);
             aspect-ratio: 9 / 19;
             background: #0d1526;
             border-radius: 38px;
@@ -160,10 +160,10 @@
         .phone .screen.no-shot > img.shot { display: none; }
 
         /* ===== Features ===== */
-        .features-section { padding: 8px 0 48px; }
+        .features-section { padding: 4px 0 34px; }
         .features-section h2 {
             font-family: 'Secular One', sans-serif; font-weight: 400;
-            font-size: 26px; margin-bottom: 20px; text-align: center;
+            font-size: 24px; margin-bottom: 14px; text-align: center;
         }
         .features {
             display: grid;
@@ -173,10 +173,10 @@
         .feature {
             background: var(--white-08);
             border: 1px solid var(--white-12);
-            border-radius: 14px;
-            padding: 16px 18px;
-            font-size: 15.5px;
-            display: flex; align-items: center; gap: 10px;
+            border-radius: 12px;
+            padding: 12px 16px;
+            font-size: 15px;
+            display: flex; align-items: center; gap: 9px;
         }
         .feature .emoji { font-size: 20px; }
 
@@ -184,9 +184,9 @@
         .business {
             background: linear-gradient(135deg, rgba(240,169,45,0.16), rgba(240,169,45,0.05));
             border: 1px solid rgba(240,169,45,0.4);
-            border-radius: 20px;
-            padding: 34px 30px;
-            margin-bottom: 56px;
+            border-radius: 18px;
+            padding: 24px 26px;
+            margin-bottom: 36px;
             display: grid;
             grid-template-columns: 1fr auto;
             gap: 24px;
@@ -216,7 +216,7 @@
         /* ===== Footer ===== */
         footer {
             border-top: 1px solid var(--white-12);
-            padding: 26px 0 34px;
+            padding: 18px 0 24px;
             display: flex; flex-wrap: wrap; align-items: center; gap: 10px 22px;
             font-size: 14px; color: var(--white-70);
         }
@@ -229,8 +229,8 @@
             .hero {
                 grid-template-columns: 1fr;
                 text-align: center;
-                gap: 38px;
-                padding: 30px 0 44px;
+                gap: 26px;
+                padding: 16px 0 32px;
             }
             .hero-text .tagline { margin-inline: auto; }
             .store-buttons { justify-content: center; }
@@ -272,6 +272,7 @@
                         <span class="labels"><small>הורד ב-</small>App Store</span>
                     </a>
                 </div>
+                <p class="hero-note">אין צורך בהתקנה? <a href="/app/">אפשר לגלוש ישירות מהדפדפן</a>.</p>
             </div>
 
             <div class="hero-phone">
@@ -310,7 +311,7 @@
                 </p>
                 <span class="gift">🎁 מתנת הצטרפות: פרסום מבצעים 90 יום חינם</span>
             </div>
-            <a class="cta" href="#storeButtons">להורדה ולהצטרפות</a>
+            <a class="cta" id="businessCta" href="https://play.google.com/store/apps/details?id=com.shchuna.app">להורדה ולהצטרפות</a>
         </section>
 
         <footer>
@@ -329,11 +330,14 @@
             var android = document.getElementById('btnAndroid');
             var ios = document.getElementById('btnIos');
             var wrap = document.getElementById('storeButtons');
+            var businessCta = document.getElementById('businessCta');
             if (/iPhone|iPad|iPod/i.test(ua)) {
                 ios.classList.add('primary');
                 wrap.insertBefore(ios, android);
+                businessCta.href = ios.href;
             } else {
                 android.classList.add('primary');
+                businessCta.href = android.href;
             }
         })();
     </script>
