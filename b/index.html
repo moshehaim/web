@@ -1,131 +1,3 @@
-
-/
-Claude finished the response
-
-Execute SQL
-Execute SQL
-עובד מלא באנדרואיד:
-
-id: 3  |  android  |  is_test: true  |  17:00:01
-וזו הבדיקה החשובה — הרישום שרד את המעבר לחנות. sendBeacon עשה בדיוק את מה שהוא אמור. גם ?t=1 נקלט נכון.
-
-שני דברים
-1. אייפון עדיין לא נבדק. זה החשד שלי מקודם — ספארי מתנהג אחרת עם sendBeacon בזמן ניווט. אם אין לך אייפון בהישג יד, אפשר לבקש ממישהו לפתוח את shchuna.co.il/b?t=1.
-
-זה לא חוסם את השלט. גם אם ספארי לא רושם, המשתמש מגיע לחנות — רק שהסריקות מאייפון לא ייספרו. אבל עדיף לדעת.
-
-2. רשומה 1 עם is_test: false — הבדיקה הראשונה בלי הזנב. אמחק אותה כדי שהמספרים יתחילו נקיים.
-
-מוחק?
-
-יש לי אומלטור
-
-אמולטור אייפון (סימולטור Xcode / Codemagic) יעבוד לבדיקה הזו — הוא מריץ Safari אמיתי עם מנוע WebKit אמיתי, ו‑sendBeacon מתנהג בו כמו במכשיר.
-
-איך: פתח Safari בסימולטור, והקלד shchuna.co.il/b?t=1
-
-מה שתראה: ההפניה תנסה לפתוח את App Store — בסימולטור אין App Store מותקן, אז ייתכן שתראה שגיאה או דף ריק. זה בסדר. מה שחשוב הוא שהרשומה נכנסה עם platform: ios, וזה בדיוק מה שנבדק.
-
-הסתייגות אחת: הסימולטור מדווח User-Agent של iPhone, אבל התנהגות הרשת שלו לא זהה ב‑100% למכשיר אמיתי ברשת סלולרית. אם הרישום יעבוד בסימולטור — סימן טוב מאוד אבל לא הוכחה מוחלטת. אם הוא לא יעבוד — זו הוכחה שיש בעיה, ואתקן.
-
-בכל מקרה זו בדיקה שווה. תריץ ואבדוק.
-
-הוא עשה חיפשו ונתן אינסטגרם
-
-זה מתאים לצפוי — בסימולטור אין App Store, אז ההפניה לא מצאה יעד ו‑iOS ניסה לפתוח את הקישור בדרך אחרת. אינסטגרם כנראה רשומה שם כאפליקציה שיודעת לטפל בקישורי apps.apple.com.
-
-זה לא מעיד על באג. במכשיר אמיתי יש App Store והוא ייפתח כרגיל.
-
-מה שבאמת חשוב הוא אם הרישום נכנס. בודק:
-
-
-Execute SQL
-Execute SQL
-הרשומה מ‑iOS לא נכנסה. עדיין 3 רשומות בלבד — Windows, Windows, Android.
-
-זה בדיוק החשד שהעליתי: ספארי לא מספיק להוציא את sendBeacon לפני שהדף מתחלף. בכרום זה עובד, ב‑WebKit לא.
-
-התיקון
-עיכוב קצר לפני ההפניה — 300 מילישניות. לא מורגש למשתמש, ומספיק לבקשה לצאת. בנוסף fetch עם keepalive כגיבוי במקביל, כך שגם אם אחד נכשל השני עובר.
-
-הנה הקטע המתוקן — החלף את בלוק ה‑<script> בקובץ b/index.html:
-
-
-Created a file, read a file
-Created a file, read a file
-מה לעשות: בגיטהאב, פתח את b/index.html לעריכה, מחק את בלוק ה‑<script> הקיים (מ‑<script> עד </script>), והדבק במקומו את התוכן מהקובץ.
-
-שלושה שינויים:
-
-1. עיכוב 350 מילישניות לפני ההפניה. זה מה שפותר את ספארי — הבקשה מספיקה לצאת. המשתמש לא ירגיש; הוא רואה את הכרטיס הלבן שליש שנייה במקום עשירית.
-
-2. fetch עם keepalive נוסף במקביל ל‑sendBeacon. שני מנגנונים, כך שגם אם אחד נכשל השני עובר. הפונקציה תקבל אולי שתי רשומות מאותה סריקה בכרום — נצטרך לראות. אם זה יקרה, אשאיר רק אחד.
-
-3. אם שניהם נכשלו — מפנה מיד בלי עיכוב, כדי לא לבזבז זמן המשתמש לחינם.
-
-אחרי ההעלאה, תריץ שוב בסימולטור. אם תיכנס רשומה עם platform: ios — סגרנו.
-
-
-B script fixed
-Code · HTML 
-Uncaught Error: Uncaught TypeError: Cannot read properties of null (reading 'style')
-השגיאה אומרת שהסקריפט לא מוצא את id="wait" — כלומר הוא רץ לפני שה‑HTML נטען, או שהודבק במקום הלא נכון בקובץ.
-
-בקובץ המקורי ה‑<script> יושב בסוף, אחרי ה‑</div> של הכרטיס ולפני </body>. אם הודבק בראש הקובץ או בתוך ה‑<head>, האלמנטים עדיין לא קיימים כשהוא רץ.
-
-התיקון הבטוח
-הוספתי הגנה — הסקריפט יעבוד בכל מקום בקובץ:
-
-
-Created a file, read a file
-Created a file, read a file
-מה השתנה: הסקריפט בודק אם ה‑HTML כבר נטען, ואם לא — ממתין. בנוסף הוא לא נופל אם האלמנטים חסרים.
-
-חשוב: השגיאה הזו נגעה רק למסלול המחשב — הקוד קרס בשורה שמציגה את שני הכפתורים. מסלול הטלפון (ההפניה לחנות) יוצא לפני זה ולא הושפע.
-
-אבל יש כאן שאלה חשובה יותר
-השגיאה מגלה שמשהו בהעלאה לא ישב נכון. וזה מסביר גם למה iOS לא נרשם — אולי הקובץ לא שלם, ולא בעיית ספארי בכלל.
-
-כדאי להעלות את הקובץ המלא מחדש במקום להחליף רק את הסקריפט. כך אין ספק שהכל במקומו.
-
-הקובץ המקורי b-index.html עדיין אצלך בהורדות. קח אותו, החלף בתוכו את בלוק ה‑<script> בגרסה החדשה, והעלה כקובץ שלם.
-
-רוצה שאכין לך את הקובץ המלא המתוקן, כדי שתעלה אותו בהעתקה אחת?
-
-
-B script v2
-Code · HTML 
-אין שם את כל הקובץ
-
-נכון, שלחתי רק את הסקריפט. הנה הקובץ המלא והמתוקן:
-
-
-Created a file, read a file
-Created a file, read a file
-הקובץ המלא.
-
-להעלאה: בגיטהאב פתח את b/index.html, לחץ על עיפרון העריכה, סמן הכל ומחק, הדבק את התוכן החדש, ו‑Commit.
-
-חכה דקה לפרסום, ואז:
-
-במחשב — shchuna.co.il/b → הכרטיס עם שני הכפתורים, בלי שגיאה בקונסול
-בסימולטור — shchuna.co.il/b?t=1 → אמור להירשם עם platform: ios
-
-תגיד לי כשעלה ואבדוק.
-
-
-B index v2
-Code · HTML 
-
-
-
-
-
-
-Claude is AI and can make mistakes. Please double-check responses.
-
-
-B index v2 · HTML
 <!DOCTYPE html>
 <html lang="he" dir="rtl">
 <head>
@@ -154,6 +26,7 @@ B index v2 · HTML
   .and { background:var(--gold); color:var(--navy); }
   .site { display:block; margin-top:16px; font-size:13px; color:#8aa0bb; direction:ltr; }
   .wait { font-size:14px; color:#8aa0bb; font-weight:600; }
+  #px { position:absolute; width:1px; height:1px; opacity:0; pointer-events:none; }
 </style>
 </head>
 <body>
@@ -168,74 +41,61 @@ B index v2 · HTML
     <div id="wait" class="wait">רגע, מעבירים אותך…</div>
     <span class="site">shchuna.co.il</span>
   </div>
- 
+
 <script>
 (function () {
   var CODE        = "b";                                    // ← שלט כיכר הר חומה
   var SCAN_URL    = "https://mebomrqnfnbqijiuawdh.supabase.co/functions/v1/scan";
   var IOS_URL     = "https://apps.apple.com/il/app/id6785217131";
   var ANDROID_URL = "https://play.google.com/store/apps/details?id=com.shchuna.app";
- 
+
   var ua = navigator.userAgent || "";
   var isTest = /[?&]t=1/.test(location.search);
- 
+
   var platform = "other";
   if (/iPhone|iPad|iPod/i.test(ua)) platform = "ios";
   else if (/Macintosh/i.test(ua) && navigator.maxTouchPoints > 1) platform = "ios"; // iPadOS 13+
   else if (/Android/i.test(ua)) platform = "android";
- 
-  var payload = JSON.stringify({ s: CODE, p: platform, t: isTest });
-  var sent = false;
- 
-  // גיבוי 1 — fetch עם keepalive (אמין ב-WebKit / ספארי)
-  try {
-    fetch(SCAN_URL, {
-      method: "POST",
-      body: payload,
-      keepalive: true,
-      mode: "cors",
-      headers: { "Content-Type": "text/plain" }
-    }).catch(function () {});
-    sent = true;
-  } catch (e) {}
- 
-  // גיבוי 2 — sendBeacon (אמין בכרום)
-  try {
-    if (navigator.sendBeacon) {
-      navigator.sendBeacon(SCAN_URL, new Blob([payload], { type: "text/plain" }));
-      sent = true;
-    }
-  } catch (e) {}
- 
+
+  // ===== רישום הסריקה =====
+  // פיקסל תמונה — המנגנון האמין ביותר, עובד בספארי ובכל דפדפן
+  var px = new Image();
+  var redirected = false;
+
+  function go() {
+    if (redirected) return;
+    redirected = true;
+    if (platform === "ios")          location.replace(IOS_URL);
+    else if (platform === "android") location.replace(ANDROID_URL);
+  }
+
   if (platform === "ios" || platform === "android") {
-    var target = (platform === "ios") ? IOS_URL : ANDROID_URL;
-    // עיכוב קצר — ספארי לא מספיק לשלוח את הבקשה לפני שהדף מתחלף
-    setTimeout(function () { location.replace(target); }, sent ? 350 : 0);
-    return;
+    // מפנים ברגע שהפיקסל נטען — כלומר אחרי שהרישום הגיע לשרת
+    px.onload  = go;
+    px.onerror = go;
+    // רשת אינטרנט לא מגיבה? מפנים בכל מקרה אחרי 1.2 שניות
+    setTimeout(go, 1200);
   }
- 
-  // מחשב / דפדפן לא מזוהה — מציגים שני כפתורים
-  function showChoice() {
-    var wait   = document.getElementById("wait");
-    var choice = document.getElementById("choice");
-    if (wait)   wait.style.display   = "none";
-    if (choice) choice.style.display = "block";
-  }
- 
-  if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", showChoice);
-  } else {
-    showChoice();
+
+  px.src = SCAN_URL
+    + "?s=" + encodeURIComponent(CODE)
+    + "&p=" + encodeURIComponent(platform)
+    + (isTest ? "&t=1" : "")
+    + "&r=" + Date.now();          // עוקף מטמון
+
+  // מחשב / דפדפן לא מזוהה — שני כפתורים
+  if (platform === "other") {
+    var show = function () {
+      var w = document.getElementById("wait");
+      var c = document.getElementById("choice");
+      if (w) w.style.display = "none";
+      if (c) c.style.display = "block";
+    };
+    if (document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", show);
+    } else { show(); }
   }
 })();
 </script>
 </body>
 </html>
- 
-
-
-
-
-
-
-
