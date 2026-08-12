@@ -3,18 +3,12 @@ const MANIFEST = 'flutter-app-manifest';
 const TEMP = 'flutter-temp-cache';
 const CACHE_NAME = 'flutter-app-cache';
 
-const RESOURCES = {"assets/AssetManifest.bin": "1c5912d36402cbdbd61fdc0745cdb055",
-"assets/AssetManifest.bin.json": "4982ad0fdde2348a9faf0ca848a96028",
-"assets/AssetManifest.json": "bc512d2c4dfdb93acaf883cddab0237a",
+const RESOURCES = {"assets/AssetManifest.bin": "92e6ed0e3856b1f32607858c22f78681",
+"assets/AssetManifest.bin.json": "05ccdfae6e422c2bd827a1a4d481de98",
+"assets/AssetManifest.json": "6276be72d1b832e36e275a40b30ea15c",
 "assets/assets/bus_stations.json": "c69ea4d6bbbf19e291ae678dc356e28f",
 "assets/assets/chomat_shmuel_polygon.json": "52febf9e39938fabd450ea0ac1b64619",
-"assets/assets/icons/app_icon.jpg": "fba8f96529d118eafeaa4a38d60395c6",
-"assets/assets/icons/app_icon.png": "49f506513a3c591bcd81aedecb7cace5",
-"assets/assets/icons/app_logo.png": "be79a021774f5b390ed5b4b17df73ad4",
 "assets/assets/icons/bayb48.png": "f3a3ee90b83476b040eb1f6837f02b63",
-"assets/assets/icons/log.png": "f4f7dcf1b59590c6c246d19aa7c318a9",
-"assets/assets/icons/open_app.png": "b9fab0e8a2d533ae63c029054b73e726",
-"assets/assets/icons/open_app2.png": "82154db5d1b00a22bdc8eb43fab6e349",
 "assets/assets/icons/stethoscope.svg": "a2b78a7027dd9e4561edfa29abe83f03",
 "assets/assets/icons/tooth.svg": "ffda33cab9dd773447976077baa2c3fe",
 "assets/assets/images/app_imag.png": "23a377ad1e239bb628e839d07572845b",
@@ -49,7 +43,7 @@ const RESOURCES = {"assets/AssetManifest.bin": "1c5912d36402cbdbd61fdc0745cdb055
 "assets/fonts/Heebo-Medium.ttf": "172ac844cd718bc0a7177d95278d393b",
 "assets/fonts/Heebo-Regular.ttf": "14e1826669fc483e0a2e71f592302040",
 "assets/fonts/Heebo-SemiBold.ttf": "fe4775e80d1830535102a4aff991265d",
-"assets/fonts/MaterialIcons-Regular.otf": "d9026f4486e50555421c90b719e57298",
+"assets/fonts/MaterialIcons-Regular.otf": "017e8b452122f47c8cfaf266658fec25",
 "assets/fonts/Rubik-Bold.ttf": "6f755d180caef859e79b956cbc98a115",
 "assets/fonts/Rubik-ExtraBold.ttf": "857f003f083bdc2bfad69dbc61a8a883",
 "assets/fonts/Rubik-Medium.ttf": "b50cf80a20b522e81d3191ccfc6fb109",
@@ -85,7 +79,7 @@ const RESOURCES = {"assets/AssetManifest.bin": "1c5912d36402cbdbd61fdc0745cdb055
 "canvaskit/skwasm_heavy.wasm": "8034ad26ba2485dab2fd49bdd786837b",
 "favicon.png": "a41693dd6753567df21e84b58c77f336",
 "flutter.js": "888483df48293866f9f41d3d9274a779",
-"flutter_bootstrap.js": "30cbf7438aa8b7cce64a7e0af427e6d5",
+"flutter_bootstrap.js": "5ff27ef39f25913048d1d201209bfe9c",
 "icons/apple-touch-icon.png": "8442aff1e9033197aa02fcbf617acc3f",
 "icons/Icon-192.png": "12b54e17c044dc435b780739edd2d86b",
 "icons/Icon-512.png": "5c1229c85805c634eb1e5ee816c1f58c",
@@ -93,9 +87,9 @@ const RESOURCES = {"assets/AssetManifest.bin": "1c5912d36402cbdbd61fdc0745cdb055
 "icons/Icon-maskable-512.png": "ac8b470926546f8bb23c38074f566bb7",
 "index.html": "0c93cd4f1a2befa188fa1e162c00ede0",
 "/": "0c93cd4f1a2befa188fa1e162c00ede0",
-"main.dart.js": "1a9c970d6288db6317c9b663d1c95d80",
+"main.dart.js": "6639a401e0f03781b48fcfc60f3b9dfd",
 "manifest.json": "7e6ce7970553374452d5322a6ff20f4a",
-"version.json": "f6c45174bdcd4ba4a21a2af11ad7c446"};
+"version.json": "7bd7b4191bece18d50258c81fc593ae0"};
 // The application shell files that are downloaded before a service worker can
 // start.
 const CORE = ["main.dart.js",
