@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>שכונה — הורדת האפליקציה</title>
+<link rel="icon" href="/app_icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Assistant:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+  :root { --navy:#0b3a78; --gold:#ffd23f; }
+  * { box-sizing:border-box; }
+  body { margin:0; min-height:100vh; display:flex; align-items:center; justify-content:center;
+         font-family:'Assistant',system-ui,-apple-system,sans-serif; color:var(--navy);
+         background:linear-gradient(180deg,#eaf3ff 0%,#f6faff 100%); padding:24px; }
+  .card { width:100%; max-width:380px; background:#fff; border-radius:20px; padding:34px 24px;
+          box-shadow:0 12px 40px rgba(11,58,120,.14); text-align:center; }
+  .logo { width:72px; height:72px; border-radius:18px; margin:0 auto 14px; display:block; }
+  h1 { font-size:28px; font-weight:800; margin:0 0 4px; }
+  p  { font-size:15px; color:#5b7290; margin:0 0 24px; font-weight:600; }
+  a  { display:block; text-decoration:none; font-weight:800; font-size:16px;
+       padding:15px; border-radius:12px; margin-bottom:11px; }
+  .ios { background:var(--navy); color:#fff; }
+  .and { background:var(--gold); color:var(--navy); }
+  .site { display:block; margin-top:16px; font-size:13px; color:#8aa0bb; direction:ltr; }
+  .wait { font-size:14px; color:#8aa0bb; font-weight:600; }
+  #px { position:absolute; width:1px; height:1px; opacity:0; pointer-events:none; }
+</style>
+</head>
+<body>
+  <div class="card">
+    <img class="logo" src="/app_icon.png" alt="שכונה">
+    <h1>שכונה</h1>
+    <p>כל מה שקרוב אליך, באפליקציה אחת</p>
+    <div id="choice" style="display:none">
+      <a class="ios" href="https://apps.apple.com/il/app/id6785217131">App Store — אייפון</a>
+      <a class="and" href="https://play.google.com/store/apps/details?id=com.shchuna.app">Google Play — אנדרואיד</a>
+    </div>
+    <div id="wait" class="wait">רגע, מעבירים אותך…</div>
+    <span class="site">shchuna.co.il</span>
+  </div>
+
+<script>
+(function () {
+  var CODE        = "w";                                    // ← פליירים
+  var SCAN_URL    = "https://mebomrqnfnbqijiuawdh.supabase.co/functions/v1/scan";
+  var IOS_URL     = "https://apps.apple.com/il/app/id6785217131";
+  var ANDROID_URL = "https://play.google.com/store/apps/details?id=com.shchuna.app";
+
+  var ua = navigator.userAgent || "";
+  var isTest = /[?&]t=1/.test(location.search);
+
+  var platform = "other";
+  if (/iPhone|iPad|iPod/i.test(ua)) platform = "ios";
+  else if (/Macintosh/i.test(ua) && navigator.maxTouchPoints > 1) platform = "ios"; // iPadOS 13+
+  else if (/Android/i.test(ua)) platform = "android";
+
+  // ===== רישום הסריקה =====
+  // פיקסל תמונה — המנגנון האמין ביותר, עובד בספארי ובכל דפדפן
+  var px = new Image();
+  var redirected = false;
+
+  function go() {
+    if (redirected) return;
+    redirected = true;
+    if (platform === "ios")          location.replace(IOS_URL);
+    else if (platform === "android") location.replace(ANDROID_URL);
+  }
+
+  if (platform === "ios" || platform === "android") {
+    // מפנים ברגע שהפיקסל נטען — כלומר אחרי שהרישום הגיע לשרת
+    px.onload  = go;
+    px.onerror = go;
+    // רשת אינטרנט לא מגיבה? מפנים בכל מקרה אחרי 1.2 שניות
+    setTimeout(go, 1200);
+  }
+
+  px.src = SCAN_URL
+    + "?s=" + encodeURIComponent(CODE)
+    + "&p=" + encodeURIComponent(platform)
+    + (isTest ? "&t=1" : "")
+    + "&r=" + Date.now();          // עוקף מטמון
+
+  // מחשב / דפדפן לא מזוהה — שני כפתורים
+  if (platform === "other") {
+    var show = function () {
+      var w = document.getElementById("wait");
+      var c = document.getElementById("choice");
+      if (w) w.style.display = "none";
+      if (c) c.style.display = "block";
+    };
+    if (document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", show);
+    } else { show(); }
+  }
+})();
+</script>
+</body>
+</html>
