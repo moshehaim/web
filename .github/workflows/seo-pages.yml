@@ -4,9 +4,8 @@ name: בניית עמודי SEO
 # אחרי שהפלט אושר, מסירים את ההערה מ-schedule להרצה יומית.
 on:
   workflow_dispatch:
-  # schedule:
-  #   - cron: '0 1 * * *'   # 04:00 שעון ישראל
-
+  schedule:
+    - cron: '0 1 * * *'
 permissions:
   contents: write
 
