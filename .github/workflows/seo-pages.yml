@@ -1,0 +1,45 @@
+name: בניית עמודי SEO
+
+# מתחילים בהרצה ידנית בלבד.
+# אחרי שהפלט אושר, מסירים את ההערה מ-schedule להרצה יומית.
+on:
+  workflow_dispatch:
+  # schedule:
+  #   - cron: '0 1 * * *'   # 04:00 שעון ישראל
+
+permissions:
+  contents: write
+
+concurrency:
+  group: seo-build
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: התקנת תלויות
+        working-directory: generator
+        run: npm ci || npm install
+
+      - name: יצירת העמודים
+        working-directory: generator
+        run: node build.js --out ../
+
+      - name: דחיפה אם השתנה משהו
+        run: |
+          git config user.name  "shchuna-bot"
+          git config user.email "bot@users.noreply.github.com"
+          git add minyanim-har-homa sitemap.xml robots.txt
+          if git diff --staged --quiet; then
+            echo "אין שינויים"
+          else
+            git commit -m "עדכון עמודי מניינים [skip ci]"
+            git push
+          fi
