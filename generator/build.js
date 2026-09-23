@@ -95,7 +95,14 @@ async function main() {
   const P = byId(prayers || {});
   const L = byId(lessons || {});
 
-  const urls = [{ loc: `${BASE}/${SECTION}/`, freq: 'weekly', pri: '0.9' }];
+  // דפי השורש הידניים. חייבים להיות זהים תו-לתו ל-canonical שבקבצים
+  // עצמם (index.html, privacy.html, terms.html) — פער ביניהם הוא סתירה.
+  const urls = [
+    { loc: `${BASE}/`,             freq: 'monthly', pri: '1.0' },
+    { loc: `${BASE}/privacy.html`, freq: 'yearly',  pri: '0.2' },
+    { loc: `${BASE}/terms.html`,   freq: 'yearly',  pri: '0.2' },
+    { loc: `${BASE}/${SECTION}/`,  freq: 'weekly',  pri: '0.9' },
+  ];
   const listed = [];
   let withPrayers = 0;
 
