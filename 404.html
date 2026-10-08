@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<title>שכונה</title>
+<script>
+  // GitHub Pages מגיש את הקובץ הזה לכל כתובת שלא קיימת כקובץ אמיתי, בכל האתר.
+  // מפנים רק כתובות שמתחילות ב-/app/ (קישורי deep link) ל-route ה-hash המתאים
+  // באפליקציית ה-web, עם שמירת ה-query string. כל כתובת אחרת — "הדף לא נמצא", בלי הפניה.
+  (function () {
+    var path = location.pathname;
+    var prefix = '/app/';
+    if (path.indexOf(prefix) === 0) {
+      var rest = path.slice(prefix.length);
+      location.replace('/app/#/' + rest + location.search);
+    }
+  })();
+</script>
+</head>
+<body>
+  <div style="font-family: Arial, sans-serif; text-align: center; padding: 80px 20px;">
+    <h1>הדף לא נמצא</h1>
+    <p><a href="/">לדף הבית</a></p>
+  </div>
+</body>
+</html>
