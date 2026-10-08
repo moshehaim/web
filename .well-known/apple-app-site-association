@@ -1,0 +1,11 @@
+{
+  "applinks": {
+    "apps": [],
+    "details": [
+      {
+        "appID": "GKGG6WRC25.com.shchuna.app",
+        "paths": ["/app/*"]
+      }
+    ]
+  }
+}

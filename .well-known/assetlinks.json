@@ -1,0 +1,13 @@
+[
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "com.shchuna.app",
+      "sha256_cert_fingerprints": [
+        "5F:CF:EE:56:E2:A8:60:5E:C7:D1:F2:E7:8C:26:D0:6B:A8:35:57:0D:65:F1:FD:B9:7F:60:0F:7C:94:21:E7:08",
+        "45:11:E6:48:FE:62:36:4B:3D:70:1F:FD:BB:78:23:3B:F6:71:6E:F1:96:70:A6:0C:3D:DE:1C:C3:AB:F6:5B:75"
+      ]
+    }
+  }
+]
