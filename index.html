@@ -55,6 +55,9 @@
 
   .web-link { display: inline-flex; align-items: center; gap: 8px; font-size: 15px; font-weight: 600; color: rgba(255,255,255,0.82); border-bottom: 1px solid rgba(255,255,255,0.35); padding-bottom: 2px; }
   .web-link:hover { color: #ffffff; }
+  .hood-link { display: inline-flex; align-items: center; gap: 10px; background: #f0a92d; color: #2a1a02; font-weight: 800; font-size: 16.5px; border-radius: 14px; padding: 13px 22px; box-shadow: 0 12px 26px rgba(0,0,0,0.25); transition: transform 0.15s; }
+  .hood-link:hover { transform: translateY(-2px); }
+  a.hero-eyebrow:hover { background: rgba(240,169,45,0.24); }
   .store-block { display: flex; flex-direction: column; align-items: center; gap: 14px; margin-bottom: 22px; width: fit-content; }
   .store-block .store-row { margin-bottom: 0; }
   .close-cta .web-link { margin-top: 18px; }
@@ -162,10 +165,10 @@
               <span class="tag">מה שקרוב אליך</span>
             </span>
           </a>
-          <div class="hero-eyebrow">
+          <a href="/har-homa/" class="hero-eyebrow">
             <span class="dot"></span>
             עכשיו בהר חומה · שכונות נוספות בקרוב
-          </div>
+          </a>
         </div>
 
         <h1>כל מה שקרוב אליך,<br><span class="accent">באפליקציה אחת.</span></h1>
@@ -184,6 +187,7 @@
               <span class="label"><small>זמין ב-</small>Google Play</span>
             </a>
           </div>
+          <a href="/har-homa/" class="hood-link">📍 כל מה שקורה בחומת שמואל ←</a>
           <a href="https://shchuna.co.il/app/" class="web-link">🌐 גלישה באתר</a>
         </div>
 
