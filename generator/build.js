@@ -6,6 +6,7 @@
  * ומייצר HTML סטטי לתוך הרפו. רץ פעם ביום ב-GitHub Actions.
  *
  *   node build.js --out ../ [--dry]
+ *   node build.js --fixture data.json --out /tmp/preview   ← עמוד הבית בלבד, בלי רשת
  */
 
 import fs from 'node:fs';
@@ -16,6 +17,8 @@ import { SlugStore } from './lib/slugs.js';
 import { computeZmanim, sortPrayers, formatPrayerTime } from './lib/prayers.js';
 import { isPrayerInSeason } from './lib/season.js';
 import { synagoguePage, indexPage, sitemap } from './lib/template.js';
+import { fetchHome, shapeHome } from './lib/home-data.js';
+import { homePage } from './lib/home-template.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -53,8 +56,11 @@ const DRY    = args.includes('--dry');
 const outIdx = args.indexOf('--out');
 const OUT    = path.resolve(__dirname, outIdx > -1 ? args[outIdx + 1] : '../out');
 const SECTION = 'minyanim-har-homa';
+const HOME    = 'har-homa';          // עמוד הבית החדש של השכונה: /har-homa/
+const fxIdx   = args.indexOf('--fixture');
+const FIXTURE = fxIdx > -1 ? path.resolve(process.cwd(), args[fxIdx + 1]) : null;
 
-if (!SUPABASE_URL || !ANON_KEY) {
+if (!FIXTURE && (!SUPABASE_URL || !ANON_KEY)) {
   console.error('לא נמצאו SUPABASE_URL / SUPABASE_ANON_KEY — לא ב-app/.env ולא בסביבה');
   process.exit(1);
 }
@@ -66,7 +72,19 @@ const write = (rel, content) => {
   fs.writeFileSync(file, content, 'utf8');
 };
 
+const writeHome = (raw) => {
+  const vm = shapeHome(raw, { now: new Date(), base: BASE });
+  write(path.join(HOME, 'index.html'), homePage(vm, { base: BASE, path: `/${HOME}/` }));
+  console.log(`  ${HOME}/  · ${vm.promos.length} מבצעים · ${vm.professionals.length} בעלי מקצוע · ` +
+    `${vm.businesses.length} עסקים · ${vm.realEstate.length} נכסים · ${vm.prayers.length} מניינים היום`);
+};
+
 async function main() {
+  if (FIXTURE) {
+    writeHome(JSON.parse(fs.readFileSync(FIXTURE, 'utf8')));
+    return;
+  }
+
   const db = createClient(SUPABASE_URL, ANON_KEY, { auth: { persistSession: false } });
 
   const [{ data: community, error: e0 }, { data: syns, error: e1 }] = await Promise.all([
@@ -102,6 +120,7 @@ async function main() {
     { loc: `${BASE}/privacy.html`, freq: 'yearly',  pri: '0.2' },
     { loc: `${BASE}/terms.html`,   freq: 'yearly',  pri: '0.2' },
     { loc: `${BASE}/${SECTION}/`,  freq: 'weekly',  pri: '0.9' },
+    { loc: `${BASE}/${HOME}/`,     freq: 'daily',   pri: '0.9' },
   ];
   const listed = [];
   let withPrayers = 0;
@@ -129,6 +148,9 @@ async function main() {
 
   write(path.join(SECTION, 'index.html'),
     indexPage({ synagogues: listed, base: BASE, counts: { total: syns.length, withPrayers } }));
+  // עמוד הבית חדש — כשל בו לא יעצור את עדכון עמודי המניינים
+  try { writeHome(await fetchHome(db, COMMUNITY_ID)); }
+  catch (e) { console.error(`  ⚠ ${HOME}/ לא נבנה:`, e.message || e); process.exitCode = 0; }
   write('sitemap.xml', sitemap(urls));
   write('robots.txt', `User-agent: *\nAllow: /\n\nSitemap: ${BASE}/sitemap.xml\n`);
 
