@@ -52,7 +52,7 @@ export async function fetchHome(db, communityId) {
       .order('recommend_count', { ascending: false, nullsFirst: false })
       .order('updated_at', { ascending: false }).limit(30)),
     q(byCommunity('promotions', 'id,title,image_url,provider_name,end_date,image_women_only,content_audience')
-      .eq('is_active', true).or(`end_date.is.null,end_date.gte.${nowIso}`)
+      .eq('is_active', true).or(`end_date.is.null,end_date.gte."${nowIso}"`)
       .order('created_at', { ascending: false }).limit(12)),
     // בלי code — הקוד לא יוצא לאתר הסטטי
     q(byCommunity('coupons', 'id,image_url,text_content,expires_at,image_women_only,content_audience')
@@ -62,14 +62,14 @@ export async function fetchHome(db, communityId) {
     q(byCommunity('approved_rental_properties', 'id,full_address,monthly_rent,num_rooms,area_in_sqm,floor,property_type,image_urls')
       .order('created_at', { ascending: false }).limit(20)),
     q(byCommunity('jobs', 'id,title,company_name,employment_type,created_at')
-      .not('is_active', 'is', false).or(`expires_at.is.null,expires_at.gt.${nowIso}`)
+      .not('is_active', 'is', false).or(`expires_at.is.null,expires_at.gt."${nowIso}"`)
       .order('created_at', { ascending: false }).limit(6)),
     q(byCommunity('second_hand_items', 'id,name,price,is_free,created_at')
       .order('created_at', { ascending: false }).limit(6)),
     q(byCommunity('gmachim', 'id,name,categories')
       .order('view_count', { ascending: false, nullsFirst: false }).limit(6)),
     q(byCommunity('volunteering', 'id,title,organization_name,created_at')
-      .not('is_active', 'is', false).or(`expires_at.is.null,expires_at.gt.${nowIso}`)
+      .not('is_active', 'is', false).or(`expires_at.is.null,expires_at.gt."${nowIso}"`)
       .order('created_at', { ascending: false }).limit(6)),
     q(byCommunity('lost_and_found', 'id,status,title,created_at')
       .order('created_at', { ascending: false }).limit(6)),
