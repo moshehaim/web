@@ -219,6 +219,8 @@ footer .c{font-size:13px;color:#8A94A6}
 .t-green{--t1:#EAF7EE;--t2:#D4EEDC;--tf:#15803D}.t-violet{--t1:#F3EFFC;--t2:#E4DCF7;--tf:#6D4BB8}
 .t-teal{--t1:#E6F6F4;--t2:#CDEBE7;--tf:#0F766E}.t-amber{--t1:#FCF5E6;--t2:#F4E5C2;--tf:#8A5A00}
 .t-rose{--t1:#FCEFF2;--t2:#F5D9E0;--tf:#9F2D4B}
+.dcard.compact .dmedia{display:none}
+.dcard.compact .dbody{padding-top:18px}
 .dmedia.noimg{background:radial-gradient(120% 90% at 85% 0%,var(--t1) 0%,var(--t2) 100%)}
 .dmedia.noimg svg{width:64px;height:64px;color:var(--tf);opacity:.9}
 .dmedia.noimg::after{content:'';position:absolute;inset:auto 0 0 0;height:36%;opacity:.35;
@@ -604,7 +606,16 @@ function run(){var t=(q.value||'').trim(),n=0;
   empty.hidden=n>0;}
 chips.forEach(function(b){b.addEventListener('click',function(){g=b.getAttribute('data-g');
   chips.forEach(function(x){x.setAttribute('aria-pressed',x===b);});run();});});
-q.addEventListener('input',run);
+q.addEventListener('input',function(){run();});
+/* כרטיס בלי תמונה: מקוצר (כיתוב בלבד), אלא אם הוא באותה שורה עם כרטיס שיש לו תמונה — לגובה אחיד */
+function fit(){var vis=cards.filter(function(c){return !c.hidden;}),rows={};
+  vis.forEach(function(c){c.classList.remove('compact');});
+  vis.forEach(function(c){var y=c.offsetTop;(rows[y]=rows[y]||[]).push(c);});
+  Object.keys(rows).forEach(function(y){var r=rows[y];
+    if(!r.some(function(c){return !c.querySelector('.dmedia.noimg');}))
+      r.forEach(function(c){c.classList.add('compact');});});}
+var _run=run;run=function(){_run();fit();};
+fit();var rt;window.addEventListener('resize',function(){clearTimeout(rt);rt=setTimeout(fit,120);});
 /* ספירת יצירת קשר — אותו RPC כמו באפליקציה, פעם אחת לכל עסק בכל ביקור */
 var API=window.__SB||null,sent={};
 function count(card){if(!API||!card)return;var id=card.getAttribute('data-id'),t=card.getAttribute('data-t');
