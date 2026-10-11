@@ -310,3 +310,71 @@ export function shapeDirectory(raw) {
     biz: { items: biz, groups: groupsOf(biz, bizOrder) },
   };
 }
+
+/* ── רשימות נוספות: מבצעים, נדל״ן, לוח השכונה ─────────────────────── */
+
+export async function fetchListings(db, communityId) {
+  const nowIso = new Date().toISOString();
+  const q = (p) => p.then(({ data, error }) => { if (error) throw error; return data || []; });
+  const by = (t, cols) => db.from(t).select(cols).eq('community_id', communityId);
+  const [promotions, coupons, sale, rent, jobs, secondHand, gmachim, volunteering, lostFound] = await Promise.all([
+    q(by('promotions', 'id,title,image_url,provider_name,end_date,image_women_only')
+      .eq('is_active', true).or(`end_date.is.null,end_date.gte."${nowIso}"`).order('created_at', { ascending: false })),
+    q(by('coupons', 'id,image_url,text_content,expires_at,image_women_only')
+      .eq('status', 'active').order('priority', { ascending: false, nullsFirst: false })),
+    q(by('approve_property', 'id,full_address,asking_price,num_rooms,area_in_sqm,floor,property_type,image_urls,created_at')
+      .order('created_at', { ascending: false })),
+    q(by('approved_rental_properties', 'id,full_address,monthly_rent,num_rooms,area_in_sqm,floor,property_type,image_urls,created_at')
+      .order('created_at', { ascending: false })),
+    q(by('jobs', 'id,title,company_name,employment_type,created_at')
+      .not('is_active', 'is', false).or(`expires_at.is.null,expires_at.gt."${nowIso}"`).order('created_at', { ascending: false })),
+    q(by('second_hand_items', 'id,name,price,is_free,created_at').order('created_at', { ascending: false })),
+    q(by('gmachim', 'id,name,categories,address').order('name')),
+    q(by('volunteering', 'id,title,organization_name,created_at')
+      .not('is_active', 'is', false).or(`expires_at.is.null,expires_at.gt."${nowIso}"`).order('created_at', { ascending: false })),
+    q(by('lost_and_found', 'id,status,title,created_at').order('created_at', { ascending: false })),
+  ]);
+  return { promotions, coupons, sale, rent, jobs, secondHand, gmachim, volunteering, lostFound };
+}
+
+export function shapeListings(raw, community, now = new Date()) {
+  const promos = [
+    ...raw.promotions.map((p) => ({ group: 'מבצעים', kind: 'מבצע', title: p.title, provider: p.provider_name || '',
+      img: p.image_women_only ? null : p.image_url, until: until(p.end_date), cat: 'retail' })),
+    ...raw.coupons.map((c) => ({ group: 'קופונים', kind: 'קופון', title: c.text_content || 'קופון', provider: '',
+      img: c.image_women_only ? null : c.image_url, until: until(c.expires_at), coupon: true, cat: 'retail' })),
+  ];
+
+  const home = (r, kind, price) => ({
+    group: kind, kind, img: firstImage(r.image_urls), cat: 'household',
+    price: price && price >= 300 ? (kind === 'להשכרה' ? `${ils(price)} לחודש` : ils(price)) : '',
+    title: [PROPERTY_TYPES[r.property_type] || 'נכס', r.num_rooms ? `${r.num_rooms} חד׳` : ''].filter(Boolean).join(' · '),
+    meta: [r.area_in_sqm ? `${r.area_in_sqm} מ״ר` : '', r.floor != null ? (r.floor === 0 ? 'קומת קרקע' : `קומה ${r.floor}`) : '']
+      .filter(Boolean).join(' · '),
+    street: r.full_address || community.neighborhood,
+  });
+  const realEstate = [...raw.sale.map((r) => home(r, 'למכירה', r.asking_price)),
+    ...raw.rent.map((r) => home(r, 'להשכרה', r.monthly_rent))]
+    .sort((a, b) => !!b.img - !!a.img);
+
+  const board = [
+    ...raw.jobs.map((j) => ({ key: 'jobs', group: 'דרושים', t: j.title,
+      sub: [j.company_name, ago(j.created_at, now)].filter(Boolean).join(' · '), b: EMPLOYMENT[j.employment_type] || '' })),
+    ...raw.secondHand.map((s) => ({ key: 'second', group: 'יד שנייה', t: s.name, sub: ago(s.created_at, now),
+      b: s.is_free || !s.price ? 'למסירה' : ils(s.price) })),
+    ...raw.gmachim.map((g) => ({ key: 'gmach', group: 'גמ״חים', t: g.name,
+      sub: [(g.categories || []).join(' · '), g.address].filter(Boolean).join(' · ') || 'גמ״ח', b: '' })),
+    ...raw.volunteering.map((v) => ({ key: 'vol', group: 'התנדבות', t: v.title,
+      sub: [v.organization_name, ago(v.created_at, now)].filter(Boolean).join(' · '), b: '' })),
+    ...raw.lostFound.map((l) => ({ key: 'lost', group: 'אבידות ומציאות', t: l.title, sub: ago(l.created_at, now),
+      b: l.status === 'lost' ? 'אבד' : 'נמצא' })),
+  ];
+  const boardGroups = [['jobs', 'דרושים'], ['second', 'יד שנייה'], ['gmach', 'גמ״חים'], ['vol', 'התנדבות'], ['lost', 'אבידות ומציאות']]
+    .filter(([k]) => board.some((x) => x.key === k));
+
+  return {
+    promos: { items: promos, groups: ['מבצעים', 'קופונים'].filter((g) => promos.some((p) => p.group === g)) },
+    realEstate: { items: realEstate, groups: ['למכירה', 'להשכרה'].filter((g) => realEstate.some((r) => r.group === g)) },
+    board: { items: board, groups: boardGroups },
+  };
+}

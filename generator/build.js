@@ -17,9 +17,9 @@ import { SlugStore } from './lib/slugs.js';
 import { computeZmanim, sortPrayers, formatPrayerTime } from './lib/prayers.js';
 import { isPrayerInSeason } from './lib/season.js';
 import { synagoguePage, indexPage, sitemap } from './lib/template.js';
-import { fetchHome, shapeHome, fetchDirectory, shapeDirectory } from './lib/home-data.js';
+import { fetchHome, shapeHome, fetchDirectory, shapeDirectory, fetchListings, shapeListings } from './lib/home-data.js';
 import { homePage } from './lib/home-template.js';
-import { listPage } from './lib/list-template.js';
+import { listPage, promosPage, realEstatePage, boardPage } from './lib/list-template.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -76,11 +76,19 @@ const write = (rel, content) => {
 // ספירת לחיצות מהדפדפן: אותו anon key ציבורי שהאפליקציה בווב משתמשת בו
 const API = SUPABASE_URL && ANON_KEY ? { url: SUPABASE_URL, key: ANON_KEY } : null;
 
-const writeHome = (raw, dirRaw) => {
+const writeHome = (raw, dirRaw, lsRaw) => {
   const vm = shapeHome(raw, { now: new Date(), base: BASE });
   write(path.join(HOME, 'index.html'), homePage(vm, { base: BASE, path: `/${HOME}/` }));
   console.log(`  ${HOME}/  · ${vm.promos.length} מבצעים · ${vm.professionals.length} בעלי מקצוע · ` +
     `${vm.businesses.length} עסקים · ${vm.realEstate.length} נכסים · ${vm.prayers.length} מניינים היום`);
+  if (lsRaw) {
+    const ls = shapeListings(lsRaw, raw.community);
+    const o = { base: BASE, home: `/${HOME}/` };
+    write(path.join(HOME, 'promos', 'index.html'), promosPage(vm, ls, o));
+    write(path.join(HOME, 'realestate', 'index.html'), realEstatePage(vm, ls, o));
+    write(path.join(HOME, 'board', 'index.html'), boardPage(vm, ls, o));
+    console.log(`  promos · ${ls.promos.items.length}   realestate · ${ls.realEstate.items.length}   board · ${ls.board.items.length}`);
+  }
   if (!dirRaw) return;
   const dir = shapeDirectory(dirRaw);
   for (const kind of ['pros', 'biz']) {
@@ -92,7 +100,7 @@ const writeHome = (raw, dirRaw) => {
 async function main() {
   if (FIXTURE) {
     const fx = JSON.parse(fs.readFileSync(FIXTURE, 'utf8'));
-    writeHome(fx, fx.directory);
+    writeHome(fx, fx.directory, fx.listings);
     return;
   }
 
@@ -134,6 +142,9 @@ async function main() {
     { loc: `${BASE}/${HOME}/`,     freq: 'daily',   pri: '0.9' },
     { loc: `${BASE}/${HOME}/pros/`, freq: 'weekly', pri: '0.8' },
     { loc: `${BASE}/${HOME}/biz/`,  freq: 'weekly', pri: '0.8' },
+    { loc: `${BASE}/${HOME}/promos/`, freq: 'daily', pri: '0.7' },
+    { loc: `${BASE}/${HOME}/realestate/`, freq: 'daily', pri: '0.8' },
+    { loc: `${BASE}/${HOME}/board/`, freq: 'daily', pri: '0.7' },
   ];
   const listed = [];
   let withPrayers = 0;
@@ -163,8 +174,9 @@ async function main() {
     indexPage({ synagogues: listed, base: BASE, counts: { total: syns.length, withPrayers } }));
   // עמוד הבית חדש — כשל בו לא יעצור את עדכון עמודי המניינים
   try {
-    const [home, dirRaw] = await Promise.all([fetchHome(db, COMMUNITY_ID), fetchDirectory(db, COMMUNITY_ID)]);
-    writeHome(home, dirRaw);
+    const [home, dirRaw, lsRaw] = await Promise.all([
+      fetchHome(db, COMMUNITY_ID), fetchDirectory(db, COMMUNITY_ID), fetchListings(db, COMMUNITY_ID)]);
+    writeHome(home, dirRaw, lsRaw);
   }
   catch (e) { console.error(`  ⚠ ${HOME}/ לא נבנה:`, e.message || e); process.exitCode = 0; }
   write('sitemap.xml', sitemap(urls));

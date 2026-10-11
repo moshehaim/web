@@ -93,6 +93,20 @@ background:linear-gradient(to top,var(--t2),transparent)}
 .dact{grid-area:a;padding:12px 14px 14px}
 .dmedia .drec{display:none}
 }
+.dtag{position:absolute;top:10px;right:10px;font-size:13px;font-weight:800;padding:4px 10px;border-radius:8px;background:#fff;color:var(--navy);z-index:1}
+.dprice{position:absolute;bottom:10px;right:10px;font-size:16px;font-weight:700;background:rgba(15,27,48,.82);color:#fff;padding:4px 10px;border-radius:10px;z-index:1;font-variant-numeric:tabular-nums}
+.dgrid.brows{grid-template-columns:repeat(auto-fill,minmax(min(360px,100%),1fr));gap:12px}
+.brow{flex-direction:row;align-items:center;text-decoration:none;color:var(--ink)}
+.brow:hover{color:var(--ink)}
+.brow .dbody{padding:14px 16px;gap:2px;min-width:0}
+.brow h3{font-size:17px}
+.bside{display:flex;align-items:center;gap:10px;padding-inline:0 16px;flex:none}
+.bgo{width:34px;height:34px;border-radius:50%;background:#F1F4F8;color:var(--navy);display:flex;align-items:center;justify-content:center;font-weight:800}
+.bgrp{font-size:12px;font-weight:800;color:var(--accent)}
+.bbadge2{font-size:13px;font-weight:800;background:#EFF4FF;color:var(--brand);border-radius:8px;padding:3px 10px;white-space:nowrap}
+.dbody .pr{font-size:17px;font-weight:800;color:var(--navy);font-variant-numeric:tabular-nums}
+@media (max-width:620px){.brow{display:flex!important}.dtag,.dprice{display:none}}
+@media (min-width:621px){.dbody .pr{display:none}}
 .join{background:var(--soft);border-radius:22px;padding:26px;display:flex;flex-wrap:wrap;gap:18px;align-items:center;justify-content:space-between;margin-bottom:56px}
 .join b{display:block;font-size:24px;color:var(--navy)}.join span{font-size:16px;color:#3B4860}
 `;
@@ -106,6 +120,7 @@ function run(){var t=(q.value||'').trim(),n=0;
 chips.forEach(function(b){b.addEventListener('click',function(){g=b.getAttribute('data-g');
   chips.forEach(function(x){x.setAttribute('aria-pressed',x===b);});run();});});
 q.addEventListener('input',function(){run();});
+var h='';try{h=decodeURIComponent((location.hash||'').slice(1));}catch(_){}if(h){chips.forEach(function(b){if(b.getAttribute('data-k')===h)b.click();});}
 /* כרטיס בלי תמונה: מקוצר (כיתוב בלבד), אלא אם הוא באותה שורה עם כרטיס שיש לו תמונה — לגובה אחיד */
 function fit(){var vis=cards.filter(function(c){return !c.hidden;}),rows={};
   vis.forEach(function(c){c.classList.remove('compact');});
@@ -155,56 +170,136 @@ function card(p, kind) {
 </article>`;
 }
 
-export function listPage(vm, dir, kind, { base, home, api }) {
-  const isPro = kind === 'pros';
-  const data = isPro ? dir.pros : dir.biz;
-  const label = isPro ? 'בעלי מקצוע' : 'עסקים';
-  const pagePath = `${home}${kind}/`;
-  const where = `${vm.name}${vm.alias ? ` (${vm.alias})` : ''}`;
-  const title = `${label} ב${where} — שכונה`;
-  const desc = isPro
-    ? `בעלי מקצוע ב${where}, ${vm.city}: ${data.groups.slice(0, 5).join(', ')} ועוד — עם טלפון ו-WhatsApp.`
-    : `עסקים ב${where}, ${vm.city}: ${data.groups.slice(0, 5).join(', ')} ועוד — עם טלפון, WhatsApp וניווט.`;
+/* ── מעטפת משותפת לכל עמודי הרשימות ─────────────────────────────── */
+
+const PAGES = [['pros/', 'בעלי מקצוע'], ['biz/', 'עסקים'], ['promos/', 'מבצעים'], ['realestate/', 'נדל״ן'], ['board/', 'לוח השכונה']];
+
+function collectionPage(vm, o) {
+  const pagePath = `${o.home}${o.slug}/`;
+  const cur = (href) => href === `${o.slug}/` ? ' aria-current="page" style="background:var(--brand);color:#fff"' : '';
   const nav = `<nav class="chips" aria-label="תחומים"><div class="wrap">
-<a href="${home}">דף השכונה</a><a href="/minyanim-har-homa/">תפילות</a><a href="${home}pros/"${isPro ? ' aria-current="page" style="background:var(--brand);color:#fff"' : ''}>בעלי מקצוע</a><a href="${home}biz/"${!isPro ? ' aria-current="page" style="background:var(--brand);color:#fff"' : ''}>עסקים</a><a href="${home}#realestate">נדל״ן</a><a href="${home}#board">דרושים</a><a href="${home}#board">יד שנייה</a><a href="${home}#board">גמ״חים</a>
+<a href="${o.home}">דף השכונה</a><a href="/minyanim-har-homa/">תפילות</a>${PAGES.map(([h, l]) => `<a href="${o.home}${h}"${cur(h)}>${l}</a>`).join('')}
 </div></nav>`;
+  const chips = o.groups.length > 1
+    ? `<div class="fchips" role="group" aria-label="סינון">
+<button type="button" data-g="" aria-pressed="true">הכל</button>${o.groups.map((g) => {
+        const [k, l] = Array.isArray(g) ? g : [g, g];
+        return `<button type="button" data-g="${esc(l)}" data-k="${esc(k)}" aria-pressed="false">${esc(l)}</button>`;
+      }).join('')}
+</div>` : '';
 
-  return `${pageHead({ title, desc, url: `${base}${pagePath}`, base, css: CSS })}<a href="#list" class="sr">דלג לרשימה</a>
+  return `${pageHead({ title: o.title, desc: o.desc, url: `${o.base}${pagePath}`, base: o.base, css: CSS })}<a href="#list" class="sr">דלג לרשימה</a>
 
-${siteHeader(vm, home, nav)}
+${siteHeader(vm, o.home, nav)}
 
 <main id="main">
 <section class="dir-hero" aria-label="כותרת"><div class="wrap">
-<nav class="crumb" aria-label="פירורי לחם"><a href="${home}">${esc(vm.name)}</a> · ${label}</nav>
-<h1>${label} <span class="emd">ב${esc(vm.name)}</span></h1>
+<nav class="crumb" aria-label="פירורי לחם"><a href="${o.home}">${esc(vm.name)}</a> · ${esc(o.label)}</nav>
+<h1>${esc(o.label)} <span class="emd">ב${esc(vm.name)}</span></h1>
 <div class="dir-tools">
-<nav class="dir-tabs" aria-label="סוג"><a href="${home}pros/"${isPro ? ' aria-current="page"' : ''}>בעלי מקצוע</a><a href="${home}biz/"${!isPro ? ' aria-current="page"' : ''}>עסקים</a></nav>
-<label class="dir-q">${svg('M11 4a7 7 0 1 0 0 14a7 7 0 1 0 0-14zM20 20l-4-4', 19, 'currentColor', 2)}<span class="sr">חיפוש</span><input id="dir-q" type="search" autocomplete="off" placeholder="${isPro ? 'חשמלאי, אינסטלטור, מורה פרטי…' : 'מכולת, קצבייה, מתנות…'}"></label>
+${o.tabs || ''}
+<label class="dir-q">${svg('M11 4a7 7 0 1 0 0 14a7 7 0 1 0 0-14zM20 20l-4-4', 19, 'currentColor', 2)}<span class="sr">חיפוש</span><input id="dir-q" type="search" autocomplete="off" placeholder="${esc(o.placeholder)}"></label>
 </div>
 </div></section>
 
-<section id="list" class="wrap dir-list" aria-label="${label}">
-<div class="fchips" role="group" aria-label="סינון לפי תחום">
-<button type="button" data-g="" aria-pressed="true">הכל</button>${data.groups.map((g) => `<button type="button" data-g="${esc(g)}" aria-pressed="false">${esc(g)}</button>`).join('')}
+<section id="list" class="wrap dir-list" aria-label="${esc(o.label)}">
+${chips}
+<div class="dgrid${o.gridClass ? ' ' + o.gridClass : ''}">
+${o.cards}
 </div>
-<div class="dgrid">
-${data.items.map((p) => card(p, kind)).join('\n')}
-</div>
-<div class="dempty" id="dir-empty" hidden><b>לא מצאנו בשכונה את מה שחיפשת</b><span>נסו מילה אחרת, או בחרו "הכל".</span></div>
+<div class="dempty" id="dir-empty"${o.cards.trim() ? ' hidden' : ''}><b>${o.cards.trim() ? 'לא מצאנו בשכונה את מה שחיפשת' : esc(o.emptyText || 'אין כרגע מודעות')}</b><span>${o.cards.trim() ? 'נסו מילה אחרת, או בחרו "הכל".' : 'רוצים לפרסם? זה דרך האפליקציה.'}</span></div>
 </section>
 
-<section class="wrap" aria-label="לבעלי עסקים"><div class="join">
-<div style="min-width:0;flex:1 1 320px"><b>עובדים בשכונה? <span class="em">תופיעו כאן.</span></b><span>פרופיל עם תמונה, טלפון, WhatsApp ו-Waze, מבצעים והמלצות מלקוחות.</span></div>
-<a class="pill btn-dark" href="${APP}">להרשמת עסק</a>
+<section class="wrap" aria-label="פרסום"><div class="join">
+<div style="min-width:0;flex:1 1 320px">${o.join}</div>
+<a class="pill btn-dark" href="${APP}">${esc(o.joinCta || 'לפרסום באפליקציה')}</a>
 </div></section>
 </main>
 
 ${siteFooter()}
 
-${api ? `<script>window.__SB=${JSON.stringify(api).replace(/</g, '\\u003c')};</script>` : ''}
+${o.api ? `<script>window.__SB=${JSON.stringify(o.api).replace(/</g, '\\u003c')};</script>` : ''}
 <script>${JS}</script>
 <script>${HOOD_JS}</script>
 </body>
 </html>
 `;
+}
+
+const where = (vm) => `${vm.name}${vm.alias ? ` (${vm.alias})` : ''}`;
+
+export function listPage(vm, dir, kind, { base, home, api }) {
+  const isPro = kind === 'pros';
+  const data = isPro ? dir.pros : dir.biz;
+  const label = isPro ? 'בעלי מקצוע' : 'עסקים';
+  return collectionPage(vm, {
+    base, home, api, slug: kind, label, groups: data.groups,
+    title: `${label} ב${where(vm)} — שכונה`,
+    desc: isPro
+      ? `בעלי מקצוע ב${where(vm)}, ${vm.city}: ${data.groups.slice(0, 5).join(', ')} ועוד — עם טלפון ו-WhatsApp.`
+      : `עסקים ב${where(vm)}, ${vm.city}: ${data.groups.slice(0, 5).join(', ')} ועוד — עם טלפון, WhatsApp וניווט.`,
+    tabs: `<nav class="dir-tabs" aria-label="סוג"><a href="${home}pros/"${isPro ? ' aria-current="page"' : ''}>בעלי מקצוע</a><a href="${home}biz/"${!isPro ? ' aria-current="page"' : ''}>עסקים</a></nav>`,
+    placeholder: isPro ? 'חשמלאי, אינסטלטור, מורה פרטי…' : 'מכולת, קצבייה, מתנות…',
+    cards: data.items.map((p) => card(p, kind)).join('\n'),
+    join: '<b>עובדים בשכונה? <span class="em">תופיעו כאן.</span></b><span>פרופיל עם תמונה, טלפון, WhatsApp ו-Waze, מבצעים והמלצות מלקוחות.</span>',
+    joinCta: 'להרשמת עסק',
+  });
+}
+
+/* כרטיס תמונה כללי (מבצע, נכס) */
+function mediaCard(x, { tag, price, lines, cta }) {
+  const tone = (CAT_ICON[x.cat] || CAT_ICON.other);
+  const media = x.img
+    ? `<img src="${esc(x.img)}" alt="${esc(x.title)}" loading="lazy" decoding="async">`
+    : svg(tone[0], 64, 'currentColor', 1.6);
+  const text = [x.title, ...lines, x.group].join(' ');
+  return `<article class="dcard lift" data-group="${esc(x.group)}" data-text="${esc(text)}">
+<div class="dmedia${x.img ? '' : ` noimg t-${tone[1]}`}">${media}${tag ? `<span class="dtag">${esc(tag)}</span>` : ''}${price ? `<span class="dprice">${esc(price)}</span>` : ''}</div>
+<div class="dbody"><h3>${esc(x.title)}</h3>${price ? `<span class="pr">${esc(price)}</span>` : ''}${lines.filter(Boolean).map((l, i) => `<span class="${i ? 'w' : 'f'}">${esc(l)}</span>`).join('')}</div>
+<div class="dact"><a class="a-app" href="${APP}">${esc(cta)}</a></div>
+</article>`;
+}
+
+export function promosPage(vm, ls, { base, home }) {
+  const d = ls.promos;
+  return collectionPage(vm, {
+    base, home, slug: 'promos', label: 'מבצעים וקופונים', groups: d.groups,
+    title: `מבצעים וקופונים ב${where(vm)} — שכונה`,
+    desc: `מבצעים וקופונים מעסקי ${where(vm)}, ${vm.city}.`,
+    placeholder: 'שם עסק או מבצע…',
+    cards: d.items.map((p) => mediaCard({ ...p }, { tag: p.kind, lines: [p.provider, p.until + (p.coupon ? ' · הקוד באפליקציה' : '')], cta: p.coupon ? 'לקוד הקופון באפליקציה' : 'לפרטים באפליקציה' })).join('\n'),
+    emptyText: 'אין כרגע מבצעים פעילים',
+    join: '<b>יש לך עסק בשכונה? <span class="em">פרסם מבצע.</span></b><span>מבצע או קופון מגיעים לשכנים עם התראה באפליקציה.</span>',
+    joinCta: 'לפרסום מבצע',
+  });
+}
+
+export function realEstatePage(vm, ls, { base, home }) {
+  const d = ls.realEstate;
+  return collectionPage(vm, {
+    base, home, slug: 'realestate', label: 'נדל״ן', groups: d.groups,
+    title: `נדל״ן ב${where(vm)} — דירות למכירה ולהשכרה | שכונה`,
+    desc: `דירות למכירה ולהשכרה ב${where(vm)}, ${vm.city} — עם תמונות, מחיר, חדרים וקומה.`,
+    placeholder: 'רחוב, מספר חדרים, סוג נכס…',
+    cards: d.items.map((r) => mediaCard({ ...r }, { tag: r.kind, price: r.price, lines: [r.meta, r.street], cta: 'לפרטים ויצירת קשר באפליקציה' })).join('\n'),
+    emptyText: 'אין כרגע נכסים',
+    join: '<b>מוכרים או משכירים? <span class="em">פרסמו כאן.</span></b><span>מודעה עם תמונות, שמגיעה לשכנים.</span>',
+    joinCta: 'לפרסום נכס',
+  });
+}
+
+export function boardPage(vm, ls, { base, home }) {
+  const d = ls.board;
+  const row = (x) => `<a class="dcard brow lift" href="${APP}" data-group="${esc(x.group)}" data-text="${esc([x.t, x.sub, x.group].join(' '))}">
+<span class="dbody"><span class="bgrp">${esc(x.group)}</span><h3>${esc(x.t)}</h3><span class="w">${esc(x.sub)}</span></span>
+<span class="bside">${x.b ? `<span class="bbadge2">${esc(x.b)}</span>` : ''}<span class="bgo" aria-hidden="true">←</span></span>
+</a>`;
+  return collectionPage(vm, {
+    base, home, slug: 'board', label: 'לוח השכונה', groups: d.groups, gridClass: 'brows',
+    title: `לוח השכונה ב${where(vm)} — דרושים, יד שנייה, גמ״חים | שכונה`,
+    desc: `לוח המודעות של ${where(vm)}: דרושים, יד שנייה, גמ״חים, התנדבות ואבידות ומציאות.`,
+    placeholder: 'עגלה, סייעת, שולחן…',
+    cards: d.items.map(row).join('\n'),
+    join: '<b>יש לכם מה לפרסם? <span class="em">ללוח השכונה.</span></b><span>דרושים, יד שנייה, גמ״ח, התנדבות או אבידה — דרך האפליקציה.</span>',
+  });
 }
