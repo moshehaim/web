@@ -10,7 +10,8 @@
  *  - אין קודי קופון — הקוד נחשף רק באפליקציה.
  *  - אין ספירות / סטטיסטיקות (מספר עסקים, צפיות וכו׳).
  *  - image_women_only=true → הפריט לא מוצג בעמוד הבית.
- *  - content_audience שונה מ-'all' → לא מוצג.
+ *  - content_audience לא מסנן באתר: הסינון לפיו רק למשתמש רשום שביקש (מסמך 'התאמת תצוגה מגדרית'),
+ *    והאתר הסטטי מוצג לאורחים.
  *  - recommend_count בלבד (entity_recommendations לא קריא ל-anon).
  */
 
@@ -21,7 +22,8 @@ import { isPrayerInSeason } from './season.js';
 // אין סינון לפי קטגוריה: בקטגוריות רגישות התמונה עוברת אישור לפני שהיא נכנסת ל-image_url
 // (טריגרים intercept_*_image + app_config.image_moderation_rules), ו-image_women_only מסתיר אותה.
 
-const SHOW = (r) => !r.image_women_only && (r.content_audience == null || r.content_audience === 'all');
+// בעמוד הבית הכרטיסים בנויים על תמונה, אז תמונה לנשים בלבד = הפריט לא בקרוסלה
+const SHOW = (r) => !r.image_women_only;
 
 export async function fetchHome(db, communityId) {
   const nowIso = new Date().toISOString();
@@ -278,7 +280,6 @@ export function shapeDirectory(raw) {
     .sort((a, b) => (order[a] ?? 99) - (order[b] ?? 99));
 
   const pros = raw.professionals
-    .filter((p) => p.content_audience == null || p.content_audience === 'all')
     .map((p, i) => {
       const subs = String(p.sub_categories || '').split(',').map((s) => s.trim()).filter(Boolean);
       return {
@@ -291,7 +292,6 @@ export function shapeDirectory(raw) {
     }).sort(byImageThenOrder);
 
   const biz = raw.businesses
-    .filter((b) => b.content_audience == null || b.content_audience === 'all')
     .map((b, i) => {
       const t = bt[b.business_type];
       return {
