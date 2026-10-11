@@ -328,11 +328,11 @@ export async function fetchListings(db, communityId) {
       .order('created_at', { ascending: false })),
     q(by('jobs', 'id,title,company_name,employment_type,created_at')
       .not('is_active', 'is', false).or(`expires_at.is.null,expires_at.gt."${nowIso}"`).order('created_at', { ascending: false })),
-    q(by('second_hand_items', 'id,name,price,is_free,created_at').order('created_at', { ascending: false })),
+    q(by('second_hand_items', 'id,name,price,is_free,image_urls,created_at').order('created_at', { ascending: false })),
     q(by('gmachim', 'id,name,categories,address').order('name')),
     q(by('volunteering', 'id,title,organization_name,created_at')
       .not('is_active', 'is', false).or(`expires_at.is.null,expires_at.gt."${nowIso}"`).order('created_at', { ascending: false })),
-    q(by('lost_and_found', 'id,status,title,created_at').order('created_at', { ascending: false })),
+    q(by('lost_and_found', 'id,status,title,image_url,created_at').order('created_at', { ascending: false })),
   ]);
   return { promotions, coupons, sale, rent, jobs, secondHand, gmachim, volunteering, lostFound };
 }
@@ -360,13 +360,13 @@ export function shapeListings(raw, community, now = new Date()) {
   const board = [
     ...raw.jobs.map((j) => ({ key: 'jobs', group: 'דרושים', t: j.title,
       sub: [j.company_name, ago(j.created_at, now)].filter(Boolean).join(' · '), b: EMPLOYMENT[j.employment_type] || '' })),
-    ...raw.secondHand.map((s) => ({ key: 'second', group: 'יד שנייה', t: s.name, sub: ago(s.created_at, now),
+    ...raw.secondHand.map((s) => ({ key: 'second', group: 'יד שנייה', t: s.name, sub: ago(s.created_at, now), img: firstImage(s.image_urls),
       b: s.is_free || !s.price ? 'למסירה' : ils(s.price) })),
     ...raw.gmachim.map((g) => ({ key: 'gmach', group: 'גמ״חים', t: g.name,
       sub: [(g.categories || []).join(' · '), g.address].filter(Boolean).join(' · ') || 'גמ״ח', b: '' })),
     ...raw.volunteering.map((v) => ({ key: 'vol', group: 'התנדבות', t: v.title,
       sub: [v.organization_name, ago(v.created_at, now)].filter(Boolean).join(' · '), b: '' })),
-    ...raw.lostFound.map((l) => ({ key: 'lost', group: 'אבידות ומציאות', t: l.title, sub: ago(l.created_at, now),
+    ...raw.lostFound.map((l) => ({ key: 'lost', group: 'אבידות ומציאות', t: l.title, sub: ago(l.created_at, now), img: l.image_url || null,
       b: l.status === 'lost' ? 'אבד' : 'נמצא' })),
   ];
   const boardGroups = [['jobs', 'דרושים'], ['second', 'יד שנייה'], ['gmach', 'גמ״חים'], ['vol', 'התנדבות'], ['lost', 'אבידות ומציאות']]

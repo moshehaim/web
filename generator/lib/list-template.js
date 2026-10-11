@@ -102,6 +102,10 @@ background:linear-gradient(to top,var(--t2),transparent)}
 .brow h3{font-size:17px}
 .bside{display:flex;align-items:center;gap:10px;padding-inline:0 16px;flex:none}
 .bgo{width:34px;height:34px;border-radius:50%;background:#F1F4F8;color:var(--navy);display:flex;align-items:center;justify-content:center;font-weight:800}
+.bthumb{flex:none;width:84px;height:84px;margin-inline-start:12px;border-radius:14px;overflow:hidden;background:#DCE5F5}
+.bthumb img{width:100%;height:100%;object-fit:cover}
+@media (max-width:620px){.brow .bthumb{width:100%;height:auto;aspect-ratio:16/10;margin:12px 0 0;border-radius:0 0 0 0}.brow{padding:0;overflow:hidden}.brow .bthumb{margin:0}}
+.fchips>:first-child{margin-inline-start:auto}.fchips>:last-child{margin-inline-end:auto}
 .bgrp{font-size:12px;font-weight:800;color:var(--accent)}
 .bbadge2{font-size:13px;font-weight:800;background:#EFF4FF;color:var(--brand);border-radius:8px;padding:3px 10px;white-space:nowrap}
 .dbody .pr{font-size:17px;font-weight:800;color:var(--navy);font-variant-numeric:tabular-nums}
@@ -291,7 +295,7 @@ export function realEstatePage(vm, ls, { base, home }) {
 export function boardPage(vm, ls, { base, home }) {
   const d = ls.board;
   const row = (x) => `<a class="dcard brow lift" href="${APP}" data-group="${esc(x.group)}" data-text="${esc([x.t, x.sub, x.group].join(' '))}">
-<span class="dbody"><span class="bgrp">${esc(x.group)}</span><h3>${esc(x.t)}</h3><span class="w">${esc(x.sub)}</span></span>
+${x.img ? `<span class="bthumb"><img src="${esc(x.img)}" alt="${esc(x.t)}" loading="lazy" decoding="async"></span>` : ''}<span class="dbody"><span class="bgrp">${esc(x.group)}</span><h3>${esc(x.t)}</h3><span class="w">${esc(x.sub)}</span></span>
 <span class="bside">${x.b ? `<span class="bbadge2">${esc(x.b)}</span>` : ''}<span class="bgo" aria-hidden="true">←</span></span>
 </a>`;
   return collectionPage(vm, {
