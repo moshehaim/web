@@ -595,7 +595,7 @@ ${FAQ.map(([q, a]) => `<details><summary>${esc(q)}</summary><p>${esc(a)}</p></de
 <footer><div class="wrap">
 <img src="/app_icon.png" alt="שכונה" width="48" height="48" loading="lazy">
 <span>שכונה · <a href="mailto:info@shchuna.co.il">info@shchuna.co.il</a></span>
-<nav aria-label="קישורים"><a href="/">כל השכונות</a><a href="${MINYANIM}">מניינים</a><a href="/terms.html">תנאי שימוש</a><a href="/privacy.html">פרטיות</a></nav>
+<nav aria-label="קישורים"><a href="/">כל השכונות</a><a href="/terms.html">תנאי שימוש</a><a href="/privacy.html">פרטיות</a></nav>
 <span class="c">© שכונה, כל הזכויות שמורות</span>
 </div></footer>
 
