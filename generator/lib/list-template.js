@@ -37,8 +37,10 @@ const CSS = `
 .dbody .f{font-size:14px;font-weight:700;color:var(--accent)}
 .dbody .w{font-size:14px;color:var(--muted)}
 .dact{padding:12px 16px 16px;display:flex;gap:8px}
-.dact a{flex:1 1 0;height:44px;border-radius:12px;font-weight:800;font-size:15px;text-decoration:none;display:flex;align-items:center;justify-content:center;gap:6px}
+.dact a{flex:1 1 0;min-width:0;white-space:nowrap;height:44px;border-radius:12px;font-weight:800;font-size:15px;text-decoration:none;display:flex;align-items:center;justify-content:center;gap:6px}
 .a-tel{background:#EFF4FF;color:var(--navy)}.a-tel:hover{color:var(--navy);background:#E2EBFF}
+.a-tel .ld{display:none}
+@media (hover:hover) and (pointer:fine){.a-tel{flex:1.6 1 0!important}.a-tel .lm{display:none}.a-tel .ld{display:inline;font-variant-numeric:tabular-nums}}
 .a-wa{background:#E7F7EC;color:#14532D}.a-wa:hover{color:#14532D;background:#D8F1E0}
 .a-waze{flex:none!important;width:44px;background:#E3F4FB;color:#0E7FAE}
 .a-app{background:#F1F4F8;color:var(--navy)}
@@ -69,6 +71,12 @@ function run(){var t=(q.value||'').trim(),n=0;
 chips.forEach(function(b){b.addEventListener('click',function(){g=b.getAttribute('data-g');
   chips.forEach(function(x){x.setAttribute('aria-pressed',x===b);});run();});});
 q.addEventListener('input',run);
+/* במחשב: הכפתור מציג את המספר, ולחיצה מעתיקה אותו (אין חייגן) */
+if(window.matchMedia&&matchMedia('(hover: hover) and (pointer: fine)').matches){
+  document.addEventListener('click',function(e){var a=e.target.closest('.a-tel');if(!a)return;e.preventDefault();
+    var d=a.querySelector('.ld'),num=d.textContent;
+    function done(){d.textContent='הועתק ✓';setTimeout(function(){d.textContent=num;},1500);}
+    if(navigator.clipboard){navigator.clipboard.writeText(num).then(done,function(){});}});}
 })();`;
 
 function card(p, kind) {
@@ -78,7 +86,7 @@ function card(p, kind) {
     : `<span class="mono" aria-hidden="true">${esc(p.name.trim().charAt(0))}</span>`;
   const rec = p.rec > 0 ? `<span class="drec">${svg(ICON_HEART, 14, 'currentColor', 2)}${p.rec === 1 ? 'המלצה אחת' : `${p.rec} המלצות`}</span>` : '';
   const acts = [];
-  if (p.phone) acts.push(`<a class="a-tel" href="${esc(p.phone.tel)}" aria-label="חיוג ל${esc(p.name)} ${esc(p.phone.display)}">${svg(ICON_PHONE, 17, 'currentColor', 2.2)}חיוג</a>`);
+  if (p.phone) acts.push(`<a class="a-tel" href="${esc(p.phone.tel)}" aria-label="חיוג ל${esc(p.name)} ${esc(p.phone.display)}">${svg(ICON_PHONE, 17, 'currentColor', 2.2)}<span class="lm">חיוג</span><span class="ld" dir="ltr">${esc(p.phone.display)}</span></a>`);
   if (p.phone?.wa) acts.push(`<a class="a-wa" href="${esc(p.phone.wa)}" target="_blank" rel="noopener" aria-label="WhatsApp ל${esc(p.name)}">${svg(ICON_WA, 17, '#15803D', 2)}WhatsApp</a>`);
   if (p.waze) acts.push(`<a class="a-waze" href="${esc(p.waze)}" target="_blank" rel="noopener" aria-label="ניווט ל${esc(p.name)} ב-Waze">${svg(ICON_WAZE, 18, 'currentColor', 2)}</a>`);
   if (!acts.length) acts.push(`<a class="a-app" href="${APP}">לפרטים באפליקציה</a>`);
