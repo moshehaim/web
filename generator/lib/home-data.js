@@ -18,8 +18,8 @@ import { computeZmanim, sortKey, formatPrayerTime } from './prayers.js';
 import { isPrayerInSeason } from './season.js';
 
 /** סוגי עסקים / קטגוריות שלא מוצגים בעמוד הבית הציבורי. */
-export const HIDDEN_BUSINESS_TYPES = new Set(['nails', 'cosmetics', 'hair_salon', 'challah_events']);
-export const HIDDEN_PRO_CATEGORIES = new Set(['beauty']);
+// אין סינון לפי קטגוריה: בקטגוריות רגישות התמונה עוברת אישור לפני שהיא נכנסת ל-image_url
+// (טריגרים intercept_*_image + app_config.image_moderation_rules), ו-image_women_only מסתיר אותה.
 
 const SHOW = (r) => !r.image_women_only && (r.content_audience == null || r.content_audience === 'all');
 
@@ -163,12 +163,12 @@ export function shapeHome(raw, { now = new Date(), base = '' } = {}) {
   const pc = raw.profCategories || {};
 
   const businesses = raw.businesses
-    .filter((b) => SHOW(b) && b.image_url && !HIDDEN_BUSINESS_TYPES.has(b.business_type))
+    .filter((b) => SHOW(b) && b.image_url)
     .slice(0, 18)
     .map((b) => ({ name: b.name, type: bt[b.business_type] || '', img: b.image_url }));
 
   const professionals = raw.professionals
-    .filter((p) => SHOW(p) && p.image_url && !HIDDEN_PRO_CATEGORIES.has(p.main_category))
+    .filter((p) => SHOW(p) && p.image_url)
     .slice(0, 14)
     .map((p) => ({ name: p.name, field: pc[p.main_category] || '', img: p.image_url, rec: p.recommend_count || 0 }));
 
@@ -233,10 +233,6 @@ export function shapeHome(raw, { now = new Date(), base = '' } = {}) {
 
 /* ── אלפון: בעלי מקצוע ועסקים ───────────────────────────────────── */
 
-/** סוגי עסקים שמוצגים באלפון בלי תמונה (טיפוח, איפור, פאות וכו׳). */
-export const HIDDEN_DIRECTORY_TYPES = new Set([
-  ...HIDDEN_BUSINESS_TYPES, 'beauty_salon', 'laser', 'bridal_salon', 'wig_salon',
-]);
 
 export async function fetchDirectory(db, communityId) {
   const q = (p) => p.then(({ data, error }) => { if (error) throw error; return data || []; });
@@ -288,8 +284,8 @@ export function shapeDirectory(raw) {
       return {
         i, name: p.name, group: pc[p.main_category]?.name_he || 'אחר',
         field: subs.slice(0, 3).join(' · ') || pc[p.main_category]?.name_he || '',
-        // טיפוח / תמונה לנשים בלבד: הכרטיס מוצג, רק בלי התמונה
-        img: p.image_women_only || HIDDEN_PRO_CATEGORIES.has(p.main_category) ? null : p.image_url,
+        // תמונה לנשים בלבד: הכרטיס מוצג, רק בלי התמונה
+        img: p.image_women_only ? null : p.image_url,
         rec: p.recommend_count || 0, where: '', phone: phoneLinks(p.phone), waze: null,
       };
     }).sort(byImageThenOrder);
@@ -300,7 +296,7 @@ export function shapeDirectory(raw) {
       const t = bt[b.business_type];
       return {
         i, name: b.name, group: bc[t?.category_id]?.name_he || 'שונות', field: t?.name_he || '',
-        img: b.image_women_only || HIDDEN_DIRECTORY_TYPES.has(b.business_type) ? null : b.image_url,
+        img: b.image_women_only ? null : b.image_url,
         rec: b.recommend_count || 0,
         where: b.address || '', phone: phoneLinks(b.phone),
         waze: b.latitude && b.longitude ? `https://waze.com/ul?ll=${b.latitude},${b.longitude}&navigate=yes` : null,
