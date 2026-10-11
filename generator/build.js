@@ -17,8 +17,9 @@ import { SlugStore } from './lib/slugs.js';
 import { computeZmanim, sortPrayers, formatPrayerTime } from './lib/prayers.js';
 import { isPrayerInSeason } from './lib/season.js';
 import { synagoguePage, indexPage, sitemap } from './lib/template.js';
-import { fetchHome, shapeHome } from './lib/home-data.js';
+import { fetchHome, shapeHome, fetchDirectory, shapeDirectory } from './lib/home-data.js';
 import { homePage } from './lib/home-template.js';
+import { listPage } from './lib/list-template.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -72,16 +73,23 @@ const write = (rel, content) => {
   fs.writeFileSync(file, content, 'utf8');
 };
 
-const writeHome = (raw) => {
+const writeHome = (raw, dirRaw) => {
   const vm = shapeHome(raw, { now: new Date(), base: BASE });
   write(path.join(HOME, 'index.html'), homePage(vm, { base: BASE, path: `/${HOME}/` }));
   console.log(`  ${HOME}/  · ${vm.promos.length} מבצעים · ${vm.professionals.length} בעלי מקצוע · ` +
     `${vm.businesses.length} עסקים · ${vm.realEstate.length} נכסים · ${vm.prayers.length} מניינים היום`);
+  if (!dirRaw) return;
+  const dir = shapeDirectory(dirRaw);
+  for (const kind of ['pros', 'biz']) {
+    write(path.join(HOME, kind, 'index.html'), listPage(vm, dir, kind, { base: BASE, home: `/${HOME}/` }));
+  }
+  console.log(`  ${HOME}/pros/ · ${dir.pros.items.length}   ${HOME}/biz/ · ${dir.biz.items.length}`);
 };
 
 async function main() {
   if (FIXTURE) {
-    writeHome(JSON.parse(fs.readFileSync(FIXTURE, 'utf8')));
+    const fx = JSON.parse(fs.readFileSync(FIXTURE, 'utf8'));
+    writeHome(fx, fx.directory);
     return;
   }
 
@@ -121,6 +129,8 @@ async function main() {
     { loc: `${BASE}/terms.html`,   freq: 'yearly',  pri: '0.2' },
     { loc: `${BASE}/${SECTION}/`,  freq: 'weekly',  pri: '0.9' },
     { loc: `${BASE}/${HOME}/`,     freq: 'daily',   pri: '0.9' },
+    { loc: `${BASE}/${HOME}/pros/`, freq: 'weekly', pri: '0.8' },
+    { loc: `${BASE}/${HOME}/biz/`,  freq: 'weekly', pri: '0.8' },
   ];
   const listed = [];
   let withPrayers = 0;
@@ -149,7 +159,10 @@ async function main() {
   write(path.join(SECTION, 'index.html'),
     indexPage({ synagogues: listed, base: BASE, counts: { total: syns.length, withPrayers } }));
   // עמוד הבית חדש — כשל בו לא יעצור את עדכון עמודי המניינים
-  try { writeHome(await fetchHome(db, COMMUNITY_ID)); }
+  try {
+    const [home, dirRaw] = await Promise.all([fetchHome(db, COMMUNITY_ID), fetchDirectory(db, COMMUNITY_ID)]);
+    writeHome(home, dirRaw);
+  }
   catch (e) { console.error(`  ⚠ ${HOME}/ לא נבנה:`, e.message || e); process.exitCode = 0; }
   write('sitemap.xml', sitemap(urls));
   write('robots.txt', `User-agent: *\nAllow: /\n\nSitemap: ${BASE}/sitemap.xml\n`);

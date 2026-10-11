@@ -10,7 +10,8 @@
  *  - אין קודי קופון — הקוד נחשף רק באפליקציה.
  *  - אין ספירות / סטטיסטיקות (מספר עסקים, צפיות וכו׳).
  *  - image_women_only=true → הפריט לא מוצג בעמוד הבית.
- *  - content_audience שונה מ-'all' → לא מוצג.
+ *  - content_audience לא מסנן באתר: הסינון לפיו רק למשתמש רשום שביקש (מסמך 'התאמת תצוגה מגדרית'),
+ *    והאתר הסטטי מוצג לאורחים.
  *  - recommend_count בלבד (entity_recommendations לא קריא ל-anon).
  */
 
@@ -18,10 +19,11 @@ import { computeZmanim, sortKey, formatPrayerTime } from './prayers.js';
 import { isPrayerInSeason } from './season.js';
 
 /** סוגי עסקים / קטגוריות שלא מוצגים בעמוד הבית הציבורי. */
-export const HIDDEN_BUSINESS_TYPES = new Set(['nails', 'cosmetics', 'hair_salon', 'challah_events']);
-export const HIDDEN_PRO_CATEGORIES = new Set(['beauty']);
+// אין סינון לפי קטגוריה: בקטגוריות רגישות התמונה עוברת אישור לפני שהיא נכנסת ל-image_url
+// (טריגרים intercept_*_image + app_config.image_moderation_rules), ו-image_women_only מסתיר אותה.
 
-const SHOW = (r) => !r.image_women_only && (r.content_audience == null || r.content_audience === 'all');
+// בעמוד הבית הכרטיסים בנויים על תמונה, אז תמונה לנשים בלבד = הפריט לא בקרוסלה
+const SHOW = (r) => !r.image_women_only;
 
 export async function fetchHome(db, communityId) {
   const nowIso = new Date().toISOString();
@@ -163,12 +165,12 @@ export function shapeHome(raw, { now = new Date(), base = '' } = {}) {
   const pc = raw.profCategories || {};
 
   const businesses = raw.businesses
-    .filter((b) => SHOW(b) && b.image_url && !HIDDEN_BUSINESS_TYPES.has(b.business_type))
+    .filter((b) => SHOW(b) && b.image_url)
     .slice(0, 18)
     .map((b) => ({ name: b.name, type: bt[b.business_type] || '', img: b.image_url }));
 
   const professionals = raw.professionals
-    .filter((p) => SHOW(p) && p.image_url && !HIDDEN_PRO_CATEGORIES.has(p.main_category))
+    .filter((p) => SHOW(p) && p.image_url)
     .slice(0, 14)
     .map((p) => ({ name: p.name, field: pc[p.main_category] || '', img: p.image_url, rec: p.recommend_count || 0 }));
 
@@ -228,5 +230,83 @@ export function shapeHome(raw, { now = new Date(), base = '' } = {}) {
     promos, professionals, businesses, realEstate, board,
     prayers: shapePrayers(raw.prayers || [], community, now),
     builtAt: now.toISOString(),
+  };
+}
+
+/* ── אלפון: בעלי מקצוע ועסקים ───────────────────────────────────── */
+
+
+export async function fetchDirectory(db, communityId) {
+  const q = (p) => p.then(({ data, error }) => { if (error) throw error; return data || []; });
+  const [businesses, professionals, businessTypes, businessCategories, profCategories] = await Promise.all([
+    q(db.from('businesses')
+      .select('id,name,phone,address,image_url,business_type,recommend_count,latitude,longitude,image_women_only,content_audience')
+      .eq('community_id', communityId).not('is_active', 'is', false)
+      .order('is_prominent', { ascending: false, nullsFirst: false })
+      .order('priority', { ascending: false, nullsFirst: false })
+      .order('name')),
+    q(db.from('professionals')
+      .select('id,name,phone,main_category,sub_categories,image_url,recommend_count,image_women_only,content_audience')
+      .eq('community_id', communityId).not('is_active', 'is', false)
+      .order('is_prominent', { ascending: false, nullsFirst: false })
+      .order('priority', { ascending: false, nullsFirst: false })
+      .order('name')),
+    q(db.from('business_types').select('id,category_id,name_he')),
+    q(db.from('business_categories').select('id,name_he,display_order')),
+    q(db.from('professional_categories').select('id,name_he,display_order')),
+  ]);
+  return { businesses, professionals, businessTypes, businessCategories, profCategories };
+}
+
+/** טלפון ישראלי → קישורי חיוג ו-WhatsApp (WhatsApp רק לנייד). */
+export function phoneLinks(raw) {
+  const d = String(raw || '').replace(/\D/g, '');
+  if (d.length < 9) return null;
+  const local = d.startsWith('972') ? '0' + d.slice(3) : d;
+  const intl = '972' + local.replace(/^0/, '');
+  return {
+    display: local.length === 10 ? `${local.slice(0, 3)}-${local.slice(3)}` : `${local.slice(0, 2)}-${local.slice(2)}`,
+    tel: `tel:${local}`,
+    wa: /^05\d{8}$/.test(local) ? `https://wa.me/${intl}` : null,
+  };
+}
+
+export function shapeDirectory(raw) {
+  const bt = Object.fromEntries(raw.businessTypes.map((t) => [t.id, t]));
+  const bc = Object.fromEntries(raw.businessCategories.map((c) => [c.id, c]));
+  const pc = Object.fromEntries(raw.profCategories.map((c) => [c.id, c]));
+  const byImageThenOrder = (a, b) => (!!b.img - !!a.img) || (a.i - b.i);
+  const groupsOf = (rows, order) => [...new Set(rows.map((r) => r.group).filter(Boolean))]
+    .sort((a, b) => (order[a] ?? 99) - (order[b] ?? 99));
+
+  const pros = raw.professionals
+    .map((p, i) => {
+      const subs = String(p.sub_categories || '').split(',').map((s) => s.trim()).filter(Boolean);
+      return {
+        i, name: p.name, group: pc[p.main_category]?.name_he || 'אחר',
+        field: subs.slice(0, 3).join(' · ') || pc[p.main_category]?.name_he || '',
+        // תמונה לנשים בלבד: הכרטיס מוצג, רק בלי התמונה
+        img: p.image_women_only ? null : p.image_url,
+        rec: p.recommend_count || 0, where: '', phone: phoneLinks(p.phone), waze: null,
+      };
+    }).sort(byImageThenOrder);
+
+  const biz = raw.businesses
+    .map((b, i) => {
+      const t = bt[b.business_type];
+      return {
+        i, name: b.name, group: bc[t?.category_id]?.name_he || 'שונות', field: t?.name_he || '',
+        img: b.image_women_only ? null : b.image_url,
+        rec: b.recommend_count || 0,
+        where: b.address || '', phone: phoneLinks(b.phone),
+        waze: b.latitude && b.longitude ? `https://waze.com/ul?ll=${b.latitude},${b.longitude}&navigate=yes` : null,
+      };
+    }).sort(byImageThenOrder);
+
+  const proOrder = Object.fromEntries(raw.profCategories.map((c) => [c.name_he, c.display_order]));
+  const bizOrder = Object.fromEntries(raw.businessCategories.map((c) => [c.name_he, c.display_order]));
+  return {
+    pros: { items: pros, groups: groupsOf(pros, proOrder) },
+    biz: { items: biz, groups: groupsOf(biz, bizOrder) },
   };
 }
