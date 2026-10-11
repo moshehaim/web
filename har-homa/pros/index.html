@@ -271,6 +271,20 @@ background:linear-gradient(to top,var(--t2),transparent)}
 .dact{grid-area:a;padding:12px 14px 14px}
 .dmedia .drec{display:none}
 }
+.dtag{position:absolute;top:10px;right:10px;font-size:13px;font-weight:800;padding:4px 10px;border-radius:8px;background:#fff;color:var(--navy);z-index:1}
+.dprice{position:absolute;bottom:10px;right:10px;font-size:16px;font-weight:700;background:rgba(15,27,48,.82);color:#fff;padding:4px 10px;border-radius:10px;z-index:1;font-variant-numeric:tabular-nums}
+.dgrid.brows{grid-template-columns:repeat(auto-fill,minmax(min(360px,100%),1fr));gap:12px}
+.brow{flex-direction:row;align-items:center;text-decoration:none;color:var(--ink)}
+.brow:hover{color:var(--ink)}
+.brow .dbody{padding:14px 16px;gap:2px;min-width:0}
+.brow h3{font-size:17px}
+.bside{display:flex;align-items:center;gap:10px;padding-inline:0 16px;flex:none}
+.bgo{width:34px;height:34px;border-radius:50%;background:#F1F4F8;color:var(--navy);display:flex;align-items:center;justify-content:center;font-weight:800}
+.bgrp{font-size:12px;font-weight:800;color:var(--accent)}
+.bbadge2{font-size:13px;font-weight:800;background:#EFF4FF;color:var(--brand);border-radius:8px;padding:3px 10px;white-space:nowrap}
+.dbody .pr{font-size:17px;font-weight:800;color:var(--navy);font-variant-numeric:tabular-nums}
+@media (max-width:620px){.brow{display:flex!important}.dtag,.dprice{display:none}}
+@media (min-width:621px){.dbody .pr{display:none}}
 .join{background:var(--soft);border-radius:22px;padding:26px;display:flex;flex-wrap:wrap;gap:18px;align-items:center;justify-content:space-between;margin-bottom:56px}
 .join b{display:block;font-size:24px;color:var(--navy)}.join span{font-size:16px;color:#3B4860}
 </style>
@@ -321,7 +335,7 @@ background:linear-gradient(to top,var(--t2),transparent)}
 </div>
 </div>
 <nav class="chips" aria-label="תחומים"><div class="wrap">
-<a href="/har-homa/">דף השכונה</a><a href="/minyanim-har-homa/">תפילות</a><a href="/har-homa/pros/" aria-current="page" style="background:var(--brand);color:#fff">בעלי מקצוע</a><a href="/har-homa/biz/">עסקים</a><a href="/har-homa/#realestate">נדל״ן</a><a href="/har-homa/#board">דרושים</a><a href="/har-homa/#board">יד שנייה</a><a href="/har-homa/#board">גמ״חים</a>
+<a href="/har-homa/">דף השכונה</a><a href="/minyanim-har-homa/">תפילות</a><a href="/har-homa/pros/" aria-current="page" style="background:var(--brand);color:#fff">בעלי מקצוע</a><a href="/har-homa/biz/">עסקים</a><a href="/har-homa/promos/">מבצעים</a><a href="/har-homa/realestate/">נדל״ן</a><a href="/har-homa/board/">לוח השכונה</a>
 </div></nav></header>
 
 
@@ -336,8 +350,8 @@ background:linear-gradient(to top,var(--t2),transparent)}
 </div></section>
 
 <section id="list" class="wrap dir-list" aria-label="בעלי מקצוע">
-<div class="fchips" role="group" aria-label="סינון לפי תחום">
-<button type="button" data-g="" aria-pressed="true">הכל</button><button type="button" data-g="משפטים וכספים" aria-pressed="false">משפטים וכספים</button><button type="button" data-g="תחזוקת בית" aria-pressed="false">תחזוקת בית</button><button type="button" data-g="לימודים והוראה" aria-pressed="false">לימודים והוראה</button><button type="button" data-g="טיפוח ויופי" aria-pressed="false">טיפוח ויופי</button><button type="button" data-g="משק בית" aria-pressed="false">משק בית</button><button type="button" data-g="רכב ותחבורה" aria-pressed="false">רכב ותחבורה</button><button type="button" data-g="עיצוב ואדריכלות" aria-pressed="false">עיצוב ואדריכלות</button><button type="button" data-g="ייעוץ נפשי ואימון" aria-pressed="false">ייעוץ נפשי ואימון</button><button type="button" data-g="יהדות ומסורת" aria-pressed="false">יהדות ומסורת</button><button type="button" data-g="אירועים ושמחות" aria-pressed="false">אירועים ושמחות</button><button type="button" data-g="בריאות והורות" aria-pressed="false">בריאות והורות</button><button type="button" data-g="אחר" aria-pressed="false">אחר</button>
+<div class="fchips" role="group" aria-label="סינון">
+<button type="button" data-g="" aria-pressed="true">הכל</button><button type="button" data-g="משפטים וכספים" data-k="משפטים וכספים" aria-pressed="false">משפטים וכספים</button><button type="button" data-g="תחזוקת בית" data-k="תחזוקת בית" aria-pressed="false">תחזוקת בית</button><button type="button" data-g="לימודים והוראה" data-k="לימודים והוראה" aria-pressed="false">לימודים והוראה</button><button type="button" data-g="טיפוח ויופי" data-k="טיפוח ויופי" aria-pressed="false">טיפוח ויופי</button><button type="button" data-g="משק בית" data-k="משק בית" aria-pressed="false">משק בית</button><button type="button" data-g="רכב ותחבורה" data-k="רכב ותחבורה" aria-pressed="false">רכב ותחבורה</button><button type="button" data-g="עיצוב ואדריכלות" data-k="עיצוב ואדריכלות" aria-pressed="false">עיצוב ואדריכלות</button><button type="button" data-g="ייעוץ נפשי ואימון" data-k="ייעוץ נפשי ואימון" aria-pressed="false">ייעוץ נפשי ואימון</button><button type="button" data-g="יהדות ומסורת" data-k="יהדות ומסורת" aria-pressed="false">יהדות ומסורת</button><button type="button" data-g="אירועים ושמחות" data-k="אירועים ושמחות" aria-pressed="false">אירועים ושמחות</button><button type="button" data-g="בריאות והורות" data-k="בריאות והורות" aria-pressed="false">בריאות והורות</button><button type="button" data-g="אחר" data-k="אחר" aria-pressed="false">אחר</button>
 </div>
 <div class="dgrid">
 <article class="dcard lift" data-group="אירועים ושמחות" data-text="DJ Stevie תקליטן/DJ אירועים ושמחות " data-id="8693d179-1c23-4b99-94aa-6d2c12dec6f6" data-t="professionals">
@@ -589,7 +603,7 @@ background:linear-gradient(to top,var(--t2),transparent)}
 <div class="dempty" id="dir-empty" hidden><b>לא מצאנו בשכונה את מה שחיפשת</b><span>נסו מילה אחרת, או בחרו "הכל".</span></div>
 </section>
 
-<section class="wrap" aria-label="לבעלי עסקים"><div class="join">
+<section class="wrap" aria-label="פרסום"><div class="join">
 <div style="min-width:0;flex:1 1 320px"><b>עובדים בשכונה? <span class="em">תופיעו כאן.</span></b><span>פרופיל עם תמונה, טלפון, WhatsApp ו-Waze, מבצעים והמלצות מלקוחות.</span></div>
 <a class="pill btn-dark" href="/app/">להרשמת עסק</a>
 </div></section>
@@ -612,6 +626,7 @@ function run(){var t=(q.value||'').trim(),n=0;
 chips.forEach(function(b){b.addEventListener('click',function(){g=b.getAttribute('data-g');
   chips.forEach(function(x){x.setAttribute('aria-pressed',x===b);});run();});});
 q.addEventListener('input',function(){run();});
+var h='';try{h=decodeURIComponent((location.hash||'').slice(1));}catch(_){}if(h){chips.forEach(function(b){if(b.getAttribute('data-k')===h)b.click();});}
 /* כרטיס בלי תמונה: מקוצר (כיתוב בלבד), אלא אם הוא באותה שורה עם כרטיס שיש לו תמונה — לגובה אחיד */
 function fit(){var vis=cards.filter(function(c){return !c.hidden;}),rows={};
   vis.forEach(function(c){c.classList.remove('compact');});
