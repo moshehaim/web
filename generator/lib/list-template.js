@@ -71,12 +71,25 @@ function run(){var t=(q.value||'').trim(),n=0;
 chips.forEach(function(b){b.addEventListener('click',function(){g=b.getAttribute('data-g');
   chips.forEach(function(x){x.setAttribute('aria-pressed',x===b);});run();});});
 q.addEventListener('input',run);
-/* במחשב: הכפתור מציג את המספר, ולחיצה מעתיקה אותו (אין חייגן) */
-if(window.matchMedia&&matchMedia('(hover: hover) and (pointer: fine)').matches){
-  document.addEventListener('click',function(e){var a=e.target.closest('.a-tel');if(!a)return;e.preventDefault();
-    var d=a.querySelector('.ld'),num=d.textContent;
-    function done(){d.textContent='הועתק ✓';setTimeout(function(){d.textContent=num;},1500);}
-    if(navigator.clipboard){navigator.clipboard.writeText(num).then(done,function(){});}});}
+/* ספירת יצירת קשר — אותו RPC כמו באפליקציה, פעם אחת לכל עסק בכל ביקור */
+var API=window.__SB||null,sent={};
+function count(card){if(!API||!card)return;var id=card.getAttribute('data-id'),t=card.getAttribute('data-t');
+  if(!id||sent[id])return;sent[id]=1;
+  try{fetch(API.url+'/rest/v1/rpc/increment_entity_contact',{method:'POST',keepalive:true,
+    headers:{'apikey':API.key,'Authorization':'Bearer '+API.key,'Content-Type':'application/json'},
+    body:JSON.stringify({entity_id:id,entity_table:t})}).catch(function(){});}catch(_){}}
+var desk=window.matchMedia&&matchMedia('(hover: hover) and (pointer: fine)').matches;
+document.addEventListener('click',function(e){
+  var wa=e.target.closest('.a-wa');if(wa){count(wa.closest('.dcard'));return;}
+  var a=e.target.closest('.a-tel');if(!a)return;
+  count(a.closest('.dcard'));
+  if(!desk)return;                       /* בטלפון: חיוג רגיל */
+  e.preventDefault();                    /* במחשב: לחיצה ראשונה מציגה, שנייה מעתיקה */
+  var d=a.querySelector('.ld'),num=a.getAttribute('data-num');
+  if(!a.classList.contains('shown')){a.classList.add('shown');d.textContent=num;d.dir='ltr';a.title='לחיצה מעתיקה';return;}
+  if(navigator.clipboard){navigator.clipboard.writeText(num).then(function(){d.textContent='הועתק ✓';
+    setTimeout(function(){d.textContent=num;},1500);},function(){});}
+});
 })();`;
 
 function card(p, kind) {
@@ -86,18 +99,18 @@ function card(p, kind) {
     : `<span class="mono" aria-hidden="true">${esc(p.name.trim().charAt(0))}</span>`;
   const rec = p.rec > 0 ? `<span class="drec">${svg(ICON_HEART, 14, 'currentColor', 2)}${p.rec === 1 ? 'המלצה אחת' : `${p.rec} המלצות`}</span>` : '';
   const acts = [];
-  if (p.phone) acts.push(`<a class="a-tel" href="${esc(p.phone.tel)}" aria-label="חיוג ל${esc(p.name)} ${esc(p.phone.display)}">${svg(ICON_PHONE, 17, 'currentColor', 2.2)}<span class="lm">חיוג</span><span class="ld" dir="ltr">${esc(p.phone.display)}</span></a>`);
+  if (p.phone) acts.push(`<a class="a-tel" href="${esc(p.phone.tel)}" data-num="${esc(p.phone.display)}" aria-label="חיוג ל${esc(p.name)} ${esc(p.phone.display)}">${svg(ICON_PHONE, 17, 'currentColor', 2.2)}<span class="lm">חיוג</span><span class="ld">הצג מספר</span></a>`);
   if (p.phone?.wa) acts.push(`<a class="a-wa" href="${esc(p.phone.wa)}" target="_blank" rel="noopener" aria-label="WhatsApp ל${esc(p.name)}">${svg(ICON_WA, 17, '#15803D', 2)}WhatsApp</a>`);
   if (p.waze) acts.push(`<a class="a-waze" href="${esc(p.waze)}" target="_blank" rel="noopener" aria-label="ניווט ל${esc(p.name)} ב-Waze">${svg(ICON_WAZE, 18, 'currentColor', 2)}</a>`);
   if (!acts.length) acts.push(`<a class="a-app" href="${APP}">לפרטים באפליקציה</a>`);
-  return `<article class="dcard lift" data-group="${esc(p.group)}" data-text="${esc(text)}">
+  return `<article class="dcard lift" data-group="${esc(p.group)}" data-text="${esc(text)}" data-id="${esc(p.id)}" data-t="${esc(p.table)}">
 <div class="dmedia">${media}${rec}</div>
 <div class="dbody"><h3>${esc(p.name)}</h3>${p.field ? `<span class="f">${esc(p.field)}</span>` : ''}${p.where ? `<span class="w">${esc(p.where)}</span>` : ''}</div>
 <div class="dact">${acts.join('')}</div>
 </article>`;
 }
 
-export function listPage(vm, dir, kind, { base, home }) {
+export function listPage(vm, dir, kind, { base, home, api }) {
   const isPro = kind === 'pros';
   const data = isPro ? dir.pros : dir.biz;
   const label = isPro ? 'בעלי מקצוע' : 'עסקים';
@@ -143,6 +156,7 @@ ${data.items.map((p) => card(p, kind)).join('\n')}
 
 ${siteFooter()}
 
+${api ? `<script>window.__SB=${JSON.stringify(api).replace(/</g, '\\u003c')};</script>` : ''}
 <script>${JS}</script>
 <script>${HOOD_JS}</script>
 </body>

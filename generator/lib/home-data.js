@@ -283,7 +283,7 @@ export function shapeDirectory(raw) {
     .map((p, i) => {
       const subs = String(p.sub_categories || '').split(',').map((s) => s.trim()).filter(Boolean);
       return {
-        i, name: p.name, group: pc[p.main_category]?.name_he || 'אחר',
+        i, id: p.id, table: 'professionals', name: p.name, group: pc[p.main_category]?.name_he || 'אחר',
         field: subs.slice(0, 3).join(' · ') || pc[p.main_category]?.name_he || '',
         // תמונה לנשים בלבד: הכרטיס מוצג, רק בלי התמונה
         img: p.image_women_only ? null : p.image_url,
@@ -295,7 +295,7 @@ export function shapeDirectory(raw) {
     .map((b, i) => {
       const t = bt[b.business_type];
       return {
-        i, name: b.name, group: bc[t?.category_id]?.name_he || 'שונות', field: t?.name_he || '',
+        i, id: b.id, table: 'businesses', name: b.name, group: bc[t?.category_id]?.name_he || 'שונות', field: t?.name_he || '',
         img: b.image_women_only ? null : b.image_url,
         rec: b.recommend_count || 0,
         where: b.address || '', phone: phoneLinks(b.phone),
