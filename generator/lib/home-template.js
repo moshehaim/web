@@ -6,16 +6,16 @@
  * פעולות (התחברות, פרסום, יצירת קשר) עוברות לאפליקציה.
  */
 
-const esc = (s) => String(s ?? '')
+export const esc = (s) => String(s ?? '')
   .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
   .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
 
-const APP = '/app/';
+export const APP = '/app/';
 const LOGIN = '/login.html';
 const DOWNLOAD = '/b/';
 const MINYANIM = '/minyanim-har-homa/';
 
-const ICON = {
+export const ICON = {
   clock: 'M12 4a8 8 0 1 0 0 16a8 8 0 1 0 0-16zM12 8v4l3 2',
   book: 'M4 5h7a2 2 0 0 1 2 2v13a2 2 0 0 0-2-2H4zM20 5h-5a2 2 0 0 0-2 2v13a2 2 0 0 1 2-2h5z',
   store: 'M3 9l1.5-5h15L21 9M3 9h18v2a3 3 0 0 1-6 0a3 3 0 0 1-6 0a3 3 0 0 1-6 0zM5 13v8h14v-8',
@@ -35,12 +35,12 @@ const ICON = {
   civic: 'M4 21V5h10v16M14 9h6v12M7 9h4M7 13h4M7 17h4',
   health: 'M9 3h6v6h6v6h-6v6H9v-6H3V9h6z',
 };
-const svg = (d, size = 24, stroke = 'currentColor', w = 1.9) =>
+export const svg = (d, size = 24, stroke = 'currentColor', w = 1.9) =>
   `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="${stroke}" stroke-width="${w}" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="${d}"/></svg>`;
 
 const ZONES = [
   ['מניינים', ICON.clock, 'blue', MINYANIM], ['שיעורי תורה', ICON.book, 'blue'],
-  ['עסקים', ICON.store, 'sky'], ['בעלי מקצוע', ICON.wrench, 'sky'],
+  ['עסקים', ICON.store, 'sky', 'biz/'], ['בעלי מקצוע', ICON.wrench, 'sky', 'pros/'],
   ['מבצעים', ICON.tag, 'sky', '#promos'], ['קופונים', ICON.ticket, 'sky', '#promos'],
   ['שירותי קהילה', ICON.civic, 'teal'], ['גמ״חים', ICON.heart, 'green'], ['אירועים', ICON.star, 'green'],
   ['דרושים', ICON.brief, 'violet'], ['יד שנייה', ICON.bag, 'violet'], ['נדל״ן', ICON.key, 'violet', '#realestate'],
@@ -57,7 +57,7 @@ const FAQ = [
   ['באילו שכונות זה פועל?', 'כרגע בחומת שמואל, ושכונות נוספות בירושלים והסביבה בדרך.'],
 ];
 
-const CSS = `
+export const CSS = `
 *,*::before,*::after{box-sizing:border-box}
 :root{--navy:#172F57;--navy2:#213E6E;--brand:#244782;--sky:#8CCBF2;--accent:#2A6FB8;--ink:#1C2B45;
 --muted:#6B7689;--line:#E6E9EF;--bg:#F6F7F9;--soft:#EAF1FA;--ok:#5CD49A;--red:#B4233C}
@@ -289,9 +289,9 @@ ${body}
 function prosSection(pros) {
   if (!pros.length) return '';
   return `<section id="pros" aria-label="בעלי מקצוע" class="wrap sec">
-<div class="sec-head">${head2('לבית, למשפחה ולאירועים', 'בעלי מקצוע', 'בשכונה')}<div class="ctrls">${arrows('pros')}<a class="more" href="${APP}">לכל בעלי המקצוע ←</a></div></div>
+<div class="sec-head">${head2('לבית, למשפחה ולאירועים', 'בעלי מקצוע', 'בשכונה')}<div class="ctrls">${arrows('pros')}<a class="more" href="pros/">לכל בעלי המקצוע ←</a></div></div>
 <div class="car car-pro" data-car="pros" data-auto="4000"><div class="track">
-${pros.map((p) => `<div class="slide"><a href="${APP}" class="card pro lift">
+${pros.map((p) => `<div class="slide"><a href="pros/" class="card pro lift">
 <div class="media">${img(p.img, p.name)}</div>
 <div class="body"><b style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(p.name)}</b><span class="field">${esc(p.field)}</span>${p.rec ? `<span class="rec">${svg(ICON.heart, 14, 'currentColor', 2)}${p.rec === 1 ? 'המלצה אחת' : `${p.rec} המלצות`}</span>` : ''}</div>
 </a></div>`).join('\n')}
@@ -301,11 +301,11 @@ ${pros.map((p) => `<div class="slide"><a href="${APP}" class="card pro lift">
 
 function bizSection(biz) {
   if (!biz.length) return '';
-  const pill = (b) => `<a href="${APP}" class="biz lift">${img(b.img, '')}<span><b>${esc(b.name)}</b><span>${esc(b.type)}</span></span></a>`;
+  const pill = (b) => `<a href="biz/" class="biz lift">${img(b.img, '')}<span><b>${esc(b.name)}</b><span>${esc(b.type)}</span></span></a>`;
   const half = Math.ceil(biz.length / 2);
   const row = (list, cls) => `<div class="mq${cls}">${list.map(pill).join('')}<span style="display:contents" aria-hidden="true">${list.map(pill).join('')}</span></div>`;
   return `<section id="biz" aria-label="עסקים בשכונה" class="sec" style="padding-bottom:16px">
-<div class="wrap sec-head">${head2('מעבירים עכבר כדי לעצור', 'עסקים', 'בשכונה')}<a class="more" href="${APP}">לאלפון העסקים ←</a></div>
+<div class="wrap sec-head">${head2('מעבירים עכבר כדי לעצור', 'עסקים', 'בשכונה')}<a class="more" href="biz/">לאלפון העסקים ←</a></div>
 <div class="mq-wrap">${row(biz.slice(0, half), '')}${biz.length > 6 ? row(biz.slice(half), ' rev') : ''}</div>
 </section>`;
 }
@@ -390,6 +390,18 @@ function ticker(vm) {
 
 /* ── סקריפט לקוח ───────────────────────────────────────────────── */
 
+export const HOOD_JS = `(function(){
+/* בורר שכונה */
+var hb=document.getElementById('hood-btn'),hp=document.getElementById('hood-pop'),hq=document.getElementById('hood-q');
+function setHood(o){hp.hidden=!o;hb.setAttribute('aria-expanded',o);if(o)hq.focus();}
+if(hb){hb.addEventListener('click',function(e){e.stopPropagation();setHood(hp.hidden);});
+  hp.addEventListener('click',function(e){e.stopPropagation();});
+  document.addEventListener('click',function(){setHood(false);});
+  document.addEventListener('keydown',function(e){if(e.key==='Escape'&&!hp.hidden){setHood(false);hb.focus();}});
+  hq.addEventListener('input',function(){var q=hq.value.trim();
+    [].forEach.call(hp.querySelectorAll('.hood-item'),function(it){it.hidden=!!q&&it.textContent.indexOf(q)<0;});});}
+})();`;
+
 const CLIENT_JS = `
 (function(){
 var TZ='Asia/Jerusalem',DAYS=['ראשון','שני','שלישי','רביעי','חמישי','שישי','שבת'];
@@ -457,26 +469,15 @@ tabs.forEach(function(t,i){t.addEventListener('click',function(){sel(t);});
   t.addEventListener('keydown',function(e){var d=e.key==='ArrowLeft'?1:e.key==='ArrowRight'?-1:0;
     if(d){var n=tabs[(i+d+tabs.length)%tabs.length];sel(n);n.focus();e.preventDefault();}});});
 
-/* בורר שכונה */
-var hb=document.getElementById('hood-btn'),hp=document.getElementById('hood-pop'),hq=document.getElementById('hood-q');
-function setHood(o){hp.hidden=!o;hb.setAttribute('aria-expanded',o);if(o)hq.focus();}
-if(hb){hb.addEventListener('click',function(e){e.stopPropagation();setHood(hp.hidden);});
-  hp.addEventListener('click',function(e){e.stopPropagation();});
-  document.addEventListener('click',function(){setHood(false);});
-  document.addEventListener('keydown',function(e){if(e.key==='Escape'&&!hp.hidden){setHood(false);hb.focus();}});
-  hq.addEventListener('input',function(){var q=hq.value.trim();
-    [].forEach.call(hp.querySelectorAll('.hood-item'),function(it){it.hidden=!!q&&it.textContent.indexOf(q)<0;});});}
 })();
 `;
 
 /* ── העמוד ─────────────────────────────────────────────────────── */
 
-export function homePage(vm, { base, path: pagePath }) {
-  const url = `${base}${pagePath}`;
-  const title = `${vm.name}${vm.alias ? ` (${vm.alias})` : ''} — שכונה | מניינים, עסקים, גמ״חים ומבצעים`;
-  const desc = `כל מה שקורה ב${vm.name}${vm.alias ? ` (${vm.alias})` : ''}, ${vm.city}: זמני תפילה, בעלי מקצוע, עסקים, מבצעים, נדל״ן, דרושים, יד שנייה וגמ״חים — מעודכן על ידי השכנים.`;
-  const multi = vm.subs.length > 1;
 
+/* ── מעטפת משותפת (ראש, כותרת, תחתית) לעמוד הבית ולרשימות ── */
+
+export function pageHead({ title, desc, url, base, css = '' }) {
   return `<!DOCTYPE html>
 <html lang="he" dir="rtl">
 <head>
@@ -497,12 +498,15 @@ export function homePage(vm, { base, path: pagePath }) {
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Assistant:wght@400;600;700;800&family=Frank+Ruhl+Libre:wght@900&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
 <link rel="preconnect" href="https://mebomrqnfnbqijiuawdh.supabase.co">
-<style>${CSS}</style>
+<style>${CSS}${css}</style>
 </head>
 <body>
-<a href="#main" class="sr">דלג לתוכן</a>
+`;
+}
 
-<header class="hdr">
+export function siteHeader(vm, pagePath, navChips) {
+  const multi = vm.subs.length > 1;
+  return `<header class="hdr">
 <div class="wrap hdr-row">
 <a class="logo" href="/" aria-label="שכונה — דף הבית"><img src="/app_icon.png" alt="שכונה" width="52" height="52"></a>
 <div class="hood">
@@ -529,10 +533,29 @@ ${vm.hoods.map((h) => h.current
 <a class="pill btn-dark" href="${DOWNLOAD}">להורדת האפליקציה</a>
 </div>
 </div>
-<nav class="chips" aria-label="תחומים"><div class="wrap">
+${navChips}</header>
+`;
+}
+
+export function siteFooter() {
+  return `<footer><div class="wrap">
+<img src="/app_icon.png" alt="שכונה" width="48" height="48" loading="lazy">
+<span>שכונה · <a href="mailto:info@shchuna.co.il">info@shchuna.co.il</a></span>
+<nav aria-label="קישורים"><a href="/">כל השכונות</a><a href="/terms.html">תנאי שימוש</a><a href="/privacy.html">פרטיות</a></nav>
+<span class="c">© שכונה, כל הזכויות שמורות</span>
+</div></footer>`;
+}
+
+export function homePage(vm, { base, path: pagePath }) {
+  const url = `${base}${pagePath}`;
+  const title = `${vm.name}${vm.alias ? ` (${vm.alias})` : ''} — שכונה | מניינים, עסקים, גמ״חים ומבצעים`;
+  const desc = `כל מה שקורה ב${vm.name}${vm.alias ? ` (${vm.alias})` : ''}, ${vm.city}: זמני תפילה, בעלי מקצוע, עסקים, מבצעים, נדל״ן, דרושים, יד שנייה וגמ״חים — מעודכן על ידי השכנים.`;
+
+  return `${pageHead({ title, desc, url, base })}<a href="#main" class="sr">דלג לתוכן</a>
+
+${siteHeader(vm, pagePath, `<nav class="chips" aria-label="תחומים"><div class="wrap">
 <a href="#board">תפילות</a>${vm.promos.length ? '<a href="#promos">מבצעים</a>' : ''}<a href="#pros">בעלי מקצוע</a><a href="#biz">עסקים</a>${vm.realEstate.length ? '<a href="#realestate">נדל״ן</a>' : ''}<a href="#board">דרושים</a><a href="#board">יד שנייה</a><a href="#board">גמ״חים</a><a href="#zones">כל התחומים</a>
-</div></nav>
-</header>
+</div></nav>`)}
 
 <main id="main">
 
@@ -548,7 +571,7 @@ ${vm.hoods.map((h) => h.current
 <div class="tiles">
 <a class="tile lift" href="#board"><i>${svg(ICON.brief, 22, 'currentColor', 2)}</i><span><b>לוח השכונה</b><span>דרושים, יד שנייה, גמ״חים</span></span></a>
 <a class="tile lift" href="${vm.promos.length ? '#promos' : APP}"><i>${svg(ICON.tag, 22, 'currentColor', 2)}</i><span><b>מבצעים וקופונים</b><span>מעסקי השכונה</span></span></a>
-<a class="tile lift" href="#pros"><i>${svg(ICON.wrench, 22, 'currentColor', 2)}</i><span><b>בעלי מקצוע</b><span>חשמל, אינסטלציה, שיפוצים ועוד</span></span></a>
+<a class="tile lift" href="pros/"><i>${svg(ICON.wrench, 22, 'currentColor', 2)}</i><span><b>בעלי מקצוע</b><span>חשמל, אינסטלציה, שיפוצים ועוד</span></span></a>
 <a class="tile lift" href="#board"><i>${svg(ICON.clock, 22, 'currentColor', 2)}</i><span><b>תפילות קרובות</b><span>המניין הבא בשכונה</span></span></a>
 </div>
 </div>
@@ -592,15 +615,11 @@ ${FAQ.map(([q, a]) => `<details><summary>${esc(q)}</summary><p>${esc(a)}</p></de
 
 </main>
 
-<footer><div class="wrap">
-<img src="/app_icon.png" alt="שכונה" width="48" height="48" loading="lazy">
-<span>שכונה · <a href="mailto:info@shchuna.co.il">info@shchuna.co.il</a></span>
-<nav aria-label="קישורים"><a href="/">כל השכונות</a><a href="/terms.html">תנאי שימוש</a><a href="/privacy.html">פרטיות</a></nav>
-<span class="c">© שכונה, כל הזכויות שמורות</span>
-</div></footer>
+${siteFooter()}
 
 <script type="application/json" id="prayers-data">${JSON.stringify(vm.prayers).replace(/</g, '\\u003c')}</script>
 <script>${CLIENT_JS}</script>
+<script>${HOOD_JS}</script>
 </body>
 </html>
 `;

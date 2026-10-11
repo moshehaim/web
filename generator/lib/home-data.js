@@ -230,3 +230,85 @@ export function shapeHome(raw, { now = new Date(), base = '' } = {}) {
     builtAt: now.toISOString(),
   };
 }
+
+/* ── אלפון: בעלי מקצוע ועסקים ───────────────────────────────────── */
+
+/** סוגי עסקים שלא מוצגים באתר הציבורי (טיפוח, איפור, פאות וכו׳). */
+export const HIDDEN_DIRECTORY_TYPES = new Set([
+  ...HIDDEN_BUSINESS_TYPES, 'beauty_salon', 'laser', 'bridal_salon', 'wig_salon',
+]);
+
+export async function fetchDirectory(db, communityId) {
+  const q = (p) => p.then(({ data, error }) => { if (error) throw error; return data || []; });
+  const [businesses, professionals, businessTypes, businessCategories, profCategories] = await Promise.all([
+    q(db.from('businesses')
+      .select('id,name,phone,address,image_url,business_type,recommend_count,latitude,longitude,image_women_only,content_audience')
+      .eq('community_id', communityId).not('is_active', 'is', false)
+      .order('is_prominent', { ascending: false, nullsFirst: false })
+      .order('priority', { ascending: false, nullsFirst: false })
+      .order('name')),
+    q(db.from('professionals')
+      .select('id,name,phone,main_category,sub_categories,image_url,recommend_count,image_women_only,content_audience')
+      .eq('community_id', communityId).not('is_active', 'is', false)
+      .order('is_prominent', { ascending: false, nullsFirst: false })
+      .order('priority', { ascending: false, nullsFirst: false })
+      .order('name')),
+    q(db.from('business_types').select('id,category_id,name_he')),
+    q(db.from('business_categories').select('id,name_he,display_order')),
+    q(db.from('professional_categories').select('id,name_he,display_order')),
+  ]);
+  return { businesses, professionals, businessTypes, businessCategories, profCategories };
+}
+
+/** טלפון ישראלי → קישורי חיוג ו-WhatsApp (WhatsApp רק לנייד). */
+export function phoneLinks(raw) {
+  const d = String(raw || '').replace(/\D/g, '');
+  if (d.length < 9) return null;
+  const local = d.startsWith('972') ? '0' + d.slice(3) : d;
+  const intl = '972' + local.replace(/^0/, '');
+  return {
+    display: local.length === 10 ? `${local.slice(0, 3)}-${local.slice(3)}` : `${local.slice(0, 2)}-${local.slice(2)}`,
+    tel: `tel:${local}`,
+    wa: /^05\d{8}$/.test(local) ? `https://wa.me/${intl}` : null,
+  };
+}
+
+export function shapeDirectory(raw) {
+  const bt = Object.fromEntries(raw.businessTypes.map((t) => [t.id, t]));
+  const bc = Object.fromEntries(raw.businessCategories.map((c) => [c.id, c]));
+  const pc = Object.fromEntries(raw.profCategories.map((c) => [c.id, c]));
+  const byImageThenOrder = (a, b) => (!!b.img - !!a.img) || (a.i - b.i);
+  const groupsOf = (rows, order) => [...new Set(rows.map((r) => r.group).filter(Boolean))]
+    .sort((a, b) => (order[a] ?? 99) - (order[b] ?? 99));
+
+  const pros = raw.professionals
+    .filter((p) => (p.content_audience == null || p.content_audience === 'all') && !HIDDEN_PRO_CATEGORIES.has(p.main_category))
+    .map((p, i) => {
+      const subs = String(p.sub_categories || '').split(',').map((s) => s.trim()).filter(Boolean);
+      return {
+        i, name: p.name, group: pc[p.main_category]?.name_he || 'אחר',
+        field: subs.slice(0, 3).join(' · ') || pc[p.main_category]?.name_he || '',
+        img: p.image_women_only ? null : p.image_url, rec: p.recommend_count || 0,
+        where: '', phone: phoneLinks(p.phone), waze: null,
+      };
+    }).sort(byImageThenOrder);
+
+  const biz = raw.businesses
+    .filter((b) => (b.content_audience == null || b.content_audience === 'all') && !HIDDEN_DIRECTORY_TYPES.has(b.business_type))
+    .map((b, i) => {
+      const t = bt[b.business_type];
+      return {
+        i, name: b.name, group: bc[t?.category_id]?.name_he || 'שונות', field: t?.name_he || '',
+        img: b.image_women_only ? null : b.image_url, rec: b.recommend_count || 0,
+        where: b.address || '', phone: phoneLinks(b.phone),
+        waze: b.latitude && b.longitude ? `https://waze.com/ul?ll=${b.latitude},${b.longitude}&navigate=yes` : null,
+      };
+    }).sort(byImageThenOrder);
+
+  const proOrder = Object.fromEntries(raw.profCategories.map((c) => [c.name_he, c.display_order]));
+  const bizOrder = Object.fromEntries(raw.businessCategories.map((c) => [c.name_he, c.display_order]));
+  return {
+    pros: { items: pros, groups: groupsOf(pros, proOrder) },
+    biz: { items: biz, groups: groupsOf(biz, bizOrder) },
+  };
+}
