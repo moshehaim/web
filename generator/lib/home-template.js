@@ -41,9 +41,9 @@ export const svg = (d, size = 24, stroke = 'currentColor', w = 1.9) =>
 const ZONES = [
   ['מניינים', ICON.clock, 'blue', MINYANIM], ['שיעורי תורה', ICON.book, 'blue'],
   ['עסקים', ICON.store, 'sky', 'biz/'], ['בעלי מקצוע', ICON.wrench, 'sky', 'pros/'],
-  ['מבצעים', ICON.tag, 'sky', '#promos'], ['קופונים', ICON.ticket, 'sky', '#promos'],
-  ['שירותי קהילה', ICON.civic, 'teal'], ['גמ״חים', ICON.heart, 'green'], ['אירועים', ICON.star, 'green'],
-  ['דרושים', ICON.brief, 'violet'], ['יד שנייה', ICON.bag, 'violet'], ['נדל״ן', ICON.key, 'violet', '#realestate'],
+  ['מבצעים', ICON.tag, 'sky', 'promos/'], ['קופונים', ICON.ticket, 'sky', 'promos/#קופונים'],
+  ['שירותי קהילה', ICON.civic, 'teal'], ['גמ״חים', ICON.heart, 'green', 'board/#gmach'], ['אירועים', ICON.star, 'green'],
+  ['דרושים', ICON.brief, 'violet', 'board/#jobs'], ['יד שנייה', ICON.bag, 'violet', 'board/#second'], ['נדל״ן', ICON.key, 'violet', 'realestate/'],
   ['אולמות אירועים', ICON.hall, 'amber'], ['אירוח', ICON.bed, 'amber'], ['הכל לאירוע', ICON.party, 'amber'],
   ['מוסדות חינוך', ICON.school, 'teal'], ['גנים ופארקים', ICON.tree, 'teal'], ['בריאות', ICON.health, 'teal'],
 ];
@@ -281,7 +281,7 @@ function promosSection(promos) {
     : `<div class="grid-auto">${promos.map(promoCard).join('')}${cta}</div>`;
   return `<section id="promos" aria-label="מבצעים וקופונים" style="background:var(--soft);padding-block:48px">
 <div class="wrap" style="display:flex;flex-direction:column;gap:20px">
-<div class="sec-head">${head2('מעסקי השכונה', 'מבצעים', 'וקופונים')}<div class="ctrls">${carousel ? arrows('promos') : ''}<a class="more" href="${APP}">הכל ←</a></div></div>
+<div class="sec-head">${head2('מעסקי השכונה', 'מבצעים', 'וקופונים')}<div class="ctrls">${carousel ? arrows('promos') : ''}<a class="more" href="promos/">הכל ←</a></div></div>
 ${body}
 </div></section>`;
 }
@@ -316,7 +316,7 @@ function realEstateSection(list) {
   return `<section id="realestate" aria-label="נדל״ן" class="wrap sec">
 <div class="sec-head">${head2('דירות מהשכונה, עם תמונות', 'נדל״ן', 'בשכונה')}<div class="ctrls">
 ${kinds.length > 2 ? `<div class="seg" role="group" aria-label="סוג עסקה">${kinds.map((k, i) => `<button type="button" data-re="${esc(k)}" aria-pressed="${i === 0}">${esc(k)}</button>`).join('')}</div>` : ''}
-${arrows('re')}<a class="more" href="${APP}">לכל הדירות ←</a></div></div>
+${arrows('re')}<a class="more" href="realestate/">לכל הדירות ←</a></div></div>
 <div class="car" data-car="re" data-auto="5000"><div class="track">
 ${list.map((r) => `<div class="slide" data-kind="${esc(r.kind)}"><a href="${APP}" class="card lift">
 <div class="media">${img(r.img, r.title)}<span class="tag">${esc(r.kind)}</span><span class="price mono">${esc(r.price)}</span></div>
@@ -364,7 +364,7 @@ ${tabs.map((t, i) => `<div role="tabpanel" id="tp-${t.key}" aria-labelledby="tab
 ${t.items.length
     ? t.items.slice(0, 5).map((x) => `<a class="bitem" href="${APP}"><span><b>${esc(x.t)}</b><small>${esc(x.sub)}</small></span>${x.b ? `<span class="bbadge">${esc(x.b)}</span>` : ''}</a>`).join('')
     : `<p class="bempty">אין כרגע מודעות ב${esc(t.label)}. רוצים לפרסם? זה דרך האפליקציה.</p>`}
-<a href="${APP}" style="display:inline-block;font-weight:800;font-size:14px;text-decoration:none;margin-top:10px">${esc(t.more)} ←</a>
+<a href="board/#${t.key}" style="display:inline-block;font-weight:800;font-size:14px;text-decoration:none;margin-top:10px">${esc(t.more)} ←</a>
 </div>`).join('\n')}
 </div>
 
