@@ -73,6 +73,9 @@ const write = (rel, content) => {
   fs.writeFileSync(file, content, 'utf8');
 };
 
+// ספירת לחיצות מהדפדפן: אותו anon key ציבורי שהאפליקציה בווב משתמשת בו
+const API = SUPABASE_URL && ANON_KEY ? { url: SUPABASE_URL, key: ANON_KEY } : null;
+
 const writeHome = (raw, dirRaw) => {
   const vm = shapeHome(raw, { now: new Date(), base: BASE });
   write(path.join(HOME, 'index.html'), homePage(vm, { base: BASE, path: `/${HOME}/` }));
@@ -81,7 +84,7 @@ const writeHome = (raw, dirRaw) => {
   if (!dirRaw) return;
   const dir = shapeDirectory(dirRaw);
   for (const kind of ['pros', 'biz']) {
-    write(path.join(HOME, kind, 'index.html'), listPage(vm, dir, kind, { base: BASE, home: `/${HOME}/` }));
+    write(path.join(HOME, kind, 'index.html'), listPage(vm, dir, kind, { base: BASE, home: `/${HOME}/`, api: API }));
   }
   console.log(`  ${HOME}/pros/ · ${dir.pros.items.length}   ${HOME}/biz/ · ${dir.biz.items.length}`);
 };

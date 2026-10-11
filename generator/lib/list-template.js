@@ -10,7 +10,41 @@ const ICON_WA = 'M4 20l1.3-4A8 8 0 1 1 8 18.7zM9 9.5c.3 2 2.3 4.2 4.5 4.6l1-1.2 
 const ICON_WAZE = 'M12 3l7 18-7-4-7 4z';
 const ICON_HEART = 'M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z';
 
+/* כרטיס בלי תמונה: אייקון התחום על רקע בצבע התחום (כמו באפליקציה — לוגו / אייקון קטגוריה) */
+const CAT_ICON = {
+  food_and_restaurants: ['M4 3v8a3 3 0 0 0 6 0V3M7 3v18M17 3c-2 2-3 5-3 8h4V3M17 11v10', 'amber'],
+  food_culinary: ['M4 3v8a3 3 0 0 0 6 0V3M7 3v18M17 3c-2 2-3 5-3 8h4V3M17 11v10', 'amber'],
+  retail: ['M4 7h16l-1.5 13h-13zM9 7V5a3 3 0 0 1 6 0v2', 'violet'],
+  automotive: ['M5 16V11l2-5h10l2 5v5M3 16h18v3H3zM7.5 13h.01M16.5 13h.01', 'sky'],
+  personal_care: ['M12 3v4M12 17v4M3 12h4M17 12h4M6 6l2.5 2.5M15.5 15.5L18 18M18 6l-2.5 2.5M8.5 15.5L6 18', 'rose'],
+  beauty: ['M12 3v4M12 17v4M3 12h4M17 12h4M6 6l2.5 2.5M15.5 15.5L18 18M18 6l-2.5 2.5M8.5 15.5L6 18', 'rose'],
+  sports_leisure: ['M12 3a9 9 0 1 0 0 18a9 9 0 1 0 0-18zM3.5 9h17M3.5 15h17M12 3c-3 3-3 15 0 18M12 3c3 3 3 15 0 18', 'green'],
+  home_garden: ['M12 21c-5-3-7-7-7-11 4 0 7 2 7 6 0-4 3-6 7-6 0 4-2 8-7 11zM12 21V10', 'green'],
+  services_repairs: ['M14.5 6.5a4 4 0 0 0-5.3 5.3L3 18l3 3 6.2-6.2a4 4 0 0 0 5.3-5.3l-2.6 2.6-2.4-.6-.6-2.4z', 'blue'],
+  home_maintenance: ['M14.5 6.5a4 4 0 0 0-5.3 5.3L3 18l3 3 6.2-6.2a4 4 0 0 0 5.3-5.3l-2.6 2.6-2.4-.6-.6-2.4z', 'blue'],
+  household: ['M4 21V10l8-6 8 6v11M9 21v-6h6v6', 'teal'],
+  pets: ['M8 9a1.8 2.2 0 1 0 0-.1zM16 9a1.8 2.2 0 1 0 0-.1zM5 13a1.6 2 0 1 0 0-.1zM19 13a1.6 2 0 1 0 0-.1zM12 13c-3 0-5 3-5 5s2 2 5 1c3 1 5 1 5-1s-2-5-5-5z', 'amber'],
+  events: ['M4 20l4-12 8 8zM14 4v2M18 6l-1.5 1.5M20 10h-2M12 9l3-3', 'violet'],
+  legal_finance: ['M12 3v18M5 7h14M5 7l-3 7a3 3 0 0 0 6 0zM19 7l-3 7a3 3 0 0 0 6 0zM8 21h8', 'blue'],
+  education: ['M2 9l10-5 10 5-10 5zM6 11v5c3 2 9 2 12 0v-5', 'teal'],
+  technology: ['M4 5h16v11H4zM2 19h20', 'sky'],
+  design_architecture: ['M3 21L21 3M15 3h6v6M6 21l-3-3 12-12 3 3z', 'violet'],
+  delivery: ['M3 7h11v9H3zM14 10h4l3 3v3h-7M7 18.5a1.5 1.5 0 1 0 0-.1M17 18.5a1.5 1.5 0 1 0 0-.1', 'sky'],
+  counseling: ['M4 5h16v10H9l-5 4z', 'teal'],
+  judaism: ['M4 5h7a2 2 0 0 1 2 2v13a2 2 0 0 0-2-2H4zM20 5h-5a2 2 0 0 0-2 2v13a2 2 0 0 1 2-2h5z', 'blue'],
+  health_parenting: ['M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z', 'rose'],
+  other: ['M3 8l9-5 9 5v8l-9 5-9-5zM3 8l9 5 9-5M12 13v8', 'blue'],
+};
+
 const CSS = `
+.t-blue{--t1:#EFF4FF;--t2:#DCE6FB;--tf:#244782}.t-sky{--t1:#E9F4FC;--t2:#D3E8F7;--tf:#1F78B4}
+.t-green{--t1:#EAF7EE;--t2:#D4EEDC;--tf:#15803D}.t-violet{--t1:#F3EFFC;--t2:#E4DCF7;--tf:#6D4BB8}
+.t-teal{--t1:#E6F6F4;--t2:#CDEBE7;--tf:#0F766E}.t-amber{--t1:#FCF5E6;--t2:#F4E5C2;--tf:#8A5A00}
+.t-rose{--t1:#FCEFF2;--t2:#F5D9E0;--tf:#9F2D4B}
+.dmedia.noimg{background:radial-gradient(120% 90% at 85% 0%,var(--t1) 0%,var(--t2) 100%)}
+.dmedia.noimg svg{width:64px;height:64px;color:var(--tf);opacity:.9}
+.dmedia.noimg::after{content:'';position:absolute;inset:auto 0 0 0;height:36%;opacity:.35;
+background:linear-gradient(to top,var(--t2),transparent)}
 .dir-hero{background:var(--navy);color:#fff}
 .dir-hero .wrap{padding-block:28px 30px;display:flex;flex-direction:column;gap:18px}
 .crumb{font-size:14px;color:#A9BAD4}.crumb a{color:#C9D6EA}
@@ -30,7 +64,6 @@ const CSS = `
 .dcard[hidden]{display:none}
 .dmedia{position:relative;aspect-ratio:4/3;max-width:100%;background:#DCE5F5;overflow:hidden;display:flex;align-items:center;justify-content:center}
 .dmedia img{width:100%;height:100%;object-fit:cover}
-.dmedia .mono{font-family:'Frank Ruhl Libre',serif;font-size:64px;font-weight:900;color:var(--brand)}
 .drec{position:absolute;top:10px;right:10px;display:inline-flex;align-items:center;gap:4px;font-size:13px;font-weight:800;background:#fff;color:#15803D;border-radius:8px;padding:3px 9px}
 .dbody{padding:14px 16px 4px;display:flex;flex-direction:column;gap:4px;flex:1}
 .dbody h3{margin:0;font-size:19px;font-weight:800;line-height:1.25}
@@ -51,7 +84,7 @@ const CSS = `
 @media (max-width:620px){
 .dcard{display:grid;grid-template-columns:96px minmax(0,1fr);grid-template-areas:"m b" "a a"}
 .dmedia{grid-area:m;aspect-ratio:1/1;margin:14px 14px 0 0;border-radius:14px;width:82px}
-.dmedia .mono{font-size:38px}
+.dmedia.noimg svg{width:36px;height:36px}
 .drec{position:static;grid-area:auto}
 .dbody{grid-area:b;padding:14px 12px 0 16px}
 .dbody h3{font-size:17px}
@@ -71,33 +104,47 @@ function run(){var t=(q.value||'').trim(),n=0;
 chips.forEach(function(b){b.addEventListener('click',function(){g=b.getAttribute('data-g');
   chips.forEach(function(x){x.setAttribute('aria-pressed',x===b);});run();});});
 q.addEventListener('input',run);
-/* במחשב: הכפתור מציג את המספר, ולחיצה מעתיקה אותו (אין חייגן) */
-if(window.matchMedia&&matchMedia('(hover: hover) and (pointer: fine)').matches){
-  document.addEventListener('click',function(e){var a=e.target.closest('.a-tel');if(!a)return;e.preventDefault();
-    var d=a.querySelector('.ld'),num=d.textContent;
-    function done(){d.textContent='הועתק ✓';setTimeout(function(){d.textContent=num;},1500);}
-    if(navigator.clipboard){navigator.clipboard.writeText(num).then(done,function(){});}});}
+/* ספירת יצירת קשר — אותו RPC כמו באפליקציה, פעם אחת לכל עסק בכל ביקור */
+var API=window.__SB||null,sent={};
+function count(card){if(!API||!card)return;var id=card.getAttribute('data-id'),t=card.getAttribute('data-t');
+  if(!id||sent[id])return;sent[id]=1;
+  try{fetch(API.url+'/rest/v1/rpc/increment_entity_contact',{method:'POST',keepalive:true,
+    headers:{'apikey':API.key,'Authorization':'Bearer '+API.key,'Content-Type':'application/json'},
+    body:JSON.stringify({entity_id:id,entity_table:t})}).catch(function(){});}catch(_){}}
+var desk=window.matchMedia&&matchMedia('(hover: hover) and (pointer: fine)').matches;
+document.addEventListener('click',function(e){
+  var wa=e.target.closest('.a-wa');if(wa){count(wa.closest('.dcard'));return;}
+  var a=e.target.closest('.a-tel');if(!a)return;
+  count(a.closest('.dcard'));
+  if(!desk)return;                       /* בטלפון: חיוג רגיל */
+  e.preventDefault();                    /* במחשב: לחיצה ראשונה מציגה, שנייה מעתיקה */
+  var d=a.querySelector('.ld'),num=a.getAttribute('data-num');
+  if(!a.classList.contains('shown')){a.classList.add('shown');d.textContent=num;d.dir='ltr';a.title='לחיצה מעתיקה';return;}
+  if(navigator.clipboard){navigator.clipboard.writeText(num).then(function(){d.textContent='הועתק ✓';
+    setTimeout(function(){d.textContent=num;},1500);},function(){});}
+});
 })();`;
 
 function card(p, kind) {
   const text = [p.name, p.field, p.group, p.where].join(' ');
   const media = p.img
     ? `<img src="${esc(p.img)}" alt="${esc(p.name)}" loading="lazy" decoding="async">`
-    : `<span class="mono" aria-hidden="true">${esc(p.name.trim().charAt(0))}</span>`;
+    : svg((CAT_ICON[p.cat] || CAT_ICON.other)[0], 64, 'currentColor', 1.6);
+  const tone = p.img ? '' : ` noimg t-${(CAT_ICON[p.cat] || CAT_ICON.other)[1]}`;
   const rec = p.rec > 0 ? `<span class="drec">${svg(ICON_HEART, 14, 'currentColor', 2)}${p.rec === 1 ? 'המלצה אחת' : `${p.rec} המלצות`}</span>` : '';
   const acts = [];
-  if (p.phone) acts.push(`<a class="a-tel" href="${esc(p.phone.tel)}" aria-label="חיוג ל${esc(p.name)} ${esc(p.phone.display)}">${svg(ICON_PHONE, 17, 'currentColor', 2.2)}<span class="lm">חיוג</span><span class="ld" dir="ltr">${esc(p.phone.display)}</span></a>`);
+  if (p.phone) acts.push(`<a class="a-tel" href="${esc(p.phone.tel)}" data-num="${esc(p.phone.display)}" aria-label="חיוג ל${esc(p.name)} ${esc(p.phone.display)}">${svg(ICON_PHONE, 17, 'currentColor', 2.2)}<span class="lm">חיוג</span><span class="ld">הצג מספר</span></a>`);
   if (p.phone?.wa) acts.push(`<a class="a-wa" href="${esc(p.phone.wa)}" target="_blank" rel="noopener" aria-label="WhatsApp ל${esc(p.name)}">${svg(ICON_WA, 17, '#15803D', 2)}WhatsApp</a>`);
   if (p.waze) acts.push(`<a class="a-waze" href="${esc(p.waze)}" target="_blank" rel="noopener" aria-label="ניווט ל${esc(p.name)} ב-Waze">${svg(ICON_WAZE, 18, 'currentColor', 2)}</a>`);
   if (!acts.length) acts.push(`<a class="a-app" href="${APP}">לפרטים באפליקציה</a>`);
-  return `<article class="dcard lift" data-group="${esc(p.group)}" data-text="${esc(text)}">
-<div class="dmedia">${media}${rec}</div>
+  return `<article class="dcard lift" data-group="${esc(p.group)}" data-text="${esc(text)}" data-id="${esc(p.id)}" data-t="${esc(p.table)}">
+<div class="dmedia${tone}">${media}${rec}</div>
 <div class="dbody"><h3>${esc(p.name)}</h3>${p.field ? `<span class="f">${esc(p.field)}</span>` : ''}${p.where ? `<span class="w">${esc(p.where)}</span>` : ''}</div>
 <div class="dact">${acts.join('')}</div>
 </article>`;
 }
 
-export function listPage(vm, dir, kind, { base, home }) {
+export function listPage(vm, dir, kind, { base, home, api }) {
   const isPro = kind === 'pros';
   const data = isPro ? dir.pros : dir.biz;
   const label = isPro ? 'בעלי מקצוע' : 'עסקים';
@@ -143,6 +190,7 @@ ${data.items.map((p) => card(p, kind)).join('\n')}
 
 ${siteFooter()}
 
+${api ? `<script>window.__SB=${JSON.stringify(api).replace(/</g, '\\u003c')};</script>` : ''}
 <script>${JS}</script>
 <script>${HOOD_JS}</script>
 </body>
