@@ -289,7 +289,7 @@ ${body}
 function prosSection(pros) {
   if (!pros.length) return '';
   return `<section id="pros" aria-label="בעלי מקצוע" class="wrap sec">
-<div class="sec-head">${head2('ממוינים לפי המלצות השכנים', 'בעלי מקצוע', 'מומלצים')}<div class="ctrls">${arrows('pros')}<a class="more" href="${APP}">לכל בעלי המקצוע ←</a></div></div>
+<div class="sec-head">${head2('לבית, למשפחה ולאירועים', 'בעלי מקצוע', 'בשכונה')}<div class="ctrls">${arrows('pros')}<a class="more" href="${APP}">לכל בעלי המקצוע ←</a></div></div>
 <div class="car car-pro" data-car="pros" data-auto="4000"><div class="track">
 ${pros.map((p) => `<div class="slide"><a href="${APP}" class="card pro lift">
 <div class="media">${img(p.img, p.name)}</div>
@@ -474,7 +474,7 @@ if(hb){hb.addEventListener('click',function(e){e.stopPropagation();setHood(hp.hi
 export function homePage(vm, { base, path: pagePath }) {
   const url = `${base}${pagePath}`;
   const title = `${vm.name}${vm.alias ? ` (${vm.alias})` : ''} — שכונה | מניינים, עסקים, גמ״חים ומבצעים`;
-  const desc = `כל מה שקורה ב${vm.name}${vm.alias ? ` (${vm.alias})` : ''}, ${vm.city}: זמני תפילה, בעלי מקצוע מומלצים, עסקים, מבצעים, נדל״ן, דרושים, יד שנייה וגמ״חים — מעודכן על ידי השכנים.`;
+  const desc = `כל מה שקורה ב${vm.name}${vm.alias ? ` (${vm.alias})` : ''}, ${vm.city}: זמני תפילה, בעלי מקצוע, עסקים, מבצעים, נדל״ן, דרושים, יד שנייה וגמ״חים — מעודכן על ידי השכנים.`;
   const multi = vm.subs.length > 1;
 
   return `<!DOCTYPE html>
@@ -548,7 +548,7 @@ ${vm.hoods.map((h) => h.current
 <div class="tiles">
 <a class="tile lift" href="#board"><i>${svg(ICON.brief, 22, 'currentColor', 2)}</i><span><b>לוח השכונה</b><span>דרושים, יד שנייה, גמ״חים</span></span></a>
 <a class="tile lift" href="${vm.promos.length ? '#promos' : APP}"><i>${svg(ICON.tag, 22, 'currentColor', 2)}</i><span><b>מבצעים וקופונים</b><span>מעסקי השכונה</span></span></a>
-<a class="tile lift" href="#pros"><i>${svg(ICON.wrench, 22, 'currentColor', 2)}</i><span><b>בעלי מקצוע</b><span>עם המלצות של שכנים</span></span></a>
+<a class="tile lift" href="#pros"><i>${svg(ICON.wrench, 22, 'currentColor', 2)}</i><span><b>בעלי מקצוע</b><span>חשמל, אינסטלציה, שיפוצים ועוד</span></span></a>
 <a class="tile lift" href="#board"><i>${svg(ICON.clock, 22, 'currentColor', 2)}</i><span><b>תפילות קרובות</b><span>המניין הבא בשכונה</span></span></a>
 </div>
 </div>
