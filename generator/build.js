@@ -148,7 +148,9 @@ async function main() {
 
   write(path.join(SECTION, 'index.html'),
     indexPage({ synagogues: listed, base: BASE, counts: { total: syns.length, withPrayers } }));
-  writeHome(await fetchHome(db, COMMUNITY_ID));
+  // עמוד הבית חדש — כשל בו לא יעצור את עדכון עמודי המניינים
+  try { writeHome(await fetchHome(db, COMMUNITY_ID)); }
+  catch (e) { console.error(`  ⚠ ${HOME}/ לא נבנה:`, e.message || e); process.exitCode = 0; }
   write('sitemap.xml', sitemap(urls));
   write('robots.txt', `User-agent: *\nAllow: /\n\nSitemap: ${BASE}/sitemap.xml\n`);
 
