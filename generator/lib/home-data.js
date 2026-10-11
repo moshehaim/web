@@ -233,7 +233,7 @@ export function shapeHome(raw, { now = new Date(), base = '' } = {}) {
 
 /* ── אלפון: בעלי מקצוע ועסקים ───────────────────────────────────── */
 
-/** סוגי עסקים שלא מוצגים באתר הציבורי (טיפוח, איפור, פאות וכו׳). */
+/** סוגי עסקים שמוצגים באלפון בלי תמונה (טיפוח, איפור, פאות וכו׳). */
 export const HIDDEN_DIRECTORY_TYPES = new Set([
   ...HIDDEN_BUSINESS_TYPES, 'beauty_salon', 'laser', 'bridal_salon', 'wig_salon',
 ]);
@@ -282,24 +282,26 @@ export function shapeDirectory(raw) {
     .sort((a, b) => (order[a] ?? 99) - (order[b] ?? 99));
 
   const pros = raw.professionals
-    .filter((p) => (p.content_audience == null || p.content_audience === 'all') && !HIDDEN_PRO_CATEGORIES.has(p.main_category))
+    .filter((p) => p.content_audience == null || p.content_audience === 'all')
     .map((p, i) => {
       const subs = String(p.sub_categories || '').split(',').map((s) => s.trim()).filter(Boolean);
       return {
         i, name: p.name, group: pc[p.main_category]?.name_he || 'אחר',
         field: subs.slice(0, 3).join(' · ') || pc[p.main_category]?.name_he || '',
-        img: p.image_women_only ? null : p.image_url, rec: p.recommend_count || 0,
-        where: '', phone: phoneLinks(p.phone), waze: null,
+        // טיפוח / תמונה לנשים בלבד: הכרטיס מוצג, רק בלי התמונה
+        img: p.image_women_only || HIDDEN_PRO_CATEGORIES.has(p.main_category) ? null : p.image_url,
+        rec: p.recommend_count || 0, where: '', phone: phoneLinks(p.phone), waze: null,
       };
     }).sort(byImageThenOrder);
 
   const biz = raw.businesses
-    .filter((b) => (b.content_audience == null || b.content_audience === 'all') && !HIDDEN_DIRECTORY_TYPES.has(b.business_type))
+    .filter((b) => b.content_audience == null || b.content_audience === 'all')
     .map((b, i) => {
       const t = bt[b.business_type];
       return {
         i, name: b.name, group: bc[t?.category_id]?.name_he || 'שונות', field: t?.name_he || '',
-        img: b.image_women_only ? null : b.image_url, rec: b.recommend_count || 0,
+        img: b.image_women_only || HIDDEN_DIRECTORY_TYPES.has(b.business_type) ? null : b.image_url,
+        rec: b.recommend_count || 0,
         where: b.address || '', phone: phoneLinks(b.phone),
         waze: b.latitude && b.longitude ? `https://waze.com/ul?ll=${b.latitude},${b.longitude}&navigate=yes` : null,
       };
