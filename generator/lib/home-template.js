@@ -234,7 +234,15 @@ a.hood-item:hover{background:#F5F8FF}
 .seg button[aria-pressed=true],.seg button[aria-selected=true]{background:#fff;color:var(--brand);font-weight:800;box-shadow:0 1px 4px rgba(0,0,0,.08)}
 
 /* board */
-.board-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px;padding-block:52px}
+.board-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px;padding-block:40px 12px}
+.pstrip{padding-block:36px 4px;display:flex;flex-direction:column;gap:12px}
+.ps-head{display:flex;align-items:center;justify-content:space-between;gap:12px}.ps-head h2{margin:0;font-size:22px;font-weight:800;color:var(--navy)}
+.ps-row{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px}
+.ps-item{display:flex;align-items:center;gap:12px;background:#fff;border-radius:18px;padding:12px;text-decoration:none;color:var(--ink);box-shadow:0 2px 10px rgba(0,0,0,.04);min-width:0}
+.ps-item:hover{color:var(--ink)}.ps-item i{width:64px;height:64px;border-radius:12px;overflow:hidden;flex:none;display:flex;align-items:center;justify-content:center;background:var(--soft);color:var(--brand)}
+.ps-item i img{width:100%;height:100%;object-fit:cover}.ps-item span{min-width:0}.ps-item em{display:inline-block;font-style:normal;font-size:12px;font-weight:800;background:var(--soft);color:var(--brand);border-radius:6px;padding:1px 7px}
+.ps-item b{display:block;font-size:16px;font-weight:800;line-height:1.3}.ps-item small{display:block;font-size:13px;color:var(--muted)}
+.ps-cta{background:var(--soft);box-shadow:none;border:1.5px dashed #C9D6EA}.ps-cta b{color:var(--navy)}
 .span2{grid-column:span 2}
 @media (max-width:1100px){.board-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.span2{grid-column:1/-1;order:3}}
 @media (max-width:700px){.board-grid{grid-template-columns:minmax(0,1fr)}}
@@ -353,7 +361,7 @@ function bizSection(biz) {
   const half = Math.ceil(biz.length / 2);
   const row = (list, cls) => `<div class="mq${cls}">${list.map(pill).join('')}<span style="display:contents" aria-hidden="true">${list.map(pill).join('')}</span></div>`;
   return `<section id="biz" aria-label="עסקים בשכונה" class="sec" style="padding-bottom:16px">
-<div class="wrap sec-head">${head2('מעבירים עכבר כדי לעצור', 'עסקים', 'בשכונה')}<a class="more" href="biz/">לאלפון העסקים ←</a></div>
+<div class="wrap sec-head">${head2('טלפון, וואטסאפ וניווט בלחיצה', 'עסקים', 'בשכונה')}<a class="more" href="biz/">לאלפון העסקים ←</a></div>
 <div class="mq-wrap">${row(biz.slice(0, half), '')}${biz.length > 6 ? row(biz.slice(half), ' rev') : ''}</div>
 </section>`;
 }
@@ -387,6 +395,16 @@ function nextPrayers(prayers, nowMin, dow) {
   }).filter(Boolean);
 }
 const prow = (p) => `<a class="prow" href="${MINYANIM}"><span class="t mono">${esc(p.c)}</span><span><b>${esc(p.n)}</b><small>${esc(p.t)}${p.l ? ' · ' + esc(p.l) : ''}</small></span><span class="when">${esc(p.when)}</span></a>`;
+
+/** פחות משלושה מבצעים: שורה אחת צנועה, בלי כותרת ענקית. בלי מבצעים — כלום. */
+function promosStrip(promos) {
+  if (!promos.length) return '';
+  return `<section id="promos" aria-label="מבצעים וקופונים" class="wrap pstrip">
+<div class="ps-head"><h2>מבצעים <span class="em">בשכונה</span></h2><a class="more" href="promos/">הכל ←</a></div>
+<div class="ps-row">${promos.map((p) => `<a class="ps-item lift" href="${APP}">${p.img ? `<i>${img(p.img, '')}</i>` : `<i class="ps-ic">${svg(ICON.tag, 22, 'currentColor', 2)}</i>`}<span><em>${esc(p.kind)}</em><b class="clamp2">${esc(p.title)}</b><small>${esc([p.provider, p.until].filter(Boolean).join(' · '))}</small></span></a>`).join('')}
+<a class="ps-item ps-cta" href="${APP}"><span><b>יש לכם עסק בשכונה?</b><small>פרסום מבצע עם התראה לשכונה ←</small></span></a></div>
+</section>`;
+}
 
 function boardSection(vm) {
   const tabs = vm.board;
@@ -696,18 +714,19 @@ ${siteHeader(vm, pagePath, navChips(pagePath, 'home'))}
 <h1>מה חדש <span class="emd">ב${esc(vm.name)}</span></h1>
 <p>מניינים, עסקים, בעלי מקצוע, מבצעים וגמ״חים — מעודכנים על ידי השכנים והעסקים עצמם.</p>
 ${shabbatCard(shabbat)}
-<a class="pill btn-sky m-only" href="${DOWNLOAD}" style="align-self:flex-start">להורדת האפליקציה</a>
+<a class="pill btn-sky" href="${DOWNLOAD}" style="align-self:flex-start">להורדת האפליקציה</a>
 </div>
 ${freshPanel(fresh)}
 </div>
 ${ticker(vm)}
 </section>
 
-${promosSection(vm.promos)}
+${boardSection(vm)}
+${vm.promos.length >= 3 ? promosSection(vm.promos) : ''}
 ${prosSection(vm.professionals)}
 ${bizSection(vm.businesses)}
+${vm.promos.length < 3 ? promosStrip(vm.promos) : ''}
 ${realEstateSection(vm.realEstate)}
-${boardSection(vm)}
 
 <section id="zones" aria-label="כל התחומים" class="wrap" style="display:flex;flex-direction:column;gap:18px">
 <h2 style="margin:0;font-size:30px;font-weight:800;color:var(--navy)">כל <span class="em">התחומים</span></h2>
@@ -720,14 +739,14 @@ ${ZONES.filter((z) => !HIDDEN_NAV.has(z[4])).map(([n, d, c, href]) => `<a class=
 <div class="txt">
 <span style="font-size:15px;font-weight:800;color:var(--sky)">לבעלי עסקים ובעלי מקצוע</span>
 <h2>השכנים כבר <span class="emd">מחפשים אותך.</span></h2>
-<p>פרופיל עסק, מבצעים וקופונים, המלצות מלקוחות ומערכת תורים — במקום אחד.</p>
+<p>פרופיל עסק, מבצעים וקופונים והמלצות מלקוחות — במקום אחד.</p>
 <div style="display:flex;gap:12px;flex-wrap:wrap"><a class="pill btn-sky" href="${APP}">להרשמת עסק</a><a class="pill btn-out" href="${DOWNLOAD}">להורדת האפליקציה</a></div>
 </div>
 <div class="feat">
 <div><b>פרופיל עסק</b><span>שעות, טלפון, WhatsApp ו-Waze</span></div>
 <div><b>מבצעים וקופונים</b><span>עם התראה לשכונה</span></div>
 <div><b>המלצות</b><span>לקוחות ממליצים בלחיצה</span></div>
-<div><b>תורים</b><span>יומן ותזכורות</span></div>
+<div><b>עמוד משלכם באתר</b><span>שמופיע בחיפוש בגוגל</span></div>
 </div>
 </div></section>
 
