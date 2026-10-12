@@ -167,7 +167,7 @@ ${nusachim.length > 1 ? `<div class="fchips" role="group" aria-label="סינון
 ${cards}
 </div>
 <div class="empty2" id="syn-empty" hidden>לא מצאנו בית כנסת כזה. נסו שם אחר או רחוב.</div>
-<p class="note2">הזמנים נמסרו על ידי מתפללים ועשויים להשתנות. מצאתם טעות? אפשר לעדכן דרך האפליקציה.</p>
+<p class="note2">הזמנים נמסרו על ידי מתפללים ועשויים להשתנות. מצאתם טעות? כל משתמש רשום יכול לעדכן באפליקציה.</p>
 ${appCta}
 </section>
 </main>
@@ -243,7 +243,7 @@ ${syn.latitude ? `<div class="info"><h2>הגעה</h2>${syn.address ? `<p>${esc(s
 </div></div>` : ''}
 ${lessons.length ? `<div class="info"><h2>שיעורי תורה</h2>${lessons.map((l) => `<div class="lesson"><b>${esc(l.topic || 'שיעור')}</b><span>${esc([l.teacher, l.day && `יום ${l.day}`, l.start_time].filter(Boolean).join(' · '))}</span></div>`).join('')}</div>` : ''}
 ${syn.study_during_day_details ? `<div class="info"><h2>לימוד ביום</h2><p>${esc(syn.study_during_day_details)}</p></div>` : ''}
-<div class="info"><h2>שינוי בזמנים?</h2><p>הזמנים נמסרו על ידי מתפללים ועשויים להשתנות. גבאי יכול לעדכן דרך האפליקציה.</p></div>
+<div class="info"><h2>שינוי בזמנים?</h2><p>הזמנים נמסרו על ידי מתפללים ועשויים להשתנות. כל משתמש רשום יכול לעדכן אותם באפליקציה.</p></div>
 </aside>
 </div>
 
