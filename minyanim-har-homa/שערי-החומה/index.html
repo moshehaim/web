@@ -2,236 +2,393 @@
 <html lang="he" dir="rtl">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>זמני תפילה בשערי החומה — הר חומה, ירושלים</title>
-<meta name="description" content="זמני תפילה בשערי החומה, ליכטנשטיין 25 — שחרית, מנחה, ערבית. 11 מניינים בהר חומה, ירושלים.">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>זמני תפילה בשערי החומה — חומת שמואל, ירושלים | שכונה</title>
+<meta name="description" content="זמני תפילה בשערי החומה, ליכטנשטיין 25 — שחרית, מנחה, ערבית. חומת שמואל (הר חומה), ירושלים.">
 <link rel="canonical" href="https://shchuna.co.il/minyanim-har-homa/%D7%A9%D7%A2%D7%A8%D7%99-%D7%94%D7%97%D7%95%D7%9E%D7%94/">
-<meta property="og:title" content="זמני תפילה בשערי החומה — הר חומה, ירושלים">
-<meta property="og:description" content="זמני תפילה בשערי החומה, ליכטנשטיין 25 — שחרית, מנחה, ערבית. 11 מניינים בהר חומה, ירושלים.">
+<link rel="icon" href="/app_icon.png">
 <meta property="og:type" content="website">
 <meta property="og:locale" content="he_IL">
+<meta property="og:title" content="זמני תפילה בשערי החומה — חומת שמואל, ירושלים | שכונה">
+<meta property="og:description" content="זמני תפילה בשערי החומה, ליכטנשטיין 25 — שחרית, מנחה, ערבית. חומת שמואל (הר חומה), ירושלים.">
 <meta property="og:url" content="https://shchuna.co.il/minyanim-har-homa/%D7%A9%D7%A2%D7%A8%D7%99-%D7%94%D7%97%D7%95%D7%9E%D7%94/">
-<link rel="icon" href="/app_icon.png">
+<meta property="og:image" content="https://shchuna.co.il/app_icon.png">
+<meta name="theme-color" content="#172F57">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Assistant:wght@400;600;700&family=Secular+One&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Assistant:wght@400;600;700;800&family=Frank+Ruhl+Libre:wght@900&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://mebomrqnfnbqijiuawdh.supabase.co">
 <style>
-*{margin:0;padding:0;box-sizing:border-box}
-:root{--navy:#16294d;--navy-2:#1a3563;--blue:#2f5aa0;--gold:#f0a92d;--gold-2:#f6c56a;
---paper:#fffaf0;--paper-line:#e8d5b5;--ink:#2c3e50;--muted:#6b7280;--bg:#f5f7fa}
+*,*::before,*::after{box-sizing:border-box}
+:root{--navy:#172F57;--navy2:#213E6E;--brand:#244782;--sky:#8CCBF2;--accent:#2A6FB8;--ink:#1C2B45;
+--muted:#6B7689;--line:#E6E9EF;--bg:#F6F7F9;--soft:#EAF1FA;--ok:#5CD49A;--red:#B4233C}
 html{scroll-behavior:smooth}
-body{font-family:'Assistant',-apple-system,'Segoe UI',sans-serif;background:var(--bg);
-color:var(--ink);line-height:1.6}
-a{color:inherit;text-decoration:none}
-:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
-.wrap{max-width:820px;margin:0 auto;padding:0 20px}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:'Assistant',-apple-system,'Segoe UI',sans-serif;line-height:1.5}
+a{color:var(--brand)}a:hover{color:#1B3766}
+img{display:block;max-width:100%}
+button{font:inherit}
+:focus-visible{outline:3px solid var(--sky);outline-offset:2px}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.wrap{max-width:1280px;margin:0 auto;padding-inline:28px}
+@media (max-width:620px){.wrap{padding-inline:16px}}
+.em{font-family:'Frank Ruhl Libre',serif;font-weight:900;color:var(--accent);background-image:linear-gradient(transparent 72%,rgba(42,147,213,.22) 72%);padding:0 2px}
+.emd{font-family:'Frank Ruhl Libre',serif;font-weight:900;color:var(--sky);background-image:linear-gradient(transparent 72%,rgba(140,203,242,.25) 72%);padding:0 2px}
+.lift{transition:transform .18s ease,box-shadow .18s ease}
+.lift:hover{transform:translateY(-3px);box-shadow:0 14px 28px rgba(23,47,87,.14)}
+.mono{font-family:'IBM Plex Mono',ui-monospace,monospace;font-weight:600}
+.pill{display:inline-flex;align-items:center;gap:6px;height:46px;padding:0 18px;border-radius:999px;font-weight:800;text-decoration:none;white-space:nowrap}
 
-.top{background:radial-gradient(120% 140% at 85% -20%,var(--blue) 0%,var(--navy-2) 45%,var(--navy) 100%);
-color:#fff;padding:14px 0}
-.top .wrap{display:flex;align-items:center;justify-content:space-between;gap:12px}
-.logo{display:flex;align-items:center;gap:9px;font-family:'Secular One',sans-serif;font-size:19px}
-.logo img{width:32px;height:32px;border-radius:9px}
-.top nav{font-size:14.5px;color:rgba(255,255,255,.72)}
+/* header */
+.hdr{background:#fff;border-bottom:1px solid var(--line);position:sticky;top:0;z-index:20}
+.hdr-row{display:flex;flex-wrap:wrap;align-items:center;gap:12px 16px;padding-block:12px}
+.logo img{width:52px;height:52px}
+.hood{position:relative}
+.hood-btn{display:flex;align-items:center;gap:10px;height:52px;padding:0 12px 0 10px;border-radius:14px;border:1.5px solid #DCE5F5;background:#F5F8FF;cursor:pointer;color:var(--navy)}
+.hood-btn small{display:block;font-size:12px;font-weight:700;color:var(--muted);text-align:right}
+.hood-btn b{display:block;font-size:18px;font-weight:800;max-width:230px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.hood-pop{position:absolute;top:60px;right:0;width:min(440px,calc(100vw - 32px));background:#fff;border-radius:18px;box-shadow:0 18px 48px rgba(15,27,48,.22);border:1px solid var(--line);padding:14px;display:flex;flex-direction:column;gap:12px;z-index:30}
+.hood-pop[hidden]{display:none}
+.hood-q{display:flex;align-items:center;gap:8px;height:44px;padding:0 12px;border-radius:12px;background:#F4F5F7;border:1px solid var(--line)}
+.hood-q input{flex:1;min-width:0;border:0;outline:0;background:transparent;font:inherit;font-size:15px;color:var(--ink)}
+.hood-list{display:flex;flex-direction:column;max-height:340px;overflow-y:auto}
+.hood-item{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px;border-radius:12px;text-decoration:none;color:var(--ink);font-size:16px;font-weight:800}
+a.hood-item:hover{background:#F5F8FF}
+.hood-item.off{color:#8A94A6;font-weight:700}
+.badge{flex:none;font-size:12px;font-weight:800;border-radius:7px;padding:2px 9px;background:#EAF0F9;color:var(--brand)}
+.badge.on{background:var(--brand);color:#fff}
+.hdr-actions{display:flex;align-items:center;gap:8px;margin-inline-start:auto;flex-wrap:wrap}
+.btn-ghost{color:var(--navy);padding:0 12px}
+.btn-line{border:1.5px solid var(--brand);color:var(--brand)}
+.btn-dark{background:var(--navy);color:#fff}.btn-dark:hover{color:#fff;background:#0F1F3B}
+@media (max-width:760px){.hdr-row{flex-wrap:nowrap;gap:10px;padding-block:10px}.logo img{width:44px;height:44px}
+.hood{min-width:0}.hood-btn{height:46px;max-width:100%}.hood-btn b{max-width:150px}
+.hdr-actions .btn-line,.hdr-actions .btn-dark{display:none}.hdr-actions .btn-ghost{width:46px;padding:0;justify-content:center}
+.btn-ghost .lbl{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}}
+.m-only{display:none}@media (max-width:760px){.m-only{display:inline-flex}}
+.chips{border-top:1px solid #EEF0F4;overflow-x:auto;scrollbar-width:none}.chips::-webkit-scrollbar{display:none}
+.chips .wrap{display:flex;gap:6px;padding-block:8px;width:max-content;min-width:100%}
+.chips a{flex:none;font-size:15px;font-weight:700;color:#3B4860;text-decoration:none;padding:6px 14px;border-radius:999px;background:#F4F5F7}
+.chips a:hover{background:#EFF4FF;color:var(--brand)}
+.chips a.on{background:var(--brand);color:#fff}
 
-.crumb{font-size:13.5px;color:var(--muted);padding:16px 0 0}
-.crumb a{border-bottom:1px solid #d3d8e0}
+/* hero */
+.hero{background:var(--navy);color:#fff;position:relative;overflow:hidden}
+.hero-sky{position:absolute;bottom:46px;left:0}
+.hero-row{display:flex;flex-wrap:wrap;gap:36px;padding-block:44px 40px;position:relative}
+.hero-text{flex:1 1 420px;min-width:0;display:flex;flex-direction:column;gap:18px;justify-content:center}
+.now{display:flex;align-items:center;gap:8px;font-size:15px;font-weight:700;color:#A9BAD4}
+.dot{width:8px;height:8px;border-radius:50%;background:var(--ok);animation:pulse 1.6s ease-in-out infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.35}}
+.hero h1{margin:0;font-size:clamp(36px,6vw,58px);font-weight:800;line-height:1.05}
+.hero p{margin:0;font-size:19px;line-height:1.6;color:#C9D6EA;max-width:520px}
+.tiles{flex:1 1 420px;min-width:0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;align-content:center}
+@media (max-width:460px){.tiles{grid-template-columns:minmax(0,1fr)}}
+.tile{display:flex;align-items:center;gap:12px;padding:16px;border-radius:18px;background:var(--navy2);color:#fff;text-decoration:none}
+.tile:hover{color:#fff}
+.tile i{width:44px;height:44px;border-radius:12px;background:var(--sky);display:flex;align-items:center;justify-content:center;flex:none;color:var(--navy)}
+.tile b{display:block;font-size:18px}.tile span{display:block;font-size:14px;color:#A9BAD4}
+.tick-wrap{background:rgba(0,0,0,.18);border-top:1px solid rgba(255,255,255,.08);overflow:hidden}
+.tick{display:flex;gap:48px;width:max-content;padding-block:12px;font-size:16px;font-weight:600;white-space:nowrap;animation:mq 45s linear infinite}
+.tick-wrap:hover .tick{animation-play-state:paused}
+.tick span{display:inline-flex;align-items:center;gap:10px}
+.tick em{font-style:normal;background:var(--sky);color:var(--navy);font-size:12px;font-weight:800;padding:2px 8px;border-radius:6px}
 
-header.hd{padding:14px 0 26px;border-bottom:1px solid #e3e7ee}
-h1{font-family:'Secular One',sans-serif;font-weight:400;font-size:clamp(28px,5vw,40px);
-line-height:1.15;color:var(--navy);margin-bottom:10px}
-.meta{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
-.chip{font-size:13.5px;font-weight:600;background:#fff;border:1px solid #dfe4ec;
-border-radius:999px;padding:5px 13px;color:#41506b}
-.chip.gold{background:rgba(240,169,45,.13);border-color:rgba(240,169,45,.45);color:#8a5a00}
-.addr{font-size:16.5px;color:#41506b}
-.addr .note{display:block;font-size:14px;color:var(--muted);font-style:italic;margin-top:3px}
+/* sections */
+.sec{padding-block:52px 8px;display:flex;flex-direction:column;gap:20px}
+.sec-head{display:flex;align-items:end;justify-content:space-between;gap:16px;flex-wrap:wrap}
+.sec-head small{display:block;font-size:14px;font-weight:800;color:var(--muted)}
+.sec-head h2{margin:0;font-size:clamp(28px,4vw,38px);font-weight:800;color:var(--navy)}
+.ctrls{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.arrow{width:44px;height:44px;border-radius:50%;border:1px solid #DCE2EC;background:#fff;cursor:pointer;font-size:20px;color:var(--navy)}
+.more{font-weight:800;text-decoration:none;margin-inline-start:6px}
 
-/* ── לוח המניינים ── */
-.board{background:var(--paper);border:1px solid var(--paper-line);border-radius:14px;
-padding:22px 20px;margin:26px 0;box-shadow:0 2px 14px rgba(22,41,77,.06)}
-.board h2{font-family:'Secular One',sans-serif;font-weight:400;font-size:22px;color:var(--navy);
-padding-bottom:12px;margin-bottom:4px;border-bottom:2px solid var(--gold)}
-.row{display:grid;grid-template-columns:74px 1fr auto;gap:12px;align-items:baseline;
-padding:11px 2px;border-bottom:1px solid rgba(232,213,181,.75)}
-.row:last-child{border-bottom:0}
-.row .t{font-weight:700;font-size:14.5px;color:#5d4e37}
-.row .v{font-size:16.5px;font-weight:600;color:var(--ink);font-variant-numeric:tabular-nums}
-.row .d{font-size:13px;color:var(--muted);text-align:left}
-.row .n{grid-column:1/-1;font-size:13px;color:var(--muted);font-style:italic;margin-top:-4px}
+.car{--v:4;overflow:hidden;padding-block:4px 18px}
+.car-pro{--v:5}
+@media (max-width:1180px){.car{--v:3}.car-pro{--v:4}}
+@media (max-width:900px){.car{--v:2}.car-pro{--v:3}}
+@media (max-width:620px){.car{--v:1}.car-pro{--v:2}}
+@media (max-width:340px){.car-pro{--v:1}}
+.track{display:flex;gap:16px;transition:transform .7s cubic-bezier(.4,.1,.2,1)}
+.slide{flex:0 0 calc((100% - (var(--v) - 1) * 16px) / var(--v));min-width:0}
+.slide[hidden]{display:none}
+.grid-auto{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(280px,100%),1fr));gap:16px}
 
-.card{background:#fff;border:1px solid #e3e7ee;border-radius:14px;padding:20px;margin:20px 0}
-.card h2{font-family:'Secular One',sans-serif;font-weight:400;font-size:20px;color:var(--navy);margin-bottom:12px}
-.lesson{padding:10px 0;border-bottom:1px solid #eef1f6}
-.lesson:last-child{border-bottom:0}
-.lesson b{font-size:15.5px}
-.lesson span{display:block;font-size:14px;color:var(--muted)}
-.actions{display:flex;flex-wrap:wrap;gap:10px;margin:20px 0}
-.btn{border:1px solid #d7dce6;background:#fff;border-radius:11px;padding:11px 18px;
-font-weight:600;font-size:15px;color:var(--navy)}
-.btn:hover{border-color:var(--gold)}
+.card{background:#fff;border-radius:20px;overflow:hidden;box-shadow:0 2px 12px rgba(0,0,0,.07);display:flex;flex-direction:column;height:100%;text-decoration:none;color:var(--ink)}
+.card:hover{color:var(--ink)}
+.media{position:relative;aspect-ratio:16/10;background:var(--brand);overflow:hidden}
+.media img{width:100%;height:100%;object-fit:cover}
+.media .tag{position:absolute;top:12px;right:12px;font-size:13px;font-weight:800;padding:4px 10px;border-radius:8px;background:#fff;color:var(--navy)}
+.media .price{position:absolute;bottom:12px;right:12px;font-size:17px;background:rgba(15,27,48,.82);color:#fff;padding:4px 10px;border-radius:10px}
+.body{padding:14px 16px 16px;display:flex;flex-direction:column;gap:6px;flex:1}
+.body b{font-size:18px;font-weight:800;line-height:1.3}
+.body .sub{font-size:14px;color:#566173}
+.body .fine{font-size:12px;color:var(--muted);margin-top:auto}
+.clamp2{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.coupon{outline:2px dashed #9DB8DF;outline-offset:-2px}
+.promo-cta{background:var(--navy);color:#fff;border-radius:20px;padding:24px;text-decoration:none;display:flex;flex-direction:column;justify-content:center;gap:8px;min-height:200px}
+.promo-cta:hover{color:#fff}.promo-cta b{font-size:24px}.promo-cta span{color:#C9D6EA}
 
-.cta{background:linear-gradient(135deg,var(--navy-2),var(--navy));color:#fff;
-border-radius:18px;padding:28px 24px;margin:30px 0;text-align:center}
-.cta h2{font-family:'Secular One',sans-serif;font-weight:400;font-size:23px;margin-bottom:8px}
-.cta p{color:rgba(255,255,255,.76);font-size:15.5px;margin-bottom:18px}
-.cta a{display:inline-block;background:var(--gold);color:#3a2503;font-weight:700;
-border-radius:12px;padding:13px 26px}
+.pro .media{aspect-ratio:4/3;background:#DCE5F5}
+.pro .field{font-size:14px;font-weight:700;color:var(--accent)}
+.rec{display:inline-flex;align-items:center;gap:4px;font-size:13px;font-weight:800;color:#15803D}
 
-footer{background:var(--navy);color:rgba(255,255,255,.62);font-size:14px;
-padding:26px 0;margin-top:40px}
-footer a{color:rgba(255,255,255,.86);border-bottom:1px solid rgba(255,255,255,.3)}
+.mq-wrap{overflow:hidden;display:flex;flex-direction:column;gap:14px;padding-block:6px}
+.mq{display:flex;gap:14px;width:max-content;animation:mq 60s linear infinite}
+.mq.rev{animation:mqr 70s linear infinite}
+.mq-wrap:hover .mq{animation-play-state:paused}
+@keyframes mq{from{transform:translateX(0)}to{transform:translateX(50%)}}
+@keyframes mqr{from{transform:translateX(50%)}to{transform:translateX(0)}}
+.biz{display:flex;align-items:center;gap:12px;padding:8px 18px 8px 8px;border-radius:999px;background:#fff;box-shadow:0 2px 10px rgba(0,0,0,.06);text-decoration:none;color:var(--ink);white-space:nowrap}
+.biz:hover{color:var(--ink)}
+.biz img{width:48px;height:48px;border-radius:50%;object-fit:cover;background:#DCE5F5}
+.biz b{display:block;font-size:16px;max-width:260px;overflow:hidden;text-overflow:ellipsis}
+.biz span{display:block;font-size:13px;color:var(--muted)}
 
-.list{display:grid;gap:10px;margin:22px 0}
-.item{background:#fff;border:1px solid #e3e7ee;border-radius:13px;padding:15px 17px;
-transition:border-color .15s,transform .15s}
-.item:hover{border-color:var(--gold);transform:translateY(-1px)}
-.item .nm{font-size:17.5px;font-weight:700;color:var(--navy)}
-.item .sub{font-size:14px;color:var(--muted);margin-top:2px}
-.item .pv{font-size:14px;color:#41506b;margin-top:7px}
-.lead{font-size:17px;color:#41506b;margin:14px 0 4px;max-width:44em}
-@media(max-width:520px){.row{grid-template-columns:64px 1fr;gap:8px}.row .d{grid-column:2;text-align:right}}
+.seg{display:flex;gap:4px;background:#EEF1F5;padding:4px;border-radius:12px}
+.seg button{border:0;background:transparent;border-radius:9px;padding:8px 14px;font-size:15px;font-weight:700;color:#3B4860;cursor:pointer;white-space:nowrap}
+.seg button[aria-pressed=true],.seg button[aria-selected=true]{background:#fff;color:var(--brand);font-weight:800;box-shadow:0 1px 4px rgba(0,0,0,.08)}
+
+/* board */
+.board-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px;padding-block:52px}
+.span2{grid-column:span 2}
+@media (max-width:1100px){.board-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.span2{grid-column:1/-1;order:3}}
+@media (max-width:700px){.board-grid{grid-template-columns:minmax(0,1fr)}}
+.panel{background:#fff;border-radius:22px;padding:22px;display:flex;flex-direction:column;gap:2px;box-shadow:0 2px 12px rgba(0,0,0,.05);min-width:0}
+.panel h2{margin:0 0 8px;font-size:24px;font-weight:800;color:var(--navy)}
+.panel-head{display:flex;align-items:baseline;justify-content:space-between;gap:10px}
+.pray{background:var(--navy);color:#fff}
+.pray h2{color:#fff}
+.clock{font-size:16px;color:var(--sky);direction:ltr}
+.prow{display:grid;grid-template-columns:62px minmax(0,1fr) auto;gap:10px;align-items:center;min-height:56px;border-top:1px solid rgba(255,255,255,.1);text-decoration:none;color:#fff}
+.prow:hover{color:#fff;background:rgba(255,255,255,.04)}
+.prow .t{font-size:17px;background:var(--navy2);border-radius:8px;text-align:center;padding:3px 0}
+.prow b{display:block;font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.prow small{display:block;font-size:13px;color:#A9BAD4}
+.prow .when{font-size:13px;font-weight:800;color:var(--ok);white-space:nowrap}
+.pray .all{color:var(--sky);font-weight:800;font-size:14px;text-decoration:none;padding-top:10px;margin-top:auto}
+.tabs{overflow-x:auto;scrollbar-width:none;margin-bottom:6px}.tabs::-webkit-scrollbar{display:none}
+.bitem{display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:54px;border-bottom:1px solid #EEF0F4;text-decoration:none;color:var(--ink)}
+.bitem:hover{color:var(--ink);background:#FAFBFC}
+.bitem b{display:block;font-size:16px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.bitem small{display:block;font-size:13px;color:var(--muted)}
+.bitem>span:first-child{min-width:0}
+.bbadge{flex:none;font-size:13px;font-weight:800;background:#EFF4FF;color:var(--brand);border-radius:8px;padding:3px 10px}
+.bempty{padding:18px 0;color:var(--muted)}
+[role=tabpanel][hidden]{display:none}
+.phones{border-top:5px solid var(--red)}
+.phone{display:flex;align-items:center;justify-content:space-between;gap:10px;min-height:48px;border-top:1px solid #EEF0F4;text-decoration:none;color:var(--ink);font-weight:700}
+.phone .n{font-size:18px;color:var(--brand)}.phone .n.hot{color:var(--red)}
+
+.zones{display:grid;grid-template-columns:repeat(auto-fill,minmax(118px,1fr));gap:10px}
+.zone{background:#fff;border-radius:18px;padding:16px 10px;text-decoration:none;color:var(--ink);display:flex;flex-direction:column;align-items:center;gap:10px;text-align:center;box-shadow:0 2px 10px rgba(0,0,0,.04);font-size:15px;font-weight:800}
+.zone:hover{color:var(--ink)}
+.zone i{width:48px;height:48px;border-radius:15px;display:flex;align-items:center;justify-content:center}
+.z-blue{background:#EFF4FF;color:#244782}.z-sky{background:#E7F1FB;color:#1F78B4}.z-green{background:#E7F7EC;color:#15803D}
+.z-violet{background:#F1EDFB;color:#6D4BB8}.z-teal{background:#E3F5F3;color:#0F766E}.z-amber{background:#FBF3E1;color:#8A5A00}
+
+.owners{background:var(--navy);color:#fff;margin-top:52px}
+.owners .wrap{padding-block:52px;display:flex;flex-wrap:wrap;gap:36px;align-items:center}
+.owners .txt{flex:1 1 420px;min-width:0;display:flex;flex-direction:column;gap:14px}
+.owners h2{margin:0;font-size:clamp(30px,4.4vw,42px);font-weight:800;line-height:1.12}
+.owners p{margin:0;font-size:18px;line-height:1.6;color:#C9D6EA}
+.owners .feat{flex:1 1 340px;min-width:0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.owners .feat div{background:var(--navy2);border-radius:18px;padding:18px}
+.owners .feat b{display:block;font-size:18px}.owners .feat span{font-size:14px;color:#C9D6EA}
+.btn-sky{background:var(--sky);color:var(--navy);height:52px;padding:0 26px}
+.btn-out{border:2px solid rgba(255,255,255,.45);color:#fff;height:52px;padding:0 26px}.btn-out:hover{color:#fff}
+
+.faq{padding-block:52px;display:flex;flex-wrap:wrap;gap:28px}
+.faq h2{flex:1 1 240px;margin:0;font-size:30px;font-weight:800;color:var(--navy)}
+.faq .list{flex:3 1 520px;min-width:0;display:flex;flex-direction:column;gap:8px}
+.faq details{background:#fff;border-radius:14px;padding:16px 20px;box-shadow:0 2px 10px rgba(0,0,0,.04)}
+.faq summary{cursor:pointer;list-style:none;font-size:17px;font-weight:800;display:flex;justify-content:space-between;gap:12px}
+.faq summary::-webkit-details-marker{display:none}
+.faq summary::after{content:'+';color:var(--brand)}
+.faq details[open] summary::after{content:'−'}
+.faq p{margin:10px 0 0;font-size:16px;line-height:1.6;color:#3B4860}
+
+footer{background:#fff;border-top:1px solid var(--line)}
+footer .wrap{padding-block:32px;display:flex;flex-direction:column;align-items:center;gap:12px;text-align:center;font-size:15px;color:var(--muted)}
+footer img{width:48px;height:48px}
+footer nav{display:flex;gap:18px;flex-wrap:wrap;justify-content:center}
+footer a{color:var(--muted)}
+footer .c{font-size:13px;color:#8A94A6}
+
+@media (prefers-reduced-motion:reduce){.mq,.mq.rev,.tick,.dot{animation:none}.track{transition:none}.lift:hover{transform:none}}
+
+.mn-hero{background:var(--navy);color:#fff}
+.mn-hero .wrap{padding-block:28px 30px;display:flex;flex-direction:column;gap:14px}
+.crumb{font-size:14px;color:#A9BAD4}.crumb a{color:#C9D6EA}
+.mn-hero h1{margin:0;font-size:clamp(30px,5vw,46px);font-weight:800;line-height:1.1;text-wrap:balance}
+.mn-hero p{margin:0;font-size:17px;color:#C9D6EA;max-width:40em}
+.mn-chips{display:flex;flex-wrap:wrap;gap:8px}
+.mn-chip{font-size:14px;font-weight:700;background:rgba(255,255,255,.12);color:#fff;border-radius:999px;padding:5px 12px}
+.mn-chip.hi{background:var(--sky);color:var(--navy)}
+.mn-q{max-width:520px;display:flex;align-items:center;gap:10px;height:48px;padding:0 16px;border-radius:14px;background:#fff;color:var(--muted)}
+.mn-q input{flex:1;min-width:0;border:0;outline:0;background:transparent;font:inherit;font-size:16px;color:var(--ink)}
+.mn-sec{padding-block:28px 8px;display:flex;flex-direction:column;gap:16px}
+.mn-sec h2{margin:0;font-size:clamp(24px,3.4vw,30px);font-weight:800;color:var(--navy)}
+.mn-head{display:flex;align-items:end;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.mn-clock{font-family:'IBM Plex Mono',ui-monospace,monospace;font-weight:600;color:var(--brand);direction:ltr}
+.seg{display:flex;gap:4px;background:#EEF1F5;padding:4px;border-radius:12px;width:max-content;max-width:100%;margin-inline:auto}
+.seg button{border:0;background:transparent;border-radius:9px;padding:8px 18px;font-size:15px;font-weight:700;color:#3B4860;cursor:pointer}
+.seg button[aria-selected=true]{background:#fff;color:var(--brand);font-weight:800;box-shadow:0 1px 4px rgba(0,0,0,.08)}
+.next{background:#fff;border-radius:22px;box-shadow:0 2px 12px rgba(0,0,0,.05);padding:8px 18px}
+.nrow{display:grid;grid-template-columns:70px minmax(0,1fr) auto;gap:12px;align-items:center;min-height:58px;border-bottom:1px solid #EEF0F4;text-decoration:none;color:var(--ink)}
+.nrow:last-child{border-bottom:0}
+.nrow:hover{color:var(--ink);background:#FAFBFC}
+.nrow .t{font-family:'IBM Plex Mono',ui-monospace,monospace;font-weight:600;font-size:18px;background:#EFF4FF;color:var(--navy);border-radius:9px;text-align:center;padding:4px 0}
+.nrow b{display:block;font-size:16px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.nrow small{display:block;font-size:13px;color:var(--muted)}
+.nrow .when{font-size:13px;font-weight:800;color:#15803D;white-space:nowrap}
+.nrow.past{opacity:.45}
+.nmore{display:block;margin:8px auto 4px;border:0;background:transparent;color:var(--brand);font-weight:800;font-size:15px;cursor:pointer}
+.nempty{padding:18px 0;color:var(--muted);text-align:center}
+.fchips{display:flex;gap:8px;overflow-x:auto;padding-bottom:2px;scrollbar-width:none}.fchips::-webkit-scrollbar{display:none}
+.fchips>:first-child{margin-inline-start:auto}.fchips>:last-child{margin-inline-end:auto}
+.fchips button{flex:none;height:40px;padding:0 16px;border-radius:999px;font-size:15px;cursor:pointer;border:1px solid #DCE2EC;background:#fff;color:var(--ink);font-weight:600}
+.fchips button[aria-pressed=true]{border-color:var(--brand);background:var(--brand);color:#fff;font-weight:800}
+.sgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(300px,100%),1fr));gap:14px}
+.scard{background:#fff;border-radius:18px;padding:16px 18px;box-shadow:0 2px 10px rgba(0,0,0,.05);text-decoration:none;color:var(--ink);display:flex;flex-direction:column;gap:6px}
+.scard:hover{color:var(--ink)}.scard[hidden]{display:none}
+.scard h3{margin:0;font-size:18px;font-weight:800;color:var(--navy)}
+.scard .a{font-size:14px;color:var(--muted)}
+.scard .tm{display:flex;flex-wrap:wrap;gap:6px;margin-top:4px}
+.scard .tm span{font-size:13px;font-weight:700;background:#F1F4F8;border-radius:8px;padding:3px 9px;color:#3B4860}
+.scard .tm span b{color:var(--brand)}
+.nchip{align-self:flex-start;font-size:12px;font-weight:800;color:var(--brand);background:#EFF4FF;border-radius:7px;padding:2px 8px}
+.empty2{background:#fff;border-radius:18px;padding:28px;text-align:center;color:#566173}
+.empty2[hidden]{display:none}
+.syn{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(0,1fr);gap:18px;align-items:start;padding-block:28px 8px}
+@media (max-width:900px){.syn{grid-template-columns:minmax(0,1fr)}}
+.pcard{background:#fff;border-radius:22px;padding:20px 22px;box-shadow:0 2px 12px rgba(0,0,0,.05)}
+.pcard h2{margin:0 0 6px;font-size:22px;font-weight:800;color:var(--navy)}
+.pt{margin-top:14px}
+.pt h3{margin:0 0 4px;font-size:15px;font-weight:800;color:var(--accent);display:flex;align-items:center;gap:8px}
+.pt h3::after{content:'';flex:1;height:1px;background:#E6E9EF}
+.prow2{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:4px 12px;align-items:baseline;padding:10px 0;border-bottom:1px solid #F1F3F6}
+.prow2:last-child{border-bottom:0}
+.prow2 .v{font-size:17px;font-weight:700;font-variant-numeric:tabular-nums}
+.prow2 .v small{font-size:13px;font-weight:600;color:var(--muted);margin-inline-start:6px}
+.prow2 .d{font-size:13px;color:var(--muted);text-align:left;white-space:nowrap}
+.prow2 .n{grid-column:1/-1;font-size:13px;color:var(--muted)}
+.side{display:flex;flex-direction:column;gap:14px}
+.info{background:#fff;border-radius:22px;padding:18px 20px;box-shadow:0 2px 12px rgba(0,0,0,.05);display:flex;flex-direction:column;gap:10px}
+.info h2{margin:0;font-size:18px;font-weight:800;color:var(--navy)}
+.info p{margin:0;font-size:15px;color:#3B4860}
+.btns{display:flex;gap:8px;flex-wrap:wrap}
+.btns a{flex:1 1 120px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;gap:6px;font-weight:800;text-decoration:none;font-size:15px}
+.b-waze{background:#E3F4FB;color:#0E7FAE}.b-map{background:#EFF4FF;color:var(--navy)}
+.lesson{padding:8px 0;border-bottom:1px solid #F1F3F6}.lesson:last-child{border-bottom:0}
+.lesson b{display:block;font-size:15px}.lesson span{font-size:13px;color:var(--muted)}
+.note2{font-size:13px;color:var(--muted);text-align:center;padding-block:18px 0}
+.app-cta{background:var(--soft);border-radius:22px;padding:22px;display:flex;flex-wrap:wrap;gap:14px;align-items:center;justify-content:space-between;margin-block:28px 56px}
+.app-cta b{display:block;font-size:20px;color:var(--navy)}.app-cta span{font-size:15px;color:#3B4860}
 </style>
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"PlaceOfWorship","name":"שערי החומה","url":"https://shchuna.co.il/minyanim-har-homa/%D7%A9%D7%A2%D7%A8%D7%99-%D7%94%D7%97%D7%95%D7%9E%D7%94/","address":{"@type":"PostalAddress","streetAddress":"ליכטנשטיין 25","addressLocality":"ירושלים","addressCountry":"IL"},"geo":{"@type":"GeoCoordinates","latitude":31.7251987,"longitude":35.2246833},"isAccessibleForFree":true}</script>
 </head>
 <body>
-<div class="top"><div class="wrap">
-  <a class="logo" href="/"><img src="/app_icon.png" alt=""><span>שכונה</span></a>
-  <nav><a href="/minyanim-har-homa/">מניינים בהר חומה</a></nav>
+<a href="#times" class="sr">דלג לזמנים</a>
+
+<header class="hdr">
+<div class="wrap hdr-row">
+<a class="logo" href="/" aria-label="שכונה — דף הבית"><img src="/app_icon.png" alt="שכונה" width="52" height="52"></a>
+<div class="hood">
+<button type="button" class="hood-btn" id="hood-btn" aria-haspopup="dialog" aria-expanded="false" aria-controls="hood-pop">
+<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#244782" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21zM12 7a2.5 2.5 0 1 0 0 5a2.5 2.5 0 1 0 0-5"/></svg>
+<span><small>השכונה שלך</small><b>חומת שמואל</b></span>
+<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#244782" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+</button>
+<div class="hood-pop" id="hood-pop" role="dialog" aria-label="בחירת שכונה" hidden>
+<label class="hood-q"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#6B7689" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 4a7 7 0 1 0 0 14a7 7 0 1 0 0-14zM20 20l-4-4"/></svg><span class="sr">חיפוש שכונה</span><input id="hood-q" type="search" placeholder="חיפוש שכונה…" autocomplete="off"></label>
+<div class="hood-list">
+<a class="hood-item" href="/har-homa/" aria-current="page"><span>חומת שמואל</span><span class="badge on">נבחרה</span></a>
+<div class="hood-item off"><span>ארמון הנציב</span><span class="badge">בקרוב</span></div>
+<div class="hood-item off"><span>בית הכרם וגבעת מרדכי</span><span class="badge">בקרוב</span></div>
+<div class="hood-item off"><span>בית וגן</span><span class="badge">בקרוב</span></div>
+<div class="hood-item off"><span>בקעה, ארנונה ותלפיות</span><span class="badge">בקרוב</span></div>
+<div class="hood-item off"><span>גבעת זאב</span><span class="badge">בקרוב</span></div>
+<div class="hood-item off"><span>גוננים</span><span class="badge">בקרוב</span></div>
+<div class="hood-item off"><span>גילה</span><span class="badge">בקרוב</span></div>
+<div class="hood-item off"><span>גינות העיר</span><span class="badge">בקרוב</span></div>
+<div class="hood-item off"><span>הגבעה הצרפתית ורמת אשכול</span><span class="badge">בקרוב</span></div>
+<div class="hood-item off"><span>העיר העתיקה ומזרח ירושלים</span><span class="badge">בקרוב</span></div>
+<div class="hood-item off"><span>הר נוף, גבעת שאול וקרית משה</span><span class="badge">בקרוב</span></div>
+<div class="hood-item off"><span>מאה שערים וגאולה</span><span class="badge">בקרוב</span></div>
+<div class="hood-item off"><span>מרכז העיר ונחלאות</span><span class="badge">בקרוב</span></div>
+<div class="hood-item off"><span>נווה יעקב</span><span class="badge">בקרוב</span></div>
+<div class="hood-item off"><span>פסגת זאב</span><span class="badge">בקרוב</span></div>
+<div class="hood-item off"><span>קרית יובל והסביבה</span><span class="badge">בקרוב</span></div>
+<div class="hood-item off"><span>רוממה וסנהדריה</span><span class="badge">בקרוב</span></div>
+<div class="hood-item off"><span>רמות</span><span class="badge">בקרוב</span></div>
+<div class="hood-item off"><span>רמת שלמה</span><span class="badge">בקרוב</span></div>
+</div>
+<a href="/" style="font-size:14px;font-weight:800;text-decoration:none;padding:4px 6px">לכל השכונות ←</a>
+</div>
+</div>
+<div class="hdr-actions">
+<a class="pill btn-ghost" href="/login.html"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4a4 4 0 1 0 0 8a4 4 0 1 0 0-8zM4 21a8 8 0 0 1 16 0"/></svg><span class="lbl">התחברות</span></a>
+<a class="pill btn-line" href="/app/"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>פרסם</a>
+<a class="pill btn-dark" href="/b/">להורדת האפליקציה</a>
+</div>
+</div>
+<nav class="chips" aria-label="תחומים"><div class="wrap">
+<a href="/har-homa/">דף השכונה</a><a href="/minyanim-har-homa/" aria-current="page" class="on">מניינים</a><a href="/app/">שיעורים</a><a href="/har-homa/biz/">עסקים</a><a href="/har-homa/pros/">בעלי מקצוע</a><a href="/har-homa/promos/">מבצעים</a><a href="/har-homa/promos/#קופונים">קופונים</a><a href="/har-homa/board/#gmach">גמ״חים</a><a href="/har-homa/board/#jobs">דרושים</a><a href="/har-homa/board/#second">יד שנייה</a><a href="/har-homa/realestate/">נדל״ן</a><a href="/har-homa/board/#vol">התנדבות</a><a href="/har-homa/board/#lost">אבידות ומציאות</a><a href="/app/">אולמות</a><a href="/app/">אירוח</a><a href="/app/">הכל לאירוע</a><a href="/app/">מוסדות חינוך</a><a href="/app/">גנים ופארקים</a><a href="/app/">אירועים</a>
+</div></nav></header>
+
+
+<main id="main">
+<section class="mn-hero" aria-label="כותרת"><div class="wrap">
+<nav class="crumb" aria-label="פירורי לחם"><a href="/har-homa/">חומת שמואל</a> · <a href="/minyanim-har-homa/">תפילות</a> · שערי החומה</nav>
+<h1>שערי החומה</h1>
+<p>ליכטנשטיין 25</p>
+<div class="mn-chips">
+<span class="mn-chip hi">נוסח ספרד</span><span class="mn-chip">נגיש</span><span class="mn-chip">אולם אירועים</span><span class="mn-chip">פתוח ללמידה ביום</span>
+</div>
+</div></section>
+
+<div class="wrap syn">
+<section id="times" class="pcard" aria-label="זמני תפילה">
+<h2>זמני <span class="em">תפילה</span></h2>
+<div class="pt"><h3>שחרית</h3>
+<div class="prow2"><span class="v">06:15</span><span class="d">ימי חול</span><span class="n">בראש חודש ב-06:00</span></div><div class="prow2"><span class="v">06:45</span><span class="d">ימי חול</span><span class="n">בראש חודש 06:30</span></div><div class="prow2"><span class="v">07:15</span><span class="d">ימי חול</span></div><div class="prow2"><span class="v">08:15</span><span class="d">ימי חול</span><span class="n">בראש חודש ב-08:30</span></div><div class="prow2"><span class="v">08:45</span><span class="d">ימי חול</span><span class="n">בראש חודש 09:00</span></div>
+</div><div class="pt"><h3>מנחה</h3>
+<div class="prow2"><span class="v">13:15</span><span class="d">ימי חול</span><span class="n">גם ביום ו&#39;</span></div><div class="prow2"><span class="v">בפלג המנחה<small>היום ≈ 17:00</small></span><span class="d">שישי</span></div><div class="prow2"><span class="v">20 דקות לפני השקיעה<small>היום ≈ 17:52</small></span><span class="d">ימי חול</span></div>
+</div><div class="pt"><h3>ערבית</h3>
+<div class="prow2"><span class="v">20 דקות אחרי השקיעה<small>היום ≈ 18:32</small></span><span class="d">ימי חול</span></div><div class="prow2"><span class="v">20:30</span><span class="d">ימי חול</span></div><div class="prow2"><span class="v">21:00</span><span class="d">ימי חול</span></div>
+</div>
+</section>
+<aside class="side">
+<div class="info"><h2>הגעה</h2><p>ליכטנשטיין 25</p><div class="btns">
+<a class="b-waze" href="https://waze.com/ul?ll=31.7251987,35.2246833&navigate=yes" rel="nofollow noopener" target="_blank"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l7 18-7-4-7 4z"/></svg>Waze</a>
+<a class="b-map" href="https://www.google.com/maps/search/?api=1&query=31.7251987,35.2246833" rel="nofollow noopener" target="_blank"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21zM12 7a2.5 2.5 0 1 0 0 5a2.5 2.5 0 1 0 0-5"/></svg>מפות</a>
 </div></div>
-<div class="wrap">
-<div class="crumb"><a href="/minyanim-har-homa/">מניינים בהר חומה</a> ← שערי החומה</div>
+<div class="info"><h2>שיעורי תורה</h2><div class="lesson"><b>דף יומי</b><span>הרב אליעזר מאיר · יום כל יום · 8:00</span></div><div class="lesson"><b>אמונה - אם הבנים שמחה</b><span>הרב גאופטמן · יום שישי · 22:00</span></div><div class="lesson"><b>הלכה - הלכות שבת</b><span>הרב גאופטמן · יום שבת · 10:40</span></div><div class="lesson"><b>כללי</b><span>הרב טולידאנו · יום שבת · 17:15</span></div><div class="lesson"><b>גמרא - עיתים לתורה - גמרא עיון</b><span>הרב יוסי רחבי · יום שני · 21:15</span></div><div class="lesson"><b>חסידות</b><span>אליהו סלמן · יום שבת · 18:20</span></div><div class="lesson"><b>פרשת שבוע</b><span>הרב גאופטמן · יום רביעי · 21:15</span></div><div class="lesson"><b>דף יומי</b><span>הרב זאב איזנשטיין · יום כל יום · 19:30</span></div><div class="lesson"><b>שיעור לנוער</b><span>הרב בועז אלוש · יום שישי · 22:30</span></div><div class="lesson"><b>הלכה ורעיון מפרשת השבוע</b><span>הרב חיים כץ שליט&quot;א · יום שבת · 8:00</span></div><div class="lesson"><b>מהר&quot;ל + גמרא סנהדרין</b><span>הרב שמואל אביטן · יום שבת · 13:45</span></div><div class="lesson"><b>לימוד ליל שבת כולל כיבוד קל</b><span>הרב · יום שישי · 21:30</span></div></div>
 
-<header class="hd">
-  <h1>שערי החומה</h1>
-  <div class="addr">ליכטנשטיין 25
-    </div>
-  <div class="meta">
-    <span class="chip gold">נוסח ספרד</span>
-    
-    <span class="chip">נגיש</span>
-    <span class="chip">אולם אירועים</span>
-    <span class="chip">פתוח ללמידה</span>
-  </div>
-</header>
-
-<section class="board">
-  <h2>זמני תפילה</h2>
-  <div class="row">
-      <span class="t">שחרית</span>
-      <span class="v">06:15</span>
-      <span class="d">ימי חול</span>
-      <span class="n">בראש חודש ב-06:00</span>
-    </div><div class="row">
-      <span class="t"></span>
-      <span class="v">06:45</span>
-      <span class="d">ימי חול</span>
-      <span class="n">בראש חודש 06:30</span>
-    </div><div class="row">
-      <span class="t"></span>
-      <span class="v">07:15</span>
-      <span class="d">ימי חול</span>
-      
-    </div><div class="row">
-      <span class="t"></span>
-      <span class="v">08:15</span>
-      <span class="d">ימי חול</span>
-      <span class="n">בראש חודש ב-08:30</span>
-    </div><div class="row">
-      <span class="t"></span>
-      <span class="v">08:45</span>
-      <span class="d">ימי חול</span>
-      <span class="n">בראש חודש 09:00</span>
-    </div><div class="row">
-      <span class="t">מנחה</span>
-      <span class="v">13:15</span>
-      <span class="d">ימי חול</span>
-      <span class="n">גם ביום ו'</span>
-    </div><div class="row">
-      <span class="t"></span>
-      <span class="v">בפלג המנחה</span>
-      <span class="d">שישי</span>
-      
-    </div><div class="row">
-      <span class="t"></span>
-      <span class="v">20 דקות לפני השקיעה</span>
-      <span class="d">ימי חול</span>
-      
-    </div><div class="row">
-      <span class="t">ערבית</span>
-      <span class="v">20 דקות אחרי השקיעה</span>
-      <span class="d">ימי חול</span>
-      
-    </div><div class="row">
-      <span class="t"></span>
-      <span class="v">20:30</span>
-      <span class="d">ימי חול</span>
-      
-    </div><div class="row">
-      <span class="t"></span>
-      <span class="v">21:00</span>
-      <span class="d">ימי חול</span>
-      
-    </div>
-</section>
-
-<section class="card">
-  <h2>שיעורי תורה</h2>
-  <div class="lesson">
-    <b>דף יומי</b>
-    <span>נותן השיעור: הרב אליעזר מאיר · יום כל יום · 8:00</span>
-  </div><div class="lesson">
-    <b>אמונה - אם הבנים שמחה</b>
-    <span>נותן השיעור: הרב גאופטמן · יום שישי · 22:00</span>
-  </div><div class="lesson">
-    <b>הלכה - הלכות שבת</b>
-    <span>נותן השיעור: הרב גאופטמן · יום שבת · 10:40</span>
-  </div><div class="lesson">
-    <b>כללי</b>
-    <span>נותן השיעור: הרב טולידאנו · יום שבת · 17:15</span>
-  </div><div class="lesson">
-    <b>גמרא - עיתים לתורה - גמרא עיון</b>
-    <span>נותן השיעור: הרב יוסי רחבי · יום שני · 21:15</span>
-  </div><div class="lesson">
-    <b>חסידות</b>
-    <span>נותן השיעור: אליהו סלמן · יום שבת · 18:20</span>
-  </div><div class="lesson">
-    <b>פרשת שבוע</b>
-    <span>נותן השיעור: הרב גאופטמן · יום רביעי · 21:15</span>
-  </div><div class="lesson">
-    <b>דף יומי</b>
-    <span>נותן השיעור: הרב זאב איזנשטיין · יום כל יום · 19:30</span>
-  </div><div class="lesson">
-    <b>שיעור לנוער</b>
-    <span>נותן השיעור: הרב בועז אלוש · יום שישי · 22:30</span>
-  </div><div class="lesson">
-    <b>הלכה ורעיון מפרשת השבוע</b>
-    <span>נותן השיעור: הרב חיים כץ שליט&quot;א · יום שבת · 8:00</span>
-  </div><div class="lesson">
-    <b>מהר&quot;ל + גמרא סנהדרין</b>
-    <span>נותן השיעור: הרב שמואל אביטן · יום שבת · 13:45</span>
-  </div><div class="lesson">
-    <b>לימוד ליל שבת כולל כיבוד קל</b>
-    <span>נותן השיעור: הרב · יום שישי · 21:30</span>
-  </div>
-</section>
-
-<div class="actions">
-  <a class="btn" href="https://waze.com/ul?ll=31.7251987,35.2246833&navigate=yes"
-     rel="nofollow noopener" target="_blank">ניווט ב-Waze</a>
-  <a class="btn" href="https://www.google.com/maps/search/?api=1&query=31.7251987,35.2246833"
-     rel="nofollow noopener" target="_blank">פתיחה במפות</a>
+<div class="info"><h2>שינוי בזמנים?</h2><p>הזמנים נמסרו על ידי מתפללים ועשויים להשתנות. כל משתמש רשום יכול לעדכן אותם.</p><div class="btns"><a class="b-map" href="/app/"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20h4L19 9l-4-4L4 16zM14 6l4 4"/></svg>עדכון זמנים</a></div></div>
+</aside>
 </div>
 
-<section class="cta">
-  <h2>המניין הקרוב אליך, עכשיו</h2>
-  <p>באפליקציה: כל המניינים בהר חומה לפי מרחק ולפי השעה, בעלי מקצוע, גמ״חים ומבצעים.</p>
-  <a href="/b">להורדת האפליקציה</a>
-</section>
-</div>
+<div class="wrap"><div class="app-cta"><div style="min-width:0;flex:1 1 300px"><b>המניין הקרוב אליך, עכשיו</b><span>באפליקציה: כל המניינים לפי מרחק ולפי השעה, עם התראות על שינויים.</span></div><a class="pill btn-dark" href="/b/">להורדת האפליקציה</a></div></div>
+</main>
+
 <footer><div class="wrap">
-  שכונה — מידע קהילתי להר חומה.
-  הזמנים נמסרו על ידי מתפללים ועשויים להשתנות.
-  <a href="/">על האפליקציה</a>
+<img src="/app_icon.png" alt="שכונה" width="48" height="48" loading="lazy">
+<span>שכונה · <a href="mailto:info@shchuna.co.il">info@shchuna.co.il</a></span>
+<nav aria-label="קישורים"><a href="/">כל השכונות</a><a href="/terms.html">תנאי שימוש</a><a href="/privacy.html">פרטיות</a></nav>
+<span class="c">© שכונה, כל הזכויות שמורות</span>
 </div></footer>
+
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"PlaceOfWorship","name":"שערי החומה","url":"https://shchuna.co.il/minyanim-har-homa/%D7%A9%D7%A2%D7%A8%D7%99-%D7%94%D7%97%D7%95%D7%9E%D7%94/","address":{"@type":"PostalAddress","streetAddress":"ליכטנשטיין 25","addressLocality":"ירושלים","addressCountry":"IL"},"geo":{"@type":"GeoCoordinates","latitude":31.7251987,"longitude":35.2246833}}</script>
+<script>(function(){
+/* בורר שכונה */
+var hb=document.getElementById('hood-btn'),hp=document.getElementById('hood-pop'),hq=document.getElementById('hood-q');
+function setHood(o){hp.hidden=!o;hb.setAttribute('aria-expanded',o);if(o)hq.focus();}
+if(hb){hb.addEventListener('click',function(e){e.stopPropagation();setHood(hp.hidden);});
+  hp.addEventListener('click',function(e){e.stopPropagation();});
+  document.addEventListener('click',function(){setHood(false);});
+  document.addEventListener('keydown',function(e){if(e.key==='Escape'&&!hp.hidden){setHood(false);hb.focus();}});
+  hq.addEventListener('input',function(){var q=hq.value.trim();
+    [].forEach.call(hp.querySelectorAll('.hood-item'),function(it){it.hidden=!!q&&it.textContent.indexOf(q)<0;});});}
+})();</script>
 </body>
 </html>

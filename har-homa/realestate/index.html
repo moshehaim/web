@@ -69,6 +69,7 @@ a.hood-item:hover{background:#F5F8FF}
 .chips .wrap{display:flex;gap:6px;padding-block:8px;width:max-content;min-width:100%}
 .chips a{flex:none;font-size:15px;font-weight:700;color:#3B4860;text-decoration:none;padding:6px 14px;border-radius:999px;background:#F4F5F7}
 .chips a:hover{background:#EFF4FF;color:var(--brand)}
+.chips a.on{background:var(--brand);color:#fff}
 
 /* hero */
 .hero{background:var(--navy);color:#fff;position:relative;overflow:hidden}
@@ -280,6 +281,10 @@ background:linear-gradient(to top,var(--t2),transparent)}
 .brow h3{font-size:17px}
 .bside{display:flex;align-items:center;gap:10px;padding-inline:0 16px;flex:none}
 .bgo{width:34px;height:34px;border-radius:50%;background:#F1F4F8;color:var(--navy);display:flex;align-items:center;justify-content:center;font-weight:800}
+.bthumb{flex:none;width:84px;height:84px;margin-inline-start:12px;border-radius:14px;overflow:hidden;background:#DCE5F5}
+.bthumb img{width:100%;height:100%;object-fit:cover}
+@media (max-width:620px){.brow .bthumb{width:100%;height:auto;aspect-ratio:16/10;margin:12px 0 0;border-radius:0 0 0 0}.brow{padding:0;overflow:hidden}.brow .bthumb{margin:0}}
+.fchips>:first-child{margin-inline-start:auto}.fchips>:last-child{margin-inline-end:auto}
 .bgrp{font-size:12px;font-weight:800;color:var(--accent)}
 .bbadge2{font-size:13px;font-weight:800;background:#EFF4FF;color:var(--brand);border-radius:8px;padding:3px 10px;white-space:nowrap}
 .dbody .pr{font-size:17px;font-weight:800;color:var(--navy);font-variant-numeric:tabular-nums}
@@ -335,7 +340,7 @@ background:linear-gradient(to top,var(--t2),transparent)}
 </div>
 </div>
 <nav class="chips" aria-label="תחומים"><div class="wrap">
-<a href="/har-homa/">דף השכונה</a><a href="/minyanim-har-homa/">תפילות</a><a href="/har-homa/pros/">בעלי מקצוע</a><a href="/har-homa/biz/">עסקים</a><a href="/har-homa/promos/">מבצעים</a><a href="/har-homa/realestate/" aria-current="page" style="background:var(--brand);color:#fff">נדל״ן</a><a href="/har-homa/board/">לוח השכונה</a>
+<a href="/har-homa/">דף השכונה</a><a href="/minyanim-har-homa/">מניינים</a><a href="/app/">שיעורים</a><a href="/har-homa/biz/">עסקים</a><a href="/har-homa/pros/">בעלי מקצוע</a><a href="/har-homa/promos/">מבצעים</a><a href="/har-homa/promos/#קופונים">קופונים</a><a href="/har-homa/board/#gmach">גמ״חים</a><a href="/har-homa/board/#jobs">דרושים</a><a href="/har-homa/board/#second">יד שנייה</a><a href="/har-homa/realestate/" aria-current="page" class="on">נדל״ן</a><a href="/har-homa/board/#vol">התנדבות</a><a href="/har-homa/board/#lost">אבידות ומציאות</a><a href="/app/">אולמות</a><a href="/app/">אירוח</a><a href="/app/">הכל לאירוע</a><a href="/app/">מוסדות חינוך</a><a href="/app/">גנים ופארקים</a><a href="/app/">אירועים</a>
 </div></nav></header>
 
 
@@ -456,7 +461,8 @@ function run(){var t=(q.value||'').trim(),n=0;
 chips.forEach(function(b){b.addEventListener('click',function(){g=b.getAttribute('data-g');
   chips.forEach(function(x){x.setAttribute('aria-pressed',x===b);});run();});});
 q.addEventListener('input',function(){run();});
-var h='';try{h=decodeURIComponent((location.hash||'').slice(1));}catch(_){}if(h){chips.forEach(function(b){if(b.getAttribute('data-k')===h)b.click();});}
+function byHash(){var h='';try{h=decodeURIComponent((location.hash||'').slice(1));}catch(_){}if(h){chips.forEach(function(b){if(b.getAttribute('data-k')===h)b.click();});}}
+byHash();window.addEventListener('hashchange',byHash);
 /* כרטיס בלי תמונה: מקוצר (כיתוב בלבד), אלא אם הוא באותה שורה עם כרטיס שיש לו תמונה — לגובה אחיד */
 function fit(){var vis=cards.filter(function(c){return !c.hidden;}),rows={};
   vis.forEach(function(c){c.classList.remove('compact');});
