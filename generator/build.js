@@ -20,6 +20,7 @@ import { sitemap } from './lib/template.js';
 import { minyanimIndexPage, synagoguePageNew } from './lib/minyanim-template.js';
 import { fetchHome, shapeHome, shapePrayers, fetchDirectory, shapeDirectory, fetchListings, shapeListings, fetchMore, shapeMore } from './lib/home-data.js';
 import { homePage, HIDDEN_NAV } from './lib/home-template.js';
+import { entityPage } from './lib/entity-template.js';
 import { listPage, promosPage, realEstatePage, boardPage, lessonsPage, hallsPage, hostingPage, eduPage, parksPage, servicesPage, eventsPage, happeningsPage } from './lib/list-template.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -77,6 +78,8 @@ const write = (rel, content) => {
 // ספירת לחיצות מהדפדפן: אותו anon key ציבורי שהאפליקציה בווב משתמשת בו
 const API = SUPABASE_URL && ANON_KEY ? { url: SUPABASE_URL, key: ANON_KEY } : null;
 
+const EXTRA_URLS = [];
+
 const writeHome = (raw, dirRaw, lsRaw, moreRaw, synSlugs) => {
   // "אירועים" מופיע בשורת התחומים רק כשיש אירועים קרובים
   if (moreRaw?.events?.length) HIDDEN_NAV.delete('happenings'); else HIDDEN_NAV.add('happenings');
@@ -94,6 +97,17 @@ const writeHome = (raw, dirRaw, lsRaw, moreRaw, synSlugs) => {
   }
   if (!dirRaw) return vm;
   const dir = shapeDirectory(dirRaw);
+  // עמוד מלא לכל עסק ובעל מקצוע — slug יציב לכל ישות (נשמר ב-slugs.json)
+  for (const kind of ['pros', 'biz']) {
+    const store = new SlugStore(path.join(OUT, HOME, kind, 'slugs.json'));
+    for (const e of dir[kind].items) {
+      e.slug = store.get(e.id, e.name);
+      e.href = `/${HOME}/${kind}/${encodeURIComponent(e.slug)}/`;
+      write(path.join(HOME, kind, e.slug, 'index.html'), entityPage(vm, e, { base: BASE, home: `/${HOME}/`, kind, api: API }));
+      EXTRA_URLS.push({ loc: `${BASE}${e.href}`, freq: 'weekly', pri: '0.6' });
+    }
+    if (!DRY) store.save();
+  }
   for (const kind of ['pros', 'biz']) {
     write(path.join(HOME, kind, 'index.html'), listPage(vm, dir, kind, { base: BASE, home: `/${HOME}/`, api: API }));
   }
@@ -211,6 +225,7 @@ async function main() {
   catch (e) { console.error(`  ⚠ ${HOME}/ לא נבנה:`, e.message || e); process.exitCode = 0; }
 
   writeMinyanim({ vm, community, syns, prayers, lessons, slugs, urls });
+  urls.push(...EXTRA_URLS);
   write('sitemap.xml', sitemap(urls));
   write('robots.txt', `User-agent: *\nAllow: /\n\nSitemap: ${BASE}/sitemap.xml\n`);
 
