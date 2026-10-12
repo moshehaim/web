@@ -19,8 +19,8 @@ import { isPrayerInSeason } from './lib/season.js';
 import { sitemap } from './lib/template.js';
 import { minyanimIndexPage, synagoguePageNew } from './lib/minyanim-template.js';
 import { fetchHome, shapeHome, shapePrayers, fetchDirectory, shapeDirectory, fetchListings, shapeListings, fetchMore, shapeMore } from './lib/home-data.js';
-import { homePage } from './lib/home-template.js';
-import { listPage, promosPage, realEstatePage, boardPage, lessonsPage, hallsPage, hostingPage, eduPage, parksPage, servicesPage, eventsPage } from './lib/list-template.js';
+import { homePage, HIDDEN_NAV } from './lib/home-template.js';
+import { listPage, promosPage, realEstatePage, boardPage, lessonsPage, hallsPage, hostingPage, eduPage, parksPage, servicesPage, eventsPage, happeningsPage } from './lib/list-template.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -78,6 +78,8 @@ const write = (rel, content) => {
 const API = SUPABASE_URL && ANON_KEY ? { url: SUPABASE_URL, key: ANON_KEY } : null;
 
 const writeHome = (raw, dirRaw, lsRaw, moreRaw, synSlugs) => {
+  // "אירועים" מופיע בשורת התחומים רק כשיש אירועים קרובים
+  if (moreRaw?.events?.length) HIDDEN_NAV.delete('happenings'); else HIDDEN_NAV.add('happenings');
   const vm = shapeHome(raw, { now: new Date(), base: BASE });
   write(path.join(HOME, 'index.html'), homePage(vm, { base: BASE, path: `/${HOME}/` }));
   console.log(`  ${HOME}/  · ${vm.promos.length} מבצעים · ${vm.professionals.length} בעלי מקצוע · ` +
@@ -101,6 +103,7 @@ const writeHome = (raw, dirRaw, lsRaw, moreRaw, synSlugs) => {
     const o = { base: BASE, home: `/${HOME}/`, api: API };
     const pages = { lessons: lessonsPage, halls: hallsPage, hosting: hostingPage, education: eduPage,
       parks: parksPage, services: servicesPage, events: eventsPage };
+    if (m.happenings.items.length) pages.happenings = happeningsPage;
     for (const [slug, fn] of Object.entries(pages)) write(path.join(HOME, slug, 'index.html'), fn(vm, m, o));
     console.log(`  lessons · ${m.lessons.items.length}  halls · ${m.halls.items.length}  hosting · ${m.hosting.items.length}  education · ${m.edu.items.length}  parks · ${m.parks.items.length}  services · ${m.services.items.length}  events · ${m.events.items.length}`);
   }

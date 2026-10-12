@@ -385,7 +385,7 @@ export async function fetchMore(db, communityId) {
   const q = (p) => p.then(({ data, error }) => { if (error) throw error; return data || []; });
   const by = (t, cols) => db.from(t).select(cols).eq('community_id', communityId);
   const syns = await q(by('synagogues', 'id,name'));
-  const [lessonsSyn, lessonsCom, halls, hosting, edu, parks, services, health] = await Promise.all([
+  const [lessonsSyn, lessonsCom, halls, hosting, edu, parks, services, health, events] = await Promise.all([
     syns.length ? q(db.from('lessons').select('id,topic,teacher,day,start_time,type,audience,location,synagogue_id,additional_info')
       .in('synagogue_id', syns.map((s) => String(s.id)))) : Promise.resolve([]),
     q(by('lessons', 'id,topic,teacher,day,start_time,type,audience,location,synagogue_id,additional_info')),
@@ -397,10 +397,12 @@ export async function fetchMore(db, communityId) {
     q(by('parks', 'id,name,location,image,park_type,facilities,latitude,longitude').order('name')),
     q(by('community_services', 'id,name,type,address,phone,image_url,lat,lng').eq('is_active', true).order('name')),
     q(by('healthcare_facility', 'id,name,facility_type,address,phone,image_url,latitude,longitude,is_24_7').not('is_active', 'is', false).order('name')),
+    q(by('events', 'id,title,start_date,location_name,location_address,target_audience,organizer_name,cost_info,image_url')
+      .gte('start_date', new Date().toISOString()).order('start_date')),
   ]);
   const seen = new Set();
   const lessons = [...lessonsSyn, ...lessonsCom].filter((l) => !seen.has(l.id) && seen.add(l.id));
-  return { syns, lessons, halls, hosting, edu, parks, services, health };
+  return { syns, lessons, halls, hosting, edu, parks, services, health, events };
 }
 
 const waze = (lat, lng) => (lat && lng ? `https://waze.com/ul?ll=${lat},${lng}&navigate=yes` : null);
@@ -450,6 +452,13 @@ export function shapeMore(raw, dir, synSlugs = {}) {
   const ev = (list, label) => list.filter((x) => x.group === 'אירועים ושמחות').map((x) => ({ ...x, group: label }));
   const events = [...halls.map((h) => ({ ...h, group: 'אולמות' })), ...ev(dir.biz.items, 'עסקים לאירועים'), ...ev(dir.pros.items, 'בעלי מקצוע לאירועים')];
 
+  const fmtDate = (iso) => {
+    const d = new Date(iso);
+    const p = new Intl.DateTimeFormat('he-IL', { timeZone: 'Asia/Jerusalem', weekday: 'long', day: 'numeric', month: 'numeric', hour: '2-digit', minute: '2-digit' });
+    return p.format(d);
+  };
+  const happenings = (raw.events || []).map((e) => ({ cat: 'events', group: 'אירועים', title: e.title, img: e.image_url,
+    lines: [fmtDate(e.start_date), [e.location_name || e.location_address, e.organizer_name].filter(Boolean).join(' · ')] }));
   const imgFirst = (a) => [...a].sort((x, y) => !!y.img - !!x.img);
   return {
     lessons: { items: lessons, groups: lessonGroups },
@@ -459,5 +468,6 @@ export function shapeMore(raw, dir, synSlugs = {}) {
     parks: { items: imgFirst(parks), groups: order(parks, 'group') },
     services: { items: services, groups: order(services, 'group') },
     events: { items: events, groups: order(events, 'group') },
+    happenings: { items: happenings, groups: [] },
   };
 }

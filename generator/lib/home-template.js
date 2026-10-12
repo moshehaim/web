@@ -42,7 +42,7 @@ const ZONES = [
   ['מניינים', ICON.clock, 'blue', MINYANIM], ['שיעורי תורה', ICON.book, 'blue', 'lessons/'],
   ['עסקים', ICON.store, 'sky', 'biz/'], ['בעלי מקצוע', ICON.wrench, 'sky', 'pros/'],
   ['מבצעים', ICON.tag, 'sky', 'promos/'], ['קופונים', ICON.ticket, 'sky', 'promos/#קופונים'],
-  ['שירותי קהילה', ICON.civic, 'teal', 'services/'], ['גמ״חים', ICON.heart, 'green', 'board/#gmach'], ['אירועים', ICON.star, 'green'],
+  ['שירותי קהילה', ICON.civic, 'teal', 'services/'], ['גמ״חים', ICON.heart, 'green', 'board/#gmach'], ['אירועים', ICON.star, 'green', 'happenings/', 'happenings'],
   ['דרושים', ICON.brief, 'violet', 'board/#jobs'], ['יד שנייה', ICON.bag, 'violet', 'board/#second'], ['נדל״ן', ICON.key, 'violet', 'realestate/'],
   ['אולמות אירועים', ICON.hall, 'amber', 'halls/'], ['אירוח', ICON.bed, 'amber', 'hosting/'], ['הכל לאירוע', ICON.party, 'amber', 'events/'],
   ['מוסדות חינוך', ICON.school, 'teal', 'education/'], ['גנים ופארקים', ICON.tree, 'teal', 'parks/'], ['בריאות', ICON.health, 'teal', 'services/'],
@@ -483,6 +483,9 @@ tabs.forEach(function(t,i){t.addEventListener('click',function(){sel(t);});
 
 
 /** שורת התחומים מתחת לכותרת — אותה רשימה בכל עמודי האתר. current = המפתח של העמוד הנוכחי. */
+/** תחומים שמוסתרים כשאין בהם תוכן (נקבע בזמן הבנייה) */
+export const HIDDEN_NAV = new Set(['happenings']);
+
 export function navChips(home, current = '') {
   const M = '/minyanim-har-homa/';
   const items = [
@@ -494,10 +497,10 @@ export function navChips(home, current = '') {
     ['vol', 'התנדבות', `${home}board/#vol`], ['lost', 'אבידות ומציאות', `${home}board/#lost`],
     ['halls', 'אולמות', `${home}halls/`], ['hosting', 'אירוח', `${home}hosting/`], ['events', 'הכל לאירוע', `${home}events/`],
     ['education', 'מוסדות חינוך', `${home}education/`], ['parks', 'גנים ופארקים', `${home}parks/`],
-    ['services', 'שירותים ובריאות', `${home}services/`], ['happenings', 'אירועים', APP],
+    ['services', 'שירותים ובריאות', `${home}services/`], ['happenings', 'אירועים', `${home}happenings/`],
   ];
   return `<nav class="chips" aria-label="תחומים"><div class="wrap">
-${items.map(([k, l, h]) => `<a href="${h}"${k === current ? ' aria-current="page" class="on"' : ''}>${l}</a>`).join('')}
+${items.filter(([k]) => !HIDDEN_NAV.has(k)).map(([k, l, h]) => `<a href="${h}"${k === current ? ' aria-current="page" class="on"' : ''}>${l}</a>`).join('')}
 </div></nav>`;
 }
 
@@ -609,7 +612,7 @@ ${boardSection(vm)}
 <section id="zones" aria-label="כל התחומים" class="wrap" style="display:flex;flex-direction:column;gap:18px">
 <h2 style="margin:0;font-size:30px;font-weight:800;color:var(--navy)">כל <span class="em">התחומים</span></h2>
 <div class="zones">
-${ZONES.map(([n, d, c, href]) => `<a class="zone lift" href="${href || APP}"><i class="z-${c}">${svg(d)}</i>${esc(n)}</a>`).join('\n')}
+${ZONES.filter((z) => !HIDDEN_NAV.has(z[4])).map(([n, d, c, href]) => `<a class="zone lift" href="${href || APP}"><i class="z-${c}">${svg(d)}</i>${esc(n)}</a>`).join('\n')}
 </div>
 </section>
 
