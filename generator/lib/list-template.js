@@ -64,7 +64,9 @@ background:linear-gradient(to top,var(--t2),transparent)}
 .dir-q{flex:1 1 280px;max-width:520px;display:flex;align-items:center;gap:10px;height:48px;padding:0 16px;border-radius:14px;background:#fff;color:var(--muted)}
 .dir-q input{flex:1;min-width:0;border:0;outline:0;background:transparent;font:inherit;font-size:16px;color:var(--ink)}
 .dir-list{padding-block:22px 56px;display:flex;flex-direction:column;gap:18px}
-.fchips{display:flex;gap:8px;overflow-x:auto;padding-bottom:2px;scrollbar-width:none}.fchips::-webkit-scrollbar{display:none}
+/* סינון: במחשב שורות ממורכזות; בטלפון גלילה לצד עם דהייה בקצה */
+.fchips{display:flex;flex-wrap:wrap;justify-content:center;gap:8px}
+@media (max-width:620px){.fchips{flex-wrap:nowrap;justify-content:flex-start;overflow-x:auto;padding-bottom:2px;scrollbar-width:none;margin-inline:-16px;padding-inline:16px;-webkit-mask-image:linear-gradient(to left,#000 calc(100% - 28px),transparent);mask-image:linear-gradient(to left,#000 calc(100% - 28px),transparent)}.fchips::-webkit-scrollbar{display:none}}
 .fchips button{flex:none;height:40px;padding:0 16px;border-radius:999px;font-size:15px;cursor:pointer;border:1px solid #DCE2EC;background:#fff;color:var(--ink);font-weight:600}
 .fchips button[aria-pressed=true]{border-color:var(--brand);background:var(--brand);color:#fff;font-weight:800}
 .dgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(280px,100%),1fr));gap:16px}
@@ -77,14 +79,18 @@ background:linear-gradient(to top,var(--t2),transparent)}
 .dbody h3{margin:0;font-size:19px;font-weight:800;line-height:1.25}
 .dbody .f{font-size:14px;font-weight:700;color:var(--accent)}
 .dbody .w{font-size:14px;color:var(--muted)}
-.dact{padding:12px 16px 16px;display:flex;gap:8px}
-.dact a{flex:1 1 0;min-width:0;white-space:nowrap;height:44px;border-radius:12px;font-weight:800;font-size:15px;text-decoration:none;display:flex;align-items:center;justify-content:center;gap:6px}
+.dact{padding:12px 16px 16px;display:flex;gap:10px;align-items:center}
+/* פעולות כאייקונים עגולים; כפתור טקסט רק כשאין טלפון ("לפרטים באפליקציה") */
+.dact a{flex:none;width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;text-decoration:none;transition:background .15s,width .2s}
 .a-tel{background:#EFF4FF;color:var(--navy)}.a-tel:hover{color:var(--navy);background:#E2EBFF}
-.a-tel .ld{display:none}
-@media (hover:hover) and (pointer:fine){.a-tel{flex:1.6 1 0!important}.a-tel .lm{display:none}.a-tel .ld{display:inline;font-variant-numeric:tabular-nums}}
-.a-wa{background:#E7F7EC;color:#14532D}.a-wa:hover{color:#14532D;background:#D8F1E0}
-.a-waze{flex:none!important;width:44px;background:#E3F4FB;color:#0E7FAE}
+.a-tel .lm,.a-tel .ld{display:none}
+.a-tel.shown{width:auto;border-radius:999px;padding:0 14px;gap:8px;font-weight:800;font-size:15px;white-space:nowrap}
+.a-tel.shown .ld{display:inline;font-variant-numeric:tabular-nums}
+.a-wa{background:#E7F7EC;color:#15803D}.a-wa:hover{color:#15803D;background:#D8F1E0}
+.a-waze{background:#E3F4FB;color:#0E7FAE}.a-waze:hover{color:#0E7FAE;background:#D3EDF8}
+.dact a.a-app{flex:1 1 auto;width:auto;border-radius:12px;font-weight:800;font-size:15px}
 .a-app{background:#F1F4F8;color:var(--navy)}
+.dact [data-tip]{position:relative}
 .dempty[hidden]{display:none}
 .dempty{background:#fff;border-radius:20px;padding:36px 24px;text-align:center;display:flex;flex-direction:column;gap:8px;align-items:center}
 .dempty b{font-size:20px}.dempty span{font-size:16px;color:#566173}
@@ -111,7 +117,6 @@ background:linear-gradient(to top,var(--t2),transparent)}
 .bthumb{flex:none;width:84px;height:84px;margin-inline-start:12px;border-radius:14px;overflow:hidden;background:#DCE5F5}
 .bthumb img{width:100%;height:100%;object-fit:cover}
 @media (max-width:620px){.brow .bthumb{width:100%;height:auto;aspect-ratio:16/10;margin:12px 0 0;border-radius:0 0 0 0}.brow{padding:0;overflow:hidden}.brow .bthumb{margin:0}}
-.fchips>:first-child{margin-inline-start:auto}.fchips>:last-child{margin-inline-end:auto}
 .bgrp{font-size:12px;font-weight:800;color:var(--accent)}
 .bbadge2{font-size:13px;font-weight:800;background:#EFF4FF;color:var(--brand);border-radius:8px;padding:3px 10px;white-space:nowrap}
 .dbody .pr{font-size:17px;font-weight:800;color:var(--navy);font-variant-numeric:tabular-nums}
@@ -170,9 +175,9 @@ function card(p, kind) {
   const tone = p.img ? '' : ` noimg t-${(CAT_ICON[p.cat] || CAT_ICON.other)[1]}`;
   const rec = p.rec > 0 ? `<span class="drec">${svg(ICON_HEART, 14, 'currentColor', 2)}${p.rec === 1 ? 'המלצה אחת' : `${p.rec} המלצות`}</span>` : '';
   const acts = [];
-  if (p.phone) acts.push(`<a class="a-tel" href="${esc(p.phone.tel)}" data-num="${esc(p.phone.display)}" aria-label="חיוג ל${esc(p.name)} ${esc(p.phone.display)}">${svg(ICON_PHONE, 17, 'currentColor', 2.2)}<span class="lm">חיוג</span><span class="ld">הצג מספר</span></a>`);
-  if (p.phone?.wa) acts.push(`<a class="a-wa" href="${esc(p.phone.wa)}" target="_blank" rel="noopener" aria-label="WhatsApp ל${esc(p.name)}">${svg(ICON_WA, 17, '#15803D', 2)}WhatsApp</a>`);
-  if (p.waze) acts.push(`<a class="a-waze" href="${esc(p.waze)}" target="_blank" rel="noopener" aria-label="ניווט ל${esc(p.name)} ב-Waze">${svg(ICON_WAZE, 18, 'currentColor', 2)}</a>`);
+  if (p.phone) acts.push(`<a class="a-tel" href="${esc(p.phone.tel)}" data-num="${esc(p.phone.display)}" aria-label="טלפון של ${esc(p.name)}" title="טלפון">${svg(ICON_PHONE, 19, 'currentColor', 2.2)}<span class="ld"></span></a>`);
+  if (p.phone?.wa) acts.push(`<a class="a-wa" href="${esc(p.phone.wa)}" target="_blank" rel="noopener" aria-label="WhatsApp ל${esc(p.name)}" title="WhatsApp">${svg(ICON_WA, 20, 'currentColor', 2)}</a>`);
+  if (p.waze) acts.push(`<a class="a-waze" href="${esc(p.waze)}" target="_blank" rel="noopener" aria-label="ניווט ל${esc(p.name)} ב-Waze" title="ניווט">${svg(ICON_WAZE, 19, 'currentColor', 2)}</a>`);
   if (!acts.length) acts.push(`<a class="a-app" href="${APP}">לפרטים באפליקציה</a>`);
   return `<article class="dcard lift" data-group="${esc(p.group)}" data-text="${esc(text)}" data-id="${esc(p.id)}" data-t="${esc(p.table)}">
 <div class="dmedia${tone}">${media}${rec}</div>

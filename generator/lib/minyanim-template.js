@@ -41,8 +41,9 @@ const CSS = `
 .nrow.past{opacity:.45}
 .nmore{display:block;margin:8px auto 4px;border:0;background:transparent;color:var(--brand);font-weight:800;font-size:15px;cursor:pointer}
 .nempty{padding:18px 0;color:var(--muted);text-align:center}
-.fchips{display:flex;gap:8px;overflow-x:auto;padding-bottom:2px;scrollbar-width:none}.fchips::-webkit-scrollbar{display:none}
-.fchips>:first-child{margin-inline-start:auto}.fchips>:last-child{margin-inline-end:auto}
+/* סינון: במחשב שורות ממורכזות; בטלפון גלילה לצד עם דהייה בקצה */
+.fchips{display:flex;flex-wrap:wrap;justify-content:center;gap:8px}
+@media (max-width:620px){.fchips{flex-wrap:nowrap;justify-content:flex-start;overflow-x:auto;padding-bottom:2px;scrollbar-width:none;margin-inline:-16px;padding-inline:16px;-webkit-mask-image:linear-gradient(to left,#000 calc(100% - 28px),transparent);mask-image:linear-gradient(to left,#000 calc(100% - 28px),transparent)}.fchips::-webkit-scrollbar{display:none}}
 .fchips button{flex:none;height:40px;padding:0 16px;border-radius:999px;font-size:15px;cursor:pointer;border:1px solid #DCE2EC;background:#fff;color:var(--ink);font-weight:600}
 .fchips button[aria-pressed=true]{border-color:var(--brand);background:var(--brand);color:#fff;font-weight:800}
 .sgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(300px,100%),1fr));gap:14px}
