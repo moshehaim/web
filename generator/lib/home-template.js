@@ -17,6 +17,8 @@ const MINYANIM = '/minyanim-har-homa/';
 
 export const ICON = {
   clock: 'M12 4a8 8 0 1 0 0 16a8 8 0 1 0 0-16zM12 8v4l3 2',
+  lost: 'M11 4a7 7 0 1 0 0 14a7 7 0 1 0 0-14zM20 20l-4-4M11 8v3M11 14h.01',
+  hand: 'M7 11V6a1.5 1.5 0 0 1 3 0v4M10 10V4.5a1.5 1.5 0 0 1 3 0V10M13 10V5.5a1.5 1.5 0 0 1 3 0V11M16 11V8a1.5 1.5 0 0 1 3 0v6a7 7 0 0 1-7 7h-.5a6 6 0 0 1-5-2.7L4 14a1.5 1.5 0 0 1 2.5-1.7L7 13',
   book: 'M4 5h7a2 2 0 0 1 2 2v13a2 2 0 0 0-2-2H4zM20 5h-5a2 2 0 0 0-2 2v13a2 2 0 0 1 2-2h5z',
   store: 'M3 9l1.5-5h15L21 9M3 9h18v2a3 3 0 0 1-6 0a3 3 0 0 1-6 0a3 3 0 0 1-6 0zM5 13v8h14v-8',
   wrench: 'M14.5 6.5a4 4 0 0 0-5.3 5.3L3 18l3 3 6.2-6.2a4 4 0 0 0 5.3-5.3l-2.6 2.6-2.4-.6-.6-2.4z',
@@ -42,10 +44,10 @@ const ZONES = [
   ['מניינים', ICON.clock, 'blue', MINYANIM], ['שיעורי תורה', ICON.book, 'blue', 'lessons/'],
   ['עסקים', ICON.store, 'sky', 'biz/'], ['בעלי מקצוע', ICON.wrench, 'sky', 'pros/'],
   ['מבצעים', ICON.tag, 'sky', 'promos/'], ['קופונים', ICON.ticket, 'sky', 'promos/#קופונים'],
-  ['שירותי קהילה', ICON.civic, 'teal', 'services/'], ['גמ״חים', ICON.heart, 'green', 'board/#gmach'], ['אירועים', ICON.star, 'green', 'happenings/', 'happenings'],
-  ['דרושים', ICON.brief, 'violet', 'board/#jobs'], ['יד שנייה', ICON.bag, 'violet', 'board/#second'], ['נדל״ן', ICON.key, 'violet', 'realestate/'],
+  ['שירותים', ICON.civic, 'teal', 'services/'], ['גמ״חים', ICON.heart, 'green', 'board/#gmach'], ['אירועים', ICON.star, 'green', 'happenings/', 'happenings'],
+  ['דרושים', ICON.brief, 'violet', 'board/#jobs'], ['יד שנייה', ICON.bag, 'violet', 'board/#second'], ['אבידות ומציאות', ICON.lost, 'violet', 'board/#lost'], ['נדל״ן', ICON.key, 'violet', 'realestate/'], ['התנדבות', ICON.hand, 'green', 'board/#vol'],
   ['אולמות אירועים', ICON.hall, 'amber', 'halls/'], ['אירוח', ICON.bed, 'amber', 'hosting/'], ['הכל לאירוע', ICON.party, 'amber', 'events/'],
-  ['מוסדות חינוך', ICON.school, 'teal', 'education/'], ['גנים ופארקים', ICON.tree, 'teal', 'parks/'], ['בריאות', ICON.health, 'teal', 'services/'],
+  ['מוסדות חינוך', ICON.school, 'teal', 'education/'], ['גנים ופארקים', ICON.tree, 'teal', 'parks/'],
 ];
 
 const PHONES = [['מוקד עירוני', '106'], ['מד״א', '101', 1], ['משטרה', '100', 1], ['כיבוי והצלה', '102', 1], ['חברת החשמל', '103']];
@@ -154,6 +156,15 @@ a.hood-item:hover{background:#F5F8FF}
 .hero p{margin:0;font-size:19px;line-height:1.6;color:#C9D6EA;max-width:520px}
 .shab{align-self:flex-start;display:inline-flex;flex-wrap:wrap;align-items:center;gap:6px 16px;margin:0!important;padding:9px 16px;border-radius:14px;background:var(--navy2);border:1px solid rgba(140,203,242,.35);font-size:16px!important;color:#C9D6EA!important;max-width:none!important}
 .shab[hidden]{display:none}.shab svg{color:var(--sky)}.shab>b{color:#fff}.shab span b{color:var(--sky);font-size:17px;margin-inline-start:4px}
+.fresh{flex:0 1 460px;min-width:0;background:rgba(33,62,110,.85);border:1px solid rgba(255,255,255,.1);border-radius:22px;padding:16px 16px 10px;display:flex;flex-direction:column;backdrop-filter:blur(2px)}
+.fresh h2{margin:0 6px 6px;font-size:20px;font-weight:800;color:#fff}
+.fr{display:flex;align-items:center;gap:12px;padding:9px 6px;border-top:1px solid rgba(255,255,255,.08);color:#fff;text-decoration:none;border-radius:12px}
+.fr:first-of-type{border-top:0}.fr:hover{background:rgba(255,255,255,.06);color:#fff}
+.fr i{width:44px;height:44px;border-radius:12px;overflow:hidden;flex:none;background:var(--sky);color:var(--navy);display:flex;align-items:center;justify-content:center;font-style:normal;font-weight:800;font-size:19px}
+.fr i img{width:100%;height:100%;object-fit:cover}
+.fr-t{flex:1;min-width:0}.fr-t b{display:block;font-size:16px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.fr-t small{display:block;font-size:13px;color:#A9BAD4;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.fr em{flex:none;font-style:normal;font-size:12px;font-weight:800;color:var(--sky)}
+@media (max-width:760px){.fresh{flex:1 1 100%}.fr:nth-of-type(n+4){display:none}}
 .tiles{flex:1 1 420px;min-width:0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;align-content:center}
 @media (max-width:460px){.tiles{grid-template-columns:minmax(0,1fr)}}
 .tile{display:flex;align-items:center;gap:12px;padding:16px;border-radius:18px;background:var(--navy2);color:#fff;text-decoration:none}
@@ -655,7 +666,16 @@ function shabbatCard(sh) {
   return `<p class="shab" data-from="${sh.candle.iso}" data-to="${sh.havdalah.iso}" title="מנהג ירושלים: הדלקה 40 דקות לפני השקיעה" hidden>${svg('M12 3c2 2.6 3 4.2 3 6a3 3 0 0 1-6 0c0-1.8 1-3.4 3-6zM9.5 14h5v7h-5z', 18, 'currentColor', 2)}<b>${esc(sh.title)}</b><span>הדלקת נרות <b class="mono">${sh.candle.t}</b></span><span>${out} <b class="mono">${sh.havdalah.t}</b></span></p>`;
 }
 
-export function homePage(vm, { base, path: pagePath, shabbat = null }) {
+function freshPanel(rows) {
+  if (!rows?.length) return '';
+  const av = (r) => r.img ? `<img src="${esc(r.img)}" alt="" loading="lazy" width="44" height="44">` : svg(r.k === 'מבצע' ? ICON.tag : r.k === 'עסק' ? ICON.store : ICON.wrench, 22, 'currentColor', 2);
+  return `<aside class="fresh" aria-label="חדש בשכונה">
+<h2>חדש <span class="emd">בשכונה</span></h2>
+${rows.map((r) => `<a class="fr" href="${esc(r.h)}"><i>${av(r)}</i><span class="fr-t"><b>${esc(r.n)}</b><small>${esc(r.k)}${r.s ? ` · ${esc(r.s)}` : ''}</small></span><em>${esc(r.w)}</em></a>`).join('\n')}
+</aside>`;
+}
+
+export function homePage(vm, { base, path: pagePath, shabbat = null, fresh = [] }) {
   const url = `${base}${pagePath}`;
   const title = `${vm.name}${vm.alias ? ` (${vm.alias})` : ''} — שכונה | מניינים, עסקים, גמ״חים ומבצעים`;
   const desc = `כל מה שקורה ב${vm.name}${vm.alias ? ` (${vm.alias})` : ''}, ${vm.city}: זמני תפילה, בעלי מקצוע, עסקים, מבצעים, נדל״ן, דרושים, יד שנייה וגמ״חים — מעודכן על ידי השכנים.`;
@@ -676,6 +696,7 @@ ${siteHeader(vm, pagePath, navChips(pagePath, 'home'))}
 ${shabbatCard(shabbat)}
 <a class="pill btn-sky m-only" href="${DOWNLOAD}" style="align-self:flex-start">להורדת האפליקציה</a>
 </div>
+${freshPanel(fresh)}
 </div>
 ${ticker(vm)}
 </section>
