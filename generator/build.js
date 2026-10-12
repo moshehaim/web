@@ -99,16 +99,27 @@ function prune(dir, keep) {
   }
 }
 
+/** "חדש בשכונה": העסקים, בעלי המקצוע והמבצעים שנוספו לאחרונה (עד 45 יום), 4 לכל היותר */
+function freshItems(dir, hrefById) {
+  const now = Date.now(), MAX = 45 * 86400000;
+  const ok = (x) => x.created && now - new Date(x.created) < MAX && now >= new Date(x.created);
+  const days = (c) => Math.floor((now - new Date(c)) / 86400000);
+  const when = (c) => { const d = days(c); return d <= 0 ? 'היום' : d === 1 ? 'אתמול' : d < 7 ? `לפני ${d} ימים` : d < 14 ? 'לפני שבוע' : `לפני ${Math.floor(d / 7)} שבועות`; };
+  const rows = [
+    ...dir.pros.items.filter((x) => ok(x) && !x.quiet && x.href).map((x) => ({ k: 'בעל מקצוע', n: x.name, s: x.field, img: x.img, h: x.href, c: x.created })),
+    ...dir.biz.items.filter((x) => ok(x) && !x.quiet && x.href).map((x) => ({ k: 'עסק', n: x.name, s: x.field, img: x.img, h: x.href, c: x.created })),
+    ...dir.promos.filter((x) => ok(x) && (hrefById[x.id] || hrefById[x.providerId])).map((x) => ({ k: 'מבצע', n: x.title, s: x.provider, img: x.img,
+      h: hrefById[x.id] || hrefById[x.providerId], c: x.created })),
+  ].sort((a, b) => new Date(b.c) - new Date(a.c)).slice(0, 4);
+  return rows.map((r) => ({ ...r, w: when(r.c) }));
+}
+
 const writeHome = (raw, dirRaw, lsRaw, moreRaw, synSlugs, detRaw) => {
   // "אירועים" מופיע בשורת התחומים רק כשיש אירועים קרובים
   if (moreRaw?.events?.length) HIDDEN_NAV.delete('happenings'); else HIDDEN_NAV.add('happenings');
   const home = `/${HOME}/`;
   const vm = shapeHome(raw, { now: new Date(), base: BASE });
   const st = raw.community.latitude ? shabbatTimes(raw.community.latitude, raw.community.longitude) : null;
-  const shabbat = raw.community.latitude ? nextShabbat(raw.community.latitude, raw.community.longitude) : null;
-  write(path.join(HOME, 'index.html'), homePage(vm, { base: BASE, path: home, shabbat }));
-  console.log(`  ${HOME}/  · ${vm.promos.length} מבצעים · ${vm.professionals.length} בעלי מקצוע · ` +
-    `${vm.businesses.length} עסקים · ${vm.realEstate.length} נכסים · ${vm.prayers.length} מניינים היום`);
 
   // 1. עסקים ובעלי מקצוע — slug יציב לכל ישות (נשמר ב-slugs.json)
   const hrefById = {};
@@ -156,6 +167,12 @@ const writeHome = (raw, dirRaw, lsRaw, moreRaw, synSlugs, detRaw) => {
     console.log(`  עמודים מלאים · ${all.length}`);
   }
   const link = (items) => { for (const x of items) if (!x.href && hrefById[x.id]) x.href = hrefById[x.id]; };
+
+  // 0. עמוד הבית — אחרי שלכל ישות יש קישור (בשביל "חדש בשכונה")
+  const shabbat = raw.community.latitude ? nextShabbat(raw.community.latitude, raw.community.longitude) : null;
+  write(path.join(HOME, 'index.html'), homePage(vm, { base: BASE, path: home, shabbat, fresh: dir ? freshItems(dir, hrefById) : [] }));
+  console.log(`  ${HOME}/  · ${vm.promos.length} מבצעים · ${vm.professionals.length} בעלי מקצוע · ` +
+    `${vm.businesses.length} עסקים · ${vm.realEstate.length} נכסים · ${vm.prayers.length} מניינים היום`);
 
   // 3. רשימות — עכשיו, כשלכל פריט יש קישור לעמוד המלא
   if (lsRaw) {

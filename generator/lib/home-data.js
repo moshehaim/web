@@ -243,14 +243,14 @@ export async function fetchDirectory(db, communityId) {
   const [businesses, professionals, businessTypes, businessCategories, profCategories, promos] = await Promise.all([
     q(db.from('businesses')
       .select('id,name,phone,address,image_url,business_type,recommend_count,latitude,longitude,image_women_only,content_audience,' +
-        'weekly_schedule,kosher_info,event_services_description,appointment_system_status,user_id')
+        'weekly_schedule,kosher_info,event_services_description,appointment_system_status,user_id,created_at')
       .eq('community_id', communityId).not('is_active', 'is', false)
       .order('is_prominent', { ascending: false, nullsFirst: false })
       .order('priority', { ascending: false, nullsFirst: false })
       .order('name')),
     q(db.from('professionals')
       .select('id,name,phone,main_category,sub_categories,image_url,recommend_count,image_women_only,content_audience,' +
-        'description,weekly_schedule,experience_years,price_range,provides_warranty,tags,address,latitude,longitude,appointment_system_status,user_id')
+        'description,weekly_schedule,experience_years,price_range,provides_warranty,tags,address,latitude,longitude,appointment_system_status,user_id,created_at')
       .eq('community_id', communityId).not('is_active', 'is', false)
       .order('is_prominent', { ascending: false, nullsFirst: false })
       .order('priority', { ascending: false, nullsFirst: false })
@@ -258,7 +258,7 @@ export async function fetchDirectory(db, communityId) {
     q(db.from('business_types').select('id,category_id,name_he')),
     q(db.from('business_categories').select('id,name_he,display_order')),
     q(db.from('professional_categories').select('id,name_he,display_order')),
-    q(db.from('promotions').select('id,title,image_url,end_date,provider_id,image_women_only')
+    q(db.from('promotions').select('id,title,image_url,end_date,provider_id,provider_name,image_women_only,created_at')
       .eq('community_id', communityId).eq('is_active', true).or(`end_date.is.null,end_date.gte."${nowIso}"`)),
   ]);
   return { businesses, professionals, businessTypes, businessCategories, profCategories, promos };
@@ -277,6 +277,11 @@ export function phoneLinks(raw) {
   };
 }
 
+// קטגוריות שתמונותיהן עוברות אישור (app_config.image_moderation_rules) — לא מקודמות ב"חדש בשכונה"
+const QUIET_BIZ_TYPES = new Set(['clothing', 'shoes', 'cosmetics']);
+const QUIET_BIZ_CATS = new Set(['personal_care', 'sports_leisure']);
+const QUIET_PRO_CATS = new Set(['beauty']);
+
 export function shapeDirectory(raw) {
   const promosOf = (id) => (raw.promos || []).filter((p) => p.provider_id === id)
     .map((p) => ({ title: p.title, img: p.image_women_only ? null : p.image_url, until: until(p.end_date) }));
@@ -291,7 +296,7 @@ export function shapeDirectory(raw) {
     .map((p, i) => {
       const subs = String(p.sub_categories || '').split(',').map((s) => s.trim()).filter(Boolean);
       return {
-        i, id: p.id, table: 'professionals', name: p.name, cat: p.main_category || 'other', group: pc[p.main_category]?.name_he || 'אחר',
+        i, id: p.id, table: 'professionals', created: p.created_at || null, quiet: QUIET_PRO_CATS.has(p.main_category), name: p.name, cat: p.main_category || 'other', group: pc[p.main_category]?.name_he || 'אחר',
         field: subs.slice(0, 3).join(' · ') || pc[p.main_category]?.name_he || '',
         // תמונה לנשים בלבד: הכרטיס מוצג, רק בלי התמונה
         img: p.image_women_only ? null : p.image_url,
@@ -309,7 +314,8 @@ export function shapeDirectory(raw) {
     .map((b, i) => {
       const t = bt[b.business_type];
       return {
-        i, id: b.id, table: 'businesses', name: b.name, cat: t?.category_id || 'other', group: bc[t?.category_id]?.name_he || 'שונות', field: t?.name_he || '',
+        i, id: b.id, table: 'businesses', created: b.created_at || null,
+        quiet: QUIET_BIZ_TYPES.has(b.business_type) || QUIET_BIZ_CATS.has(t?.category_id), name: b.name, cat: t?.category_id || 'other', group: bc[t?.category_id]?.name_he || 'שונות', field: t?.name_he || '',
         img: b.image_women_only ? null : b.image_url,
         rec: b.recommend_count || 0,
         where: b.address || '', phone: phoneLinks(b.phone),
@@ -326,6 +332,8 @@ export function shapeDirectory(raw) {
   return {
     pros: { items: pros, groups: groupsOf(pros, proOrder) },
     biz: { items: biz, groups: groupsOf(biz, bizOrder) },
+    promos: (raw.promos || []).map((p) => ({ id: p.id, title: p.title, provider: p.provider_name || '', providerId: p.provider_id,
+      img: p.image_women_only ? null : p.image_url, created: p.created_at || null })),
   };
 }
 
