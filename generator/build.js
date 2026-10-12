@@ -21,7 +21,7 @@ import { minyanimIndexPage, synagoguePageNew } from './lib/minyanim-template.js'
 import { fetchHome, shapeHome, shapePrayers, fetchDirectory, shapeDirectory, fetchListings, shapeListings, fetchMore, shapeMore } from './lib/home-data.js';
 import { homePage, HIDDEN_NAV, navChips } from './lib/home-template.js';
 import { entityPage, detailPage } from './lib/entity-template.js';
-import { fetchDetails, shapeDetails, shabbatTimes } from './lib/details.js';
+import { fetchDetails, shapeDetails, shabbatTimes, nextShabbat } from './lib/details.js';
 import { listPage, promosPage, realEstatePage, boardPage, lessonsPage, hallsPage, hostingPage, eduPage, parksPage, servicesPage, eventsPage, happeningsPage } from './lib/list-template.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -105,7 +105,8 @@ const writeHome = (raw, dirRaw, lsRaw, moreRaw, synSlugs, detRaw) => {
   const home = `/${HOME}/`;
   const vm = shapeHome(raw, { now: new Date(), base: BASE });
   const st = raw.community.latitude ? shabbatTimes(raw.community.latitude, raw.community.longitude) : null;
-  write(path.join(HOME, 'index.html'), homePage(vm, { base: BASE, path: home }));
+  const shabbat = raw.community.latitude ? nextShabbat(raw.community.latitude, raw.community.longitude) : null;
+  write(path.join(HOME, 'index.html'), homePage(vm, { base: BASE, path: home, shabbat }));
   console.log(`  ${HOME}/  · ${vm.promos.length} מבצעים · ${vm.professionals.length} בעלי מקצוע · ` +
     `${vm.businesses.length} עסקים · ${vm.realEstate.length} נכסים · ${vm.prayers.length} מניינים היום`);
 

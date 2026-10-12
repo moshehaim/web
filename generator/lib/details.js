@@ -7,7 +7,7 @@
  * יצירת קשר עם אנשים פרטיים עוברת באפליקציה.
  */
 
-import { Location, Zmanim } from '@hebcal/core';
+import { Location, Zmanim, HebrewCalendar } from '@hebcal/core';
 import { phoneLinks } from './home-data.js';
 
 const q = (p) => p.then(({ data, error }) => { if (error) throw error; return data || []; });
@@ -51,6 +51,34 @@ export function shabbatTimes(lat, lng, now = new Date()) {
   const candle = new Date(new Zmanim(loc, fri, false).sunset().getTime() - 40 * 60000);
   const havdalah = new Zmanim(loc, sat, false).tzeit(8.5);
   return { candle, havdalah, fmt: hm };
+}
+
+/**
+ * השבת / החג הקרוב לעמוד הבית: { title, candle: {t, d, iso}, havdalah: {t, d, iso} }.
+ * מתחלף רק אחרי צאת השבת — כך שהבנייה השעתית לא משנה את העמוד בלי סיבה.
+ */
+export function nextShabbat(lat, lng, now = new Date()) {
+  const loc = new Location(lat, lng, true, 'Asia/Jerusalem', 'Jerusalem', 'IL');
+  const end = new Date(now); end.setDate(end.getDate() + 9);
+  const ev = HebrewCalendar.calendar({ start: new Date(now.getTime() - 2 * 86400000), end, location: loc,
+    candlelighting: true, candleLightingMins: 40, havdalahDeg: 8.5, sedrot: true, il: true });
+  const hi = ev.findIndex((e) => e.getDesc() === 'Havdalah' && e.eventTime > now);
+  if (hi < 0) return null;
+  let ci = hi; while (ci >= 0 && ev[ci].getDesc() !== 'Candle lighting') ci--;
+  if (ci < 0) return null;
+  const strip = (x) => x.replace(/־/g, ' ').trim();
+  const mid = ev.slice(ci + 1, hi);
+  const par = mid.find((e) => e.getDesc().startsWith('Parashat'));
+  const hol = mid.find((e) => !e.getDesc().startsWith('Parashat') && !/Candle|Havdalah|School|Memorial|Rosh Chodesh|Shabbat Mevarchim/.test(e.getDesc()));
+  const title = par ? `שבת ${strip(par.render('he-x-NoNikud'))}` : hol ? strip(hol.render('he-x-NoNikud')) : 'שבת';
+  const W = ['ראשון', 'שני', 'שלישי', 'רביעי', 'חמישי', 'שישי', 'שבת'];
+  const at = (e) => {
+    const d = e.eventTime, o = { timeZone: 'Asia/Jerusalem' };
+    const wd = W[new Date(d.toLocaleString('en-US', o)).getDay()];
+    return { t: d.toLocaleTimeString('en-GB', { ...o, hour: '2-digit', minute: '2-digit' }),
+      d: wd === 'שבת' ? 'מוצאי שבת' : `יום ${wd}`, iso: d.toLocaleDateString('en-CA', o) };
+  };
+  return { title: hol && par ? `${title} · ${strip(hol.render('he-x-NoNikud'))}` : title, chag: !par, candle: at(ev[ci]), havdalah: at(ev[hi]) };
 }
 
 const PROPERTY = { apartment: 'דירה', gardenApartment: 'דירת גן', penthouse: 'פנטהאוז', duplex: 'דופלקס', cottage: 'קוטג׳',
