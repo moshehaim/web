@@ -44,7 +44,9 @@ button{font:inherit}
 .hdr-mid{display:flex;align-items:center;gap:12px;min-width:0;flex:1}
 @media (min-width:1440px){.hdr-row{display:grid;grid-template-columns:minmax(420px,1fr) minmax(0,680px) minmax(420px,1fr);max-width:1600px;gap:20px}.hdr-mid{justify-content:center}.hdr-actions{justify-self:end;flex-wrap:nowrap}}
 @media (max-width:1100px) and (min-width:761px){.hdr-actions .btn-line{display:none}}
-.logo img{width:52px;height:52px}
+.logo{display:inline-flex;align-items:center;gap:12px;text-decoration:none;color:var(--navy)}.logo img{width:52px;height:52px;flex:none}
+.brand b{display:block;font-size:24px;font-weight:800;line-height:1.1}.brand small{display:block;font-size:13px;font-weight:700;color:var(--muted);white-space:nowrap}
+@media (max-width:1100px){.brand small{display:none}}@media (max-width:760px){.brand{display:none}}
 .hood{position:relative}
 .hood-btn{display:flex;align-items:center;gap:10px;height:52px;padding:0 12px 0 10px;border-radius:14px;border:1.5px solid #DCE5F5;background:#F5F8FF;cursor:pointer;color:var(--navy)}
 .hood-btn small{display:block;font-size:12px;font-weight:700;color:var(--muted);text-align:right}
@@ -298,7 +300,7 @@ footer .c{font-size:13px;color:#8A94A6}
 
 <header class="hdr">
 <div class="wrap hdr-row">
-<a class="logo" href="/" aria-label="שכונה — דף הבית"><img src="/app_icon.png" alt="שכונה" width="52" height="52"></a>
+<a class="logo" href="/" aria-label="שכונה — דף הבית"><img src="/app_icon.png" alt="" width="52" height="52"><span class="brand"><b>שכונה</b><small>הכל בשכונה, במקום אחד</small></span></a>
 <div class="hdr-mid">
 <div class="hood">
 <button type="button" class="hood-btn" id="hood-btn" aria-haspopup="dialog" aria-expanded="false" aria-controls="hood-pop">
