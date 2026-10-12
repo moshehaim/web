@@ -173,7 +173,8 @@ a.hood-item:hover{background:#F5F8FF}
 
 .pro .media{aspect-ratio:4/3;background:#DCE5F5}
 .pro .field{font-size:14px;font-weight:700;color:var(--accent)}
-.rec{display:inline-flex;align-items:center;gap:4px;font-size:13px;font-weight:800;color:#15803D}
+/* המלצות: אותו אדום של הלב באפליקציה (RecommendHeartBadge.heartColor) */
+.rec{align-self:flex-start;display:inline-flex;align-items:center;gap:4px;font-size:13px;font-weight:800;background:#E24B4A;color:#fff;border-radius:999px;padding:2px 9px 2px 10px}
 
 .mq-wrap{overflow:hidden;display:flex;flex-direction:column;gap:14px;padding-block:6px}
 .mq{display:flex;gap:14px;width:max-content;animation:mq 60s linear infinite}
@@ -295,7 +296,7 @@ background:linear-gradient(to top,var(--t2),transparent)}
 .dcard[hidden]{display:none}
 .dmedia{position:relative;aspect-ratio:4/3;max-width:100%;background:#DCE5F5;overflow:hidden;display:flex;align-items:center;justify-content:center}
 .dmedia img{width:100%;height:100%;object-fit:cover}
-.drec{position:absolute;top:10px;right:10px;display:inline-flex;align-items:center;gap:4px;font-size:13px;font-weight:800;background:#fff;color:#15803D;border-radius:8px;padding:3px 9px}
+.drec{position:absolute;top:10px;right:10px;display:inline-flex;align-items:center;gap:4px;font-size:13px;font-weight:800;background:#E24B4A;color:#fff;border-radius:999px;padding:3px 10px;box-shadow:0 2px 8px rgba(0,0,0,.22)}
 .dbody{padding:14px 16px 4px;display:flex;flex-direction:column;gap:4px;flex:1}
 .dbody h3{margin:0;font-size:19px;font-weight:800;line-height:1.25}
 .dbody .f{font-size:14px;font-weight:700;color:var(--accent)}
@@ -325,7 +326,7 @@ background:linear-gradient(to top,var(--t2),transparent)}
 .dcard{display:grid;grid-template-columns:96px minmax(0,1fr);grid-template-areas:"m b" "a a"}
 .dmedia{grid-area:m;aspect-ratio:1/1;margin:14px 14px 0 0;border-radius:14px;width:82px}
 .dmedia.noimg svg{width:36px;height:36px}
-.drec{position:static;grid-area:auto}
+.drec{position:static;grid-area:auto;align-self:flex-start;box-shadow:none}
 .dbody{grid-area:b;padding:14px 12px 0 16px}
 .dbody h3{font-size:17px}
 .dact{grid-area:a;padding:12px 14px 14px}
