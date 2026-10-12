@@ -340,7 +340,7 @@ background:linear-gradient(to top,var(--t2),transparent)}
 </div>
 </div>
 <nav class="chips" aria-label="תחומים"><div class="wrap">
-<a href="/har-homa/">דף השכונה</a><a href="/minyanim-har-homa/">מניינים</a><a href="/app/">שיעורים</a><a href="/har-homa/biz/">עסקים</a><a href="/har-homa/pros/">בעלי מקצוע</a><a href="/har-homa/promos/">מבצעים</a><a href="/har-homa/promos/#קופונים">קופונים</a><a href="/har-homa/board/#gmach">גמ״חים</a><a href="/har-homa/board/#jobs">דרושים</a><a href="/har-homa/board/#second">יד שנייה</a><a href="/har-homa/realestate/">נדל״ן</a><a href="/har-homa/board/#vol">התנדבות</a><a href="/har-homa/board/#lost">אבידות ומציאות</a><a href="/app/">אולמות</a><a href="/app/">אירוח</a><a href="/app/">הכל לאירוע</a><a href="/app/">מוסדות חינוך</a><a href="/app/">גנים ופארקים</a><a href="/app/">אירועים</a>
+<a href="/har-homa/">דף השכונה</a><a href="/minyanim-har-homa/">מניינים</a><a href="/har-homa/lessons/">שיעורים</a><a href="/har-homa/biz/">עסקים</a><a href="/har-homa/pros/">בעלי מקצוע</a><a href="/har-homa/promos/">מבצעים</a><a href="/har-homa/promos/#קופונים">קופונים</a><a href="/har-homa/board/#gmach">גמ״חים</a><a href="/har-homa/board/#jobs">דרושים</a><a href="/har-homa/board/#second">יד שנייה</a><a href="/har-homa/realestate/">נדל״ן</a><a href="/har-homa/board/#vol">התנדבות</a><a href="/har-homa/board/#lost">אבידות ומציאות</a><a href="/har-homa/halls/">אולמות</a><a href="/har-homa/hosting/">אירוח</a><a href="/har-homa/events/">הכל לאירוע</a><a href="/har-homa/education/">מוסדות חינוך</a><a href="/har-homa/parks/">גנים ופארקים</a><a href="/har-homa/services/">שירותים ובריאות</a><a href="/app/">אירועים</a>
 </div></nav></header>
 
 
@@ -702,6 +702,8 @@ document.addEventListener('click',function(e){
 });
 })();</script>
 <script>(function(){
+/* תחום נוכחי בשורת התחומים — לגלול אליו שיהיה גלוי */
+var on=document.querySelector('.chips a.on');if(on&&on.scrollIntoView){try{on.scrollIntoView({block:'nearest',inline:'center'});}catch(_){}}
 /* בורר שכונה */
 var hb=document.getElementById('hood-btn'),hp=document.getElementById('hood-pop'),hq=document.getElementById('hood-q');
 function setHood(o){hp.hidden=!o;hb.setAttribute('aria-expanded',o);if(o)hq.focus();}
