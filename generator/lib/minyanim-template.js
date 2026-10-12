@@ -3,7 +3,7 @@
  * אותה מעטפת כמו עמוד השכונה (ראש, ניווט, תחתית), אותם צבעים.
  */
 
-import { pageHead, siteHeader, siteFooter, HOOD_JS, esc, svg } from './home-template.js';
+import { pageHead, siteHeader, siteFooter, HOOD_JS, esc, svg, navChips, APP } from './home-template.js';
 import { sortPrayers, formatPrayerTime, formatSelectedDays, NUSACH } from './prayers.js';
 
 const SECTION = '/minyanim-har-homa/';
@@ -83,11 +83,7 @@ const CSS = `
 .app-cta b{display:block;font-size:20px;color:var(--navy)}.app-cta span{font-size:15px;color:#3B4860}
 `;
 
-function nav(home) {
-  return `<nav class="chips" aria-label="תחומים"><div class="wrap">
-<a href="${home}">דף השכונה</a><a href="${SECTION}" aria-current="page" style="background:var(--brand);color:#fff">תפילות</a><a href="${home}pros/">בעלי מקצוע</a><a href="${home}biz/">עסקים</a><a href="${home}promos/">מבצעים</a><a href="${home}realestate/">נדל״ן</a><a href="${home}board/">לוח השכונה</a>
-</div></nav>`;
-}
+const nav = (home) => navChips(home, 'minyanim');
 
 const appCta = `<div class="app-cta"><div style="min-width:0;flex:1 1 300px"><b>המניין הקרוב אליך, עכשיו</b><span>באפליקציה: כל המניינים לפי מרחק ולפי השעה, עם התראות על שינויים.</span></div><a class="pill btn-dark" href="/b/">להורדת האפליקציה</a></div>`;
 
@@ -130,7 +126,7 @@ function draw(){var n=now(),m=n.getHours()*60+n.getMinutes(),d=n.getDay();
     more.hidden=!list.length;more.textContent='כל המניינים של היום ('+type+')';
     box.innerHTML=t2.length?'<p class="nempty">אין עוד '+esc(type)+' היום. מחר:</p>'+t2.map(function(p){return row(p,'מחר',false);}).join(''):'<p class="nempty">אין עוד '+esc(type)+' היום.</p>';return;}
   more.hidden=up.length<=8&&list.length===up.length;more.textContent='כל המניינים של היום ('+type+')';
-  box.innerHTML=up.slice(0,8).map(function(p){var x=p.m-m;return row(p,x<=60?'בעוד '+x+' דק׳':'',false);}).join('');}
+  box.innerHTML=up.slice(0,8).map(function(p){var x=p.m-m;return row(p,x===0?'עכשיו':x<=60?'בעוד '+x+' דק׳':'',false);}).join('');}
 function pick(t){type=t;all=false;tabs.forEach(function(b){b.setAttribute('aria-selected',b.getAttribute('data-t')===t);});draw();}
 tabs.forEach(function(b){b.addEventListener('click',function(){pick(b.getAttribute('data-t'));});});
 more.addEventListener('click',function(){all=true;draw();});
@@ -243,7 +239,7 @@ ${syn.latitude ? `<div class="info"><h2>הגעה</h2>${syn.address ? `<p>${esc(s
 </div></div>` : ''}
 ${lessons.length ? `<div class="info"><h2>שיעורי תורה</h2>${lessons.map((l) => `<div class="lesson"><b>${esc(l.topic || 'שיעור')}</b><span>${esc([l.teacher, l.day && `יום ${l.day}`, l.start_time].filter(Boolean).join(' · '))}</span></div>`).join('')}</div>` : ''}
 ${syn.study_during_day_details ? `<div class="info"><h2>לימוד ביום</h2><p>${esc(syn.study_during_day_details)}</p></div>` : ''}
-<div class="info"><h2>שינוי בזמנים?</h2><p>הזמנים נמסרו על ידי מתפללים ועשויים להשתנות. כל משתמש רשום יכול לעדכן אותם באפליקציה.</p></div>
+<div class="info"><h2>שינוי בזמנים?</h2><p>הזמנים נמסרו על ידי מתפללים ועשויים להשתנות. כל משתמש רשום יכול לעדכן אותם.</p><div class="btns"><a class="b-map" href="${APP}">${svg('M4 20h4L19 9l-4-4L4 16zM14 6l4 4', 17, 'currentColor', 2)}עדכון זמנים</a></div></div>
 </aside>
 </div>
 
