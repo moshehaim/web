@@ -34,6 +34,12 @@ const CAT_ICON = {
   judaism: ['M4 5h7a2 2 0 0 1 2 2v13a2 2 0 0 0-2-2H4zM20 5h-5a2 2 0 0 0-2 2v13a2 2 0 0 1 2-2h5z', 'blue'],
   health_parenting: ['M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z', 'rose'],
   other: ['M3 8l9-5 9 5v8l-9 5-9-5zM3 8l9 5 9-5M12 13v8', 'blue'],
+  hall: ['M4 20h16M6 20V8h12v12M9 8V5h6v3M10 20v-5h4v5', 'amber'],
+  hosting: ['M3 18V8M3 14h18v4M21 14v-3a3 3 0 0 0-3-3h-7v6', 'amber'],
+  edu: ['M2 9l10-5 10 5-10 5zM6 11v5c3 2 9 2 12 0v-5', 'teal'],
+  park: ['M12 3l6 9H6zM12 8l7 9H5zM12 17v4', 'green'],
+  service: ['M4 21V5h10v16M14 9h6v12M7 9h4M7 13h4M7 17h4', 'teal'],
+  health: ['M9 3h6v6h6v6h-6v6H9v-6H3V9h6z', 'rose'],
 };
 
 const CSS = `
@@ -303,5 +309,88 @@ ${x.img ? `<span class="bthumb"><img src="${esc(x.img)}" alt="${esc(x.t)}" loadi
     placeholder: 'עגלה, סייעת, שולחן…',
     cards: d.items.map(row).join('\n'),
     join: '<b>יש לכם מה לפרסם? <span class="em">ללוח השכונה.</span></b><span>דרושים, יד שנייה, גמ״ח, התנדבות או אבידה — דרך האפליקציה.</span>',
+  });
+}
+
+/* ── תחומים נוספים ─────────────────────────────────────────────── */
+
+const dirCards = (items) => items.map((p) => card(p)).join('\n');
+
+export function lessonsPage(vm, m, { base, home }) {
+  const d = m.lessons;
+  const row = (x) => `<a class="dcard brow lift" href="${x.href || APP}" data-group="${esc(x.group)}" data-text="${esc([x.t, x.sub, x.group, x.b].join(' '))}">
+<span class="dbody"><span class="bgrp">${esc(x.group)}</span><h3>${esc(x.t)}</h3><span class="w">${esc(x.sub)}</span></span>
+<span class="bside">${x.b ? `<span class="bbadge2">${esc(x.b)}</span>` : ''}<span class="bgo" aria-hidden="true">←</span></span>
+</a>`;
+  return collectionPage(vm, {
+    base, home, slug: 'lessons', label: 'שיעורי תורה', groups: d.groups, gridClass: 'brows',
+    title: `שיעורי תורה ב${where(vm)} — שכונה`,
+    desc: `שיעורי תורה בבתי הכנסת ב${where(vm)}, ${vm.city} — לפי יום ושעה, עם שם המעביר ובית הכנסת.`,
+    placeholder: 'נושא, שם הרב, בית כנסת…', cards: d.items.map(row).join('\n'), emptyText: 'אין כרגע שיעורים',
+    join: '<b>מעבירים שיעור? <span class="em">הוסיפו אותו.</span></b><span>כל משתמש רשום יכול להוסיף ולעדכן שיעורים באפליקציה.</span>',
+    joinCta: 'להוספת שיעור',
+  });
+}
+
+export function hallsPage(vm, m, { base, home, api }) {
+  return collectionPage(vm, {
+    base, home, api, slug: 'halls', label: 'אולמות', groups: [],
+    title: `אולמות ב${where(vm)} — שכונה`, desc: `אולמות לאירועים ולשמחות ב${where(vm)}, ${vm.city} — קיבולת, קייטרינג ונגישות.`,
+    placeholder: 'שם אולם או רחוב…', cards: dirCards(m.halls.items), emptyText: 'אין כרגע אולמות',
+    join: '<b>יש לכם אולם? <span class="em">הוסיפו אותו.</span></b><span>פרופיל עם תמונות, קיבולת ויצירת קשר.</span>', joinCta: 'להוספת אולם',
+  });
+}
+
+export function hostingPage(vm, m, { base, home }) {
+  const d = m.hosting;
+  return collectionPage(vm, {
+    base, home, slug: 'hosting', label: 'אירוח', groups: d.groups,
+    title: `אירוח ב${where(vm)} — שכונה`, desc: `מקומות אירוח לשבת ולאירועים ב${where(vm)}, ${vm.city}.`,
+    placeholder: 'שם או רחוב…', emptyText: 'אין כרגע מקומות אירוח',
+    cards: d.items.map((h) => mediaCard(h, { lines: h.lines, cta: 'לפרטים ויצירת קשר באפליקציה' })).join('\n'),
+    join: '<b>מארחים בשכונה? <span class="em">הוסיפו את המקום.</span></b><span>מודעה עם תמונות שמגיעה לשכנים ולאורחים שלהם.</span>', joinCta: 'להוספת מקום אירוח',
+  });
+}
+
+export function eduPage(vm, m, { base, home, api }) {
+  const d = m.edu;
+  return collectionPage(vm, {
+    base, home, api, slug: 'education', label: 'מוסדות חינוך', groups: d.groups,
+    title: `מוסדות חינוך ב${where(vm)} — גנים, מעונות ובתי ספר | שכונה`,
+    desc: `גני ילדים, מעונות, משפחתונים, בתי ספר וישיבות ב${where(vm)}, ${vm.city}.`,
+    placeholder: 'שם גן, בית ספר או רחוב…', cards: dirCards(d.items), emptyText: 'אין כרגע מוסדות',
+    join: '<b>מנהלים מוסד? <span class="em">עדכנו את הפרטים.</span></b><span>טלפון, גילאים ותמונה — דרך האפליקציה.</span>', joinCta: 'לעדכון פרטים',
+  });
+}
+
+export function parksPage(vm, m, { base, home, api }) {
+  const d = m.parks;
+  return collectionPage(vm, {
+    base, home, api, slug: 'parks', label: 'גנים ופארקים', groups: d.groups,
+    title: `גנים ופארקים ב${where(vm)} — שכונה`, desc: `גני משחקים, פארקים ומתחמי כושר ב${where(vm)}, ${vm.city} — עם ניווט.`,
+    placeholder: 'שם גן או רחוב…', cards: dirCards(d.items), emptyText: 'אין כרגע גנים',
+    join: '<b>מכירים גן שחסר? <span class="em">הוסיפו אותו.</span></b><span>כל משתמש רשום יכול להוסיף גן ותמונה באפליקציה.</span>', joinCta: 'להוספת גן',
+  });
+}
+
+export function servicesPage(vm, m, { base, home, api }) {
+  const d = m.services;
+  return collectionPage(vm, {
+    base, home, api, slug: 'services', label: 'שירותים ובריאות', groups: d.groups,
+    title: `שירותים ובריאות ב${where(vm)} — שכונה`,
+    desc: `מרפאות, בתי מרקחת, טיפות חלב, מקוואות, דואר, כספומטים ודפיברילטורים ב${where(vm)}, ${vm.city}.`,
+    placeholder: 'מרפאה, דואר, כספומט…', cards: dirCards(d.items), emptyText: 'אין כרגע שירותים',
+    join: '<b>חסר שירות ברשימה? <span class="em">הוסיפו אותו.</span></b><span>כל משתמש רשום יכול להוסיף באפליקציה.</span>', joinCta: 'להוספה',
+  });
+}
+
+export function eventsPage(vm, m, { base, home, api }) {
+  const d = m.events;
+  return collectionPage(vm, {
+    base, home, api, slug: 'events', label: 'הכל לאירוע', groups: d.groups,
+    title: `הכל לאירוע ב${where(vm)} — אולמות, ציוד וצלמים | שכונה`,
+    desc: `אולמות, ציוד לאירועים, צלמים, הפעלות וקייטרינג ב${where(vm)}, ${vm.city}.`,
+    placeholder: 'אולם, צלם, ציוד…', cards: dirCards(d.items), emptyText: 'אין כרגע ספקים',
+    join: '<b>נותנים שירות לאירועים? <span class="em">תופיעו כאן.</span></b><span>פרופיל עם תמונה, טלפון ו-WhatsApp.</span>', joinCta: 'להרשמת עסק',
   });
 }
