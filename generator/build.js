@@ -20,7 +20,8 @@ import { sitemap } from './lib/template.js';
 import { minyanimIndexPage, synagoguePageNew } from './lib/minyanim-template.js';
 import { fetchHome, shapeHome, shapePrayers, fetchDirectory, shapeDirectory, fetchListings, shapeListings, fetchMore, shapeMore } from './lib/home-data.js';
 import { homePage, HIDDEN_NAV } from './lib/home-template.js';
-import { entityPage } from './lib/entity-template.js';
+import { entityPage, detailPage } from './lib/entity-template.js';
+import { fetchDetails, shapeDetails, shabbatTimes } from './lib/details.js';
 import { listPage, promosPage, realEstatePage, boardPage, lessonsPage, hallsPage, hostingPage, eduPage, parksPage, servicesPage, eventsPage, happeningsPage } from './lib/list-template.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -80,41 +81,86 @@ const API = SUPABASE_URL && ANON_KEY ? { url: SUPABASE_URL, key: ANON_KEY } : nu
 
 const EXTRA_URLS = [];
 
-const writeHome = (raw, dirRaw, lsRaw, moreRaw, synSlugs) => {
+/** מוחק עמודים של ישויות שכבר לא קיימות (מבצע שפג, מודעה שירדה) — שומר רק את מה שנכתב עכשיו */
+function prune(dir, keep) {
+  if (DRY || !fs.existsSync(dir)) return;
+  for (const name of fs.readdirSync(dir)) {
+    const full = path.join(dir, name);
+    if (fs.statSync(full).isDirectory() && !keep.has(name)) fs.rmSync(full, { recursive: true, force: true });
+  }
+}
+
+const writeHome = (raw, dirRaw, lsRaw, moreRaw, synSlugs, detRaw) => {
   // "אירועים" מופיע בשורת התחומים רק כשיש אירועים קרובים
   if (moreRaw?.events?.length) HIDDEN_NAV.delete('happenings'); else HIDDEN_NAV.add('happenings');
+  const home = `/${HOME}/`;
   const vm = shapeHome(raw, { now: new Date(), base: BASE });
-  write(path.join(HOME, 'index.html'), homePage(vm, { base: BASE, path: `/${HOME}/` }));
+  const st = raw.community.latitude ? shabbatTimes(raw.community.latitude, raw.community.longitude) : null;
+  write(path.join(HOME, 'index.html'), homePage(vm, { base: BASE, path: home }));
   console.log(`  ${HOME}/  · ${vm.promos.length} מבצעים · ${vm.professionals.length} בעלי מקצוע · ` +
     `${vm.businesses.length} עסקים · ${vm.realEstate.length} נכסים · ${vm.prayers.length} מניינים היום`);
+
+  // 1. עסקים ובעלי מקצוע — slug יציב לכל ישות (נשמר ב-slugs.json)
+  const hrefById = {};
+  const dir = dirRaw ? shapeDirectory(dirRaw) : null;
+  if (dir) for (const kind of ['pros', 'biz']) {
+    const store = new SlugStore(path.join(OUT, HOME, kind, 'slugs.json'));
+    const keep = new Set();
+    for (const e of dir[kind].items) {
+      e.slug = store.get(e.id, e.name); keep.add(e.slug);
+      e.href = hrefById[e.id] = `${home}${kind}/${encodeURIComponent(e.slug)}/`;
+      write(path.join(HOME, kind, e.slug, 'index.html'), entityPage(vm, e, { base: BASE, home, kind, api: API, st }));
+      EXTRA_URLS.push({ loc: `${BASE}${e.href}`, freq: 'weekly', pri: '0.6' });
+    }
+    prune(path.join(OUT, HOME, kind), keep);
+    if (!DRY) store.save();
+  }
+
+  // 2. כל שאר הרכיבים — עמוד מלא לכל אחד
+  if (detRaw) {
+    const all = shapeDetails(detRaw, raw.community);
+    const bySeg = {};
+    for (const d of all) (bySeg[d.seg] ||= []).push(d);
+    for (const [seg, items] of Object.entries(bySeg)) {
+      const store = new SlugStore(path.join(OUT, HOME, seg, 'slugs.json'));
+      const keep = new Set();
+      for (const d of items) {
+        d.slug = store.get(d.id, d.name); keep.add(d.slug);
+        d.href = hrefById[d.id] = `${home}${seg}/${encodeURIComponent(d.slug)}/`;
+      }
+      for (const d of items) {
+        const e = { ...d, field: d.kicker, group: d.kicker, detail: { desc: d.desc, facts: d.facts, tags: [], sections: d.sections,
+          schedule: d.schedule, lat: d.lat, lng: d.lng, promos: [] }, providerHref: d.providerId ? hrefById[d.providerId] : null };
+        write(path.join(HOME, seg, d.slug, 'index.html'), detailPage(vm, e, { base: BASE, home, kind: seg, api: API, st,
+          listLabel: d.list, ldType: d.ld, listHref: d.boardKey ? `${home}board/#${d.boardKey}` : `${home}${seg}/` }));
+        EXTRA_URLS.push({ loc: `${BASE}${d.href}`, freq: 'weekly', pri: '0.5' });
+      }
+      prune(path.join(OUT, HOME, seg), keep);
+      if (!DRY) store.save();
+    }
+    console.log(`  עמודים מלאים · ${all.length}`);
+  }
+  const link = (items) => { for (const x of items) if (!x.href && hrefById[x.id]) x.href = hrefById[x.id]; };
+
+  // 3. רשימות — עכשיו, כשלכל פריט יש קישור לעמוד המלא
   if (lsRaw) {
     const ls = shapeListings(lsRaw, raw.community);
-    const o = { base: BASE, home: `/${HOME}/` };
+    [ls.promos, ls.realEstate, ls.board].forEach((x) => link(x.items));
+    const o = { base: BASE, home };
     write(path.join(HOME, 'promos', 'index.html'), promosPage(vm, ls, o));
     write(path.join(HOME, 'realestate', 'index.html'), realEstatePage(vm, ls, o));
     write(path.join(HOME, 'board', 'index.html'), boardPage(vm, ls, o));
     console.log(`  promos · ${ls.promos.items.length}   realestate · ${ls.realEstate.items.length}   board · ${ls.board.items.length}`);
   }
-  if (!dirRaw) return vm;
-  const dir = shapeDirectory(dirRaw);
-  // עמוד מלא לכל עסק ובעל מקצוע — slug יציב לכל ישות (נשמר ב-slugs.json)
+  if (!dir) return vm;
   for (const kind of ['pros', 'biz']) {
-    const store = new SlugStore(path.join(OUT, HOME, kind, 'slugs.json'));
-    for (const e of dir[kind].items) {
-      e.slug = store.get(e.id, e.name);
-      e.href = `/${HOME}/${kind}/${encodeURIComponent(e.slug)}/`;
-      write(path.join(HOME, kind, e.slug, 'index.html'), entityPage(vm, e, { base: BASE, home: `/${HOME}/`, kind, api: API }));
-      EXTRA_URLS.push({ loc: `${BASE}${e.href}`, freq: 'weekly', pri: '0.6' });
-    }
-    if (!DRY) store.save();
-  }
-  for (const kind of ['pros', 'biz']) {
-    write(path.join(HOME, kind, 'index.html'), listPage(vm, dir, kind, { base: BASE, home: `/${HOME}/`, api: API }));
+    write(path.join(HOME, kind, 'index.html'), listPage(vm, dir, kind, { base: BASE, home, api: API }));
   }
   console.log(`  ${HOME}/pros/ · ${dir.pros.items.length}   ${HOME}/biz/ · ${dir.biz.items.length}`);
   if (moreRaw) {
     const m = shapeMore(moreRaw, dir, synSlugs || {});
-    const o = { base: BASE, home: `/${HOME}/`, api: API };
+    [m.halls, m.hosting, m.edu, m.parks, m.services, m.events].forEach((x) => link(x.items));
+    const o = { base: BASE, home, api: API };
     const pages = { lessons: lessonsPage, halls: hallsPage, hosting: hostingPage, education: eduPage,
       parks: parksPage, services: servicesPage, events: eventsPage };
     if (m.happenings.items.length) pages.happenings = happeningsPage;
@@ -165,7 +211,7 @@ const fallbackVm = (c) => ({ name: c.neighborhood, alias: c.secondaryname || '',
 async function main() {
   if (FIXTURE) {
     const fx = JSON.parse(fs.readFileSync(FIXTURE, 'utf8'));
-    const vm = writeHome(fx, fx.directory, fx.listings, fx.more, {});
+    const vm = writeHome(fx, fx.directory, fx.listings, fx.more, {}, fx.details);
     if (fx.minyanim) {
       writeMinyanim({ vm, community: fx.community, ...fx.minyanim,
         slugs: new SlugStore(path.join(OUT, SECTION, 'slugs.json')), urls: [] });
@@ -216,11 +262,12 @@ async function main() {
   // עמוד הבית והרשימות — כשל בהם לא יעצור את עמודי המניינים
   let vm = fallbackVm(community);
   try {
-    const [home, dirRaw, lsRaw, moreRaw] = await Promise.all([
-      fetchHome(db, COMMUNITY_ID), fetchDirectory(db, COMMUNITY_ID), fetchListings(db, COMMUNITY_ID), fetchMore(db, COMMUNITY_ID)]);
+    const [home, dirRaw, lsRaw, moreRaw, detRaw] = await Promise.all([
+      fetchHome(db, COMMUNITY_ID), fetchDirectory(db, COMMUNITY_ID), fetchListings(db, COMMUNITY_ID), fetchMore(db, COMMUNITY_ID),
+      fetchDetails(db, COMMUNITY_ID)]);
     // slugs של בתי הכנסת — לקישור משיעור לעמוד בית הכנסת
     const synSlugs = Object.fromEntries(syns.map((s) => [s.name, slugs.get(s.id, s.name)]));
-    vm = writeHome(home, dirRaw, lsRaw, moreRaw, synSlugs);
+    vm = writeHome(home, dirRaw, lsRaw, moreRaw, synSlugs, detRaw);
   }
   catch (e) { console.error(`  ⚠ ${HOME}/ לא נבנה:`, e.message || e); process.exitCode = 0; }
 

@@ -273,8 +273,8 @@ function mediaCard(x, { tag, price, lines, cta }) {
   const text = [x.title, ...lines, x.group].join(' ');
   return `<article class="dcard lift" data-group="${esc(x.group)}" data-text="${esc(text)}">
 <div class="dmedia${x.img ? '' : ` noimg t-${tone[1]}`}">${media}${tag ? `<span class="dtag">${esc(tag)}</span>` : ''}${price ? `<span class="dprice">${esc(price)}</span>` : ''}</div>
-<div class="dbody"><h3>${esc(x.title)}</h3>${price ? `<span class="pr">${esc(price)}</span>` : ''}${lines.filter(Boolean).map((l, i) => `<span class="${i ? 'w' : 'f'}">${esc(l)}</span>`).join('')}</div>
-<div class="dact"><a class="a-app" href="${APP}">${esc(cta)}</a></div>
+<div class="dbody"><h3>${x.href ? `<a class="stretch" href="${esc(x.href)}">${esc(x.title)}</a>` : esc(x.title)}</h3>${price ? `<span class="pr">${esc(price)}</span>` : ''}${lines.filter(Boolean).map((l, i) => `<span class="${i ? 'w' : 'f'}">${esc(l)}</span>`).join('')}</div>
+<div class="dact"><a class="a-app" href="${esc(x.href || APP)}">${esc(x.href ? 'לפרטים' : cta)}</a></div>
 </article>`;
 }
 
@@ -308,7 +308,7 @@ export function realEstatePage(vm, ls, { base, home }) {
 
 export function boardPage(vm, ls, { base, home }) {
   const d = ls.board;
-  const row = (x) => `<a class="dcard brow lift" href="${APP}" data-group="${esc(x.group)}" data-text="${esc([x.t, x.sub, x.group].join(' '))}">
+  const row = (x) => `<a class="dcard brow lift" href="${esc(x.href || APP)}" data-group="${esc(x.group)}" data-text="${esc([x.t, x.sub, x.group].join(' '))}">
 ${x.img ? `<span class="bthumb"><img src="${esc(x.img)}" alt="${esc(x.t)}" loading="lazy" decoding="async"></span>` : ''}<span class="dbody"><span class="bgrp">${esc(x.group)}</span><h3>${esc(x.t)}</h3><span class="w">${esc(x.sub)}</span></span>
 <span class="bside">${x.b ? `<span class="bbadge2">${esc(x.b)}</span>` : ''}<span class="bgo" aria-hidden="true">←</span></span>
 </a>`;
