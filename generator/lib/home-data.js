@@ -37,7 +37,7 @@ export async function fetchHome(db, communityId) {
   ] = await Promise.all([
     db.from('community').select('id,city,neighborhood,secondaryname,latitude,longitude')
       .eq('id', communityId).single().then(({ data, error }) => { if (error) throw error; return data; }),
-    q(db.from('community').select('id,neighborhood,is_active').order('neighborhood')),
+    q(db.from('community').select('id,neighborhood,secondaryname,neighborhoods,is_active').order('neighborhood')),
     q(db.from('sub_neighborhoods').select('label,sort_order,is_active').eq('community_id', communityId).order('sort_order')),
     q(db.from('business_types').select('id,name_he')),
     q(db.from('professional_categories').select('id,name_he')),
@@ -217,7 +217,8 @@ export function shapeHome(raw, { now = new Date(), base = '' } = {}) {
 
   const active = new Set(raw.communities.filter((c) => c.is_active).map((c) => c.id));
   const hoods = raw.communities
-    .map((c) => ({ name: c.neighborhood, active: active.has(c.id), current: c.id === community.id }))
+    .map((c) => ({ name: c.neighborhood, active: active.has(c.id), current: c.id === community.id,
+      also: [c.secondaryname, ...(Array.isArray(c.neighborhoods) ? c.neighborhoods : [])].filter((x) => x && typeof x === 'string').join(' ') }))
     .sort((a, b) => (b.current - a.current) || (b.active - a.active) || a.name.localeCompare(b.name, 'he'));
 
   return {

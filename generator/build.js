@@ -14,12 +14,12 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { createClient } from '@supabase/supabase-js';
 import { SlugStore } from './lib/slugs.js';
-import { computeZmanim, sortPrayers, formatPrayerTime } from './lib/prayers.js';
+import { computeZmanim, sortPrayers, formatPrayerTime, NUSACH } from './lib/prayers.js';
 import { isPrayerInSeason } from './lib/season.js';
 import { sitemap } from './lib/template.js';
 import { minyanimIndexPage, synagoguePageNew } from './lib/minyanim-template.js';
 import { fetchHome, shapeHome, shapePrayers, fetchDirectory, shapeDirectory, fetchListings, shapeListings, fetchMore, shapeMore } from './lib/home-data.js';
-import { homePage, HIDDEN_NAV } from './lib/home-template.js';
+import { homePage, HIDDEN_NAV, navChips } from './lib/home-template.js';
 import { entityPage, detailPage } from './lib/entity-template.js';
 import { fetchDetails, shapeDetails, shabbatTimes } from './lib/details.js';
 import { listPage, promosPage, realEstatePage, boardPage, lessonsPage, hallsPage, hostingPage, eduPage, parksPage, servicesPage, eventsPage, happeningsPage } from './lib/list-template.js';
@@ -80,6 +80,15 @@ const write = (rel, content) => {
 const API = SUPABASE_URL && ANON_KEY ? { url: SUPABASE_URL, key: ANON_KEY } : null;
 
 const EXTRA_URLS = [];
+/** אינדקס החיפוש שבראש העמוד: {n שם, t סוג, s תיאור, h קישור, o סדר} → har-homa/search.json */
+const SEARCH = [];
+const addSearch = (n, t, s, h, o) => { if (n && h) SEARCH.push({ n: String(n).trim(), t, s: (s || '').trim() || undefined, h, o }); };
+const writeSearch = () => {
+  const seen = new Set();
+  const out = SEARCH.filter((x) => !seen.has(x.h) && seen.add(x.h));
+  write(path.join(HOME, 'search.json'), JSON.stringify(out));
+  console.log(`  ${HOME}/search.json · ${out.length} פריטים`);
+};
 
 /** מוחק עמודים של ישויות שכבר לא קיימות (מבצע שפג, מודעה שירדה) — שומר רק את מה שנכתב עכשיו */
 function prune(dir, keep) {
@@ -102,6 +111,8 @@ const writeHome = (raw, dirRaw, lsRaw, moreRaw, synSlugs, detRaw) => {
 
   // 1. עסקים ובעלי מקצוע — slug יציב לכל ישות (נשמר ב-slugs.json)
   const hrefById = {};
+  // התחומים עצמם — "גמ״ח" או "אולמות" מובילים לרשימה
+  for (const m of navChips(home).matchAll(/<a href="([^"]+)">([^<]+)<\/a>/g)) if (m[1] !== home) addSearch(m[2], 'תחום', '', m[1], 1);
   const dir = dirRaw ? shapeDirectory(dirRaw) : null;
   if (dir) for (const kind of ['pros', 'biz']) {
     const store = new SlugStore(path.join(OUT, HOME, kind, 'slugs.json'));
@@ -111,6 +122,8 @@ const writeHome = (raw, dirRaw, lsRaw, moreRaw, synSlugs, detRaw) => {
       e.href = hrefById[e.id] = `${home}${kind}/${encodeURIComponent(e.slug)}/`;
       write(path.join(HOME, kind, e.slug, 'index.html'), entityPage(vm, e, { base: BASE, home, kind, api: API, st }));
       EXTRA_URLS.push({ loc: `${BASE}${e.href}`, freq: 'weekly', pri: '0.6' });
+      addSearch(e.name, kind === 'pros' ? 'בעל מקצוע' : 'עסק',
+        [e.field, e.group !== e.field ? e.group : '', ...(e.detail?.tags || [])].filter(Boolean).join(' · '), e.href, 2);
     }
     prune(path.join(OUT, HOME, kind), keep);
     if (!DRY) store.save();
@@ -134,6 +147,7 @@ const writeHome = (raw, dirRaw, lsRaw, moreRaw, synSlugs, detRaw) => {
         write(path.join(HOME, seg, d.slug, 'index.html'), detailPage(vm, e, { base: BASE, home, kind: seg, api: API, st,
           listLabel: d.list, ldType: d.ld, listHref: d.boardKey ? `${home}board/#${d.boardKey}` : `${home}${seg}/` }));
         EXTRA_URLS.push({ loc: `${BASE}${d.href}`, freq: 'weekly', pri: '0.5' });
+        addSearch(d.name, d.list, [d.kicker].filter(Boolean).join(' · '), d.href, 3);
       }
       prune(path.join(OUT, HOME, seg), keep);
       if (!DRY) store.save();
@@ -197,6 +211,8 @@ function writeMinyanim({ vm, community, syns, prayers, lessons, slugs, urls }) {
       .filter((t) => ['שחרית', 'מנחה', 'ערבית'].includes(t.t))
       .map((t) => ({ type: t.t, time: t.c }));
     listed.push({ ...syn, first, has: p.length > 0 });
+    addSearch(syn.name, 'בית כנסת', [NUSACH[syn.prayer_nusach] && syn.prayer_nusach !== 'other' ? `נוסח ${NUSACH[syn.prayer_nusach]}` : '', syn.address].filter(Boolean).join(' · '),
+      `/${SECTION}/${encodeURIComponent(syn.slug)}/`, 2);
   }
   // בתי כנסת עם זמנים קודם, ואז לפי א״ב
   listed.sort((a, b) => (b.has - a.has) || a.name.localeCompare(b.name, 'he'));
@@ -216,6 +232,7 @@ async function main() {
       writeMinyanim({ vm, community: fx.community, ...fx.minyanim,
         slugs: new SlugStore(path.join(OUT, SECTION, 'slugs.json')), urls: [] });
     }
+    writeSearch();
     return;
   }
 
@@ -273,6 +290,7 @@ async function main() {
 
   writeMinyanim({ vm, community, syns, prayers, lessons, slugs, urls });
   urls.push(...EXTRA_URLS);
+  writeSearch();
   write('sitemap.xml', sitemap(urls));
   write('robots.txt', `User-agent: *\nAllow: /\n\nSitemap: ${BASE}/sitemap.xml\n`);
 
