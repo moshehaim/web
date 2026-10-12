@@ -193,7 +193,15 @@ a.hood-item:hover{background:#F5F8FF}
 .seg button[aria-pressed=true],.seg button[aria-selected=true]{background:#fff;color:var(--brand);font-weight:800;box-shadow:0 1px 4px rgba(0,0,0,.08)}
 
 /* board */
-.board-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px;padding-block:52px}
+.board-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px;padding-block:40px 12px}
+.pstrip{padding-block:36px 4px;display:flex;flex-direction:column;gap:12px}
+.ps-head{display:flex;align-items:center;justify-content:space-between;gap:12px}.ps-head h2{margin:0;font-size:22px;font-weight:800;color:var(--navy)}
+.ps-row{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px}
+.ps-item{display:flex;align-items:center;gap:12px;background:#fff;border-radius:18px;padding:12px;text-decoration:none;color:var(--ink);box-shadow:0 2px 10px rgba(0,0,0,.04);min-width:0}
+.ps-item:hover{color:var(--ink)}.ps-item i{width:64px;height:64px;border-radius:12px;overflow:hidden;flex:none;display:flex;align-items:center;justify-content:center;background:var(--soft);color:var(--brand)}
+.ps-item i img{width:100%;height:100%;object-fit:cover}.ps-item span{min-width:0}.ps-item em{display:inline-block;font-style:normal;font-size:12px;font-weight:800;background:var(--soft);color:var(--brand);border-radius:6px;padding:1px 7px}
+.ps-item b{display:block;font-size:16px;font-weight:800;line-height:1.3}.ps-item small{display:block;font-size:13px;color:var(--muted)}
+.ps-cta{background:var(--soft);box-shadow:none;border:1.5px dashed #C9D6EA}.ps-cta b{color:var(--navy)}
 .span2{grid-column:span 2}
 @media (max-width:1100px){.board-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.span2{grid-column:1/-1;order:3}}
 @media (max-width:700px){.board-grid{grid-template-columns:minmax(0,1fr)}}
@@ -330,7 +338,7 @@ footer .c{font-size:13px;color:#8A94A6}
 <h1>מה חדש <span class="emd">בחומת שמואל</span></h1>
 <p>מניינים, עסקים, בעלי מקצוע, מבצעים וגמ״חים — מעודכנים על ידי השכנים והעסקים עצמם.</p>
 <p class="shab" data-from="2026-10-16" data-to="2026-10-17" title="מנהג ירושלים: הדלקה 40 דקות לפני השקיעה" hidden><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3c2 2.6 3 4.2 3 6a3 3 0 0 1-6 0c0-1.8 1-3.4 3-6zM9.5 14h5v7h-5z"/></svg><b>שבת פרשת נח</b><span>הדלקת נרות <b class="mono">17:26</b></span><span>צאת שבת <b class="mono">18:41</b></span></p>
-<a class="pill btn-sky m-only" href="/b/" style="align-self:flex-start">להורדת האפליקציה</a>
+<a class="pill btn-sky" href="/b/" style="align-self:flex-start">להורדת האפליקציה</a>
 </div>
 <aside class="fresh" aria-label="חדש בשכונה">
 <h2>חדש <span class="emd">בשכונה</span></h2>
@@ -343,14 +351,48 @@ footer .c{font-size:13px;color:#8A94A6}
 <div class="tick-wrap"><div class="tick"><span><em>מבצע</em>א.א.ב ניקיון: נקיון בניין</span><span><em>דרושים</em>סדרן בוקר וערב למשמרות</span><span><em>דרושים</em>מטפלת מחנכת מעון אמונה</span><span><em>דרושים</em>דרושים קופאיות וסדרנים</span><span><em>יד שנייה</em>למכירה שמלה מהממת לכלת בת מצווה/שושבנית מידה 12</span><span><em>יד שנייה</em>פינת אוכל</span><span><em>יד שנייה</em>שולחן כתיבה עץ סנדביץ</span><span><em>מציאה</em>אופניים חדשות</span><span><em>מציאה</em>אוזנייה איר פודס</span><span style="display:contents" aria-hidden="true"><span><em>מבצע</em>א.א.ב ניקיון: נקיון בניין</span><span><em>דרושים</em>סדרן בוקר וערב למשמרות</span><span><em>דרושים</em>מטפלת מחנכת מעון אמונה</span><span><em>דרושים</em>דרושים קופאיות וסדרנים</span><span><em>יד שנייה</em>למכירה שמלה מהממת לכלת בת מצווה/שושבנית מידה 12</span><span><em>יד שנייה</em>פינת אוכל</span><span><em>יד שנייה</em>שולחן כתיבה עץ סנדביץ</span><span><em>מציאה</em>אופניים חדשות</span><span><em>מציאה</em>אוזנייה איר פודס</span></span></div></div>
 </section>
 
-<section id="promos" aria-label="מבצעים וקופונים" style="background:var(--soft);padding-block:48px">
-<div class="wrap" style="display:flex;flex-direction:column;gap:20px">
-<div class="sec-head"><div><small>מעסקי השכונה</small><h2>מבצעים <span class="em">וקופונים</span></h2></div><div class="ctrls"><a class="more" href="promos/">הכל ←</a></div></div>
-<div class="grid-auto"><a href="/app/" class="card lift">
-<div class="media"><img src="https://mebomrqnfnbqijiuawdh.supabase.co/storage/v1/object/public/images/promotions/general/7d345b43-6bb0-4acf-82dd-47f1ec3eebd6.jpg?v=1791289357010" alt="נקיון בניין" loading="lazy" decoding="async"><span class="tag">מבצע</span></div>
-<div class="body"><b class="clamp2">נקיון בניין</b><span class="sub">א.א.ב ניקיון</span><span class="fine">בתוקף עד 13.10</span></div>
-</a><a href="/app/" class="promo-cta lift"><b>המבצע שלך <span class="emd">כאן</span></b><span>פרסום מבצע עם התראה לשכונה</span></a></div>
+<section id="board" aria-label="לוח השכונה" class="wrap"><div class="board-grid">
+
+<div class="panel pray">
+<div class="panel-head"><h2>תפילות <span class="emd">קרובות</span></h2><span class="clock mono" data-clock></span></div>
+<div data-next-prayers><a class="prow" href="/minyanim-har-homa/"><span class="t mono">05:40</span><span><b>קול אליהו</b><small>שחרית</small></span><span class="when">היום</span></a><a class="prow" href="/minyanim-har-homa/"><span class="t mono">13:15</span><span><b>נעם שיח</b><small>מנחה</small></span><span class="when">היום</span></a><a class="prow" href="/minyanim-har-homa/"><span class="t mono">17:52</span><span><b>אורות החומה (אורות יהודה)</b><small>ערבית · מיד אחרי מנחה</small></span><span class="when">היום</span></a></div>
+<a class="all" href="/minyanim-har-homa/">כל המניינים ←</a>
+</div>
+
+<div class="panel span2">
+<div class="panel-head"><h2>לוח <span class="em">השכונה</span></h2><a href="/app/" style="font-weight:800;font-size:14px;text-decoration:none">+ פרסום בלוח</a></div>
+<div class="seg tabs" role="tablist" aria-label="לוח השכונה">
+<button type="button" role="tab" id="tab-jobs" aria-controls="tp-jobs" aria-selected="true" tabindex="0">דרושים</button><button type="button" role="tab" id="tab-second" aria-controls="tp-second" aria-selected="false" tabindex="-1">יד שנייה</button><button type="button" role="tab" id="tab-gmach" aria-controls="tp-gmach" aria-selected="false" tabindex="-1">גמ״חים</button><button type="button" role="tab" id="tab-vol" aria-controls="tp-vol" aria-selected="false" tabindex="-1">התנדבות</button><button type="button" role="tab" id="tab-lost" aria-controls="tp-lost" aria-selected="false" tabindex="-1">אבידות ומציאות</button>
+</div>
+<div role="tabpanel" id="tp-jobs" aria-labelledby="tab-jobs">
+<a class="bitem" href="/app/"><span><b>סדרן בוקר וערב למשמרות</b><small>לפני 2 שבועות</small></span><span class="bbadge">משרה מלאה</span></a><a class="bitem" href="/app/"><span><b>מטפלת מחנכת מעון אמונה</b><small>לפני חודש</small></span><span class="bbadge">משרה מלאה</span></a><a class="bitem" href="/app/"><span><b>דרושים קופאיות וסדרנים</b><small>מעיין 2000 · לפני חודש</small></span><span class="bbadge">משרה מלאה</span></a><a class="bitem" href="/app/"><span><b>דרושים/ות עובדים/ות</b><small>מעיין 2000 · לפני חודש</small></span><span class="bbadge">משרה מלאה</span></a><a class="bitem" href="/app/"><span><b>נוקדים</b><small>משפחתון עמנואל · לפני 3 חודשים</small></span><span class="bbadge">משרה מלאה</span></a>
+<a href="board/#jobs" style="display:inline-block;font-weight:800;font-size:14px;text-decoration:none;margin-top:10px">לכל המשרות ←</a>
+</div>
+<div role="tabpanel" id="tp-second" aria-labelledby="tab-second" hidden>
+<a class="bitem" href="/app/"><span><b>למכירה שמלה מהממת לכלת בת מצווה/שושבנית מידה 12</b><small>לפני חודש</small></span><span class="bbadge">₪200</span></a><a class="bitem" href="/app/"><span><b>פינת אוכל</b><small>לפני 3 חודשים</small></span><span class="bbadge">₪1,000</span></a><a class="bitem" href="/app/"><span><b>שולחן כתיבה עץ סנדביץ</b><small>לפני 3 חודשים</small></span><span class="bbadge">למסירה</span></a><a class="bitem" href="/app/"><span><b>רכב מיצובישי אוטלנדר 2015</b><small>לפני 3 חודשים</small></span><span class="bbadge">₪54,000</span></a><a class="bitem" href="/app/"><span><b>ארון אמבטיה</b><small>לפני 3 חודשים</small></span><span class="bbadge">₪300</span></a>
+<a href="board/#second" style="display:inline-block;font-weight:800;font-size:14px;text-decoration:none;margin-top:10px">לכל המודעות ←</a>
+</div>
+<div role="tabpanel" id="tp-gmach" aria-labelledby="tab-gmach" hidden>
+<a class="bitem" href="/app/"><span><b>אור וחסד לעילוי נשמת קלרה</b><small>ביגוד</small></span></a><a class="bitem" href="/app/"><span><b>חסדי אביעד</b><small>קישוטים לאירועים</small></span></a><a class="bitem" href="/app/"><span><b>טל של ברכה</b><small>כלי הגשה · מפות ומפיות · קישוטים לאירועים</small></span></a><a class="bitem" href="/app/"><span><b>נצח ישראל</b><small>הלוואות</small></span></a><a class="bitem" href="/app/"><span><b>גמ&quot;ח לולים לקמפינג ומנשאים — משפחת אבן ישראל</b><small>ציוד תינוקות</small></span></a>
+<a href="board/#gmach" style="display:inline-block;font-weight:800;font-size:14px;text-decoration:none;margin-top:10px">לכל הגמ״חים ←</a>
+</div>
+<div role="tabpanel" id="tp-vol" aria-labelledby="tab-vol" hidden>
+<a class="bitem" href="/app/"><span><b>עזרה לאשת מילואים אחרי לידה</b><small>העוגן · לפני חודש</small></span></a>
+<a href="board/#vol" style="display:inline-block;font-weight:800;font-size:14px;text-decoration:none;margin-top:10px">לכל ההתנדבויות ←</a>
+</div>
+<div role="tabpanel" id="tp-lost" aria-labelledby="tab-lost" hidden>
+<a class="bitem" href="/app/"><span><b>אופניים חדשות</b><small>לפני 3 חודשים</small></span><span class="bbadge">נמצא</span></a><a class="bitem" href="/app/"><span><b>אוזנייה איר פודס</b><small>לפני 3 חודשים</small></span><span class="bbadge">נמצא</span></a><a class="bitem" href="/app/"><span><b>תפילין</b><small>לפני 3 חודשים</small></span><span class="bbadge">נמצא</span></a><a class="bitem" href="/app/"><span><b>אופניים חדשים</b><small>לפני 3 חודשים</small></span><span class="bbadge">נמצא</span></a><a class="bitem" href="/app/"><span><b>בגד חדש בתוך שקית חנות ספורט</b><small>לפני 3 חודשים</small></span><span class="bbadge">נמצא</span></a>
+<a href="board/#lost" style="display:inline-block;font-weight:800;font-size:14px;text-decoration:none;margin-top:10px">לכל המודעות ←</a>
+</div>
+</div>
+
+<div class="panel phones">
+<h2>טלפונים <span class="em">חשובים</span></h2>
+<a class="phone" href="tel:106"><span>מוקד עירוני</span><span class="n mono">106</span></a><a class="phone" href="tel:101"><span>מד״א</span><span class="n mono hot">101</span></a><a class="phone" href="tel:100"><span>משטרה</span><span class="n mono hot">100</span></a><a class="phone" href="tel:102"><span>כיבוי והצלה</span><span class="n mono hot">102</span></a><a class="phone" href="tel:103"><span>חברת החשמל</span><span class="n mono">103</span></a>
+</div>
+
 </div></section>
+
 <section id="pros" aria-label="בעלי מקצוע" class="wrap sec">
 <div class="sec-head"><div><small>לבית, למשפחה ולאירועים</small><h2>בעלי מקצוע <span class="em">בשכונה</span></h2></div><div class="ctrls"><button type="button" class="arrow" data-prev="pros" aria-label="הקודם">→</button><button type="button" class="arrow" data-next="pros" aria-label="הבא">←</button><a class="more" href="pros/">לכל בעלי המקצוע ←</a></div></div>
 <div class="car car-pro" data-car="pros" data-auto="4000"><div class="track">
@@ -413,8 +455,13 @@ footer .c{font-size:13px;color:#8A94A6}
 </div></div>
 </section>
 <section id="biz" aria-label="עסקים בשכונה" class="sec" style="padding-bottom:16px">
-<div class="wrap sec-head"><div><small>מעבירים עכבר כדי לעצור</small><h2>עסקים <span class="em">בשכונה</span></h2></div><a class="more" href="biz/">לאלפון העסקים ←</a></div>
+<div class="wrap sec-head"><div><small>טלפון, וואטסאפ וניווט בלחיצה</small><h2>עסקים <span class="em">בשכונה</span></h2></div><a class="more" href="biz/">לאלפון העסקים ←</a></div>
 <div class="mq-wrap"><div class="mq"><a href="biz/" class="biz lift"><img src="https://mebomrqnfnbqijiuawdh.supabase.co/storage/v1/object/public/images/businesses/profiles/b26b2c3f-9c0b-4bd2-bb4a-74f5d540cde7.jpg?v=1785875980006" alt="" loading="lazy" decoding="async"><span><b>שפע זול</b><span>סופרמרקט</span></span></a><a href="biz/" class="biz lift"><img src="https://mebomrqnfnbqijiuawdh.supabase.co/storage/v1/object/public/images/businesses/profiles/7e166739-f483-46b1-b75c-ea54c2290d20.jpg?v=1782731069860" alt="" loading="lazy" decoding="async"><span><b>טובי שווארמה</b><span>מזון מהיר</span></span></a><a href="biz/" class="biz lift"><img src="https://mebomrqnfnbqijiuawdh.supabase.co/storage/v1/object/public/images/businesses/profiles/94e96dcb-2083-4ed5-ae7a-987c77d29178.jpg?v=1787574987883" alt="" loading="lazy" decoding="async"><span><b>א.ק הנדימן</b><span>הנדימן / תיקונים כלליים</span></span></a><a href="biz/" class="biz lift"><img src="https://mebomrqnfnbqijiuawdh.supabase.co/storage/v1/object/public/images/businesses/profiles/cc00081a-b334-4a3f-901c-7abbb6b0e075.jpg?v=1785954633971" alt="" loading="lazy" decoding="async"><span><b>הרמנוס בר מצוות</b><span>צילום אירועים</span></span></a><a href="biz/" class="biz lift"><img src="https://mebomrqnfnbqijiuawdh.supabase.co/storage/v1/object/public/images/businesses/profiles/bb1d439d-2716-4542-abfc-0dbf62d0cb7e.jpg?v=1785948764416" alt="" loading="lazy" decoding="async"><span><b>אליה ארמוזה</b><span>צילום אירועים</span></span></a><a href="biz/" class="biz lift"><img src="https://mebomrqnfnbqijiuawdh.supabase.co/storage/v1/object/public/images/businesses/profiles/eb179057-825b-47da-9c77-d337ec7eb702.jpg?v=1782282026867" alt="" loading="lazy" decoding="async"><span><b>אילנית מזרחי חנות מתנות</b><span>חנות מתנות</span></span></a><a href="biz/" class="biz lift"><img src="https://mebomrqnfnbqijiuawdh.supabase.co/storage/v1/object/public/images/businesses/profiles/6712b046-5c52-4c73-a91f-c7937a3fe1ed.jpg?v=1789496986544" alt="" loading="lazy" decoding="async"><span><b>הפרשת חלה</b><span>מעמדי הפרשת חלה</span></span></a><a href="biz/" class="biz lift"><img src="https://mebomrqnfnbqijiuawdh.supabase.co/storage/v1/object/public/images/businesses/profiles/5386d9ac-87fe-4d7d-b0d5-c9d0e9af2146.jpg?v=1787673607002" alt="" loading="lazy" decoding="async"><span><b>המספריים והכלב אושרת</b><span>מספרת כלבים / טיפוח בעלי חיים</span></span></a><span style="display:contents" aria-hidden="true"><a href="biz/" class="biz lift"><img src="https://mebomrqnfnbqijiuawdh.supabase.co/storage/v1/object/public/images/businesses/profiles/b26b2c3f-9c0b-4bd2-bb4a-74f5d540cde7.jpg?v=1785875980006" alt="" loading="lazy" decoding="async"><span><b>שפע זול</b><span>סופרמרקט</span></span></a><a href="biz/" class="biz lift"><img src="https://mebomrqnfnbqijiuawdh.supabase.co/storage/v1/object/public/images/businesses/profiles/7e166739-f483-46b1-b75c-ea54c2290d20.jpg?v=1782731069860" alt="" loading="lazy" decoding="async"><span><b>טובי שווארמה</b><span>מזון מהיר</span></span></a><a href="biz/" class="biz lift"><img src="https://mebomrqnfnbqijiuawdh.supabase.co/storage/v1/object/public/images/businesses/profiles/94e96dcb-2083-4ed5-ae7a-987c77d29178.jpg?v=1787574987883" alt="" loading="lazy" decoding="async"><span><b>א.ק הנדימן</b><span>הנדימן / תיקונים כלליים</span></span></a><a href="biz/" class="biz lift"><img src="https://mebomrqnfnbqijiuawdh.supabase.co/storage/v1/object/public/images/businesses/profiles/cc00081a-b334-4a3f-901c-7abbb6b0e075.jpg?v=1785954633971" alt="" loading="lazy" decoding="async"><span><b>הרמנוס בר מצוות</b><span>צילום אירועים</span></span></a><a href="biz/" class="biz lift"><img src="https://mebomrqnfnbqijiuawdh.supabase.co/storage/v1/object/public/images/businesses/profiles/bb1d439d-2716-4542-abfc-0dbf62d0cb7e.jpg?v=1785948764416" alt="" loading="lazy" decoding="async"><span><b>אליה ארמוזה</b><span>צילום אירועים</span></span></a><a href="biz/" class="biz lift"><img src="https://mebomrqnfnbqijiuawdh.supabase.co/storage/v1/object/public/images/businesses/profiles/eb179057-825b-47da-9c77-d337ec7eb702.jpg?v=1782282026867" alt="" loading="lazy" decoding="async"><span><b>אילנית מזרחי חנות מתנות</b><span>חנות מתנות</span></span></a><a href="biz/" class="biz lift"><img src="https://mebomrqnfnbqijiuawdh.supabase.co/storage/v1/object/public/images/businesses/profiles/6712b046-5c52-4c73-a91f-c7937a3fe1ed.jpg?v=1789496986544" alt="" loading="lazy" decoding="async"><span><b>הפרשת חלה</b><span>מעמדי הפרשת חלה</span></span></a><a href="biz/" class="biz lift"><img src="https://mebomrqnfnbqijiuawdh.supabase.co/storage/v1/object/public/images/businesses/profiles/5386d9ac-87fe-4d7d-b0d5-c9d0e9af2146.jpg?v=1787673607002" alt="" loading="lazy" decoding="async"><span><b>המספריים והכלב אושרת</b><span>מספרת כלבים / טיפוח בעלי חיים</span></span></a></span></div><div class="mq rev"><a href="biz/" class="biz lift"><img src="https://mebomrqnfnbqijiuawdh.supabase.co/storage/v1/object/public/images/businesses/profiles/e0df25e5-8685-4fbd-a45d-d1bb983bf2b1.jpg?v=1784094326902" alt="" loading="lazy" decoding="async"><span><b>הכל לבית ולגן הטמבוריה של מאור</b><span>חנות כל בו</span></span></a><a href="biz/" class="biz lift"><img src="https://mebomrqnfnbqijiuawdh.supabase.co/storage/v1/object/public/images/businesses/profiles/74ebf1b3-3d75-4d26-900d-2fc3cbcd24f9.jpg?v=1789497499504" alt="" loading="lazy" decoding="async"><span><b>דרים ספא יום הולדת לילדות</b><span>הפעלות ויום הולדת לילדים</span></span></a><a href="biz/" class="biz lift"><img src="https://mebomrqnfnbqijiuawdh.supabase.co/storage/v1/object/public/images/businesses/profiles/2e73f701-20d3-4940-8dee-d01afef989c4.jpg?v=1788342450640" alt="" loading="lazy" decoding="async"><span><b>הקצביה</b><span>קצבייה</span></span></a><a href="biz/" class="biz lift"><img src="https://mebomrqnfnbqijiuawdh.supabase.co/storage/v1/object/public/images/businesses/profiles/4a4ef10a-cde5-4ef4-94e0-9a41dd157e02.jpg?v=1783875230840" alt="" loading="lazy" decoding="async"><span><b>השכרת מתנפח ביתי</b><span>צעצועים</span></span></a><a href="biz/" class="biz lift"><img src="https://mebomrqnfnbqijiuawdh.supabase.co/storage/v1/object/public/images/businesses/profiles/dc2f74d9-aa77-4b13-a9a1-c7652dbb4128.jpg?v=1789552261723" alt="" loading="lazy" decoding="async"><span><b>א.ח ציוד לארועים</b><span>השכרת ציוד לאירועים</span></span></a><a href="biz/" class="biz lift"><img src="https://mebomrqnfnbqijiuawdh.supabase.co/storage/v1/object/public/images/businesses/profiles/54e2c68d-2d47-4f2b-8fac-a46e9f334466.jpg?v=1789502020028" alt="" loading="lazy" decoding="async"><span><b>mc שירות פז שירות תיקונים ומכירת מוצרי חשמל ביתיים</b><span>תיקון מכשירי חשמל</span></span></a><a href="biz/" class="biz lift"><img src="https://mebomrqnfnbqijiuawdh.supabase.co/storage/v1/object/public/images/businesses/profiles/fe459aae-8d7d-4180-86b2-4de518b53485.jpg?v=1781680279650" alt="" loading="lazy" decoding="async"><span><b>גלובל חשבות</b><span>מחשבים</span></span></a><a href="biz/" class="biz lift"><img src="https://mebomrqnfnbqijiuawdh.supabase.co/storage/v1/object/public/images/businesses/profiles/c2703bae-abf2-46a4-9dbf-a53ba9286f1b.jpg?v=1791310337368" alt="" loading="lazy" decoding="async"><span><b>שירות שיאון</b><span>תיקון מכשירי חשמל</span></span></a><span style="display:contents" aria-hidden="true"><a href="biz/" class="biz lift"><img src="https://mebomrqnfnbqijiuawdh.supabase.co/storage/v1/object/public/images/businesses/profiles/e0df25e5-8685-4fbd-a45d-d1bb983bf2b1.jpg?v=1784094326902" alt="" loading="lazy" decoding="async"><span><b>הכל לבית ולגן הטמבוריה של מאור</b><span>חנות כל בו</span></span></a><a href="biz/" class="biz lift"><img src="https://mebomrqnfnbqijiuawdh.supabase.co/storage/v1/object/public/images/businesses/profiles/74ebf1b3-3d75-4d26-900d-2fc3cbcd24f9.jpg?v=1789497499504" alt="" loading="lazy" decoding="async"><span><b>דרים ספא יום הולדת לילדות</b><span>הפעלות ויום הולדת לילדים</span></span></a><a href="biz/" class="biz lift"><img src="https://mebomrqnfnbqijiuawdh.supabase.co/storage/v1/object/public/images/businesses/profiles/2e73f701-20d3-4940-8dee-d01afef989c4.jpg?v=1788342450640" alt="" loading="lazy" decoding="async"><span><b>הקצביה</b><span>קצבייה</span></span></a><a href="biz/" class="biz lift"><img src="https://mebomrqnfnbqijiuawdh.supabase.co/storage/v1/object/public/images/businesses/profiles/4a4ef10a-cde5-4ef4-94e0-9a41dd157e02.jpg?v=1783875230840" alt="" loading="lazy" decoding="async"><span><b>השכרת מתנפח ביתי</b><span>צעצועים</span></span></a><a href="biz/" class="biz lift"><img src="https://mebomrqnfnbqijiuawdh.supabase.co/storage/v1/object/public/images/businesses/profiles/dc2f74d9-aa77-4b13-a9a1-c7652dbb4128.jpg?v=1789552261723" alt="" loading="lazy" decoding="async"><span><b>א.ח ציוד לארועים</b><span>השכרת ציוד לאירועים</span></span></a><a href="biz/" class="biz lift"><img src="https://mebomrqnfnbqijiuawdh.supabase.co/storage/v1/object/public/images/businesses/profiles/54e2c68d-2d47-4f2b-8fac-a46e9f334466.jpg?v=1789502020028" alt="" loading="lazy" decoding="async"><span><b>mc שירות פז שירות תיקונים ומכירת מוצרי חשמל ביתיים</b><span>תיקון מכשירי חשמל</span></span></a><a href="biz/" class="biz lift"><img src="https://mebomrqnfnbqijiuawdh.supabase.co/storage/v1/object/public/images/businesses/profiles/fe459aae-8d7d-4180-86b2-4de518b53485.jpg?v=1781680279650" alt="" loading="lazy" decoding="async"><span><b>גלובל חשבות</b><span>מחשבים</span></span></a><a href="biz/" class="biz lift"><img src="https://mebomrqnfnbqijiuawdh.supabase.co/storage/v1/object/public/images/businesses/profiles/c2703bae-abf2-46a4-9dbf-a53ba9286f1b.jpg?v=1791310337368" alt="" loading="lazy" decoding="async"><span><b>שירות שיאון</b><span>תיקון מכשירי חשמל</span></span></a></span></div></div>
+</section>
+<section id="promos" aria-label="מבצעים וקופונים" class="wrap pstrip">
+<div class="ps-head"><h2>מבצעים <span class="em">בשכונה</span></h2><a class="more" href="promos/">הכל ←</a></div>
+<div class="ps-row"><a class="ps-item lift" href="/app/"><i><img src="https://mebomrqnfnbqijiuawdh.supabase.co/storage/v1/object/public/images/promotions/general/7d345b43-6bb0-4acf-82dd-47f1ec3eebd6.jpg?v=1791289357010" alt="" loading="lazy" decoding="async"></i><span><em>מבצע</em><b class="clamp2">נקיון בניין</b><small>א.א.ב ניקיון · בתוקף עד 13.10</small></span></a>
+<a class="ps-item ps-cta" href="/app/"><span><b>יש לכם עסק בשכונה?</b><small>פרסום מבצע עם התראה לשכונה ←</small></span></a></div>
 </section>
 <section id="realestate" aria-label="נדל״ן" class="wrap sec">
 <div class="sec-head"><div><small>דירות מהשכונה, עם תמונות</small><h2>נדל״ן <span class="em">בשכונה</span></h2></div><div class="ctrls">
@@ -475,47 +522,6 @@ footer .c{font-size:13px;color:#8A94A6}
 </a></div>
 </div></div>
 </section>
-<section id="board" aria-label="לוח השכונה" class="wrap"><div class="board-grid">
-
-<div class="panel pray">
-<div class="panel-head"><h2>תפילות <span class="emd">קרובות</span></h2><span class="clock mono" data-clock></span></div>
-<div data-next-prayers><a class="prow" href="/minyanim-har-homa/"><span class="t mono">05:40</span><span><b>קול אליהו</b><small>שחרית</small></span><span class="when">היום</span></a><a class="prow" href="/minyanim-har-homa/"><span class="t mono">13:15</span><span><b>נעם שיח</b><small>מנחה</small></span><span class="when">היום</span></a><a class="prow" href="/minyanim-har-homa/"><span class="t mono">17:52</span><span><b>אורות החומה (אורות יהודה)</b><small>ערבית · מיד אחרי מנחה</small></span><span class="when">היום</span></a></div>
-<a class="all" href="/minyanim-har-homa/">כל המניינים ←</a>
-</div>
-
-<div class="panel span2">
-<div class="panel-head"><h2>לוח <span class="em">השכונה</span></h2><a href="/app/" style="font-weight:800;font-size:14px;text-decoration:none">+ פרסום בלוח</a></div>
-<div class="seg tabs" role="tablist" aria-label="לוח השכונה">
-<button type="button" role="tab" id="tab-jobs" aria-controls="tp-jobs" aria-selected="true" tabindex="0">דרושים</button><button type="button" role="tab" id="tab-second" aria-controls="tp-second" aria-selected="false" tabindex="-1">יד שנייה</button><button type="button" role="tab" id="tab-gmach" aria-controls="tp-gmach" aria-selected="false" tabindex="-1">גמ״חים</button><button type="button" role="tab" id="tab-vol" aria-controls="tp-vol" aria-selected="false" tabindex="-1">התנדבות</button><button type="button" role="tab" id="tab-lost" aria-controls="tp-lost" aria-selected="false" tabindex="-1">אבידות ומציאות</button>
-</div>
-<div role="tabpanel" id="tp-jobs" aria-labelledby="tab-jobs">
-<a class="bitem" href="/app/"><span><b>סדרן בוקר וערב למשמרות</b><small>לפני 2 שבועות</small></span><span class="bbadge">משרה מלאה</span></a><a class="bitem" href="/app/"><span><b>מטפלת מחנכת מעון אמונה</b><small>לפני חודש</small></span><span class="bbadge">משרה מלאה</span></a><a class="bitem" href="/app/"><span><b>דרושים קופאיות וסדרנים</b><small>מעיין 2000 · לפני חודש</small></span><span class="bbadge">משרה מלאה</span></a><a class="bitem" href="/app/"><span><b>דרושים/ות עובדים/ות</b><small>מעיין 2000 · לפני חודש</small></span><span class="bbadge">משרה מלאה</span></a><a class="bitem" href="/app/"><span><b>נוקדים</b><small>משפחתון עמנואל · לפני 3 חודשים</small></span><span class="bbadge">משרה מלאה</span></a>
-<a href="board/#jobs" style="display:inline-block;font-weight:800;font-size:14px;text-decoration:none;margin-top:10px">לכל המשרות ←</a>
-</div>
-<div role="tabpanel" id="tp-second" aria-labelledby="tab-second" hidden>
-<a class="bitem" href="/app/"><span><b>למכירה שמלה מהממת לכלת בת מצווה/שושבנית מידה 12</b><small>לפני חודש</small></span><span class="bbadge">₪200</span></a><a class="bitem" href="/app/"><span><b>פינת אוכל</b><small>לפני 3 חודשים</small></span><span class="bbadge">₪1,000</span></a><a class="bitem" href="/app/"><span><b>שולחן כתיבה עץ סנדביץ</b><small>לפני 3 חודשים</small></span><span class="bbadge">למסירה</span></a><a class="bitem" href="/app/"><span><b>רכב מיצובישי אוטלנדר 2015</b><small>לפני 3 חודשים</small></span><span class="bbadge">₪54,000</span></a><a class="bitem" href="/app/"><span><b>ארון אמבטיה</b><small>לפני 3 חודשים</small></span><span class="bbadge">₪300</span></a>
-<a href="board/#second" style="display:inline-block;font-weight:800;font-size:14px;text-decoration:none;margin-top:10px">לכל המודעות ←</a>
-</div>
-<div role="tabpanel" id="tp-gmach" aria-labelledby="tab-gmach" hidden>
-<a class="bitem" href="/app/"><span><b>אור וחסד לעילוי נשמת קלרה</b><small>ביגוד</small></span></a><a class="bitem" href="/app/"><span><b>חסדי אביעד</b><small>קישוטים לאירועים</small></span></a><a class="bitem" href="/app/"><span><b>טל של ברכה</b><small>כלי הגשה · מפות ומפיות · קישוטים לאירועים</small></span></a><a class="bitem" href="/app/"><span><b>נצח ישראל</b><small>הלוואות</small></span></a><a class="bitem" href="/app/"><span><b>גמ&quot;ח לולים לקמפינג ומנשאים — משפחת אבן ישראל</b><small>ציוד תינוקות</small></span></a>
-<a href="board/#gmach" style="display:inline-block;font-weight:800;font-size:14px;text-decoration:none;margin-top:10px">לכל הגמ״חים ←</a>
-</div>
-<div role="tabpanel" id="tp-vol" aria-labelledby="tab-vol" hidden>
-<a class="bitem" href="/app/"><span><b>עזרה לאשת מילואים אחרי לידה</b><small>העוגן · לפני חודש</small></span></a>
-<a href="board/#vol" style="display:inline-block;font-weight:800;font-size:14px;text-decoration:none;margin-top:10px">לכל ההתנדבויות ←</a>
-</div>
-<div role="tabpanel" id="tp-lost" aria-labelledby="tab-lost" hidden>
-<a class="bitem" href="/app/"><span><b>אופניים חדשות</b><small>לפני 3 חודשים</small></span><span class="bbadge">נמצא</span></a><a class="bitem" href="/app/"><span><b>אוזנייה איר פודס</b><small>לפני 3 חודשים</small></span><span class="bbadge">נמצא</span></a><a class="bitem" href="/app/"><span><b>תפילין</b><small>לפני 3 חודשים</small></span><span class="bbadge">נמצא</span></a><a class="bitem" href="/app/"><span><b>אופניים חדשים</b><small>לפני 3 חודשים</small></span><span class="bbadge">נמצא</span></a><a class="bitem" href="/app/"><span><b>בגד חדש בתוך שקית חנות ספורט</b><small>לפני 3 חודשים</small></span><span class="bbadge">נמצא</span></a>
-<a href="board/#lost" style="display:inline-block;font-weight:800;font-size:14px;text-decoration:none;margin-top:10px">לכל המודעות ←</a>
-</div>
-</div>
-
-<div class="panel phones">
-<h2>טלפונים <span class="em">חשובים</span></h2>
-<a class="phone" href="tel:106"><span>מוקד עירוני</span><span class="n mono">106</span></a><a class="phone" href="tel:101"><span>מד״א</span><span class="n mono hot">101</span></a><a class="phone" href="tel:100"><span>משטרה</span><span class="n mono hot">100</span></a><a class="phone" href="tel:102"><span>כיבוי והצלה</span><span class="n mono hot">102</span></a><a class="phone" href="tel:103"><span>חברת החשמל</span><span class="n mono">103</span></a>
-</div>
-
-</div></section>
 
 <section id="zones" aria-label="כל התחומים" class="wrap" style="display:flex;flex-direction:column;gap:18px">
 <h2 style="margin:0;font-size:30px;font-weight:800;color:var(--navy)">כל <span class="em">התחומים</span></h2>
@@ -546,14 +552,14 @@ footer .c{font-size:13px;color:#8A94A6}
 <div class="txt">
 <span style="font-size:15px;font-weight:800;color:var(--sky)">לבעלי עסקים ובעלי מקצוע</span>
 <h2>השכנים כבר <span class="emd">מחפשים אותך.</span></h2>
-<p>פרופיל עסק, מבצעים וקופונים, המלצות מלקוחות ומערכת תורים — במקום אחד.</p>
+<p>פרופיל עסק, מבצעים וקופונים והמלצות מלקוחות — במקום אחד.</p>
 <div style="display:flex;gap:12px;flex-wrap:wrap"><a class="pill btn-sky" href="/app/">להרשמת עסק</a><a class="pill btn-out" href="/b/">להורדת האפליקציה</a></div>
 </div>
 <div class="feat">
 <div><b>פרופיל עסק</b><span>שעות, טלפון, WhatsApp ו-Waze</span></div>
 <div><b>מבצעים וקופונים</b><span>עם התראה לשכונה</span></div>
 <div><b>המלצות</b><span>לקוחות ממליצים בלחיצה</span></div>
-<div><b>תורים</b><span>יומן ותזכורות</span></div>
+<div><b>עמוד משלכם באתר</b><span>שמופיע בחיפוש בגוגל</span></div>
 </div>
 </div></section>
 
