@@ -241,6 +241,10 @@ background:linear-gradient(to top,var(--t2),transparent)}
 .dir-list{padding-block:22px 56px;display:flex;flex-direction:column;gap:18px}
 /* סינון: במחשב שורות ממורכזות; בטלפון גלילה לצד עם דהייה בקצה */
 .fchips{display:flex;flex-wrap:wrap;justify-content:center;gap:8px}
+/* שורת הסינון ברוחב המסך המלא, מחוץ למסגרת התוכן */
+.fbar{padding:22px 16px 0}
+.dir-list.has-bar{padding-top:16px}
+@media (max-width:620px){.fbar{padding:18px 16px 0}.fbar .fchips{margin-inline:-16px}}
 @media (max-width:620px){.fchips{flex-wrap:nowrap;justify-content:flex-start;overflow-x:auto;padding-bottom:2px;scrollbar-width:none;margin-inline:-16px;padding-inline:16px;-webkit-mask-image:linear-gradient(to left,#000 calc(100% - 28px),transparent);mask-image:linear-gradient(to left,#000 calc(100% - 28px),transparent)}.fchips::-webkit-scrollbar{display:none}}
 .fchips button{flex:none;height:40px;padding:0 16px;border-radius:999px;font-size:15px;cursor:pointer;border:1px solid #DCE2EC;background:#fff;color:var(--ink);font-weight:600}
 .fchips button[aria-pressed=true]{border-color:var(--brand);background:var(--brand);color:#fff;font-weight:800}
@@ -366,10 +370,10 @@ background:linear-gradient(to top,var(--t2),transparent)}
 </div>
 </div></section>
 
-<section id="list" class="wrap dir-list" aria-label="מוסדות חינוך">
-<div class="fchips" role="group" aria-label="סינון">
+<div class="fbar"><div class="fchips" role="group" aria-label="סינון">
 <button type="button" data-g="" aria-pressed="true">הכל</button><button type="button" data-g="בית ספר יסודי" data-k="בית ספר יסודי" aria-pressed="false">בית ספר יסודי</button><button type="button" data-g="גן ילדים" data-k="גן ילדים" aria-pressed="false">גן ילדים</button><button type="button" data-g="מעון" data-k="מעון" aria-pressed="false">מעון</button><button type="button" data-g="משפחתון" data-k="משפחתון" aria-pressed="false">משפחתון</button><button type="button" data-g="ישיבה קטנה" data-k="ישיבה קטנה" aria-pressed="false">ישיבה קטנה</button><button type="button" data-g="סמינר" data-k="סמינר" aria-pressed="false">סמינר</button><button type="button" data-g="תיכון" data-k="תיכון" aria-pressed="false">תיכון</button>
-</div>
+</div></div>
+<section id="list" class="wrap dir-list has-bar" aria-label="מוסדות חינוך">
 <div class="dgrid">
 <article class="dcard lift" data-group="בית ספר יסודי" data-text="אילן רמון ממלכתי · בנים ובנות · גילאי א-ו בית ספר יסודי הרב יצחק ניסים 3" data-id="2301531f-a8f4-4f8e-b11b-cbc5b58dc149" data-t="education_institution">
 <div class="dmedia noimg t-teal"><svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 9l10-5 10 5-10 5zM6 11v5c3 2 9 2 12 0v-5"/></svg></div>

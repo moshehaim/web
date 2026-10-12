@@ -241,6 +241,10 @@ background:linear-gradient(to top,var(--t2),transparent)}
 .dir-list{padding-block:22px 56px;display:flex;flex-direction:column;gap:18px}
 /* סינון: במחשב שורות ממורכזות; בטלפון גלילה לצד עם דהייה בקצה */
 .fchips{display:flex;flex-wrap:wrap;justify-content:center;gap:8px}
+/* שורת הסינון ברוחב המסך המלא, מחוץ למסגרת התוכן */
+.fbar{padding:22px 16px 0}
+.dir-list.has-bar{padding-top:16px}
+@media (max-width:620px){.fbar{padding:18px 16px 0}.fbar .fchips{margin-inline:-16px}}
 @media (max-width:620px){.fchips{flex-wrap:nowrap;justify-content:flex-start;overflow-x:auto;padding-bottom:2px;scrollbar-width:none;margin-inline:-16px;padding-inline:16px;-webkit-mask-image:linear-gradient(to left,#000 calc(100% - 28px),transparent);mask-image:linear-gradient(to left,#000 calc(100% - 28px),transparent)}.fchips::-webkit-scrollbar{display:none}}
 .fchips button{flex:none;height:40px;padding:0 16px;border-radius:999px;font-size:15px;cursor:pointer;border:1px solid #DCE2EC;background:#fff;color:var(--ink);font-weight:600}
 .fchips button[aria-pressed=true]{border-color:var(--brand);background:var(--brand);color:#fff;font-weight:800}
@@ -366,10 +370,10 @@ background:linear-gradient(to top,var(--t2),transparent)}
 </div>
 </div></section>
 
-<section id="list" class="wrap dir-list" aria-label="שירותים ובריאות">
-<div class="fchips" role="group" aria-label="סינון">
+<div class="fbar"><div class="fchips" role="group" aria-label="סינון">
 <button type="button" data-g="" aria-pressed="true">הכל</button><button type="button" data-g="דואר" data-k="דואר" aria-pressed="false">דואר</button><button type="button" data-g="דפיברילטורים" data-k="דפיברילטורים" aria-pressed="false">דפיברילטורים</button><button type="button" data-g="כספומטים" data-k="כספומטים" aria-pressed="false">כספומטים</button><button type="button" data-g="מקוואות" data-k="מקוואות" aria-pressed="false">מקוואות</button><button type="button" data-g="מרכז קהילתי" data-k="מרכז קהילתי" aria-pressed="false">מרכז קהילתי</button><button type="button" data-g="משרדי ממשלה" data-k="משרדי ממשלה" aria-pressed="false">משרדי ממשלה</button><button type="button" data-g="טיפת חלב" data-k="טיפת חלב" aria-pressed="false">טיפת חלב</button><button type="button" data-g="מרפאה" data-k="מרפאה" aria-pressed="false">מרפאה</button><button type="button" data-g="בית מרקחת" data-k="בית מרקחת" aria-pressed="false">בית מרקחת</button>
-</div>
+</div></div>
+<section id="list" class="wrap dir-list has-bar" aria-label="שירותים ובריאות">
 <div class="dgrid">
 <article class="dcard lift" data-group="דואר" data-text="דואר  דואר שאול אביגור 11" data-id="38a43491-3264-4578-a054-1157b65c8cd9" data-t="community_services">
 <div class="dmedia noimg t-teal"><svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 21V5h10v16M14 9h6v12M7 9h4M7 13h4M7 17h4"/></svg></div>

@@ -241,6 +241,10 @@ background:linear-gradient(to top,var(--t2),transparent)}
 .dir-list{padding-block:22px 56px;display:flex;flex-direction:column;gap:18px}
 /* סינון: במחשב שורות ממורכזות; בטלפון גלילה לצד עם דהייה בקצה */
 .fchips{display:flex;flex-wrap:wrap;justify-content:center;gap:8px}
+/* שורת הסינון ברוחב המסך המלא, מחוץ למסגרת התוכן */
+.fbar{padding:22px 16px 0}
+.dir-list.has-bar{padding-top:16px}
+@media (max-width:620px){.fbar{padding:18px 16px 0}.fbar .fchips{margin-inline:-16px}}
 @media (max-width:620px){.fchips{flex-wrap:nowrap;justify-content:flex-start;overflow-x:auto;padding-bottom:2px;scrollbar-width:none;margin-inline:-16px;padding-inline:16px;-webkit-mask-image:linear-gradient(to left,#000 calc(100% - 28px),transparent);mask-image:linear-gradient(to left,#000 calc(100% - 28px),transparent)}.fchips::-webkit-scrollbar{display:none}}
 .fchips button{flex:none;height:40px;padding:0 16px;border-radius:999px;font-size:15px;cursor:pointer;border:1px solid #DCE2EC;background:#fff;color:var(--ink);font-weight:600}
 .fchips button[aria-pressed=true]{border-color:var(--brand);background:var(--brand);color:#fff;font-weight:800}
@@ -366,8 +370,8 @@ background:linear-gradient(to top,var(--t2),transparent)}
 </div>
 </div></section>
 
-<section id="list" class="wrap dir-list" aria-label="אולמות">
 
+<section id="list" class="wrap dir-list" aria-label="אולמות">
 <div class="dgrid">
 <article class="dcard lift" data-group="אולמות" data-text="חסדי שמואל - הרב עמרמי עד 200 איש · קייטרינג אולמות הרב מן ההר 4" data-id="794f9ffd-6dbe-4e36-abac-2a7818ca2e4d" data-t="halls">
 <div class="dmedia"><img src="https://mebomrqnfnbqijiuawdh.supabase.co/storage/v1/object/public/images/halls/90bad84e-cd56-4d0f-ac02-3c5001ea1984.jpg?v=1787773638958" alt="חסדי שמואל - הרב עמרמי" loading="lazy" decoding="async"></div>

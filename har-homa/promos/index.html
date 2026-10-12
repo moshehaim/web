@@ -241,6 +241,10 @@ background:linear-gradient(to top,var(--t2),transparent)}
 .dir-list{padding-block:22px 56px;display:flex;flex-direction:column;gap:18px}
 /* סינון: במחשב שורות ממורכזות; בטלפון גלילה לצד עם דהייה בקצה */
 .fchips{display:flex;flex-wrap:wrap;justify-content:center;gap:8px}
+/* שורת הסינון ברוחב המסך המלא, מחוץ למסגרת התוכן */
+.fbar{padding:22px 16px 0}
+.dir-list.has-bar{padding-top:16px}
+@media (max-width:620px){.fbar{padding:18px 16px 0}.fbar .fchips{margin-inline:-16px}}
 @media (max-width:620px){.fchips{flex-wrap:nowrap;justify-content:flex-start;overflow-x:auto;padding-bottom:2px;scrollbar-width:none;margin-inline:-16px;padding-inline:16px;-webkit-mask-image:linear-gradient(to left,#000 calc(100% - 28px),transparent);mask-image:linear-gradient(to left,#000 calc(100% - 28px),transparent)}.fchips::-webkit-scrollbar{display:none}}
 .fchips button{flex:none;height:40px;padding:0 16px;border-radius:999px;font-size:15px;cursor:pointer;border:1px solid #DCE2EC;background:#fff;color:var(--ink);font-weight:600}
 .fchips button[aria-pressed=true]{border-color:var(--brand);background:var(--brand);color:#fff;font-weight:800}
@@ -366,8 +370,8 @@ background:linear-gradient(to top,var(--t2),transparent)}
 </div>
 </div></section>
 
-<section id="list" class="wrap dir-list" aria-label="מבצעים וקופונים">
 
+<section id="list" class="wrap dir-list" aria-label="מבצעים וקופונים">
 <div class="dgrid">
 <article class="dcard lift" data-group="מבצעים" data-text="נקיון בניין א.א.ב ניקיון בתוקף עד 13.10 מבצעים">
 <div class="dmedia"><img src="https://mebomrqnfnbqijiuawdh.supabase.co/storage/v1/object/public/images/promotions/general/7d345b43-6bb0-4acf-82dd-47f1ec3eebd6.jpg?v=1791289357010" alt="נקיון בניין" loading="lazy" decoding="async"><span class="dtag">מבצע</span></div>

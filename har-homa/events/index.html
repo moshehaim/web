@@ -241,6 +241,10 @@ background:linear-gradient(to top,var(--t2),transparent)}
 .dir-list{padding-block:22px 56px;display:flex;flex-direction:column;gap:18px}
 /* סינון: במחשב שורות ממורכזות; בטלפון גלילה לצד עם דהייה בקצה */
 .fchips{display:flex;flex-wrap:wrap;justify-content:center;gap:8px}
+/* שורת הסינון ברוחב המסך המלא, מחוץ למסגרת התוכן */
+.fbar{padding:22px 16px 0}
+.dir-list.has-bar{padding-top:16px}
+@media (max-width:620px){.fbar{padding:18px 16px 0}.fbar .fchips{margin-inline:-16px}}
 @media (max-width:620px){.fchips{flex-wrap:nowrap;justify-content:flex-start;overflow-x:auto;padding-bottom:2px;scrollbar-width:none;margin-inline:-16px;padding-inline:16px;-webkit-mask-image:linear-gradient(to left,#000 calc(100% - 28px),transparent);mask-image:linear-gradient(to left,#000 calc(100% - 28px),transparent)}.fchips::-webkit-scrollbar{display:none}}
 .fchips button{flex:none;height:40px;padding:0 16px;border-radius:999px;font-size:15px;cursor:pointer;border:1px solid #DCE2EC;background:#fff;color:var(--ink);font-weight:600}
 .fchips button[aria-pressed=true]{border-color:var(--brand);background:var(--brand);color:#fff;font-weight:800}
@@ -366,10 +370,10 @@ background:linear-gradient(to top,var(--t2),transparent)}
 </div>
 </div></section>
 
-<section id="list" class="wrap dir-list" aria-label="הכל לאירוע">
-<div class="fchips" role="group" aria-label="סינון">
+<div class="fbar"><div class="fchips" role="group" aria-label="סינון">
 <button type="button" data-g="" aria-pressed="true">הכל</button><button type="button" data-g="אולמות" data-k="אולמות" aria-pressed="false">אולמות</button><button type="button" data-g="עסקים לאירועים" data-k="עסקים לאירועים" aria-pressed="false">עסקים לאירועים</button><button type="button" data-g="בעלי מקצוע לאירועים" data-k="בעלי מקצוע לאירועים" aria-pressed="false">בעלי מקצוע לאירועים</button>
-</div>
+</div></div>
+<section id="list" class="wrap dir-list has-bar" aria-label="הכל לאירוע">
 <div class="dgrid">
 <article class="dcard lift" data-group="אולמות" data-text="אוהל יצחק וחנה עד 80 איש אולמות נחמה" data-id="0ccb0404-c706-4047-9c4e-1b803e829a1b" data-t="halls">
 <div class="dmedia noimg t-amber"><svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20h16M6 20V8h12v12M9 8V5h6v3M10 20v-5h4v5"/></svg></div>

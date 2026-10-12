@@ -241,6 +241,10 @@ background:linear-gradient(to top,var(--t2),transparent)}
 .dir-list{padding-block:22px 56px;display:flex;flex-direction:column;gap:18px}
 /* סינון: במחשב שורות ממורכזות; בטלפון גלילה לצד עם דהייה בקצה */
 .fchips{display:flex;flex-wrap:wrap;justify-content:center;gap:8px}
+/* שורת הסינון ברוחב המסך המלא, מחוץ למסגרת התוכן */
+.fbar{padding:22px 16px 0}
+.dir-list.has-bar{padding-top:16px}
+@media (max-width:620px){.fbar{padding:18px 16px 0}.fbar .fchips{margin-inline:-16px}}
 @media (max-width:620px){.fchips{flex-wrap:nowrap;justify-content:flex-start;overflow-x:auto;padding-bottom:2px;scrollbar-width:none;margin-inline:-16px;padding-inline:16px;-webkit-mask-image:linear-gradient(to left,#000 calc(100% - 28px),transparent);mask-image:linear-gradient(to left,#000 calc(100% - 28px),transparent)}.fchips::-webkit-scrollbar{display:none}}
 .fchips button{flex:none;height:40px;padding:0 16px;border-radius:999px;font-size:15px;cursor:pointer;border:1px solid #DCE2EC;background:#fff;color:var(--ink);font-weight:600}
 .fchips button[aria-pressed=true]{border-color:var(--brand);background:var(--brand);color:#fff;font-weight:800}
@@ -366,10 +370,10 @@ background:linear-gradient(to top,var(--t2),transparent)}
 </div>
 </div></section>
 
-<section id="list" class="wrap dir-list" aria-label="עסקים">
-<div class="fchips" role="group" aria-label="סינון">
+<div class="fbar"><div class="fchips" role="group" aria-label="סינון">
 <button type="button" data-g="" aria-pressed="true">הכל</button><button type="button" data-g="מזון ומסעדות" data-k="מזון ומסעדות" aria-pressed="false">מזון ומסעדות</button><button type="button" data-g="קמעונאות" data-k="קמעונאות" aria-pressed="false">קמעונאות</button><button type="button" data-g="טיפוח אישי" data-k="טיפוח אישי" aria-pressed="false">טיפוח אישי</button><button type="button" data-g="לבית ולגן" data-k="לבית ולגן" aria-pressed="false">לבית ולגן</button><button type="button" data-g="שירותים ותיקונים" data-k="שירותים ותיקונים" aria-pressed="false">שירותים ותיקונים</button><button type="button" data-g="אירועים ושמחות" data-k="אירועים ושמחות" aria-pressed="false">אירועים ושמחות</button><button type="button" data-g="חיות מחמד" data-k="חיות מחמד" aria-pressed="false">חיות מחמד</button><button type="button" data-g="שונות" data-k="שונות" aria-pressed="false">שונות</button>
-</div>
+</div></div>
+<section id="list" class="wrap dir-list has-bar" aria-label="עסקים">
 <div class="dgrid">
 <article class="dcard lift" data-group="שירותים ותיקונים" data-text="mc שירות פז שירות תיקונים ומכירת מוצרי חשמל ביתיים תיקון מכשירי חשמל שירותים ותיקונים גילה" data-id="54e2c68d-2d47-4f2b-8fac-a46e9f334466" data-t="businesses">
 <div class="dmedia"><img src="https://mebomrqnfnbqijiuawdh.supabase.co/storage/v1/object/public/images/businesses/profiles/54e2c68d-2d47-4f2b-8fac-a46e9f334466.jpg?v=1789502020028" alt="mc שירות פז שירות תיקונים ומכירת מוצרי חשמל ביתיים" loading="lazy" decoding="async"></div>
