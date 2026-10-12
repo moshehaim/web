@@ -78,6 +78,7 @@ background:linear-gradient(to top,var(--t2),transparent)}
 .dcard[hidden]{display:none}
 .dmedia{position:relative;aspect-ratio:4/3;max-width:100%;background:#DCE5F5;overflow:hidden;display:flex;align-items:center;justify-content:center}
 .dmedia img{width:100%;height:100%;object-fit:cover}
+.drec .rn{display:none}
 .drec{position:absolute;top:10px;right:10px;display:inline-flex;align-items:center;gap:4px;font-size:13px;font-weight:800;background:#E24B4A;color:#fff;border-radius:999px;padding:3px 10px;box-shadow:0 2px 8px rgba(0,0,0,.22)}
 .dbody{padding:14px 16px 4px;display:flex;flex-direction:column;gap:4px;flex:1}
 .dbody h3{margin:0;font-size:19px;font-weight:800;line-height:1.25}
@@ -96,7 +97,7 @@ background:linear-gradient(to top,var(--t2),transparent)}
 .a-tel.shown{width:auto;border-radius:999px;padding:0 14px;gap:8px;font-weight:800;font-size:15px;white-space:nowrap}
 .a-tel.shown .ld{display:inline;font-variant-numeric:tabular-nums}
 .a-wa{background:#E7F7EC;color:#15803D}.a-wa:hover{color:#15803D;background:#D8F1E0}
-.a-waze{background:#E3F4FB;color:#0E7FAE}.a-waze:hover{color:#0E7FAE;background:#D3EDF8}
+.a-waze{background:none}.a-waze img{width:44px;height:44px;display:block;transition:transform .15s}.a-waze:hover img{transform:scale(1.06)}
 .dact a.a-app{flex:1 1 auto;width:auto;border-radius:12px;font-weight:800;font-size:15px}
 .a-app{background:#F1F4F8;color:var(--navy)}
 .dact [data-tip]{position:relative}
@@ -105,14 +106,16 @@ background:linear-gradient(to top,var(--t2),transparent)}
 .dempty b{font-size:20px}.dempty span{font-size:16px;color:#566173}
 .dgrid .dcard:hover{transform:none}
 @media (max-width:620px){
-.dcard{display:grid;grid-template-columns:96px minmax(0,1fr);grid-template-areas:"m b" "a a"}
-.dmedia{grid-area:m;aspect-ratio:1/1;margin:14px 14px 0 0;border-radius:14px;width:82px}
+/* כמו באפליקציה: הטקסט מימין, התמונה בצד השני */
+.dcard{display:grid;grid-template-columns:minmax(0,1fr) 96px;grid-template-areas:"b m" "a a"}
+.dmedia{grid-area:m;aspect-ratio:1/1;margin:14px 0 0 14px;border-radius:14px;width:82px;overflow:visible}
+.dmedia img{border-radius:14px}
 .dmedia.noimg svg{width:36px;height:36px}
-.drec{position:static;grid-area:auto;align-self:flex-start;box-shadow:none}
-.dbody{grid-area:b;padding:14px 12px 0 16px}
+.drec{top:-6px;right:auto;left:-6px;padding:2px 7px;gap:3px;font-size:12px;box-shadow:0 1px 4px rgba(0,0,0,.25);border:2px solid #fff}
+.drec .rt{display:none}.drec .rn{display:inline}
+.dbody{grid-area:b;padding:14px 16px 0 12px}
 .dbody h3{font-size:17px}
 .dact{grid-area:a;padding:12px 14px 14px}
-.dmedia .drec{display:none}
 }
 .dtag{position:absolute;top:10px;right:10px;font-size:13px;font-weight:800;padding:4px 10px;border-radius:8px;background:#fff;color:var(--navy);z-index:1}
 .dprice{position:absolute;bottom:10px;right:10px;font-size:16px;font-weight:700;background:rgba(15,27,48,.82);color:#fff;padding:4px 10px;border-radius:10px;z-index:1;font-variant-numeric:tabular-nums}
@@ -182,11 +185,13 @@ function card(p, kind) {
     ? `<img src="${esc(p.img)}" alt="${esc(p.name)}" loading="lazy" decoding="async">`
     : svg((CAT_ICON[p.cat] || CAT_ICON.other)[0], 64, 'currentColor', 1.6);
   const tone = p.img ? '' : ` noimg t-${(CAT_ICON[p.cat] || CAT_ICON.other)[1]}`;
-  const rec = p.rec > 0 ? `<span class="drec">${svg(ICON_HEART, 14, 'currentColor', 2)}${p.rec === 1 ? 'המלצה אחת' : `${p.rec} המלצות`}</span>` : '';
+  // בכרטיס הצר (טלפון) התג מתכווץ ללב עם מספר — כמו RecommendHeartBadge באפליקציה
+  const recTxt = p.rec === 1 ? 'המלצה אחת' : `${p.rec} המלצות`;
+  const rec = p.rec > 0 ? `<span class="drec" aria-label="${recTxt}">${svg(ICON_HEART, 14, 'currentColor', 2)}<span class="rt">${recTxt}</span><span class="rn">${p.rec}</span></span>` : '';
   const acts = [];
   if (p.phone) acts.push(`<a class="a-tel" href="${esc(p.phone.tel)}" data-num="${esc(p.phone.display)}" aria-label="טלפון של ${esc(p.name)}" title="טלפון">${svg(ICON_PHONE, 19, 'currentColor', 2.2)}<span class="ld"></span></a>`);
   if (p.phone?.wa) acts.push(`<a class="a-wa" href="${esc(p.phone.wa)}" target="_blank" rel="noopener" aria-label="WhatsApp ל${esc(p.name)}" title="WhatsApp">${svg(ICON_WA, 20, 'currentColor', 2)}</a>`);
-  if (p.waze) acts.push(`<a class="a-waze" href="${esc(p.waze)}" target="_blank" rel="noopener" aria-label="ניווט ל${esc(p.name)} ב-Waze" title="ניווט">${svg(ICON_WAZE, 19, 'currentColor', 2)}</a>`);
+  if (p.waze) acts.push(`<a class="a-waze" href="${esc(p.waze)}" target="_blank" rel="noopener" aria-label="ניווט ל${esc(p.name)} ב-Waze" title="ניווט ב-Waze"><img src="/img/waze.png" alt="" width="44" height="44"></a>`);
   if (!acts.length) acts.push(`<a class="a-app" href="${APP}">לפרטים באפליקציה</a>`);
   return `<article class="dcard lift" data-group="${esc(p.group)}" data-text="${esc(text)}" data-id="${esc(p.id)}" data-t="${esc(p.table)}">
 <div class="dmedia${tone}">${media}${rec}</div>

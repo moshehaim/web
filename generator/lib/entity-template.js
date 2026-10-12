@@ -190,7 +190,7 @@ ${(d.promos || []).length ? `<div class="e-card"><h2>מבצעים <span class="e
 </div>
 <aside class="e-side">
 <div class="e-card"><h2>יצירת קשר</h2><div class="e-acts">${acts.join('')}</div></div>
-${e.where || d.lat ? `<div class="e-card"><h2>הגעה</h2>${e.where ? `<p class="e-addr">${esc(e.where)}</p>` : ''}${d.lat ? `<div class="e-acts">${e.waze ? `<a class="e-waze" href="${esc(e.waze)}" target="_blank" rel="nofollow noopener">${svg(ICON.waze, 18, 'currentColor', 2)}ניווט ב-Waze</a>` : ''}${maps ? `<a class="e-map" href="${esc(maps)}" target="_blank" rel="nofollow noopener">${svg(ICON.pin, 18, 'currentColor', 2)}פתיחה במפות</a>` : ''}</div>` : ''}</div>` : ''}
+${e.where || d.lat ? `<div class="e-card"><h2>הגעה</h2>${e.where ? `<p class="e-addr">${esc(e.where)}</p>` : ''}${d.lat ? `<div class="e-acts">${e.waze ? `<a class="e-waze" href="${esc(e.waze)}" target="_blank" rel="nofollow noopener"><img src="/img/waze.png" alt="" width="24" height="24" style="display:block">ניווט ב-Waze</a>` : ''}${maps ? `<a class="e-map" href="${esc(maps)}" target="_blank" rel="nofollow noopener">${svg(ICON.pin, 18, 'currentColor', 2)}פתיחה במפות</a>` : ''}</div>` : ''}</div>` : ''}
 ${hours(d.schedule, st)}
 <p class="e-note">${OWNER_NOTE[e.owner] || OWNER_NOTE.team}</p>
 </aside>
