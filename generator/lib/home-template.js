@@ -108,6 +108,7 @@ a.hood-item:hover{background:#F5F8FF}
 .chips .wrap{display:flex;gap:6px;padding-block:8px;width:max-content;min-width:100%}
 .chips a{flex:none;font-size:15px;font-weight:700;color:#3B4860;text-decoration:none;padding:6px 14px;border-radius:999px;background:#F4F5F7}
 .chips a:hover{background:#EFF4FF;color:var(--brand)}
+.chips a.on{background:var(--brand);color:#fff}
 
 /* hero */
 .hero{background:var(--navy);color:#fff;position:relative;overflow:hidden}
@@ -345,7 +346,8 @@ function boardSection(vm) {
   const first = Math.max(0, tabs.findIndex((t) => t.items.length));
   const now = new Date(vm.builtAt);
   const jt = new Date(now.toLocaleString('en-US', { timeZone: 'Asia/Jerusalem' }));
-  const ssr = nextPrayers(vm.prayers, jt.getHours() * 60 + jt.getMinutes(), jt.getDay());
+  // בלי תלות בשעת הבנייה (נבנה כל שעה, ושינוי רק בגלל השעה ייצור commit מיותר) — הדפדפן מחליף מיד
+  const ssr = nextPrayers(vm.prayers, 0, jt.getDay());
 
   return `<section id="board" aria-label="לוח השכונה" class="wrap"><div class="board-grid">
 
@@ -417,7 +419,7 @@ var TYPES=['שחרית','מנחה','ערבית'],lastMin=-1;
 function nextList(nowMin,dow){return TYPES.map(function(t){
   var of=P.filter(function(p){return p.t===t;}),p=null,w='';
   for(var i=0;i<of.length;i++){if(of[i].d.indexOf(dow)>=0&&of[i].m>=nowMin){p=of[i];break;}}
-  if(p){w=p.m-nowMin<=60?'בעוד '+(p.m-nowMin)+' דק׳':'היום';}
+  if(p){w=p.m===nowMin?'עכשיו':p.m-nowMin<=60?'בעוד '+(p.m-nowMin)+' דק׳':'היום';}
   else{for(var j=0;j<of.length;j++){if(of[j].d.indexOf((dow+1)%7)>=0){p=of[j];break;}}w='מחר';}
   return p?{p:p,w:w}:null;}).filter(Boolean);}
 function tick(){
@@ -476,6 +478,25 @@ tabs.forEach(function(t,i){t.addEventListener('click',function(){sel(t);});
 
 
 /* ── מעטפת משותפת (ראש, כותרת, תחתית) לעמוד הבית ולרשימות ── */
+
+
+/** שורת התחומים מתחת לכותרת — אותה רשימה בכל עמודי האתר. current = המפתח של העמוד הנוכחי. */
+export function navChips(home, current = '') {
+  const M = '/minyanim-har-homa/';
+  const items = [
+    ['home', 'דף השכונה', home], ['minyanim', 'מניינים', M], ['lessons', 'שיעורים', APP],
+    ['biz', 'עסקים', `${home}biz/`], ['pros', 'בעלי מקצוע', `${home}pros/`],
+    ['promos', 'מבצעים', `${home}promos/`], ['coupons', 'קופונים', `${home}promos/#קופונים`],
+    ['gmach', 'גמ״חים', `${home}board/#gmach`], ['jobs', 'דרושים', `${home}board/#jobs`],
+    ['second', 'יד שנייה', `${home}board/#second`], ['realestate', 'נדל״ן', `${home}realestate/`],
+    ['vol', 'התנדבות', `${home}board/#vol`], ['lost', 'אבידות ומציאות', `${home}board/#lost`],
+    ['halls', 'אולמות', APP], ['hosting', 'אירוח', APP], ['events', 'הכל לאירוע', APP],
+    ['edu', 'מוסדות חינוך', APP], ['parks', 'גנים ופארקים', APP], ['happenings', 'אירועים', APP],
+  ];
+  return `<nav class="chips" aria-label="תחומים"><div class="wrap">
+${items.map(([k, l, h]) => `<a href="${h}"${k === current ? ' aria-current="page" class="on"' : ''}>${l}</a>`).join('')}
+</div></nav>`;
+}
 
 export function pageHead({ title, desc, url, base, css = '' }) {
   return `<!DOCTYPE html>
@@ -553,9 +574,7 @@ export function homePage(vm, { base, path: pagePath }) {
 
   return `${pageHead({ title, desc, url, base })}<a href="#main" class="sr">דלג לתוכן</a>
 
-${siteHeader(vm, pagePath, `<nav class="chips" aria-label="תחומים"><div class="wrap">
-<a href="#board">תפילות</a>${vm.promos.length ? '<a href="#promos">מבצעים</a>' : ''}<a href="#pros">בעלי מקצוע</a><a href="#biz">עסקים</a>${vm.realEstate.length ? '<a href="#realestate">נדל״ן</a>' : ''}<a href="#board">דרושים</a><a href="#board">יד שנייה</a><a href="#board">גמ״חים</a><a href="#zones">כל התחומים</a>
-</div></nav>`)}
+${siteHeader(vm, pagePath, navChips(pagePath, 'home'))}
 
 <main id="main">
 

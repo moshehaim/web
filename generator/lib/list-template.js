@@ -3,7 +3,7 @@
  * HTML מלא מרונדר מראש (לגוגל), וסקריפט קטן לחיפוש ולסינון לפי תחום.
  */
 
-import { pageHead, siteHeader, siteFooter, HOOD_JS, esc, svg, APP } from './home-template.js';
+import { pageHead, siteHeader, siteFooter, HOOD_JS, esc, svg, APP, navChips } from './home-template.js';
 
 const ICON_PHONE = 'M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2';
 const ICON_WA = 'M4 20l1.3-4A8 8 0 1 1 8 18.7zM9 9.5c.3 2 2.3 4.2 4.5 4.6l1-1.2 1.8.8-.4 1.6c-3.3.2-7-3.4-7-6.8l1.5-.5.8 1.8z';
@@ -102,6 +102,10 @@ background:linear-gradient(to top,var(--t2),transparent)}
 .brow h3{font-size:17px}
 .bside{display:flex;align-items:center;gap:10px;padding-inline:0 16px;flex:none}
 .bgo{width:34px;height:34px;border-radius:50%;background:#F1F4F8;color:var(--navy);display:flex;align-items:center;justify-content:center;font-weight:800}
+.bthumb{flex:none;width:84px;height:84px;margin-inline-start:12px;border-radius:14px;overflow:hidden;background:#DCE5F5}
+.bthumb img{width:100%;height:100%;object-fit:cover}
+@media (max-width:620px){.brow .bthumb{width:100%;height:auto;aspect-ratio:16/10;margin:12px 0 0;border-radius:0 0 0 0}.brow{padding:0;overflow:hidden}.brow .bthumb{margin:0}}
+.fchips>:first-child{margin-inline-start:auto}.fchips>:last-child{margin-inline-end:auto}
 .bgrp{font-size:12px;font-weight:800;color:var(--accent)}
 .bbadge2{font-size:13px;font-weight:800;background:#EFF4FF;color:var(--brand);border-radius:8px;padding:3px 10px;white-space:nowrap}
 .dbody .pr{font-size:17px;font-weight:800;color:var(--navy);font-variant-numeric:tabular-nums}
@@ -120,7 +124,8 @@ function run(){var t=(q.value||'').trim(),n=0;
 chips.forEach(function(b){b.addEventListener('click',function(){g=b.getAttribute('data-g');
   chips.forEach(function(x){x.setAttribute('aria-pressed',x===b);});run();});});
 q.addEventListener('input',function(){run();});
-var h='';try{h=decodeURIComponent((location.hash||'').slice(1));}catch(_){}if(h){chips.forEach(function(b){if(b.getAttribute('data-k')===h)b.click();});}
+function byHash(){var h='';try{h=decodeURIComponent((location.hash||'').slice(1));}catch(_){}if(h){chips.forEach(function(b){if(b.getAttribute('data-k')===h)b.click();});}}
+byHash();window.addEventListener('hashchange',byHash);
 /* כרטיס בלי תמונה: מקוצר (כיתוב בלבד), אלא אם הוא באותה שורה עם כרטיס שיש לו תמונה — לגובה אחיד */
 function fit(){var vis=cards.filter(function(c){return !c.hidden;}),rows={};
   vis.forEach(function(c){c.classList.remove('compact');});
@@ -176,10 +181,7 @@ const PAGES = [['pros/', 'בעלי מקצוע'], ['biz/', 'עסקים'], ['promo
 
 function collectionPage(vm, o) {
   const pagePath = `${o.home}${o.slug}/`;
-  const cur = (href) => href === `${o.slug}/` ? ' aria-current="page" style="background:var(--brand);color:#fff"' : '';
-  const nav = `<nav class="chips" aria-label="תחומים"><div class="wrap">
-<a href="${o.home}">דף השכונה</a><a href="/minyanim-har-homa/">תפילות</a>${PAGES.map(([h, l]) => `<a href="${o.home}${h}"${cur(h)}>${l}</a>`).join('')}
-</div></nav>`;
+  const nav = navChips(o.home, o.slug);
   const chips = o.groups.length > 1
     ? `<div class="fchips" role="group" aria-label="סינון">
 <button type="button" data-g="" aria-pressed="true">הכל</button>${o.groups.map((g) => {
@@ -291,7 +293,7 @@ export function realEstatePage(vm, ls, { base, home }) {
 export function boardPage(vm, ls, { base, home }) {
   const d = ls.board;
   const row = (x) => `<a class="dcard brow lift" href="${APP}" data-group="${esc(x.group)}" data-text="${esc([x.t, x.sub, x.group].join(' '))}">
-<span class="dbody"><span class="bgrp">${esc(x.group)}</span><h3>${esc(x.t)}</h3><span class="w">${esc(x.sub)}</span></span>
+${x.img ? `<span class="bthumb"><img src="${esc(x.img)}" alt="${esc(x.t)}" loading="lazy" decoding="async"></span>` : ''}<span class="dbody"><span class="bgrp">${esc(x.group)}</span><h3>${esc(x.t)}</h3><span class="w">${esc(x.sub)}</span></span>
 <span class="bside">${x.b ? `<span class="bbadge2">${esc(x.b)}</span>` : ''}<span class="bgo" aria-hidden="true">←</span></span>
 </a>`;
   return collectionPage(vm, {
