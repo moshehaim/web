@@ -79,7 +79,10 @@ button{font:inherit}
 
 /* header */
 .hdr{background:#fff;border-bottom:1px solid var(--line);position:sticky;top:0;z-index:20}
-.hdr-row{display:flex;flex-wrap:wrap;align-items:center;gap:12px 16px;padding-block:12px}
+.hdr-row{display:flex;align-items:center;gap:12px 16px;padding-block:12px}
+.hdr-mid{display:flex;align-items:center;gap:12px;min-width:0;flex:1}
+@media (min-width:1440px){.hdr-row{display:grid;grid-template-columns:minmax(420px,1fr) minmax(0,680px) minmax(420px,1fr);max-width:1600px;gap:20px}.hdr-mid{justify-content:center}.hdr-actions{justify-self:end;flex-wrap:nowrap}}
+@media (max-width:1100px) and (min-width:761px){.hdr-actions .btn-line{display:none}}
 .logo img{width:52px;height:52px}
 .hood{position:relative}
 .hood-btn{display:flex;align-items:center;gap:10px;height:52px;padding:0 12px 0 10px;border-radius:14px;border:1.5px solid #DCE5F5;background:#F5F8FF;cursor:pointer;color:var(--navy)}
@@ -95,7 +98,7 @@ a.hood-item:hover{background:#F5F8FF}
 .hood-item.off{color:#8A94A6;font-weight:700}
 .badge{flex:none;font-size:12px;font-weight:800;border-radius:7px;padding:2px 9px;background:#EAF0F9;color:var(--brand)}
 .badge.on{background:var(--brand);color:#fff}
-.gs{position:relative;flex:1 1 260px;max-width:460px;min-width:0}
+.gs{position:relative;flex:1 1 440px;max-width:460px;min-width:0}
 .gs-box{display:flex;align-items:center;gap:8px;height:46px;padding:0 14px;border-radius:999px;background:#F6F7F9;border:1px solid var(--line)}
 .gs-box:focus-within{border-color:#9DB8DF;background:#fff}
 .gs-box input{flex:1;min-width:0;border:0;outline:0;background:transparent;font:inherit;font-size:15px;color:var(--ink)}
@@ -115,7 +118,7 @@ a.hood-item:hover{background:#F5F8FF}
 .btn-ghost{color:var(--navy);padding:0 12px}
 .btn-line{border:1.5px solid var(--brand);color:var(--brand)}
 .btn-dark{background:var(--navy);color:#fff}.btn-dark:hover{color:#fff;background:#0F1F3B}
-@media (max-width:760px){.hdr-row{flex-wrap:wrap;gap:10px;padding-block:10px}.logo img{width:44px;height:44px}
+@media (max-width:760px){.hdr-row{display:flex;flex-wrap:wrap;gap:10px;padding-block:10px}.hdr-mid{display:contents}.hdr-actions{margin-inline-start:auto}.logo img{width:44px;height:44px}
 .hood{min-width:0}.hood-btn{height:46px;max-width:100%}.hood-btn b{max-width:150px}
 .hdr-actions .btn-line,.hdr-actions .btn-dark{display:none}.hdr-actions .btn-ghost{width:46px;padding:0;justify-content:center}
 .btn-ghost .lbl{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}}
@@ -589,6 +592,7 @@ export function siteHeader(vm, pagePath, navChips) {
   return `<header class="hdr">
 <div class="wrap hdr-row">
 <a class="logo" href="/" aria-label="שכונה — דף הבית"><img src="/app_icon.png" alt="שכונה" width="52" height="52"></a>
+<div class="hdr-mid">
 <div class="hood">
 <button type="button" class="hood-btn" id="hood-btn" aria-haspopup="dialog" aria-expanded="false" aria-controls="hood-pop">
 ${svg('M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21zM12 7a2.5 2.5 0 1 0 0 5a2.5 2.5 0 1 0 0-5', 20, '#244782', 2)}
@@ -616,6 +620,7 @@ ${vm.hoods.map((h) => {
 <label class="gs-box">${svg('M11 4a7 7 0 1 0 0 14a7 7 0 1 0 0-14zM20 20l-4-4', 18, '#6B7689', 2)}<span class="sr">חיפוש בשכונה</span><input id="g-q" type="search" placeholder="חשמלאי, גמ״ח עריסות, בית כנסת…" autocomplete="off" aria-controls="g-res" aria-expanded="false"></label>
 <div class="gs-res" id="g-res" role="listbox" hidden></div>
 </form>
+</div>
 <div class="hdr-actions">
 <button type="button" class="pill btn-ghost gs-open" aria-label="חיפוש">${svg('M11 4a7 7 0 1 0 0 14a7 7 0 1 0 0-14zM20 20l-4-4', 20, 'currentColor', 2)}</button>
 <a class="pill btn-ghost" href="${LOGIN}">${svg('M12 4a4 4 0 1 0 0 8a4 4 0 1 0 0-8zM4 21a8 8 0 0 1 16 0', 20, 'currentColor', 2)}<span class="lbl">התחברות</span></a>
