@@ -242,14 +242,14 @@ export async function fetchDirectory(db, communityId) {
   const [businesses, professionals, businessTypes, businessCategories, profCategories, promos] = await Promise.all([
     q(db.from('businesses')
       .select('id,name,phone,address,image_url,business_type,recommend_count,latitude,longitude,image_women_only,content_audience,' +
-        'weekly_schedule,kosher_info,event_services_description,appointment_system_status')
+        'weekly_schedule,kosher_info,event_services_description,appointment_system_status,user_id')
       .eq('community_id', communityId).not('is_active', 'is', false)
       .order('is_prominent', { ascending: false, nullsFirst: false })
       .order('priority', { ascending: false, nullsFirst: false })
       .order('name')),
     q(db.from('professionals')
       .select('id,name,phone,main_category,sub_categories,image_url,recommend_count,image_women_only,content_audience,' +
-        'description,weekly_schedule,experience_years,price_range,provides_warranty,tags,address,latitude,longitude,appointment_system_status')
+        'description,weekly_schedule,experience_years,price_range,provides_warranty,tags,address,latitude,longitude,appointment_system_status,user_id')
       .eq('community_id', communityId).not('is_active', 'is', false)
       .order('is_prominent', { ascending: false, nullsFirst: false })
       .order('priority', { ascending: false, nullsFirst: false })
@@ -296,6 +296,7 @@ export function shapeDirectory(raw) {
         img: p.image_women_only ? null : p.image_url,
         rec: p.recommend_count || 0, where: p.address || '', phone: phoneLinks(p.phone),
         waze: p.latitude && p.longitude ? `https://waze.com/ul?ll=${p.latitude},${p.longitude}&navigate=yes` : null,
+        owner: p.user_id ? 'owner' : 'team',
         detail: { desc: p.description || '', schedule: p.weekly_schedule, booking: [2, 3].includes(p.appointment_system_status),
           facts: [p.experience_years ? `${p.experience_years} שנות ניסיון` : '', p.price_range || '', p.provides_warranty ? 'נותן אחריות' : '']
             .filter(Boolean), tags: [...subs.slice(3), ...(p.tags || [])], lat: p.latitude, lng: p.longitude,
@@ -312,6 +313,7 @@ export function shapeDirectory(raw) {
         rec: b.recommend_count || 0,
         where: b.address || '', phone: phoneLinks(b.phone),
         waze: b.latitude && b.longitude ? `https://waze.com/ul?ll=${b.latitude},${b.longitude}&navigate=yes` : null,
+        owner: b.user_id ? 'owner' : 'team',
         detail: { desc: b.event_services_description || '', schedule: b.weekly_schedule, booking: [2, 3].includes(b.appointment_system_status),
           facts: [b.kosher_info ? `כשרות: ${b.kosher_info}` : ''].filter(Boolean), tags: [], lat: b.latitude, lng: b.longitude,
           promos: promosOf(b.id) },
@@ -354,14 +356,14 @@ export async function fetchListings(db, communityId) {
 
 export function shapeListings(raw, community, now = new Date()) {
   const promos = [
-    ...raw.promotions.map((p) => ({ group: 'מבצעים', kind: 'מבצע', title: p.title, provider: p.provider_name || '',
+    ...raw.promotions.map((p) => ({ id: p.id, group: 'מבצעים', kind: 'מבצע', title: p.title, provider: p.provider_name || '',
       img: p.image_women_only ? null : p.image_url, until: until(p.end_date), cat: 'retail' })),
     ...raw.coupons.map((c) => ({ group: 'קופונים', kind: 'קופון', title: c.text_content || 'קופון', provider: '',
       img: c.image_women_only ? null : c.image_url, until: until(c.expires_at), coupon: true, cat: 'retail' })),
   ];
 
   const home = (r, kind, price) => ({
-    group: kind, kind, img: firstImage(r.image_urls), cat: 'household',
+    id: r.id, group: kind, kind, img: firstImage(r.image_urls), cat: 'household',
     price: price && price >= 300 ? (kind === 'להשכרה' ? `${ils(price)} לחודש` : ils(price)) : '',
     title: [PROPERTY_TYPES[r.property_type] || 'נכס', r.num_rooms ? `${r.num_rooms} חד׳` : ''].filter(Boolean).join(' · '),
     meta: [r.area_in_sqm ? `${r.area_in_sqm} מ״ר` : '', r.floor != null ? (r.floor === 0 ? 'קומת קרקע' : `קומה ${r.floor}`) : '']
@@ -373,15 +375,15 @@ export function shapeListings(raw, community, now = new Date()) {
     .sort((a, b) => !!b.img - !!a.img);
 
   const board = [
-    ...raw.jobs.map((j) => ({ key: 'jobs', group: 'דרושים', t: j.title,
+    ...raw.jobs.map((j) => ({ id: j.id, key: 'jobs', group: 'דרושים', t: j.title,
       sub: [j.company_name, ago(j.created_at, now)].filter(Boolean).join(' · '), b: EMPLOYMENT[j.employment_type] || '' })),
-    ...raw.secondHand.map((s) => ({ key: 'second', group: 'יד שנייה', t: s.name, sub: ago(s.created_at, now), img: firstImage(s.image_urls),
+    ...raw.secondHand.map((s) => ({ id: s.id, key: 'second', group: 'יד שנייה', t: s.name, sub: ago(s.created_at, now), img: firstImage(s.image_urls),
       b: s.is_free || !s.price ? 'למסירה' : ils(s.price) })),
-    ...raw.gmachim.map((g) => ({ key: 'gmach', group: 'גמ״חים', t: g.name,
+    ...raw.gmachim.map((g) => ({ id: g.id, key: 'gmach', group: 'גמ״חים', t: g.name,
       sub: [(g.categories || []).join(' · '), g.address].filter(Boolean).join(' · ') || 'גמ״ח', b: '' })),
-    ...raw.volunteering.map((v) => ({ key: 'vol', group: 'התנדבות', t: v.title,
+    ...raw.volunteering.map((v) => ({ id: v.id, key: 'vol', group: 'התנדבות', t: v.title,
       sub: [v.organization_name, ago(v.created_at, now)].filter(Boolean).join(' · '), b: '' })),
-    ...raw.lostFound.map((l) => ({ key: 'lost', group: 'אבידות ומציאות', t: l.title, sub: ago(l.created_at, now), img: l.image_url || null,
+    ...raw.lostFound.map((l) => ({ id: l.id, key: 'lost', group: 'אבידות ומציאות', t: l.title, sub: ago(l.created_at, now), img: l.image_url || null,
       b: l.status === 'lost' ? 'אבד' : 'נמצא' })),
   ];
   const boardGroups = [['jobs', 'דרושים'], ['second', 'יד שנייה'], ['gmach', 'גמ״חים'], ['vol', 'התנדבות'], ['lost', 'אבידות ומציאות']]
@@ -442,7 +444,7 @@ export function shapeMore(raw, dir, synSlugs = {}) {
     field: [h.capacity > 1 ? `עד ${h.capacity} איש` : '', h.has_catering ? 'קייטרינג' : '', h.has_disabled_access ? 'נגיש' : ''].filter(Boolean).join(' · '),
     where: h.address || '', img: firstImage(h.images), phone: phoneLinks(h.phone), waze: waze(h.latitude, h.longitude), rec: 0 }));
 
-  const hosting = raw.hosting.map((h) => ({ cat: 'hosting', group: HOSTING_TYPES[h.type] || 'אירוח', title: h.name,
+  const hosting = raw.hosting.map((h) => ({ id: h.id, cat: 'hosting', group: HOSTING_TYPES[h.type] || 'אירוח', title: h.name,
     img: firstImage(h.images), lines: [[h.number_of_rooms_text && `${h.number_of_rooms_text} חדרים`, h.max_guests_text && `עד ${h.max_guests_text} אורחים`].filter(Boolean).join(' · '), h.address || ''] }));
 
   const edu = raw.edu.map((e) => ({ id: e.id, table: 'education_institution', cat: 'edu', name: e.name,

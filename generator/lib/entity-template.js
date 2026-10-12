@@ -4,6 +4,7 @@
  * "קביעת תור" מופיע רק כשמערכת התורים פעילה (appointment_system_status 2/3), ורק כאן.
  */
 
+import { isIsraeliDST } from './season.js';
 import { pageHead, siteHeader, siteFooter, HOOD_JS, esc, svg, APP, navChips } from './home-template.js';
 
 const DAYS = [['sunday', 'ראשון'], ['monday', 'שני'], ['tuesday', 'שלישי'], ['wednesday', 'רביעי'],
@@ -18,17 +19,26 @@ const ICON = {
   share: 'M18 8a3 3 0 1 0 0-.1zM6 15a3 3 0 1 0 0-.1zM18 22a3 3 0 1 0 0-.1zM8.6 13.5l6.8 4M15.4 6.5l-6.8 4',
 };
 
+const OWNER_NOTE = {
+  owner: 'הפרטים נמסרו על ידי בעל העסק ומתעדכנים על ידו באפליקציה.',
+  team: 'הפרטים נאספו על ידי צוות שכונה ועשויים להשתנות. בעל המקום? כתבו לנו לעדכון: info@shchuna.co.il',
+  user: 'המודעה פורסמה על ידי משתמש באפליקציה. פרטי הקשר של המפרסם זמינים באפליקציה.',
+};
+
 const CSS = `
 .e-hero{background:var(--navy);color:#fff}
 .e-hero .wrap{padding-block:26px 28px;display:flex;flex-direction:column;gap:12px}
 .crumb{font-size:14px;color:#A9BAD4}.crumb a{color:#C9D6EA}
 .e-hero h1{margin:0;font-size:clamp(28px,4.6vw,44px);font-weight:800;line-height:1.12;text-wrap:balance}
+.e-price{font-size:24px;font-weight:800;color:var(--sky);font-variant-numeric:tabular-nums}
+.e-gal{display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:8px}
+.e-gal a{aspect-ratio:1/1;border-radius:12px;overflow:hidden;background:#DCE5F5;display:block}.e-gal img{width:100%;height:100%;object-fit:cover}
 .e-tags{display:flex;flex-wrap:wrap;gap:8px}
 .e-tag{font-size:14px;font-weight:700;background:rgba(255,255,255,.12);color:#fff;border-radius:999px;padding:5px 12px}
 .e-tag.hi{background:var(--sky);color:var(--navy)}
 .e-tag.rec{background:#E7F7EC;color:#15803D;display:inline-flex;align-items:center;gap:5px}
 .e-grid{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(0,1fr);gap:18px;align-items:start;padding-block:24px 8px}
-@media (max-width:900px){.e-grid{grid-template-columns:minmax(0,1fr)}.e-side{order:-1}}
+@media (max-width:900px){.e-grid{grid-template-columns:minmax(0,1fr)}.e-grid:not(.ad) .e-side{order:-1}}
 .e-card{background:#fff;border-radius:22px;padding:20px 22px;box-shadow:0 2px 12px rgba(0,0,0,.05);display:flex;flex-direction:column;gap:12px}
 .e-card h2{margin:0;font-size:20px;font-weight:800;color:var(--navy)}
 .e-img{border-radius:22px;overflow:hidden;background:#DCE5F5;aspect-ratio:16/10;max-width:100%}
@@ -49,7 +59,8 @@ const CSS = `
 .hours{display:flex;flex-direction:column}
 .hrow{display:flex;justify-content:space-between;gap:12px;padding:8px 0;border-bottom:1px solid #F1F3F6;font-size:15px}
 .hrow:last-child{border-bottom:0}
-.hrow b{font-weight:700}.hrow span{font-variant-numeric:tabular-nums;color:#3B4860}
+.hrow b{font-weight:700;flex:none}.hrow span{font-variant-numeric:tabular-nums;color:#3B4860;text-align:left}
+.hrow small{font-size:12px;color:var(--muted)}
 .hrow.today{font-weight:800}.hrow.today b,.hrow.today span{color:var(--brand)}
 .hrow .closed{color:var(--muted)}
 .e-addr{font-size:15px;color:#3B4860;margin:0}
@@ -62,14 +73,41 @@ const CSS = `
 .app-cta b{display:block;font-size:20px;color:var(--navy)}.app-cta span{font-size:15px;color:#3B4860}
 `;
 
-function hours(schedule) {
+/** כמו TimeRange.formatTimeForDisplay באפליקציה + שעה משוערת לשבת הקרובה */
+const REL = (n, before, what) => {
+  const a = Math.abs(n);
+  const w = a === 30 ? 'חצי שעה' : a === 60 ? 'שעה' : a === 90 ? 'שעה וחצי' : a === 120 ? 'שעתיים' : `${a} דק׳`;
+  return `${w} ${before ? 'לפני' : 'אחרי'} ${what}`;
+};
+function fmtTime(t, st) {
+  if (!t) return '';
+  const m = /^(candle_lighting|havdalah)([+-]\d+)?$/.exec(t);
+  if (m) {
+    const off = parseInt(m[2] || '0', 10);
+    const isCandle = m[1] === 'candle_lighting';
+    const base = isCandle ? st?.candle : st?.havdalah;
+    const label = off === 0 ? (isCandle ? 'כניסת שבת' : 'צאת שבת') : REL(off, off < 0, isCandle ? 'כניסת שבת' : 'צאת שבת');
+    const approx = base ? st.fmt(new Date(base.getTime() + off * 60000)) : '';
+    return `${label}${approx ? ` <small>(השבוע ≈ <span dir="ltr">${approx}</span>)</small>` : ''}`;
+  }
+  if (t.includes('|')) { const [w, su] = t.split('|'); return `<span dir="ltr">${esc(isIsraeliDST() ? su : w)}</span>`; }   // חורף|קיץ — מציגים את העונה הנוכחית
+  return `<span dir="ltr">${esc(t)}</span>`;
+}
+const isTimeLike = (t) => /^(\d{1,2}:\d{2}|candle_lighting|havdalah)/.test(t || '') || (t || '').includes('|');
+
+function hours(schedule, st) {
   if (!schedule || typeof schedule !== 'object') return '';
+  if (!DAYS.some(([k]) => Array.isArray(schedule[k]) && schedule[k].length)) return '';
   const rows = DAYS.map(([k, he], i) => {
     const r = schedule[k];
-    const txt = Array.isArray(r) && r.length ? r.map((x) => (x.end ? `${x.start}–${x.end}` : x.start)).join(', ') : '';
-    return `<div class="hrow" data-d="${i}"><b>${he}</b>${txt ? `<span dir="ltr">${esc(txt)}</span>` : '<span class="closed">סגור</span>'}</div>`;
+    const txt = Array.isArray(r) && r.length ? r.map((x) => {
+      if (!isTimeLike(x.start)) return esc(x.start || '');            // טקסט חופשי
+      const plain = (t) => /^\d{1,2}:\d{2}$/.test(t || '');
+      if (plain(x.start) && plain(x.end)) return `<span dir="ltr">${esc(x.start)}–${esc(x.end)}</span>`;
+      return x.end ? `${fmtTime(x.start, st)} – ${fmtTime(x.end, st)}` : fmtTime(x.start, st);
+    }).join('<br>') : '';
+    return `<div class="hrow" data-d="${i}"><b>${he}</b>${txt ? `<span>${txt}</span>` : '<span class="closed">סגור</span>'}</div>`;
   });
-  if (!DAYS.some(([k]) => Array.isArray(schedule[k]) && schedule[k].length)) return '';
   return `<div class="e-card"><h2>שעות פעילות</h2><div class="hours">${rows.join('')}</div></div>`;
 }
 
@@ -83,18 +121,18 @@ function ldHours(schedule) {
   return out.length ? out : undefined;
 }
 
-export function entityPage(vm, e, { base, home, kind, api }) {
+/** עמוד מלא גנרי. e: { id, table, name, slug, field, group, img, gallery, price, rec, where, phone, waze, appOnly, detail{...}, owner } */
+export function detailPage(vm, e, { base, home, kind, listLabel, ldType, listHref, api, st }) {
   const isPro = kind === 'pros';
-  const listLabel = isPro ? 'בעלי מקצוע' : 'עסקים';
   const url = `${base}${home}${kind}/${encodeURIComponent(e.slug)}/`;
   const d = e.detail || {};
-  const title = `${e.name} — ${e.field || e.group} ב${vm.name} | שכונה`;
-  const desc = (d.desc ? d.desc.replace(/\s+/g, ' ').slice(0, 150) : `${e.name}, ${e.field || e.group} ב${vm.name}, ${vm.city}.`) +
+  const title = `${e.name} — ${e.field || e.kicker || e.group} ב${vm.name} | שכונה`;
+  const desc = (d.desc ? d.desc.replace(/\s+/g, ' ').slice(0, 150) : `${e.name}, ${e.field || e.kicker || e.group} ב${vm.name}, ${vm.city}.`) +
     (e.phone ? ' טלפון, WhatsApp ושעות פעילות.' : '');
   const maps = d.lat && d.lng ? `https://www.google.com/maps/search/?api=1&query=${d.lat},${d.lng}` : null;
 
   const jsonld = {
-    '@context': 'https://schema.org', '@type': isPro ? 'ProfessionalService' : 'LocalBusiness', name: e.name, url,
+    '@context': 'https://schema.org', '@type': ldType || (isPro ? 'ProfessionalService' : 'LocalBusiness'), name: e.name, url,
     ...(e.img && { image: e.img }), ...(e.phone && { telephone: e.phone.display }),
     ...(e.where && { address: { '@type': 'PostalAddress', streetAddress: e.where, addressLocality: vm.city, addressCountry: 'IL' } }),
     ...(d.lat && { geo: { '@type': 'GeoCoordinates', latitude: d.lat, longitude: d.lng } }),
@@ -102,10 +140,11 @@ export function entityPage(vm, e, { base, home, kind, api }) {
   };
 
   const acts = [];
-  if (e.phone) acts.push(`<a class="e-tel" href="${esc(e.phone.tel)}" data-num="${esc(e.phone.display)}">${svg(ICON.phone, 19, 'currentColor', 2.2)}<span class="lbl">התקשרו</span><span class="num" dir="ltr" hidden>${esc(e.phone.display)}</span></a>`);
-  if (e.phone?.wa) acts.push(`<a class="e-wa" href="${esc(e.phone.wa)}" target="_blank" rel="noopener">${svg(ICON.wa, 19, 'currentColor', 2)}WhatsApp</a>`);
+  if (e.phone && !e.appOnly) acts.push(`<a class="e-tel" href="${esc(e.phone.tel)}" data-num="${esc(e.phone.display)}">${svg(ICON.phone, 19, 'currentColor', 2.2)}<span class="lbl">התקשרו</span><span class="num" dir="ltr" hidden>${esc(e.phone.display)}</span></a>`);
+  if (e.phone?.wa && !e.appOnly) acts.push(`<a class="e-wa" href="${esc(e.phone.wa)}" target="_blank" rel="noopener">${svg(ICON.wa, 19, 'currentColor', 2)}WhatsApp</a>`);
+  if (e.providerHref) acts.push(`<a class="e-map" href="${esc(e.providerHref)}">לעמוד העסק</a>`);
   if (d.booking) acts.push(`<a class="e-book" href="${APP}">${svg(ICON.cal, 19, 'currentColor', 2)}קביעת תור</a>`);
-  if (!acts.length) acts.push(`<a class="e-map" href="${APP}">לפרטים באפליקציה</a>`);
+  if (!acts.length) acts.push(`<a class="e-map" href="${APP}">${e.appOnly ? 'ליצירת קשר באפליקציה' : 'לפרטים באפליקציה'}</a>`);
 
   const JS = `(function(){
 var API=window.__SB||null,el=document.querySelector('[data-entity]'),sent=0;
@@ -130,27 +169,29 @@ ${siteHeader(vm, home, navChips(home, kind))}
 
 <main id="main" data-entity data-id="${esc(e.id)}" data-t="${esc(e.table)}">
 <section class="e-hero" aria-label="כותרת"><div class="wrap">
-<nav class="crumb" aria-label="פירורי לחם"><a href="${home}">${esc(vm.name)}</a> · <a href="${home}${kind}/">${listLabel}</a> · ${esc(e.name)}</nav>
-<h1>${esc(e.name)}</h1>
-<div class="e-tags">${e.field ? `<span class="e-tag hi">${esc(e.field)}</span>` : ''}${e.group && e.group !== e.field ? `<span class="e-tag">${esc(e.group)}</span>` : ''}${e.rec > 0 ? `<span class="e-tag rec">${svg(ICON.heart, 14, 'currentColor', 2)}${e.rec === 1 ? 'המלצה אחת' : `${e.rec} המלצות`}</span>` : ''}</div>
+<nav class="crumb" aria-label="פירורי לחם"><a href="${home}">${esc(vm.name)}</a> · <a href="${listHref || `${home}${kind}/`}">${esc(listLabel)}</a> · ${esc(e.name)}</nav>
+<h1>${esc(e.name)}</h1>${e.price ? `<span class="e-price">${esc(e.price)}</span>` : ''}
+<div class="e-tags">${e.field || e.kicker ? `<span class="e-tag hi">${esc(e.field || e.kicker)}</span>` : ''}${e.group && e.group !== e.field ? `<span class="e-tag">${esc(e.group)}</span>` : ''}${e.rec > 0 ? `<span class="e-tag rec">${svg(ICON.heart, 14, 'currentColor', 2)}${e.rec === 1 ? 'המלצה אחת' : `${e.rec} המלצות`}</span>` : ''}</div>
 </div></section>
 
-<div class="wrap e-grid">
+<div class="wrap e-grid${e.appOnly ? ' ad' : ''}">
 <div class="e-main">
 ${e.img ? `<div class="e-img"><img src="${esc(e.img)}" alt="${esc(e.name)}" decoding="async"></div>` : ''}
+${(e.gallery || []).length ? `<div class="e-gal">${e.gallery.slice(0, 8).map((g) => `<a href="${esc(g)}" target="_blank" rel="noopener"><img src="${esc(g)}" alt="" loading="lazy"></a>`).join('')}</div>` : ''}
 ${d.desc ? `<div class="e-card"><h2>אודות</h2><p class="e-desc">${esc(d.desc)}</p></div>` : ''}
 ${(d.facts || []).length || (d.tags || []).length ? `<div class="e-card"><h2>פרטים</h2><div class="e-chips">${[...(d.facts || []), ...(d.tags || [])].map((t) => `<span>${esc(t)}</span>`).join('')}</div></div>` : ''}
+${(d.sections || []).filter((x) => (x.chips || []).length || x.text).map((x) => `<div class="e-card"><h2>${esc(x.title)}</h2>${x.text ? `<p class="e-desc">${esc(x.text)}</p>` : `<div class="e-chips">${x.chips.map((c) => `<span>${esc(c)}</span>`).join('')}</div>`}</div>`).join('')}
 ${(d.promos || []).length ? `<div class="e-card"><h2>מבצעים <span class="em">פעילים</span></h2><div class="e-promos">${d.promos.map((p) => `<a class="e-promo lift" href="${home}promos/" style="text-decoration:none;color:inherit">${p.img ? `<span class="pi"><img src="${esc(p.img)}" alt="" loading="lazy"></span>` : ''}<b>${esc(p.title)}</b><span>${esc(p.until)}</span></a>`).join('')}</div></div>` : ''}
 </div>
 <aside class="e-side">
 <div class="e-card"><h2>יצירת קשר</h2><div class="e-acts">${acts.join('')}</div></div>
 ${e.where || d.lat ? `<div class="e-card"><h2>הגעה</h2>${e.where ? `<p class="e-addr">${esc(e.where)}</p>` : ''}${d.lat ? `<div class="e-acts">${e.waze ? `<a class="e-waze" href="${esc(e.waze)}" target="_blank" rel="nofollow noopener">${svg(ICON.waze, 18, 'currentColor', 2)}ניווט ב-Waze</a>` : ''}${maps ? `<a class="e-map" href="${esc(maps)}" target="_blank" rel="nofollow noopener">${svg(ICON.pin, 18, 'currentColor', 2)}פתיחה במפות</a>` : ''}</div>` : ''}</div>` : ''}
-${hours(d.schedule)}
-<p class="e-note">הפרטים נמסרו על ידי בעל העסק. בעל העסק? אפשר לעדכן אותם באפליקציה.</p>
+${hours(d.schedule, st)}
+<p class="e-note">${OWNER_NOTE[e.owner] || OWNER_NOTE.team}</p>
 </aside>
 </div>
 
-<div class="wrap"><div class="app-cta"><div style="min-width:0;flex:1 1 300px"><b>עוד ${listLabel} בשכונה</b><span>כל ה${listLabel} ב${esc(vm.name)}, עם חיפוש וסינון לפי תחום.</span></div><a class="pill btn-dark" href="${home}${kind}/">ל${listLabel} ←</a></div></div>
+<div class="wrap"><div class="app-cta"><div style="min-width:0;flex:1 1 300px"><b>עוד ב${esc(listLabel)}</b><span>כל הרשימה ב${esc(vm.name)}, עם חיפוש וסינון.</span></div><a class="pill btn-dark" href="${listHref || `${home}${kind}/`}">ל${esc(listLabel)} ←</a></div></div>
 </main>
 
 ${siteFooter()}
@@ -162,4 +203,9 @@ ${api ? `<script>window.__SB=${JSON.stringify(api).replace(/</g, '\\u003c')};</s
 </body>
 </html>
 `;
+}
+
+/** עסק / בעל מקצוע — עטיפה של detailPage */
+export function entityPage(vm, e, { base, home, kind, api, st }) {
+  return detailPage(vm, e, { base, home, kind, api, st, listLabel: kind === 'pros' ? 'בעלי מקצוע' : 'עסקים' });
 }
