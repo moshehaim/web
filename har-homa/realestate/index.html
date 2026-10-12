@@ -56,19 +56,44 @@ a.hood-item:hover{background:#F5F8FF}
 .hood-item.off{color:#8A94A6;font-weight:700}
 .badge{flex:none;font-size:12px;font-weight:800;border-radius:7px;padding:2px 9px;background:#EAF0F9;color:var(--brand)}
 .badge.on{background:var(--brand);color:#fff}
+.gs{position:relative;flex:1 1 260px;max-width:460px;min-width:0}
+.gs-box{display:flex;align-items:center;gap:8px;height:46px;padding:0 14px;border-radius:999px;background:#F6F7F9;border:1px solid var(--line)}
+.gs-box:focus-within{border-color:#9DB8DF;background:#fff}
+.gs-box input{flex:1;min-width:0;border:0;outline:0;background:transparent;font:inherit;font-size:15px;color:var(--ink)}
+.gs-res{position:absolute;top:52px;inset-inline:0;background:#fff;border:1px solid var(--line);border-radius:16px;box-shadow:0 18px 48px rgba(15,27,48,.18);padding:6px;z-index:40;max-height:70vh;overflow-y:auto}
+.gs-res[hidden]{display:none}
+.gs-res a{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 12px;border-radius:10px;text-decoration:none;color:var(--ink)}
+.gs-res a:hover,.gs-res a.sel{background:#F5F8FF}
+.gs-res b{display:block;font-size:15px}.gs-res small{display:block;font-size:12.5px;color:var(--muted)}
+.gs-res .ty{flex:none;font-size:12px;font-weight:800;color:var(--brand);background:#EFF4FF;border-radius:7px;padding:2px 8px}
+.gs-res p{margin:0;padding:12px;color:var(--muted);font-size:14px}
+.gs-open{display:none}
+@media (max-width:760px){.gs{display:none;order:9;flex:1 0 100%;max-width:none}.hdr.gs-on .gs{display:block}.gs-open{display:inline-flex;width:46px;padding:0;justify-content:center;border-color:var(--line);color:var(--ink,#0f1b30)}}
+.hood-item small{display:block;font-size:12px;font-weight:600;color:var(--muted)}
+.hood-item[hidden]{display:none}
+.hood-none{margin:0;padding:10px;font-size:14px;color:var(--muted)}
 .hdr-actions{display:flex;align-items:center;gap:8px;margin-inline-start:auto;flex-wrap:wrap}
 .btn-ghost{color:var(--navy);padding:0 12px}
 .btn-line{border:1.5px solid var(--brand);color:var(--brand)}
 .btn-dark{background:var(--navy);color:#fff}.btn-dark:hover{color:#fff;background:#0F1F3B}
-@media (max-width:760px){.hdr-row{flex-wrap:nowrap;gap:10px;padding-block:10px}.logo img{width:44px;height:44px}
+@media (max-width:760px){.hdr-row{flex-wrap:wrap;gap:10px;padding-block:10px}.logo img{width:44px;height:44px}
 .hood{min-width:0}.hood-btn{height:46px;max-width:100%}.hood-btn b{max-width:150px}
 .hdr-actions .btn-line,.hdr-actions .btn-dark{display:none}.hdr-actions .btn-ghost{width:46px;padding:0;justify-content:center}
 .btn-ghost .lbl{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}}
 .m-only{display:none}@media (max-width:760px){.m-only{display:inline-flex}}
-/* שורת התחומים: במחשב שורות ממורכזות; בטלפון גלילה לצד עם דהייה */
-.chips{border-top:1px solid #EEF0F4}
-.chips .wrap{display:flex;flex-wrap:wrap;justify-content:center;gap:6px;padding-block:8px;max-width:none}
-@media (max-width:760px){.chips{overflow-x:auto;scrollbar-width:none;-webkit-mask-image:linear-gradient(to left,#000 calc(100% - 28px),transparent);mask-image:linear-gradient(to left,#000 calc(100% - 28px),transparent)}.chips::-webkit-scrollbar{display:none}.chips .wrap{flex-wrap:nowrap;justify-content:flex-start;width:max-content;min-width:100%}}
+/* שורת התחומים: שורה אחת ברוחב המסך, נגללת לצד; חיצים במחשב */
+.chips{border-top:1px solid #EEF0F4;position:relative}
+.chips .wrap{display:flex;gap:6px;padding-block:8px;padding-inline:16px;max-width:none;overflow-x:auto;scrollbar-width:none;scroll-behavior:smooth}
+.chips .wrap::-webkit-scrollbar{display:none}
+.chips .wrap>a{flex:none}
+.chips .wrap>a:first-child{margin-inline-start:auto}.chips .wrap>a:last-child{margin-inline-end:auto}
+.cnav{position:absolute;top:50%;transform:translateY(-50%);width:34px;height:34px;border-radius:50%;border:1px solid var(--line);background:#fff;color:var(--navy);font-size:16px;font-weight:800;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.08);z-index:2;display:none}
+.cnav.prev{right:6px}.cnav.next{left:6px}
+.chips.more-start .cnav.prev,.chips.more-end .cnav.next{display:block}
+.chips.more-end .wrap{-webkit-mask-image:linear-gradient(to left,#000 calc(100% - 56px),transparent);mask-image:linear-gradient(to left,#000 calc(100% - 56px),transparent)}
+.chips.more-start.more-end .wrap{-webkit-mask-image:linear-gradient(to left,transparent,#000 56px,#000 calc(100% - 56px),transparent);mask-image:linear-gradient(to left,transparent,#000 56px,#000 calc(100% - 56px),transparent)}
+.chips.more-start:not(.more-end) .wrap{-webkit-mask-image:linear-gradient(to right,#000 calc(100% - 56px),transparent);mask-image:linear-gradient(to right,#000 calc(100% - 56px),transparent)}
+@media (hover:none){.cnav{display:none!important}}
 .chips a{flex:none;font-size:15px;font-weight:700;color:#3B4860;text-decoration:none;padding:6px 14px;border-radius:999px;background:#F4F5F7}
 .chips a:hover{background:#EFF4FF;color:var(--brand)}
 .chips a.on{background:var(--brand);color:#fff}
@@ -325,37 +350,43 @@ background:linear-gradient(to top,var(--t2),transparent)}
 <div class="hood-pop" id="hood-pop" role="dialog" aria-label="בחירת שכונה" hidden>
 <label class="hood-q"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#6B7689" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 4a7 7 0 1 0 0 14a7 7 0 1 0 0-14zM20 20l-4-4"/></svg><span class="sr">חיפוש שכונה</span><input id="hood-q" type="search" placeholder="חיפוש שכונה…" autocomplete="off"></label>
 <div class="hood-list">
-<a class="hood-item" href="/har-homa/" aria-current="page"><span>חומת שמואל</span><span class="badge on">נבחרה</span></a>
-<div class="hood-item off"><span>ארמון הנציב</span><span class="badge">בקרוב</span></div>
-<div class="hood-item off"><span>בית הכרם וגבעת מרדכי</span><span class="badge">בקרוב</span></div>
-<div class="hood-item off"><span>בית וגן</span><span class="badge">בקרוב</span></div>
-<div class="hood-item off"><span>בקעה, ארנונה ותלפיות</span><span class="badge">בקרוב</span></div>
-<div class="hood-item off"><span>גבעת זאב</span><span class="badge">בקרוב</span></div>
-<div class="hood-item off"><span>גוננים</span><span class="badge">בקרוב</span></div>
-<div class="hood-item off"><span>גילה</span><span class="badge">בקרוב</span></div>
-<div class="hood-item off"><span>גינות העיר</span><span class="badge">בקרוב</span></div>
-<div class="hood-item off"><span>הגבעה הצרפתית ורמת אשכול</span><span class="badge">בקרוב</span></div>
-<div class="hood-item off"><span>העיר העתיקה ומזרח ירושלים</span><span class="badge">בקרוב</span></div>
-<div class="hood-item off"><span>הר נוף, גבעת שאול וקרית משה</span><span class="badge">בקרוב</span></div>
-<div class="hood-item off"><span>מאה שערים וגאולה</span><span class="badge">בקרוב</span></div>
-<div class="hood-item off"><span>מרכז העיר ונחלאות</span><span class="badge">בקרוב</span></div>
-<div class="hood-item off"><span>נווה יעקב</span><span class="badge">בקרוב</span></div>
-<div class="hood-item off"><span>פסגת זאב</span><span class="badge">בקרוב</span></div>
-<div class="hood-item off"><span>קרית יובל והסביבה</span><span class="badge">בקרוב</span></div>
-<div class="hood-item off"><span>רוממה וסנהדריה</span><span class="badge">בקרוב</span></div>
-<div class="hood-item off"><span>רמות</span><span class="badge">בקרוב</span></div>
-<div class="hood-item off"><span>רמת שלמה</span><span class="badge">בקרוב</span></div>
+<a class="hood-item" href="/har-homa/" aria-current="page" data-s="חומת שמואל הר חומה חומת שמואל"><span>חומת שמואל<small>הר חומה חומת שמואל</small></span><span class="badge on">נבחרה</span></a>
+<div class="hood-item off" data-s="ארמון הנציב תלפיות מזרח ארמון הנציב תלפיות מזרח"><span>ארמון הנציב<small>תלפיות מזרח ארמון הנציב תלפיות מזרח</small></span><span class="badge">בקרוב</span></div>
+<div class="hood-item off" data-s="בית הכרם וגבעת מרדכי בית הכרם גבעת מרדכי יפה נוף"><span>בית הכרם וגבעת מרדכי<small>בית הכרם גבעת מרדכי יפה נוף</small></span><span class="badge">בקרוב</span></div>
+<div class="hood-item off" data-s="בית וגן רמת שרת ורמת דניה בית וגן הולילנד רמת שרת רמת דניה מורדות בית וגן"><span>בית וגן<small>רמת שרת ורמת דניה בית וגן הולילנד רמת שרת רמת דניה מורדות בית וגן</small></span><span class="badge">בקרוב</span></div>
+<div class="hood-item off" data-s="בקעה, ארנונה ותלפיות גאולים (בקעה) ארנונה תלפיות מקור חיים אזור תעשייה תלפיות אבו תור גבעת חנניה (אבו טור)"><span>בקעה, ארנונה ותלפיות<small>גאולים (בקעה) ארנונה תלפיות מקור חיים אזור תעשייה תלפיות אבו תור גבעת חנניה (אבו טור)</small></span><span class="badge">בקרוב</span></div>
+<div class="hood-item off" data-s="גבעת זאב גבעת זאב גבעת זאב הוותיקה אגן האיילות הר שמואל"><span>גבעת זאב<small>גבעת זאב גבעת זאב הוותיקה אגן האיילות הר שמואל</small></span><span class="badge">בקרוב</span></div>
+<div class="hood-item off" data-s="גוננים גוננים שיכון רסקו, גבעת הוורדים קטמונים קטמון ח&#39;-ט&#39;"><span>גוננים<small>גוננים שיכון רסקו, גבעת הוורדים קטמונים קטמון ח&#39;-ט&#39;</small></span><span class="badge">בקרוב</span></div>
+<div class="hood-item off" data-s="גילה גילה"><span>גילה<small>גילה</small></span><span class="badge">בקרוב</span></div>
+<div class="hood-item off" data-s="גינות העיר רחביה, טלביה והמושבה רחביה קוממיות (טלביה) קרית שמואל המושבה הגרמנית קטמון הישנה ניות קרית הלאום גבעת רם"><span>גינות העיר<small>רחביה, טלביה והמושבה רחביה קוממיות (טלביה) קרית שמואל המושבה הגרמנית קטמון הישנה ניות קרית הלאום גבעת רם</small></span><span class="badge">בקרוב</span></div>
+<div class="hood-item off" data-s="הגבעה הצרפתית ורמת אשכול גבעה צרפתית רמת אשכול מעלות דפנה הר הצופים"><span>הגבעה הצרפתית ורמת אשכול<small>גבעה צרפתית רמת אשכול מעלות דפנה הר הצופים</small></span><span class="badge">בקרוב</span></div>
+<div class="hood-item off" data-s="העיר העתיקה ומזרח ירושלים הרובע היהודי וממילא העיר העתיקה הרובע היהודי ממילא"><span>העיר העתיקה ומזרח ירושלים<small>הרובע היהודי וממילא העיר העתיקה הרובע היהודי ממילא</small></span><span class="badge">בקרוב</span></div>
+<div class="hood-item off" data-s="הר נוף, גבעת שאול וקרית משה הר נוף גבעת שאול קרית משה רמת מוצא עמק הארזים"><span>הר נוף, גבעת שאול וקרית משה<small>הר נוף גבעת שאול קרית משה רמת מוצא עמק הארזים</small></span><span class="badge">בקרוב</span></div>
+<div class="hood-item off" data-s="מאה שערים וגאולה מאה שערים גאולה בוכרים בית ישראל מקור ברוך שמואל הנביא כרם אברהם זכרון משה בתי אונגרין"><span>מאה שערים וגאולה<small>מאה שערים גאולה בוכרים בית ישראל מקור ברוך שמואל הנביא כרם אברהם זכרון משה בתי אונגרין</small></span><span class="badge">בקרוב</span></div>
+<div class="hood-item off" data-s="מרכז העיר ונחלאות מרכז העיר נחלאות מוסררה מורשה מגרש הרוסים"><span>מרכז העיר ונחלאות<small>מרכז העיר נחלאות מוסררה מורשה מגרש הרוסים</small></span><span class="badge">בקרוב</span></div>
+<div class="hood-item off" data-s="נווה יעקב נווה יעקב נווה יעקב מזרח"><span>נווה יעקב<small>נווה יעקב נווה יעקב מזרח</small></span><span class="badge">בקרוב</span></div>
+<div class="hood-item off" data-s="פסגת זאב פסגת זאב פסגת זאב מזרח פסגת זאב מערב פסגת זאב צפון"><span>פסגת זאב<small>פסגת זאב פסגת זאב מזרח פסגת זאב מערב פסגת זאב צפון</small></span><span class="badge">בקרוב</span></div>
+<div class="hood-item off" data-s="קרית יובל והסביבה קרית יובל מלחה עין כרם קרית מנחם גבעת משואה רכס לבן"><span>קרית יובל והסביבה<small>קרית יובל מלחה עין כרם קרית מנחם גבעת משואה רכס לבן</small></span><span class="badge">בקרוב</span></div>
+<div class="hood-item off" data-s="רוממה וסנהדריה רוממה - מטרסדורף, אונסדורף רוממה - צאנז - בעלז רוממה - תחנה מרכזית רוממה - תל ארזה, עזרת תורה סנהדריה"><span>רוממה וסנהדריה<small>רוממה - מטרסדורף, אונסדורף רוממה - צאנז - בעלז רוממה - תחנה מרכזית רוממה - תל ארזה, עזרת תורה סנהדריה</small></span><span class="badge">בקרוב</span></div>
+<div class="hood-item off" data-s="רמות רמות רמות א&#39; רמות ב&#39; רמות ג&#39; רמות ד&#39; רמות ה&#39; רמות ו&#39; רמות פולין רמות אלון"><span>רמות<small>רמות רמות א&#39; רמות ב&#39; רמות ג&#39; רמות ד&#39; רמות ה&#39; רמות ו&#39; רמות פולין רמות אלון</small></span><span class="badge">בקרוב</span></div>
+<div class="hood-item off" data-s="רמת שלמה רמת שלמה"><span>רמת שלמה<small>רמת שלמה</small></span><span class="badge">בקרוב</span></div>
+<p class="hood-none" hidden>לא מצאנו שכונה בשם הזה. שכונות נוספות בירושלים בדרך.</p>
 </div>
 <a href="/" style="font-size:14px;font-weight:800;text-decoration:none;padding:4px 6px">לכל השכונות ←</a>
 </div>
 </div>
+<form class="gs" role="search" data-home="/har-homa/" onsubmit="return false">
+<label class="gs-box"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#6B7689" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 4a7 7 0 1 0 0 14a7 7 0 1 0 0-14zM20 20l-4-4"/></svg><span class="sr">חיפוש בשכונה</span><input id="g-q" type="search" placeholder="חשמלאי, גמ״ח עריסות, בית כנסת…" autocomplete="off" aria-controls="g-res" aria-expanded="false"></label>
+<div class="gs-res" id="g-res" role="listbox" hidden></div>
+</form>
 <div class="hdr-actions">
+<button type="button" class="pill btn-ghost gs-open" aria-label="חיפוש"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 4a7 7 0 1 0 0 14a7 7 0 1 0 0-14zM20 20l-4-4"/></svg></button>
 <a class="pill btn-ghost" href="/login.html"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4a4 4 0 1 0 0 8a4 4 0 1 0 0-8zM4 21a8 8 0 0 1 16 0"/></svg><span class="lbl">התחברות</span></a>
 <a class="pill btn-line" href="/app/"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>פרסם</a>
 <a class="pill btn-dark" href="/b/">להורדת האפליקציה</a>
 </div>
 </div>
-<nav class="chips" aria-label="תחומים"><div class="wrap">
+<nav class="chips" aria-label="תחומים"><button type="button" class="cnav prev" aria-label="תחומים קודמים">→</button><button type="button" class="cnav next" aria-label="תחומים נוספים">←</button><div class="wrap">
 <a href="/har-homa/">דף השכונה</a><a href="/minyanim-har-homa/">מניינים</a><a href="/har-homa/lessons/">שיעורים</a><a href="/har-homa/biz/">עסקים</a><a href="/har-homa/pros/">בעלי מקצוע</a><a href="/har-homa/promos/">מבצעים</a><a href="/har-homa/promos/#קופונים">קופונים</a><a href="/har-homa/board/#gmach">גמ״חים</a><a href="/har-homa/board/#jobs">דרושים</a><a href="/har-homa/board/#second">יד שנייה</a><a href="/har-homa/realestate/" aria-current="page" class="on">נדל״ן</a><a href="/har-homa/board/#vol">התנדבות</a><a href="/har-homa/board/#lost">אבידות ומציאות</a><a href="/har-homa/halls/">אולמות</a><a href="/har-homa/hosting/">אירוח</a><a href="/har-homa/events/">הכל לאירוע</a><a href="/har-homa/education/">מוסדות חינוך</a><a href="/har-homa/parks/">גנים ופארקים</a><a href="/har-homa/services/">שירותים ובריאות</a>
 </div></nav></header>
 
@@ -511,6 +542,14 @@ document.addEventListener('click',function(e){
 <script>(function(){
 /* תחום נוכחי בשורת התחומים — לגלול אליו שיהיה גלוי */
 var on=document.querySelector('.chips a.on');if(on&&on.scrollIntoView){try{on.scrollIntoView({block:'nearest',inline:'center'});}catch(_){}}
+/* חיצים לשורת התחומים */
+var nav=document.querySelector('.chips'),nw=nav&&nav.querySelector('.wrap');
+function navState(){if(!nw)return;var max=nw.scrollWidth-nw.clientWidth,x=Math.abs(nw.scrollLeft);
+  nav.classList.toggle('more-start',x>4);nav.classList.toggle('more-end',x<max-4);}
+if(nw){nw.addEventListener('scroll',navState,{passive:true});window.addEventListener('resize',navState);navState();
+  [].forEach.call(nav.querySelectorAll('.cnav'),function(b){b.addEventListener('click',function(){
+    var d=b.classList.contains('next')?-1:1;nw.scrollBy({left:d*Math.max(200,nw.clientWidth*0.6)});});});}
+function norm(s){return String(s||'').toLowerCase().replace(/[\u0591-\u05C7]/g,'').replace(/["'׳״]/g,'').replace(/[.,()–-]/g,' ').replace(/\s+/g,' ').trim();}
 /* בורר שכונה */
 var hb=document.getElementById('hood-btn'),hp=document.getElementById('hood-pop'),hq=document.getElementById('hood-q');
 function setHood(o){hp.hidden=!o;hb.setAttribute('aria-expanded',o);if(o)hq.focus();}
@@ -518,8 +557,26 @@ if(hb){hb.addEventListener('click',function(e){e.stopPropagation();setHood(hp.hi
   hp.addEventListener('click',function(e){e.stopPropagation();});
   document.addEventListener('click',function(){setHood(false);});
   document.addEventListener('keydown',function(e){if(e.key==='Escape'&&!hp.hidden){setHood(false);hb.focus();}});
-  hq.addEventListener('input',function(){var q=hq.value.trim();
-    [].forEach.call(hp.querySelectorAll('.hood-item'),function(it){it.hidden=!!q&&it.textContent.indexOf(q)<0;});});}
+  hq.addEventListener('input',function(){var q=norm(hq.value),n=0;
+    [].forEach.call(hp.querySelectorAll('.hood-item'),function(it){var ok=!q||norm(it.getAttribute('data-s')).indexOf(q)>=0;it.hidden=!ok;if(ok)n++;});
+    hp.querySelector('.hood-none').hidden=n>0;});}
+/* חיפוש בשכונה — אינדקס search.json נטען בפוקוס הראשון */
+var gf=document.querySelector('.gs'),gq=document.getElementById('g-q'),gr=document.getElementById('g-res'),IDX=null,sel=-1;
+if(gf){var hdr=document.querySelector('.hdr'),gopen=document.querySelector('.gs-open');
+  if(gopen)gopen.addEventListener('click',function(){hdr.classList.toggle('gs-on');if(hdr.classList.contains('gs-on'))gq.focus();});
+  function load(){if(IDX)return;IDX=[];fetch(gf.getAttribute('data-home')+'search.json').then(function(r){return r.json();}).then(function(d){IDX=d.map(function(x){x.k=norm(x.n+' '+x.t+' '+(x.s||''));x.nk=norm(x.n);return x;});show();}).catch(function(){});}
+  function esc2(s){return String(s).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
+  function show(){var q=norm(gq.value);sel=-1;if(!q){gr.hidden=true;gq.setAttribute('aria-expanded','false');return;}
+    var w=q.split(' '),res=(IDX||[]).filter(function(x){return w.every(function(t){return x.k.indexOf(t)>=0;});});
+    res.sort(function(a,b){return (b.nk.indexOf(q)===0)-(a.nk.indexOf(q)===0)||(b.nk.indexOf(q)>=0)-(a.nk.indexOf(q)>=0)||(a.o||9)-(b.o||9);});
+    gr.innerHTML=res.length?res.slice(0,10).map(function(x){return '<a role="option" href="'+esc2(x.h)+'"><span><b>'+esc2(x.n)+'</b>'+(x.s?'<small>'+esc2(x.s.slice(0,60))+'</small>':'')+'</span><span class="ty">'+esc2(x.t)+'</span></a>';}).join(''):(IDX&&IDX.length?'<p>לא מצאנו בשכונה. נסו מילה אחרת.</p>':'<p>טוען…</p>');
+    gr.hidden=false;gq.setAttribute('aria-expanded','true');}
+  gq.addEventListener('focus',load);gq.addEventListener('input',function(){load();show();});
+  gq.addEventListener('keydown',function(e){var a=gr.querySelectorAll('a');if(!a.length)return;
+    if(e.key==='ArrowDown'||e.key==='ArrowUp'){e.preventDefault();sel=(sel+(e.key==='ArrowDown'?1:-1)+a.length)%a.length;[].forEach.call(a,function(x,i){x.classList.toggle('sel',i===sel);});}
+    else if(e.key==='Enter'){location.href=a[Math.max(0,sel)].getAttribute('href');}
+    else if(e.key==='Escape'){gr.hidden=true;}});
+  document.addEventListener('click',function(e){if(!gf.contains(e.target))gr.hidden=true;});}
 })();</script>
 </body>
 </html>
