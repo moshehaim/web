@@ -95,19 +95,44 @@ a.hood-item:hover{background:#F5F8FF}
 .hood-item.off{color:#8A94A6;font-weight:700}
 .badge{flex:none;font-size:12px;font-weight:800;border-radius:7px;padding:2px 9px;background:#EAF0F9;color:var(--brand)}
 .badge.on{background:var(--brand);color:#fff}
+.gs{position:relative;flex:1 1 260px;max-width:460px;min-width:0}
+.gs-box{display:flex;align-items:center;gap:8px;height:46px;padding:0 14px;border-radius:999px;background:#F6F7F9;border:1px solid var(--line)}
+.gs-box:focus-within{border-color:#9DB8DF;background:#fff}
+.gs-box input{flex:1;min-width:0;border:0;outline:0;background:transparent;font:inherit;font-size:15px;color:var(--ink)}
+.gs-res{position:absolute;top:52px;inset-inline:0;background:#fff;border:1px solid var(--line);border-radius:16px;box-shadow:0 18px 48px rgba(15,27,48,.18);padding:6px;z-index:40;max-height:70vh;overflow-y:auto}
+.gs-res[hidden]{display:none}
+.gs-res a{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 12px;border-radius:10px;text-decoration:none;color:var(--ink)}
+.gs-res a:hover,.gs-res a.sel{background:#F5F8FF}
+.gs-res b{display:block;font-size:15px}.gs-res small{display:block;font-size:12.5px;color:var(--muted)}
+.gs-res .ty{flex:none;font-size:12px;font-weight:800;color:var(--brand);background:#EFF4FF;border-radius:7px;padding:2px 8px}
+.gs-res p{margin:0;padding:12px;color:var(--muted);font-size:14px}
+.gs-open{display:none}
+@media (max-width:760px){.gs{display:none;order:9;flex:1 0 100%;max-width:none}.hdr.gs-on .gs{display:block}.gs-open{display:inline-flex;width:46px;padding:0;justify-content:center;border-color:var(--line);color:var(--ink,#0f1b30)}}
+.hood-item small{display:block;font-size:12px;font-weight:600;color:var(--muted)}
+.hood-item[hidden]{display:none}
+.hood-none{margin:0;padding:10px;font-size:14px;color:var(--muted)}
 .hdr-actions{display:flex;align-items:center;gap:8px;margin-inline-start:auto;flex-wrap:wrap}
 .btn-ghost{color:var(--navy);padding:0 12px}
 .btn-line{border:1.5px solid var(--brand);color:var(--brand)}
 .btn-dark{background:var(--navy);color:#fff}.btn-dark:hover{color:#fff;background:#0F1F3B}
-@media (max-width:760px){.hdr-row{flex-wrap:nowrap;gap:10px;padding-block:10px}.logo img{width:44px;height:44px}
+@media (max-width:760px){.hdr-row{flex-wrap:wrap;gap:10px;padding-block:10px}.logo img{width:44px;height:44px}
 .hood{min-width:0}.hood-btn{height:46px;max-width:100%}.hood-btn b{max-width:150px}
 .hdr-actions .btn-line,.hdr-actions .btn-dark{display:none}.hdr-actions .btn-ghost{width:46px;padding:0;justify-content:center}
 .btn-ghost .lbl{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}}
 .m-only{display:none}@media (max-width:760px){.m-only{display:inline-flex}}
-/* שורת התחומים: במחשב שורות ממורכזות; בטלפון גלילה לצד עם דהייה */
-.chips{border-top:1px solid #EEF0F4}
-.chips .wrap{display:flex;flex-wrap:wrap;justify-content:center;gap:6px;padding-block:8px;max-width:none}
-@media (max-width:760px){.chips{overflow-x:auto;scrollbar-width:none;-webkit-mask-image:linear-gradient(to left,#000 calc(100% - 28px),transparent);mask-image:linear-gradient(to left,#000 calc(100% - 28px),transparent)}.chips::-webkit-scrollbar{display:none}.chips .wrap{flex-wrap:nowrap;justify-content:flex-start;width:max-content;min-width:100%}}
+/* שורת התחומים: שורה אחת ברוחב המסך, נגללת לצד; חיצים במחשב */
+.chips{border-top:1px solid #EEF0F4;position:relative}
+.chips .wrap{display:flex;gap:6px;padding-block:8px;padding-inline:16px;max-width:none;overflow-x:auto;scrollbar-width:none;scroll-behavior:smooth}
+.chips .wrap::-webkit-scrollbar{display:none}
+.chips .wrap>a{flex:none}
+.chips .wrap>a:first-child{margin-inline-start:auto}.chips .wrap>a:last-child{margin-inline-end:auto}
+.cnav{position:absolute;top:50%;transform:translateY(-50%);width:34px;height:34px;border-radius:50%;border:1px solid var(--line);background:#fff;color:var(--navy);font-size:16px;font-weight:800;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.08);z-index:2;display:none}
+.cnav.prev{right:6px}.cnav.next{left:6px}
+.chips.more-start .cnav.prev,.chips.more-end .cnav.next{display:block}
+.chips.more-end .wrap{-webkit-mask-image:linear-gradient(to left,#000 calc(100% - 56px),transparent);mask-image:linear-gradient(to left,#000 calc(100% - 56px),transparent)}
+.chips.more-start.more-end .wrap{-webkit-mask-image:linear-gradient(to left,transparent,#000 56px,#000 calc(100% - 56px),transparent);mask-image:linear-gradient(to left,transparent,#000 56px,#000 calc(100% - 56px),transparent)}
+.chips.more-start:not(.more-end) .wrap{-webkit-mask-image:linear-gradient(to right,#000 calc(100% - 56px),transparent);mask-image:linear-gradient(to right,#000 calc(100% - 56px),transparent)}
+@media (hover:none){.cnav{display:none!important}}
 .chips a{flex:none;font-size:15px;font-weight:700;color:#3B4860;text-decoration:none;padding:6px 14px;border-radius:999px;background:#F4F5F7}
 .chips a:hover{background:#EFF4FF;color:var(--brand)}
 .chips a.on{background:var(--brand);color:#fff}
@@ -397,6 +422,14 @@ function ticker(vm) {
 export const HOOD_JS = `(function(){
 /* תחום נוכחי בשורת התחומים — לגלול אליו שיהיה גלוי */
 var on=document.querySelector('.chips a.on');if(on&&on.scrollIntoView){try{on.scrollIntoView({block:'nearest',inline:'center'});}catch(_){}}
+/* חיצים לשורת התחומים */
+var nav=document.querySelector('.chips'),nw=nav&&nav.querySelector('.wrap');
+function navState(){if(!nw)return;var max=nw.scrollWidth-nw.clientWidth,x=Math.abs(nw.scrollLeft);
+  nav.classList.toggle('more-start',x>4);nav.classList.toggle('more-end',x<max-4);}
+if(nw){nw.addEventListener('scroll',navState,{passive:true});window.addEventListener('resize',navState);navState();
+  [].forEach.call(nav.querySelectorAll('.cnav'),function(b){b.addEventListener('click',function(){
+    var d=b.classList.contains('next')?-1:1;nw.scrollBy({left:d*Math.max(200,nw.clientWidth*0.6)});});});}
+function norm(s){return String(s||'').toLowerCase().replace(/[\\u0591-\\u05C7]/g,'').replace(/["'׳״]/g,'').replace(/[.,()–-]/g,' ').replace(/\\s+/g,' ').trim();}
 /* בורר שכונה */
 var hb=document.getElementById('hood-btn'),hp=document.getElementById('hood-pop'),hq=document.getElementById('hood-q');
 function setHood(o){hp.hidden=!o;hb.setAttribute('aria-expanded',o);if(o)hq.focus();}
@@ -404,8 +437,26 @@ if(hb){hb.addEventListener('click',function(e){e.stopPropagation();setHood(hp.hi
   hp.addEventListener('click',function(e){e.stopPropagation();});
   document.addEventListener('click',function(){setHood(false);});
   document.addEventListener('keydown',function(e){if(e.key==='Escape'&&!hp.hidden){setHood(false);hb.focus();}});
-  hq.addEventListener('input',function(){var q=hq.value.trim();
-    [].forEach.call(hp.querySelectorAll('.hood-item'),function(it){it.hidden=!!q&&it.textContent.indexOf(q)<0;});});}
+  hq.addEventListener('input',function(){var q=norm(hq.value),n=0;
+    [].forEach.call(hp.querySelectorAll('.hood-item'),function(it){var ok=!q||norm(it.getAttribute('data-s')).indexOf(q)>=0;it.hidden=!ok;if(ok)n++;});
+    hp.querySelector('.hood-none').hidden=n>0;});}
+/* חיפוש בשכונה — אינדקס search.json נטען בפוקוס הראשון */
+var gf=document.querySelector('.gs'),gq=document.getElementById('g-q'),gr=document.getElementById('g-res'),IDX=null,sel=-1;
+if(gf){var hdr=document.querySelector('.hdr'),gopen=document.querySelector('.gs-open');
+  if(gopen)gopen.addEventListener('click',function(){hdr.classList.toggle('gs-on');if(hdr.classList.contains('gs-on'))gq.focus();});
+  function load(){if(IDX)return;IDX=[];fetch(gf.getAttribute('data-home')+'search.json').then(function(r){return r.json();}).then(function(d){IDX=d.map(function(x){x.k=norm(x.n+' '+x.t+' '+(x.s||''));x.nk=norm(x.n);return x;});show();}).catch(function(){});}
+  function esc2(s){return String(s).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
+  function show(){var q=norm(gq.value);sel=-1;if(!q){gr.hidden=true;gq.setAttribute('aria-expanded','false');return;}
+    var w=q.split(' '),res=(IDX||[]).filter(function(x){return w.every(function(t){return x.k.indexOf(t)>=0;});});
+    res.sort(function(a,b){return (b.nk.indexOf(q)===0)-(a.nk.indexOf(q)===0)||(b.nk.indexOf(q)>=0)-(a.nk.indexOf(q)>=0)||(a.o||9)-(b.o||9);});
+    gr.innerHTML=res.length?res.slice(0,10).map(function(x){return '<a role="option" href="'+esc2(x.h)+'"><span><b>'+esc2(x.n)+'</b>'+(x.s?'<small>'+esc2(x.s.slice(0,60))+'</small>':'')+'</span><span class="ty">'+esc2(x.t)+'</span></a>';}).join(''):(IDX&&IDX.length?'<p>לא מצאנו בשכונה. נסו מילה אחרת.</p>':'<p>טוען…</p>');
+    gr.hidden=false;gq.setAttribute('aria-expanded','true');}
+  gq.addEventListener('focus',load);gq.addEventListener('input',function(){load();show();});
+  gq.addEventListener('keydown',function(e){var a=gr.querySelectorAll('a');if(!a.length)return;
+    if(e.key==='ArrowDown'||e.key==='ArrowUp'){e.preventDefault();sel=(sel+(e.key==='ArrowDown'?1:-1)+a.length)%a.length;[].forEach.call(a,function(x,i){x.classList.toggle('sel',i===sel);});}
+    else if(e.key==='Enter'){location.href=a[Math.max(0,sel)].getAttribute('href');}
+    else if(e.key==='Escape'){gr.hidden=true;}});
+  document.addEventListener('click',function(e){if(!gf.contains(e.target))gr.hidden=true;});}
 })();`;
 
 const CLIENT_JS = `
@@ -501,7 +552,7 @@ export function navChips(home, current = '') {
     ['education', 'מוסדות חינוך', `${home}education/`], ['parks', 'גנים ופארקים', `${home}parks/`],
     ['services', 'שירותים ובריאות', `${home}services/`], ['happenings', 'אירועים', `${home}happenings/`],
   ];
-  return `<nav class="chips" aria-label="תחומים"><div class="wrap">
+  return `<nav class="chips" aria-label="תחומים"><button type="button" class="cnav prev" aria-label="תחומים קודמים">→</button><button type="button" class="cnav next" aria-label="תחומים נוספים">←</button><div class="wrap">
 ${items.filter(([k]) => !HIDDEN_NAV.has(k)).map(([k, l, h]) => `<a href="${h}"${k === current ? ' aria-current="page" class="on"' : ''}>${l}</a>`).join('')}
 </div></nav>`;
 }
@@ -547,16 +598,26 @@ ${svg('M6 9l6 6 6-6', 16, '#244782', 2.4)}
 <div class="hood-pop" id="hood-pop" role="dialog" aria-label="בחירת שכונה" hidden>
 <label class="hood-q">${svg('M11 4a7 7 0 1 0 0 14a7 7 0 1 0 0-14zM20 20l-4-4', 17, '#6B7689', 2)}<span class="sr">חיפוש שכונה</span><input id="hood-q" type="search" placeholder="חיפוש שכונה…" autocomplete="off"></label>
 <div class="hood-list">
-${vm.hoods.map((h) => h.current
-    ? `<a class="hood-item" href="${esc(pagePath)}" aria-current="page"><span>${esc(h.name)}</span><span class="badge on">נבחרה</span></a>`
-    : h.active
-      ? `<a class="hood-item" href="/"><span>${esc(h.name)}</span><span class="badge on">פעילה</span></a>`
-      : `<div class="hood-item off"><span>${esc(h.name)}</span><span class="badge">בקרוב</span></div>`).join('\n')}
+${vm.hoods.map((h) => {
+    const ds = ` data-s="${esc([h.name, h.also].filter(Boolean).join(' '))}"`;
+    const sub = h.also ? `<small>${esc(h.also)}</small>` : '';
+    return h.current
+      ? `<a class="hood-item" href="${esc(pagePath)}" aria-current="page"${ds}><span>${esc(h.name)}${sub}</span><span class="badge on">נבחרה</span></a>`
+      : h.active
+        ? `<a class="hood-item" href="/"${ds}><span>${esc(h.name)}${sub}</span><span class="badge on">פעילה</span></a>`
+        : `<div class="hood-item off"${ds}><span>${esc(h.name)}${sub}</span><span class="badge">בקרוב</span></div>`;
+  }).join('\n')}
+<p class="hood-none" hidden>לא מצאנו שכונה בשם הזה. שכונות נוספות בירושלים בדרך.</p>
 </div>
 <a href="/" style="font-size:14px;font-weight:800;text-decoration:none;padding:4px 6px">לכל השכונות ←</a>
 </div>
 </div>
+<form class="gs" role="search" data-home="${esc(pagePath)}" onsubmit="return false">
+<label class="gs-box">${svg('M11 4a7 7 0 1 0 0 14a7 7 0 1 0 0-14zM20 20l-4-4', 18, '#6B7689', 2)}<span class="sr">חיפוש בשכונה</span><input id="g-q" type="search" placeholder="חשמלאי, גמ״ח עריסות, בית כנסת…" autocomplete="off" aria-controls="g-res" aria-expanded="false"></label>
+<div class="gs-res" id="g-res" role="listbox" hidden></div>
+</form>
 <div class="hdr-actions">
+<button type="button" class="pill btn-ghost gs-open" aria-label="חיפוש">${svg('M11 4a7 7 0 1 0 0 14a7 7 0 1 0 0-14zM20 20l-4-4', 20, 'currentColor', 2)}</button>
 <a class="pill btn-ghost" href="${LOGIN}">${svg('M12 4a4 4 0 1 0 0 8a4 4 0 1 0 0-8zM4 21a8 8 0 0 1 16 0', 20, 'currentColor', 2)}<span class="lbl">התחברות</span></a>
 <a class="pill btn-line" href="${APP}">${svg('M12 5v14M5 12h14', 18, 'currentColor', 2.4)}פרסם</a>
 <a class="pill btn-dark" href="${DOWNLOAD}">להורדת האפליקציה</a>
