@@ -18,9 +18,9 @@ import { computeZmanim, sortPrayers, formatPrayerTime } from './lib/prayers.js';
 import { isPrayerInSeason } from './lib/season.js';
 import { sitemap } from './lib/template.js';
 import { minyanimIndexPage, synagoguePageNew } from './lib/minyanim-template.js';
-import { fetchHome, shapeHome, shapePrayers, fetchDirectory, shapeDirectory, fetchListings, shapeListings } from './lib/home-data.js';
+import { fetchHome, shapeHome, shapePrayers, fetchDirectory, shapeDirectory, fetchListings, shapeListings, fetchMore, shapeMore } from './lib/home-data.js';
 import { homePage } from './lib/home-template.js';
-import { listPage, promosPage, realEstatePage, boardPage } from './lib/list-template.js';
+import { listPage, promosPage, realEstatePage, boardPage, lessonsPage, hallsPage, hostingPage, eduPage, parksPage, servicesPage, eventsPage } from './lib/list-template.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -77,7 +77,7 @@ const write = (rel, content) => {
 // ספירת לחיצות מהדפדפן: אותו anon key ציבורי שהאפליקציה בווב משתמשת בו
 const API = SUPABASE_URL && ANON_KEY ? { url: SUPABASE_URL, key: ANON_KEY } : null;
 
-const writeHome = (raw, dirRaw, lsRaw) => {
+const writeHome = (raw, dirRaw, lsRaw, moreRaw, synSlugs) => {
   const vm = shapeHome(raw, { now: new Date(), base: BASE });
   write(path.join(HOME, 'index.html'), homePage(vm, { base: BASE, path: `/${HOME}/` }));
   console.log(`  ${HOME}/  · ${vm.promos.length} מבצעים · ${vm.professionals.length} בעלי מקצוע · ` +
@@ -96,6 +96,14 @@ const writeHome = (raw, dirRaw, lsRaw) => {
     write(path.join(HOME, kind, 'index.html'), listPage(vm, dir, kind, { base: BASE, home: `/${HOME}/`, api: API }));
   }
   console.log(`  ${HOME}/pros/ · ${dir.pros.items.length}   ${HOME}/biz/ · ${dir.biz.items.length}`);
+  if (moreRaw) {
+    const m = shapeMore(moreRaw, dir, synSlugs || {});
+    const o = { base: BASE, home: `/${HOME}/`, api: API };
+    const pages = { lessons: lessonsPage, halls: hallsPage, hosting: hostingPage, education: eduPage,
+      parks: parksPage, services: servicesPage, events: eventsPage };
+    for (const [slug, fn] of Object.entries(pages)) write(path.join(HOME, slug, 'index.html'), fn(vm, m, o));
+    console.log(`  lessons · ${m.lessons.items.length}  halls · ${m.halls.items.length}  hosting · ${m.hosting.items.length}  education · ${m.edu.items.length}  parks · ${m.parks.items.length}  services · ${m.services.items.length}  events · ${m.events.items.length}`);
+  }
   return vm;
 };
 
@@ -140,7 +148,7 @@ const fallbackVm = (c) => ({ name: c.neighborhood, alias: c.secondaryname || '',
 async function main() {
   if (FIXTURE) {
     const fx = JSON.parse(fs.readFileSync(FIXTURE, 'utf8'));
-    const vm = writeHome(fx, fx.directory, fx.listings);
+    const vm = writeHome(fx, fx.directory, fx.listings, fx.more, {});
     if (fx.minyanim) {
       writeMinyanim({ vm, community: fx.community, ...fx.minyanim,
         slugs: new SlugStore(path.join(OUT, SECTION, 'slugs.json')), urls: [] });
@@ -184,14 +192,18 @@ async function main() {
     { loc: `${BASE}/${HOME}/promos/`, freq: 'daily', pri: '0.7' },
     { loc: `${BASE}/${HOME}/realestate/`, freq: 'daily', pri: '0.8' },
     { loc: `${BASE}/${HOME}/board/`, freq: 'daily', pri: '0.7' },
+    ...['lessons', 'halls', 'hosting', 'education', 'parks', 'services', 'events']
+      .map((k) => ({ loc: `${BASE}/${HOME}/${k}/`, freq: 'weekly', pri: '0.6' })),
   ];
 
   // עמוד הבית והרשימות — כשל בהם לא יעצור את עמודי המניינים
   let vm = fallbackVm(community);
   try {
-    const [home, dirRaw, lsRaw] = await Promise.all([
-      fetchHome(db, COMMUNITY_ID), fetchDirectory(db, COMMUNITY_ID), fetchListings(db, COMMUNITY_ID)]);
-    vm = writeHome(home, dirRaw, lsRaw);
+    const [home, dirRaw, lsRaw, moreRaw] = await Promise.all([
+      fetchHome(db, COMMUNITY_ID), fetchDirectory(db, COMMUNITY_ID), fetchListings(db, COMMUNITY_ID), fetchMore(db, COMMUNITY_ID)]);
+    // slugs של בתי הכנסת — לקישור משיעור לעמוד בית הכנסת
+    const synSlugs = Object.fromEntries(syns.map((s) => [s.name, slugs.get(s.id, s.name)]));
+    vm = writeHome(home, dirRaw, lsRaw, moreRaw, synSlugs);
   }
   catch (e) { console.error(`  ⚠ ${HOME}/ לא נבנה:`, e.message || e); process.exitCode = 0; }
 

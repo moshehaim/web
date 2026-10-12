@@ -378,3 +378,86 @@ export function shapeListings(raw, community, now = new Date()) {
     board: { items: board, groups: boardGroups },
   };
 }
+
+/* ── תחומים נוספים: שיעורים, אולמות, אירוח, חינוך, פארקים, שירותים ובריאות ── */
+
+export async function fetchMore(db, communityId) {
+  const q = (p) => p.then(({ data, error }) => { if (error) throw error; return data || []; });
+  const by = (t, cols) => db.from(t).select(cols).eq('community_id', communityId);
+  const syns = await q(by('synagogues', 'id,name'));
+  const [lessonsSyn, lessonsCom, halls, hosting, edu, parks, services, health] = await Promise.all([
+    syns.length ? q(db.from('lessons').select('id,topic,teacher,day,start_time,type,audience,location,synagogue_id,additional_info')
+      .in('synagogue_id', syns.map((s) => String(s.id)))) : Promise.resolve([]),
+    q(by('lessons', 'id,topic,teacher,day,start_time,type,audience,location,synagogue_id,additional_info')),
+    q(by('halls', 'id,name,address,phone,images,capacity,has_catering,has_disabled_access,latitude,longitude')
+      .eq('is_active', true).order('is_prominent', { ascending: false, nullsFirst: false }).order('priority', { ascending: false, nullsFirst: false }).order('name')),
+    q(by('hospitality', 'id,name,address,images,type,number_of_rooms_text,max_guests_text,latitude,longitude')
+      .eq('is_active', true).order('name')),
+    q(by('education_institution', 'id,name,address,phone,image_url,institution_type,category,age_groups,gender_type,latitude,longitude').order('name')),
+    q(by('parks', 'id,name,location,image,park_type,facilities,latitude,longitude').order('name')),
+    q(by('community_services', 'id,name,type,address,phone,image_url,lat,lng').eq('is_active', true).order('name')),
+    q(by('healthcare_facility', 'id,name,facility_type,address,phone,image_url,latitude,longitude,is_24_7').not('is_active', 'is', false).order('name')),
+  ]);
+  const seen = new Set();
+  const lessons = [...lessonsSyn, ...lessonsCom].filter((l) => !seen.has(l.id) && seen.add(l.id));
+  return { syns, lessons, halls, hosting, edu, parks, services, health };
+}
+
+const waze = (lat, lng) => (lat && lng ? `https://waze.com/ul?ll=${lat},${lng}&navigate=yes` : null);
+const SERVICE_TYPES = { atm: 'כספומטים', mikveh: 'מקוואות', post_office: 'דואר', interior_ministry: 'משרדי ממשלה',
+  community_center: 'מרכז קהילתי', defibrillator: 'דפיברילטורים' };
+const HOSTING_TYPES = { complex: 'מתחם אירוח', villa: 'וילה', apartment: 'דירה', unit: 'יחידת אירוח', room: 'חדר' };
+const DAY_ORDER = ['כל יום', 'ראשון', 'שני', 'שלישי', 'רביעי', 'חמישי', 'שישי', 'שבת', 'מוצאי שבת'];
+
+export function shapeMore(raw, dir, synSlugs = {}) {
+  const synName = Object.fromEntries(raw.syns.map((s) => [String(s.id), s.name]));
+  const order = (list, key) => [...new Set(list.map((x) => x[key]).filter(Boolean))];
+
+  const lessons = raw.lessons.map((l) => {
+    const syn = synName[String(l.synagogue_id)] || l.location || '';
+    return { group: (l.day || 'אחר').trim(), t: l.topic || 'שיעור',
+      sub: [l.teacher, l.start_time, syn].filter(Boolean).join(' · '), b: l.audience || '',
+      href: synSlugs[syn] ? `/minyanim-har-homa/${encodeURIComponent(synSlugs[syn])}/` : null, time: l.start_time || '' };
+  }).sort((a, b) => (DAY_ORDER.indexOf(a.group) + 1 || 99) - (DAY_ORDER.indexOf(b.group) + 1 || 99) || a.time.localeCompare(b.time));
+  const lessonGroups = order(lessons, 'group');
+
+  const halls = raw.halls.map((h) => ({ id: h.id, table: 'halls', cat: 'hall', name: h.name, group: 'אולמות',
+    field: [h.capacity > 1 ? `עד ${h.capacity} איש` : '', h.has_catering ? 'קייטרינג' : '', h.has_disabled_access ? 'נגיש' : ''].filter(Boolean).join(' · '),
+    where: h.address || '', img: firstImage(h.images), phone: phoneLinks(h.phone), waze: waze(h.latitude, h.longitude), rec: 0 }));
+
+  const hosting = raw.hosting.map((h) => ({ cat: 'hosting', group: HOSTING_TYPES[h.type] || 'אירוח', title: h.name,
+    img: firstImage(h.images), lines: [[h.number_of_rooms_text && `${h.number_of_rooms_text} חדרים`, h.max_guests_text && `עד ${h.max_guests_text} אורחים`].filter(Boolean).join(' · '), h.address || ''] }));
+
+  const edu = raw.edu.map((e) => ({ id: e.id, table: 'education_institution', cat: 'edu', name: e.name,
+    group: e.institution_type || e.category || 'אחר',
+    field: [e.category && e.category !== e.institution_type ? e.category : '', e.gender_type, (e.age_groups || []).length ? `גילאי ${(e.age_groups || []).join(', ')}` : ''].filter(Boolean).join(' · '),
+    where: e.address || '', img: e.image_url, phone: phoneLinks(e.phone), waze: waze(e.latitude, e.longitude), rec: 0 }));
+
+  const parks = raw.parks.map((p) => ({ id: p.id, table: 'parks', cat: 'park', name: p.name, group: p.park_type || 'פארק',
+    field: (p.facilities || []).slice(0, 4).join(' · '), where: p.location || '', img: p.image, phone: null,
+    waze: waze(p.latitude, p.longitude), rec: 0 }));
+
+  const services = [
+    ...raw.services.map((s) => ({ id: s.id, table: 'community_services', cat: 'service', name: s.name,
+      group: SERVICE_TYPES[s.type] || 'שירותים', field: '', where: s.address || '', img: s.image_url,
+      phone: phoneLinks(s.phone), waze: waze(s.lat, s.lng), rec: 0 })),
+    ...raw.health.map((h) => ({ id: h.id, table: 'healthcare_facility', cat: 'health', name: h.name,
+      group: h.facility_type || 'בריאות', field: h.is_24_7 ? 'פתוח 24/7' : '', where: h.address || '', img: h.image_url,
+      phone: phoneLinks(h.phone), waze: waze(h.latitude, h.longitude), rec: 0 })),
+  ];
+
+  // הכל לאירוע: אולמות + עסקים ובעלי מקצוע מתחום האירועים
+  const ev = (list, label) => list.filter((x) => x.group === 'אירועים ושמחות').map((x) => ({ ...x, group: label }));
+  const events = [...halls.map((h) => ({ ...h, group: 'אולמות' })), ...ev(dir.biz.items, 'עסקים לאירועים'), ...ev(dir.pros.items, 'בעלי מקצוע לאירועים')];
+
+  const imgFirst = (a) => [...a].sort((x, y) => !!y.img - !!x.img);
+  return {
+    lessons: { items: lessons, groups: lessonGroups },
+    halls: { items: imgFirst(halls), groups: [] },
+    hosting: { items: hosting, groups: order(hosting, 'group') },
+    edu: { items: imgFirst(edu), groups: order(edu, 'group') },
+    parks: { items: imgFirst(parks), groups: order(parks, 'group') },
+    services: { items: services, groups: order(services, 'group') },
+    events: { items: events, groups: order(events, 'group') },
+  };
+}

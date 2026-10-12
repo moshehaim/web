@@ -39,13 +39,13 @@ export const svg = (d, size = 24, stroke = 'currentColor', w = 1.9) =>
   `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="${stroke}" stroke-width="${w}" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="${d}"/></svg>`;
 
 const ZONES = [
-  ['מניינים', ICON.clock, 'blue', MINYANIM], ['שיעורי תורה', ICON.book, 'blue'],
+  ['מניינים', ICON.clock, 'blue', MINYANIM], ['שיעורי תורה', ICON.book, 'blue', 'lessons/'],
   ['עסקים', ICON.store, 'sky', 'biz/'], ['בעלי מקצוע', ICON.wrench, 'sky', 'pros/'],
   ['מבצעים', ICON.tag, 'sky', 'promos/'], ['קופונים', ICON.ticket, 'sky', 'promos/#קופונים'],
-  ['שירותי קהילה', ICON.civic, 'teal'], ['גמ״חים', ICON.heart, 'green', 'board/#gmach'], ['אירועים', ICON.star, 'green'],
+  ['שירותי קהילה', ICON.civic, 'teal', 'services/'], ['גמ״חים', ICON.heart, 'green', 'board/#gmach'], ['אירועים', ICON.star, 'green'],
   ['דרושים', ICON.brief, 'violet', 'board/#jobs'], ['יד שנייה', ICON.bag, 'violet', 'board/#second'], ['נדל״ן', ICON.key, 'violet', 'realestate/'],
-  ['אולמות אירועים', ICON.hall, 'amber'], ['אירוח', ICON.bed, 'amber'], ['הכל לאירוע', ICON.party, 'amber'],
-  ['מוסדות חינוך', ICON.school, 'teal'], ['גנים ופארקים', ICON.tree, 'teal'], ['בריאות', ICON.health, 'teal'],
+  ['אולמות אירועים', ICON.hall, 'amber', 'halls/'], ['אירוח', ICON.bed, 'amber', 'hosting/'], ['הכל לאירוע', ICON.party, 'amber', 'events/'],
+  ['מוסדות חינוך', ICON.school, 'teal', 'education/'], ['גנים ופארקים', ICON.tree, 'teal', 'parks/'], ['בריאות', ICON.health, 'teal', 'services/'],
 ];
 
 const PHONES = [['מוקד עירוני', '106'], ['מד״א', '101', 1], ['משטרה', '100', 1], ['כיבוי והצלה', '102', 1], ['חברת החשמל', '103']];
@@ -393,6 +393,8 @@ function ticker(vm) {
 /* ── סקריפט לקוח ───────────────────────────────────────────────── */
 
 export const HOOD_JS = `(function(){
+/* תחום נוכחי בשורת התחומים — לגלול אליו שיהיה גלוי */
+var on=document.querySelector('.chips a.on');if(on&&on.scrollIntoView){try{on.scrollIntoView({block:'nearest',inline:'center'});}catch(_){}}
 /* בורר שכונה */
 var hb=document.getElementById('hood-btn'),hp=document.getElementById('hood-pop'),hq=document.getElementById('hood-q');
 function setHood(o){hp.hidden=!o;hb.setAttribute('aria-expanded',o);if(o)hq.focus();}
@@ -484,14 +486,15 @@ tabs.forEach(function(t,i){t.addEventListener('click',function(){sel(t);});
 export function navChips(home, current = '') {
   const M = '/minyanim-har-homa/';
   const items = [
-    ['home', 'דף השכונה', home], ['minyanim', 'מניינים', M], ['lessons', 'שיעורים', APP],
+    ['home', 'דף השכונה', home], ['minyanim', 'מניינים', M], ['lessons', 'שיעורים', `${home}lessons/`],
     ['biz', 'עסקים', `${home}biz/`], ['pros', 'בעלי מקצוע', `${home}pros/`],
     ['promos', 'מבצעים', `${home}promos/`], ['coupons', 'קופונים', `${home}promos/#קופונים`],
     ['gmach', 'גמ״חים', `${home}board/#gmach`], ['jobs', 'דרושים', `${home}board/#jobs`],
     ['second', 'יד שנייה', `${home}board/#second`], ['realestate', 'נדל״ן', `${home}realestate/`],
     ['vol', 'התנדבות', `${home}board/#vol`], ['lost', 'אבידות ומציאות', `${home}board/#lost`],
-    ['halls', 'אולמות', APP], ['hosting', 'אירוח', APP], ['events', 'הכל לאירוע', APP],
-    ['edu', 'מוסדות חינוך', APP], ['parks', 'גנים ופארקים', APP], ['happenings', 'אירועים', APP],
+    ['halls', 'אולמות', `${home}halls/`], ['hosting', 'אירוח', `${home}hosting/`], ['events', 'הכל לאירוע', `${home}events/`],
+    ['education', 'מוסדות חינוך', `${home}education/`], ['parks', 'גנים ופארקים', `${home}parks/`],
+    ['services', 'שירותים ובריאות', `${home}services/`], ['happenings', 'אירועים', APP],
   ];
   return `<nav class="chips" aria-label="תחומים"><div class="wrap">
 ${items.map(([k, l, h]) => `<a href="${h}"${k === current ? ' aria-current="page" class="on"' : ''}>${l}</a>`).join('')}
