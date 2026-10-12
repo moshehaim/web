@@ -115,6 +115,15 @@ a.hood-item:hover{background:#F5F8FF}
 .hero p{margin:0;font-size:19px;line-height:1.6;color:#C9D6EA;max-width:520px}
 .shab{align-self:flex-start;display:inline-flex;flex-wrap:wrap;align-items:center;gap:6px 16px;margin:0!important;padding:9px 16px;border-radius:14px;background:var(--navy2);border:1px solid rgba(140,203,242,.35);font-size:16px!important;color:#C9D6EA!important;max-width:none!important}
 .shab[hidden]{display:none}.shab svg{color:var(--sky)}.shab>b{color:#fff}.shab span b{color:var(--sky);font-size:17px;margin-inline-start:4px}
+.fresh{flex:0 1 460px;min-width:0;background:rgba(33,62,110,.85);border:1px solid rgba(255,255,255,.1);border-radius:22px;padding:16px 16px 10px;display:flex;flex-direction:column;backdrop-filter:blur(2px)}
+.fresh h2{margin:0 6px 6px;font-size:20px;font-weight:800;color:#fff}
+.fr{display:flex;align-items:center;gap:12px;padding:9px 6px;border-top:1px solid rgba(255,255,255,.08);color:#fff;text-decoration:none;border-radius:12px}
+.fr:first-of-type{border-top:0}.fr:hover{background:rgba(255,255,255,.06);color:#fff}
+.fr i{width:44px;height:44px;border-radius:12px;overflow:hidden;flex:none;background:var(--sky);color:var(--navy);display:flex;align-items:center;justify-content:center;font-style:normal;font-weight:800;font-size:19px}
+.fr i img{width:100%;height:100%;object-fit:cover}
+.fr-t{flex:1;min-width:0}.fr-t b{display:block;font-size:16px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.fr-t small{display:block;font-size:13px;color:#A9BAD4;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.fr em{flex:none;font-style:normal;font-size:12px;font-weight:800;color:var(--sky)}
+@media (max-width:760px){.fresh{flex:1 1 100%}.fr:nth-of-type(n+4){display:none}}
 .tiles{flex:1 1 420px;min-width:0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;align-content:center}
 @media (max-width:460px){.tiles{grid-template-columns:minmax(0,1fr)}}
 .tile{display:flex;align-items:center;gap:12px;padding:16px;border-radius:18px;background:var(--navy2);color:#fff;text-decoration:none}
