@@ -65,8 +65,10 @@ a.hood-item:hover{background:#F5F8FF}
 .hdr-actions .btn-line,.hdr-actions .btn-dark{display:none}.hdr-actions .btn-ghost{width:46px;padding:0;justify-content:center}
 .btn-ghost .lbl{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}}
 .m-only{display:none}@media (max-width:760px){.m-only{display:inline-flex}}
-.chips{border-top:1px solid #EEF0F4;overflow-x:auto;scrollbar-width:none}.chips::-webkit-scrollbar{display:none}
-.chips .wrap{display:flex;gap:6px;padding-block:8px;width:max-content;min-width:100%}
+/* שורת התחומים: במחשב שורות ממורכזות; בטלפון גלילה לצד עם דהייה */
+.chips{border-top:1px solid #EEF0F4}
+.chips .wrap{display:flex;flex-wrap:wrap;justify-content:center;gap:6px;padding-block:8px}
+@media (max-width:760px){.chips{overflow-x:auto;scrollbar-width:none;-webkit-mask-image:linear-gradient(to left,#000 calc(100% - 28px),transparent);mask-image:linear-gradient(to left,#000 calc(100% - 28px),transparent)}.chips::-webkit-scrollbar{display:none}.chips .wrap{flex-wrap:nowrap;justify-content:flex-start;width:max-content;min-width:100%}}
 .chips a{flex:none;font-size:15px;font-weight:700;color:#3B4860;text-decoration:none;padding:6px 14px;border-radius:999px;background:#F4F5F7}
 .chips a:hover{background:#EFF4FF;color:var(--brand)}
 .chips a.on{background:var(--brand);color:#fff}
@@ -244,8 +246,9 @@ footer .c{font-size:13px;color:#8A94A6}
 .nrow.past{opacity:.45}
 .nmore{display:block;margin:8px auto 4px;border:0;background:transparent;color:var(--brand);font-weight:800;font-size:15px;cursor:pointer}
 .nempty{padding:18px 0;color:var(--muted);text-align:center}
-.fchips{display:flex;gap:8px;overflow-x:auto;padding-bottom:2px;scrollbar-width:none}.fchips::-webkit-scrollbar{display:none}
-.fchips>:first-child{margin-inline-start:auto}.fchips>:last-child{margin-inline-end:auto}
+/* סינון: במחשב שורות ממורכזות; בטלפון גלילה לצד עם דהייה בקצה */
+.fchips{display:flex;flex-wrap:wrap;justify-content:center;gap:8px}
+@media (max-width:620px){.fchips{flex-wrap:nowrap;justify-content:flex-start;overflow-x:auto;padding-bottom:2px;scrollbar-width:none;margin-inline:-16px;padding-inline:16px;-webkit-mask-image:linear-gradient(to left,#000 calc(100% - 28px),transparent);mask-image:linear-gradient(to left,#000 calc(100% - 28px),transparent)}.fchips::-webkit-scrollbar{display:none}}
 .fchips button{flex:none;height:40px;padding:0 16px;border-radius:999px;font-size:15px;cursor:pointer;border:1px solid #DCE2EC;background:#fff;color:var(--ink);font-weight:600}
 .fchips button[aria-pressed=true]{border-color:var(--brand);background:var(--brand);color:#fff;font-weight:800}
 .sgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(300px,100%),1fr));gap:14px}

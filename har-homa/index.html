@@ -65,8 +65,10 @@ a.hood-item:hover{background:#F5F8FF}
 .hdr-actions .btn-line,.hdr-actions .btn-dark{display:none}.hdr-actions .btn-ghost{width:46px;padding:0;justify-content:center}
 .btn-ghost .lbl{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}}
 .m-only{display:none}@media (max-width:760px){.m-only{display:inline-flex}}
-.chips{border-top:1px solid #EEF0F4;overflow-x:auto;scrollbar-width:none}.chips::-webkit-scrollbar{display:none}
-.chips .wrap{display:flex;gap:6px;padding-block:8px;width:max-content;min-width:100%}
+/* שורת התחומים: במחשב שורות ממורכזות; בטלפון גלילה לצד עם דהייה */
+.chips{border-top:1px solid #EEF0F4}
+.chips .wrap{display:flex;flex-wrap:wrap;justify-content:center;gap:6px;padding-block:8px}
+@media (max-width:760px){.chips{overflow-x:auto;scrollbar-width:none;-webkit-mask-image:linear-gradient(to left,#000 calc(100% - 28px),transparent);mask-image:linear-gradient(to left,#000 calc(100% - 28px),transparent)}.chips::-webkit-scrollbar{display:none}.chips .wrap{flex-wrap:nowrap;justify-content:flex-start;width:max-content;min-width:100%}}
 .chips a{flex:none;font-size:15px;font-weight:700;color:#3B4860;text-decoration:none;padding:6px 14px;border-radius:999px;background:#F4F5F7}
 .chips a:hover{background:#EFF4FF;color:var(--brand)}
 .chips a.on{background:var(--brand);color:#fff}
