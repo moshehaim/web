@@ -152,16 +152,8 @@ a.hood-item:hover{background:#F5F8FF}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.35}}
 .hero h1{margin:0;font-size:clamp(32px,4.6vw,52px);font-weight:800;line-height:1.1}
 .hero p{margin:0;font-size:19px;line-height:1.6;color:#C9D6EA;max-width:520px}
-.shab{flex:0 1 440px;min-width:0;background:var(--navy2);border:1px solid rgba(255,255,255,.08);border-radius:22px;padding:20px 22px;display:flex;flex-direction:column;gap:14px}
-.sh-h small{display:block;font-size:13px;font-weight:800;color:var(--sky)}.sh-h b{display:block;font-size:24px;font-weight:800;line-height:1.25}
-.sh-t{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.sh-c{display:flex;align-items:center;gap:12px;padding:12px;border-radius:16px;background:rgba(255,255,255,.06)}
-.sh-c i{width:40px;height:40px;border-radius:12px;background:var(--sky);color:var(--navy);display:flex;align-items:center;justify-content:center;flex:none}
-.sh-c small{display:block;font-size:13px;font-weight:700;color:#A9BAD4}.sh-c b{display:block;font-size:26px;font-weight:800;line-height:1.1}
-.sh-c em{display:block;font-style:normal;font-size:13px;font-weight:700;color:#C9D6EA}.sh-c.today{background:rgba(140,203,242,.16);box-shadow:inset 0 0 0 1.5px var(--sky)}.sh-c.today em{color:var(--sky)}
-.sh-l{align-self:flex-start;color:var(--sky);font-weight:800;font-size:15px;text-decoration:none}.sh-l:hover{color:#fff}
-.sh-n{margin:0!important;font-size:12px!important;color:#8FA3C2!important}
-@media (max-width:760px){.shab{flex:1 1 100%}}@media (max-width:380px){.sh-t{grid-template-columns:1fr}}
+.shab{align-self:flex-start;display:inline-flex;flex-wrap:wrap;align-items:center;gap:6px 16px;margin:0!important;padding:9px 16px;border-radius:14px;background:var(--navy2);border:1px solid rgba(140,203,242,.35);font-size:16px!important;color:#C9D6EA!important;max-width:none!important}
+.shab[hidden]{display:none}.shab svg{color:var(--sky)}.shab>b{color:#fff}.shab span b{color:var(--sky);font-size:17px;margin-inline-start:4px}
 .tiles{flex:1 1 420px;min-width:0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;align-content:center}
 @media (max-width:460px){.tiles{grid-template-columns:minmax(0,1fr)}}
 .tile{display:flex;align-items:center;gap:12px;padding:16px;border-radius:18px;background:var(--navy2);color:#fff;text-decoration:none}
@@ -502,9 +494,9 @@ function tick(){
     return '<a class="prow" href="${MINYANIM}"><span class="t mono">'+esc(p.c)+'</span><span><b>'+esc(p.n)+'</b><small>'+esc(p.t)+(p.l?' · '+esc(p.l):'')+'</small></span><span class="when">'+esc(x.w)+'</span></a>';}).join('');}
 }
 tick();setInterval(tick,1000);
-/* זמני שבת: "הערב" כשהיום הוא היום */
+/* זמני שבת: רק מיום ההדלקה (שישי / ערב חג) ועד צאת השבת */
 (function(){var n=jnow(),iso=n.getFullYear()+'-'+pad(n.getMonth()+1)+'-'+pad(n.getDate());
-[].forEach.call(document.querySelectorAll('.sh-c[data-iso]'),function(c){if(c.getAttribute('data-iso')===iso){c.classList.add('today');c.querySelector('[data-rel]').textContent='הערב';}});})();
+[].forEach.call(document.querySelectorAll('.shab[data-from]'),function(c){c.hidden=!(iso>=c.getAttribute('data-from')&&iso<=c.getAttribute('data-to'));});})();
 
 /* קרוסלות */
 var reduce=window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -659,13 +651,8 @@ export function siteFooter() {
 function shabbatCard(sh) {
   if (!sh) return '';
   const out = sh.chag ? (sh.havdalah.d === 'מוצאי שבת' ? 'צאת שבת וחג' : 'צאת החג') : 'צאת שבת';
-  const cell = (lbl, x, ic) => `<div class="sh-c" data-iso="${x.iso}"><i>${svg(ic, 20, 'currentColor', 2)}</i><span><small>${lbl}</small><b class="mono">${x.t}</b><em data-rel>${esc(x.d)}</em></span></div>`;
-  return `<aside class="shab" aria-label="זמני ${sh.chag ? 'החג' : 'השבת'}">
-<div class="sh-h"><small>${sh.chag ? 'החג הקרוב' : 'השבת הקרובה'}</small><b>${esc(sh.title)}</b></div>
-<div class="sh-t">${cell('הדלקת נרות', sh.candle, 'M12 3c2 2.6 3 4.2 3 6a3 3 0 0 1-6 0c0-1.8 1-3.4 3-6zM9.5 14h5v7h-5z')}${cell(out, sh.havdalah, 'M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M5.6 18.4l2.1-2.1M16.3 7.7l2.1-2.1')}</div>
-<a class="sh-l" href="/minyanim-har-homa/">זמני התפילות בשכונה ←</a>
-<p class="sh-n">לפי מנהג ירושלים: הדלקה 40 דקות לפני השקיעה</p>
-</aside>`;
+  // מוסתר כברירת מחדל; הסקריפט מציג אותו מיום ההדלקה ועד צאת השבת/החג
+  return `<p class="shab" data-from="${sh.candle.iso}" data-to="${sh.havdalah.iso}" title="מנהג ירושלים: הדלקה 40 דקות לפני השקיעה" hidden>${svg('M12 3c2 2.6 3 4.2 3 6a3 3 0 0 1-6 0c0-1.8 1-3.4 3-6zM9.5 14h5v7h-5z', 18, 'currentColor', 2)}<b>${esc(sh.title)}</b><span>הדלקת נרות <b class="mono">${sh.candle.t}</b></span><span>${out} <b class="mono">${sh.havdalah.t}</b></span></p>`;
 }
 
 export function homePage(vm, { base, path: pagePath, shabbat = null }) {
@@ -686,9 +673,9 @@ ${siteHeader(vm, pagePath, navChips(pagePath, 'home'))}
 <span class="now"><span class="dot"></span><span data-day>${esc(vm.name)}</span> · <span data-greet>ברוכים הבאים</span></span>
 <h1>מה חדש <span class="emd">ב${esc(vm.name)}</span></h1>
 <p>מניינים, עסקים, בעלי מקצוע, מבצעים וגמ״חים — מעודכנים על ידי השכנים והעסקים עצמם.</p>
+${shabbatCard(shabbat)}
 <a class="pill btn-sky m-only" href="${DOWNLOAD}" style="align-self:flex-start">להורדת האפליקציה</a>
 </div>
-${shabbatCard(shabbat)}
 </div>
 ${ticker(vm)}
 </section>
