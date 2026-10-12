@@ -469,6 +469,8 @@ export function shapeMore(raw, dir, synSlugs = {}) {
     ...raw.services.map((s) => ({ id: s.id, table: 'community_services', cat: 'service', name: s.name,
       group: SERVICE_TYPES[s.type] || 'שירותים', field: '', where: s.address || '', img: s.image_url,
       phone: phoneLinks(s.phone), waze: waze(s.lat, s.lng), rec: 0 })),
+  ];
+  const health = [
     ...raw.health.map((h) => ({ id: h.id, table: 'healthcare_facility', cat: 'health', name: h.name,
       group: h.facility_type || 'בריאות', field: h.is_24_7 ? 'פתוח 24/7' : '', where: h.address || '', img: h.image_url,
       phone: phoneLinks(h.phone), waze: waze(h.latitude, h.longitude), rec: 0 })),
@@ -493,6 +495,7 @@ export function shapeMore(raw, dir, synSlugs = {}) {
     edu: { items: imgFirst(edu), groups: order(edu, 'group') },
     parks: { items: imgFirst(parks), groups: order(parks, 'group') },
     services: { items: services, groups: order(services, 'group') },
+    health: { items: imgFirst(health), groups: order(health, 'group') },
     events: { items: events, groups: order(events, 'group') },
     happenings: { items: happenings, groups: [] },
   };

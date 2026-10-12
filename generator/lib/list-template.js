@@ -390,11 +390,22 @@ export function parksPage(vm, m, { base, home, api }) {
 export function servicesPage(vm, m, { base, home, api }) {
   const d = m.services;
   return collectionPage(vm, {
-    base, home, api, slug: 'services', label: 'שירותים ובריאות', groups: d.groups,
-    title: `שירותים ובריאות ב${where(vm)} — שכונה`,
-    desc: `מרפאות, בתי מרקחת, טיפות חלב, מקוואות, דואר, כספומטים ודפיברילטורים ב${where(vm)}, ${vm.city}.`,
-    placeholder: 'מרפאה, דואר, כספומט…', cards: dirCards(d.items), emptyText: 'אין כרגע שירותים',
+    base, home, api, slug: 'services', label: 'שירותי קהילה', groups: d.groups,
+    title: `שירותי קהילה ב${where(vm)} — מקוואות, דואר, כספומטים | שכונה`,
+    desc: `מקוואות, סניפי דואר, כספומטים, מרכזים קהילתיים ודפיברילטורים ב${where(vm)}, ${vm.city}.`,
+    placeholder: 'מקווה, דואר, כספומט…', cards: dirCards(d.items), emptyText: 'אין כרגע שירותים',
     join: '<b>חסר שירות ברשימה? <span class="em">הוסיפו אותו.</span></b><span>כל משתמש רשום יכול להוסיף באפליקציה.</span>', joinCta: 'להוספה',
+  });
+}
+
+export function healthPage(vm, m, { base, home, api }) {
+  const d = m.health;
+  return collectionPage(vm, {
+    base, home, api, slug: 'health', label: 'בריאות', groups: d.groups,
+    title: `מוסדות בריאות ב${where(vm)} — מרפאות, בתי מרקחת, טיפות חלב | שכונה`,
+    desc: `מרפאות, קופות חולים, בתי מרקחת, טיפות חלב ומוקדים ב${where(vm)}, ${vm.city}.`,
+    placeholder: 'מרפאה, בית מרקחת…', cards: dirCards(d.items), emptyText: 'אין כרגע מוסדות בריאות',
+    join: '<b>חסר מוסד ברשימה? <span class="em">הוסיפו אותו.</span></b><span>כל משתמש רשום יכול להוסיף באפליקציה.</span>', joinCta: 'להוספה',
   });
 }
 
