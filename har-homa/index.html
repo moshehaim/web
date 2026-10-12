@@ -106,13 +106,23 @@ a.hood-item:hover{background:#F5F8FF}
 /* hero */
 .hero{background:var(--navy);color:#fff;position:relative;overflow:hidden}
 .hero-sky{position:absolute;bottom:46px;left:0}
-.hero-row{display:flex;flex-wrap:wrap;gap:36px;padding-block:44px 40px;position:relative}
+.hero-row{display:flex;flex-wrap:wrap;align-items:center;gap:28px 48px;padding-block:34px 32px;position:relative}
 .hero-text{flex:1 1 420px;min-width:0;display:flex;flex-direction:column;gap:18px;justify-content:center}
 .now{display:flex;align-items:center;gap:8px;font-size:15px;font-weight:700;color:#A9BAD4}
 .dot{width:8px;height:8px;border-radius:50%;background:var(--ok);animation:pulse 1.6s ease-in-out infinite}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.35}}
-.hero h1{margin:0;font-size:clamp(36px,6vw,58px);font-weight:800;line-height:1.05}
+.hero h1{margin:0;font-size:clamp(32px,4.6vw,52px);font-weight:800;line-height:1.1}
 .hero p{margin:0;font-size:19px;line-height:1.6;color:#C9D6EA;max-width:520px}
+.shab{flex:0 1 440px;min-width:0;background:var(--navy2);border:1px solid rgba(255,255,255,.08);border-radius:22px;padding:20px 22px;display:flex;flex-direction:column;gap:14px}
+.sh-h small{display:block;font-size:13px;font-weight:800;color:var(--sky)}.sh-h b{display:block;font-size:24px;font-weight:800;line-height:1.25}
+.sh-t{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.sh-c{display:flex;align-items:center;gap:12px;padding:12px;border-radius:16px;background:rgba(255,255,255,.06)}
+.sh-c i{width:40px;height:40px;border-radius:12px;background:var(--sky);color:var(--navy);display:flex;align-items:center;justify-content:center;flex:none}
+.sh-c small{display:block;font-size:13px;font-weight:700;color:#A9BAD4}.sh-c b{display:block;font-size:26px;font-weight:800;line-height:1.1}
+.sh-c em{display:block;font-style:normal;font-size:13px;font-weight:700;color:#C9D6EA}.sh-c.today{background:rgba(140,203,242,.16);box-shadow:inset 0 0 0 1.5px var(--sky)}.sh-c.today em{color:var(--sky)}
+.sh-l{align-self:flex-start;color:var(--sky);font-weight:800;font-size:15px;text-decoration:none}.sh-l:hover{color:#fff}
+.sh-n{margin:0!important;font-size:12px!important;color:#8FA3C2!important}
+@media (max-width:760px){.shab{flex:1 1 100%}}@media (max-width:380px){.sh-t{grid-template-columns:1fr}}
 .tiles{flex:1 1 420px;min-width:0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;align-content:center}
 @media (max-width:460px){.tiles{grid-template-columns:minmax(0,1fr)}}
 .tile{display:flex;align-items:center;gap:12px;padding:16px;border-radius:18px;background:var(--navy2);color:#fff;text-decoration:none}
@@ -314,16 +324,16 @@ footer .c{font-size:13px;color:#8A94A6}
 <div class="wrap hero-row">
 <div class="hero-text">
 <span class="now"><span class="dot"></span><span data-day>חומת שמואל</span> · <span data-greet>ברוכים הבאים</span></span>
-<h1>כל חומת שמואל, <span class="emd">במקום אחד.</span></h1>
+<h1>מה חדש <span class="emd">בחומת שמואל</span></h1>
 <p>מניינים, עסקים, בעלי מקצוע, מבצעים וגמ״חים — מעודכנים על ידי השכנים והעסקים עצמם.</p>
 <a class="pill btn-sky m-only" href="/b/" style="align-self:flex-start">להורדת האפליקציה</a>
 </div>
-<div class="tiles">
-<a class="tile lift" href="#board"><i><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 8h18v12H3zM8 8V5h8v3"/></svg></i><span><b>לוח השכונה</b><span>דרושים, יד שנייה, גמ״חים</span></span></a>
-<a class="tile lift" href="#promos"><i><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12V4h8l10 10-8 8zM7.5 7.5h.01"/></svg></i><span><b>מבצעים וקופונים</b><span>מעסקי השכונה</span></span></a>
-<a class="tile lift" href="pros/"><i><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14.5 6.5a4 4 0 0 0-5.3 5.3L3 18l3 3 6.2-6.2a4 4 0 0 0 5.3-5.3l-2.6 2.6-2.4-.6-.6-2.4z"/></svg></i><span><b>בעלי מקצוע</b><span>חשמל, אינסטלציה, שיפוצים ועוד</span></span></a>
-<a class="tile lift" href="#board"><i><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4a8 8 0 1 0 0 16a8 8 0 1 0 0-16zM12 8v4l3 2"/></svg></i><span><b>תפילות קרובות</b><span>המניין הבא בשכונה</span></span></a>
-</div>
+<aside class="shab" aria-label="זמני השבת">
+<div class="sh-h"><small>השבת הקרובה</small><b>שבת פרשת נח</b></div>
+<div class="sh-t"><div class="sh-c" data-iso="2026-10-16"><i><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3c2 2.6 3 4.2 3 6a3 3 0 0 1-6 0c0-1.8 1-3.4 3-6zM9.5 14h5v7h-5z"/></svg></i><span><small>הדלקת נרות</small><b class="mono">17:26</b><em data-rel>יום שישי</em></span></div><div class="sh-c" data-iso="2026-10-17"><i><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M5.6 18.4l2.1-2.1M16.3 7.7l2.1-2.1"/></svg></i><span><small>צאת שבת</small><b class="mono">18:41</b><em data-rel>מוצאי שבת</em></span></div></div>
+<a class="sh-l" href="/minyanim-har-homa/">זמני התפילות בשכונה ←</a>
+<p class="sh-n">לפי מנהג ירושלים: הדלקה 40 דקות לפני השקיעה</p>
+</aside>
 </div>
 <div class="tick-wrap"><div class="tick"><span><em>מבצע</em>א.א.ב ניקיון: נקיון בניין</span><span><em>דרושים</em>סדרן בוקר וערב למשמרות</span><span><em>דרושים</em>מטפלת מחנכת מעון אמונה</span><span><em>דרושים</em>דרושים קופאיות וסדרנים</span><span><em>יד שנייה</em>למכירה שמלה מהממת לכלת בת מצווה/שושבנית מידה 12</span><span><em>יד שנייה</em>פינת אוכל</span><span><em>יד שנייה</em>שולחן כתיבה עץ סנדביץ</span><span><em>מציאה</em>אופניים חדשות</span><span><em>מציאה</em>אוזנייה איר פודס</span><span style="display:contents" aria-hidden="true"><span><em>מבצע</em>א.א.ב ניקיון: נקיון בניין</span><span><em>דרושים</em>סדרן בוקר וערב למשמרות</span><span><em>דרושים</em>מטפלת מחנכת מעון אמונה</span><span><em>דרושים</em>דרושים קופאיות וסדרנים</span><span><em>יד שנייה</em>למכירה שמלה מהממת לכלת בת מצווה/שושבנית מידה 12</span><span><em>יד שנייה</em>פינת אוכל</span><span><em>יד שנייה</em>שולחן כתיבה עץ סנדביץ</span><span><em>מציאה</em>אופניים חדשות</span><span><em>מציאה</em>אוזנייה איר פודס</span></span></div></div>
 </section>
@@ -588,6 +598,9 @@ function tick(){
     return '<a class="prow" href="/minyanim-har-homa/"><span class="t mono">'+esc(p.c)+'</span><span><b>'+esc(p.n)+'</b><small>'+esc(p.t)+(p.l?' · '+esc(p.l):'')+'</small></span><span class="when">'+esc(x.w)+'</span></a>';}).join('');}
 }
 tick();setInterval(tick,1000);
+/* זמני שבת: "הערב" כשהיום הוא היום */
+(function(){var n=jnow(),iso=n.getFullYear()+'-'+pad(n.getMonth()+1)+'-'+pad(n.getDate());
+[].forEach.call(document.querySelectorAll('.sh-c[data-iso]'),function(c){if(c.getAttribute('data-iso')===iso){c.classList.add('today');c.querySelector('[data-rel]').textContent='הערב';}});})();
 
 /* קרוסלות */
 var reduce=window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches;
