@@ -22,7 +22,7 @@ import { fetchHome, shapeHome, shapePrayers, fetchDirectory, shapeDirectory, fet
 import { homePage, HIDDEN_NAV, navChips } from './lib/home-template.js';
 import { entityPage, detailPage } from './lib/entity-template.js';
 import { fetchDetails, shapeDetails, shabbatTimes, nextShabbat } from './lib/details.js';
-import { listPage, promosPage, realEstatePage, boardPage, lessonsPage, hallsPage, hostingPage, eduPage, parksPage, servicesPage, eventsPage, happeningsPage } from './lib/list-template.js';
+import { listPage, promosPage, realEstatePage, boardPage, lessonsPage, hallsPage, hostingPage, eduPage, parksPage, servicesPage, healthPage, eventsPage, happeningsPage } from './lib/list-template.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -191,10 +191,10 @@ const writeHome = (raw, dirRaw, lsRaw, moreRaw, synSlugs, detRaw) => {
   console.log(`  ${HOME}/pros/ · ${dir.pros.items.length}   ${HOME}/biz/ · ${dir.biz.items.length}`);
   if (moreRaw) {
     const m = shapeMore(moreRaw, dir, synSlugs || {});
-    [m.halls, m.hosting, m.edu, m.parks, m.services, m.events].forEach((x) => link(x.items));
+    [m.halls, m.hosting, m.edu, m.parks, m.services, m.health, m.events].forEach((x) => link(x.items));
     const o = { base: BASE, home, api: API };
     const pages = { lessons: lessonsPage, halls: hallsPage, hosting: hostingPage, education: eduPage,
-      parks: parksPage, services: servicesPage, events: eventsPage };
+      parks: parksPage, services: servicesPage, health: healthPage, events: eventsPage };
     if (m.happenings.items.length) pages.happenings = happeningsPage;
     for (const [slug, fn] of Object.entries(pages)) write(path.join(HOME, slug, 'index.html'), fn(vm, m, o));
     console.log(`  lessons · ${m.lessons.items.length}  halls · ${m.halls.items.length}  hosting · ${m.hosting.items.length}  education · ${m.edu.items.length}  parks · ${m.parks.items.length}  services · ${m.services.items.length}  events · ${m.events.items.length}`);
@@ -290,7 +290,7 @@ async function main() {
     { loc: `${BASE}/${HOME}/promos/`, freq: 'daily', pri: '0.7' },
     { loc: `${BASE}/${HOME}/realestate/`, freq: 'daily', pri: '0.8' },
     { loc: `${BASE}/${HOME}/board/`, freq: 'daily', pri: '0.7' },
-    ...['lessons', 'halls', 'hosting', 'education', 'parks', 'services', 'events']
+    ...['lessons', 'halls', 'hosting', 'education', 'parks', 'services', 'health', 'events']
       .map((k) => ({ loc: `${BASE}/${HOME}/${k}/`, freq: 'weekly', pri: '0.6' })),
   ];
 

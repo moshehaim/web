@@ -124,13 +124,13 @@ export function shapeDetails(raw, community) {
     sections: [{ title: 'מה יש בגן', chips: [...first(p.facilities), yes(p.has_restrooms, 'שירותים'), yes(p.has_picnic_area, 'פינת פיקניק'), yes(p.has_parking, 'חניה'), yes(p.is_accessible, 'נגיש')].filter(Boolean) }],
     where: p.location, lat: p.latitude, lng: p.longitude, owner: 'team' });
 
-  for (const s of raw.services) add({ seg: 'services', list: 'שירותים ובריאות', ld: 'GovernmentOffice', id: s.id, table: 'community_services', cat: 'service',
+  for (const s of raw.services) add({ seg: 'services', list: 'שירותי קהילה', ld: 'GovernmentOffice', id: s.id, table: 'community_services', cat: 'service',
     name: s.name, kicker: SERVICE_TYPES[s.type] || 'שירות', img: s.image_url, gallery: first(s.image_gallery), desc: s.notes,
     where: s.address, lat: s.lat, lng: s.lng, phone: phoneLinks(s.phone), owner: 'team' });
 
   for (const h of raw.health) {
     const svc = Array.isArray(h.services) ? h.services.map((x) => (typeof x === 'string' ? x : x?.name)).filter(Boolean) : [];
-    add({ seg: 'services', list: 'שירותים ובריאות', ld: 'MedicalClinic', id: h.id, table: 'healthcare_facility', cat: 'health',
+    add({ seg: 'health', list: 'בריאות', ld: 'MedicalClinic', id: h.id, table: 'healthcare_facility', cat: 'health',
       name: h.name, kicker: h.facility_type || 'בריאות', img: h.image_url,
       facts: [yes(h.is_24_7, 'פתוח 24/7'), yes(h.has_emergency, 'מוקד חירום'), yes(h.has_accessibility, 'נגיש'), yes(h.has_parking, 'חניה'), h.network].filter(Boolean),
       sections: svc.length ? [{ title: 'שירותים', chips: svc }] : [], schedule: h.weekly_schedule,

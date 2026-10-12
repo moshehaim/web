@@ -44,10 +44,10 @@ const ZONES = [
   ['מניינים', ICON.clock, 'blue', MINYANIM], ['שיעורי תורה', ICON.book, 'blue', 'lessons/'],
   ['עסקים', ICON.store, 'sky', 'biz/'], ['בעלי מקצוע', ICON.wrench, 'sky', 'pros/'],
   ['מבצעים', ICON.tag, 'sky', 'promos/'], ['קופונים', ICON.ticket, 'sky', 'promos/#קופונים'],
-  ['שירותים', ICON.civic, 'teal', 'services/'], ['גמ״חים', ICON.heart, 'green', 'board/#gmach'], ['אירועים', ICON.star, 'green', 'happenings/', 'happenings'],
+  ['שירותי קהילה', ICON.civic, 'teal', 'services/'], ['גמ״חים', ICON.heart, 'green', 'board/#gmach'], ['אירועים', ICON.star, 'green', 'happenings/', 'happenings'],
   ['דרושים', ICON.brief, 'violet', 'board/#jobs'], ['יד שנייה', ICON.bag, 'violet', 'board/#second'], ['אבידות ומציאות', ICON.lost, 'violet', 'board/#lost'], ['נדל״ן', ICON.key, 'violet', 'realestate/'], ['התנדבות', ICON.hand, 'green', 'board/#vol'],
   ['אולמות אירועים', ICON.hall, 'amber', 'halls/'], ['אירוח', ICON.bed, 'amber', 'hosting/'], ['הכל לאירוע', ICON.party, 'amber', 'events/'],
-  ['מוסדות חינוך', ICON.school, 'teal', 'education/'], ['גנים ופארקים', ICON.tree, 'teal', 'parks/'],
+  ['מוסדות חינוך', ICON.school, 'teal', 'education/'], ['גנים ופארקים', ICON.tree, 'teal', 'parks/'], ['בריאות', ICON.health, 'teal', 'health/'],
 ];
 
 const PHONES = [['מוקד עירוני', '106'], ['מד״א', '101', 1], ['משטרה', '100', 1], ['כיבוי והצלה', '102', 1], ['חברת החשמל', '103']];
@@ -264,6 +264,7 @@ a.hood-item:hover{background:#F5F8FF}
 .phone .n{font-size:18px;color:var(--brand)}.phone .n.hot{color:var(--red)}
 
 .zones{display:grid;grid-template-columns:repeat(auto-fill,minmax(118px,1fr));gap:10px}
+@media (min-width:1000px){.zones{grid-template-columns:repeat(10,minmax(0,1fr))}.zones .zone{padding-inline:6px;font-size:14.5px;line-height:1.3}}
 .zone{background:#fff;border-radius:18px;padding:16px 10px;text-decoration:none;color:var(--ink);display:flex;flex-direction:column;align-items:center;gap:10px;text-align:center;box-shadow:0 2px 10px rgba(0,0,0,.04);font-size:15px;font-weight:800}
 .zone:hover{color:var(--ink)}
 .zone i{width:48px;height:48px;border-radius:15px;display:flex;align-items:center;justify-content:center}
@@ -571,7 +572,7 @@ export function navChips(home, current = '') {
     ['vol', 'התנדבות', `${home}board/#vol`], ['lost', 'אבידות ומציאות', `${home}board/#lost`],
     ['halls', 'אולמות', `${home}halls/`], ['hosting', 'אירוח', `${home}hosting/`], ['events', 'הכל לאירוע', `${home}events/`],
     ['education', 'מוסדות חינוך', `${home}education/`], ['parks', 'גנים ופארקים', `${home}parks/`],
-    ['services', 'שירותים ובריאות', `${home}services/`], ['happenings', 'אירועים', `${home}happenings/`],
+    ['services', 'שירותי קהילה', `${home}services/`], ['health', 'בריאות', `${home}health/`], ['happenings', 'אירועים', `${home}happenings/`],
   ];
   return `<nav class="chips" aria-label="תחומים"><button type="button" class="cnav prev" aria-label="תחומים קודמים">→</button><button type="button" class="cnav next" aria-label="תחומים נוספים">←</button><div class="wrap">
 ${items.filter(([k]) => !HIDDEN_NAV.has(k)).map(([k, l, h]) => `<a href="${h}"${k === current ? ' aria-current="page" class="on"' : ''}>${l}</a>`).join('')}
