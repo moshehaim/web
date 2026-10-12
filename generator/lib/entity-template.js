@@ -36,7 +36,8 @@ const CSS = `
 .e-tags{display:flex;flex-wrap:wrap;gap:8px}
 .e-tag{font-size:14px;font-weight:700;background:rgba(255,255,255,.12);color:#fff;border-radius:999px;padding:5px 12px}
 .e-tag.hi{background:var(--sky);color:var(--navy)}
-.e-tag.rec{background:#E7F7EC;color:#15803D;display:inline-flex;align-items:center;gap:5px}
+.e-tag.rec{background:#E24B4A;color:#fff;display:inline-flex;align-items:center;gap:5px}
+.e-rec{background:#FDECEC;color:#C0362F}.e-rec:hover{color:#C0362F;background:#FBDCDC}.e-rec svg{color:#E24B4A}
 .e-grid{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(0,1fr);gap:18px;align-items:start;padding-block:24px 8px}
 @media (max-width:900px){.e-grid{grid-template-columns:minmax(0,1fr)}.e-grid:not(.ad) .e-side{order:-1}}
 .e-card{background:#fff;border-radius:22px;padding:20px 22px;box-shadow:0 2px 12px rgba(0,0,0,.05);display:flex;flex-direction:column;gap:12px}
@@ -144,7 +145,11 @@ export function detailPage(vm, e, { base, home, kind, listLabel, ldType, listHre
   if (e.phone?.wa && !e.appOnly) acts.push(`<a class="e-wa" href="${esc(e.phone.wa)}" target="_blank" rel="noopener">${svg(ICON.wa, 19, 'currentColor', 2)}WhatsApp</a>`);
   if (e.providerHref) acts.push(`<a class="e-map" href="${esc(e.providerHref)}">לעמוד העסק</a>`);
   if (d.booking) acts.push(`<a class="e-book" href="${APP}">${svg(ICON.cal, 19, 'currentColor', 2)}קביעת תור</a>`);
-  if (!acts.length) acts.push(`<a class="e-map" href="${APP}">${e.appOnly ? 'ליצירת קשר באפליקציה' : 'לפרטים באפליקציה'}</a>`);
+  const noContact = !acts.length;
+  // המלצה: נשלח לאפליקציה — הראוטר פותח את המסך עם פעולת ההמלצה מודגשת (?recommend=1)
+  const recPath = e.table === 'professionals' ? 'professional' : e.table === 'businesses' ? 'business' : null;
+  if (recPath && e.id) acts.push(`<a class="e-rec" href="${APP}${recPath}/${encodeURIComponent(e.id)}?recommend=1">${svg(ICON.heart, 19, 'currentColor', 2.2)}${e.rec > 0 ? 'אני ממליץ' : 'היה הראשון להמליץ'}</a>`);
+  if (noContact) acts.push(`<a class="e-map" href="${APP}">${e.appOnly ? 'ליצירת קשר באפליקציה' : 'לפרטים באפליקציה'}</a>`);
 
   const JS = `(function(){
 var API=window.__SB||null,el=document.querySelector('[data-entity]'),sent=0;
