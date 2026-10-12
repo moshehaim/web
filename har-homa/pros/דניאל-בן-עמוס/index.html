@@ -67,7 +67,7 @@ a.hood-item:hover{background:#F5F8FF}
 .m-only{display:none}@media (max-width:760px){.m-only{display:inline-flex}}
 /* שורת התחומים: במחשב שורות ממורכזות; בטלפון גלילה לצד עם דהייה */
 .chips{border-top:1px solid #EEF0F4}
-.chips .wrap{display:flex;flex-wrap:wrap;justify-content:center;gap:6px;padding-block:8px}
+.chips .wrap{display:flex;flex-wrap:wrap;justify-content:center;gap:6px;padding-block:8px;max-width:none}
 @media (max-width:760px){.chips{overflow-x:auto;scrollbar-width:none;-webkit-mask-image:linear-gradient(to left,#000 calc(100% - 28px),transparent);mask-image:linear-gradient(to left,#000 calc(100% - 28px),transparent)}.chips::-webkit-scrollbar{display:none}.chips .wrap{flex-wrap:nowrap;justify-content:flex-start;width:max-content;min-width:100%}}
 .chips a{flex:none;font-size:15px;font-weight:700;color:#3B4860;text-decoration:none;padding:6px 14px;border-radius:999px;background:#F4F5F7}
 .chips a:hover{background:#EFF4FF;color:var(--brand)}
@@ -222,12 +222,15 @@ footer .c{font-size:13px;color:#8A94A6}
 .e-hero .wrap{padding-block:26px 28px;display:flex;flex-direction:column;gap:12px}
 .crumb{font-size:14px;color:#A9BAD4}.crumb a{color:#C9D6EA}
 .e-hero h1{margin:0;font-size:clamp(28px,4.6vw,44px);font-weight:800;line-height:1.12;text-wrap:balance}
+.e-price{font-size:24px;font-weight:800;color:var(--sky);font-variant-numeric:tabular-nums}
+.e-gal{display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:8px}
+.e-gal a{aspect-ratio:1/1;border-radius:12px;overflow:hidden;background:#DCE5F5;display:block}.e-gal img{width:100%;height:100%;object-fit:cover}
 .e-tags{display:flex;flex-wrap:wrap;gap:8px}
 .e-tag{font-size:14px;font-weight:700;background:rgba(255,255,255,.12);color:#fff;border-radius:999px;padding:5px 12px}
 .e-tag.hi{background:var(--sky);color:var(--navy)}
 .e-tag.rec{background:#E7F7EC;color:#15803D;display:inline-flex;align-items:center;gap:5px}
 .e-grid{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(0,1fr);gap:18px;align-items:start;padding-block:24px 8px}
-@media (max-width:900px){.e-grid{grid-template-columns:minmax(0,1fr)}.e-side{order:-1}}
+@media (max-width:900px){.e-grid{grid-template-columns:minmax(0,1fr)}.e-grid:not(.ad) .e-side{order:-1}}
 .e-card{background:#fff;border-radius:22px;padding:20px 22px;box-shadow:0 2px 12px rgba(0,0,0,.05);display:flex;flex-direction:column;gap:12px}
 .e-card h2{margin:0;font-size:20px;font-weight:800;color:var(--navy)}
 .e-img{border-radius:22px;overflow:hidden;background:#DCE5F5;aspect-ratio:16/10;max-width:100%}
@@ -248,7 +251,8 @@ footer .c{font-size:13px;color:#8A94A6}
 .hours{display:flex;flex-direction:column}
 .hrow{display:flex;justify-content:space-between;gap:12px;padding:8px 0;border-bottom:1px solid #F1F3F6;font-size:15px}
 .hrow:last-child{border-bottom:0}
-.hrow b{font-weight:700}.hrow span{font-variant-numeric:tabular-nums;color:#3B4860}
+.hrow b{font-weight:700;flex:none}.hrow span{font-variant-numeric:tabular-nums;color:#3B4860;text-align:left}
+.hrow small{font-size:12px;color:var(--muted)}
 .hrow.today{font-weight:800}.hrow.today b,.hrow.today span{color:var(--brand)}
 .hrow .closed{color:var(--muted)}
 .e-addr{font-size:15px;color:#3B4860;margin:0}
@@ -321,19 +325,21 @@ footer .c{font-size:13px;color:#8A94A6}
 <div class="wrap e-grid">
 <div class="e-main">
 
+
 <div class="e-card"><h2>אודות</h2><p class="e-desc">מורה פרטית לאנגלית, מתמטיקה, ערבית ומקצועות נוספים. מכיתה ה׳ ועד האקדמיה, מכינה לבגרויות, סטודנטים ועוד</p></div>
 <div class="e-card"><h2>פרטים</h2><div class="e-chips"><span>7 שנות ניסיון</span></div></div>
+
 
 </div>
 <aside class="e-side">
 <div class="e-card"><h2>יצירת קשר</h2><div class="e-acts"><a class="e-tel" href="tel:0502633378" data-num="050-2633378"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2"/></svg><span class="lbl">התקשרו</span><span class="num" dir="ltr" hidden>050-2633378</span></a><a class="e-wa" href="https://wa.me/972502633378" target="_blank" rel="noopener"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20l1.3-4A8 8 0 1 1 8 18.7zM9 9.5c.3 2 2.3 4.2 4.5 4.6l1-1.2 1.8.8-.4 1.6c-3.3.2-7-3.4-7-6.8l1.5-.5.8 1.8z"/></svg>WhatsApp</a></div></div>
 
-<div class="e-card"><h2>שעות פעילות</h2><div class="hours"><div class="hrow" data-d="0"><b>ראשון</b><span dir="ltr">08:00–17:00</span></div><div class="hrow" data-d="1"><b>שני</b><span dir="ltr">08:00–17:00</span></div><div class="hrow" data-d="2"><b>שלישי</b><span dir="ltr">08:00–17:00</span></div><div class="hrow" data-d="3"><b>רביעי</b><span dir="ltr">08:00–17:00</span></div><div class="hrow" data-d="4"><b>חמישי</b><span dir="ltr">08:00–17:00</span></div><div class="hrow" data-d="5"><b>שישי</b><span dir="ltr">08:00–candle_lighting-60</span></div><div class="hrow" data-d="6"><b>שבת</b><span dir="ltr">havdalah+60–22:00</span></div></div></div>
-<p class="e-note">הפרטים נמסרו על ידי בעל העסק. בעל העסק? אפשר לעדכן אותם באפליקציה.</p>
+<div class="e-card"><h2>שעות פעילות</h2><div class="hours"><div class="hrow" data-d="0"><b>ראשון</b><span><span dir="ltr">08:00–17:00</span></span></div><div class="hrow" data-d="1"><b>שני</b><span><span dir="ltr">08:00–17:00</span></span></div><div class="hrow" data-d="2"><b>שלישי</b><span><span dir="ltr">08:00–17:00</span></span></div><div class="hrow" data-d="3"><b>רביעי</b><span><span dir="ltr">08:00–17:00</span></span></div><div class="hrow" data-d="4"><b>חמישי</b><span><span dir="ltr">08:00–17:00</span></span></div><div class="hrow" data-d="5"><b>שישי</b><span><span dir="ltr">08:00</span> – שעה לפני כניסת שבת <small>(השבוע ≈ <span dir="ltr">16:26</span>)</small></span></div><div class="hrow" data-d="6"><b>שבת</b><span>שעה אחרי צאת שבת <small>(השבוע ≈ <span dir="ltr">19:41</span>)</small> – <span dir="ltr">22:00</span></span></div></div></div>
+<p class="e-note">הפרטים נמסרו על ידי בעל העסק ומתעדכנים על ידו באפליקציה.</p>
 </aside>
 </div>
 
-<div class="wrap"><div class="app-cta"><div style="min-width:0;flex:1 1 300px"><b>עוד בעלי מקצוע בשכונה</b><span>כל הבעלי מקצוע בחומת שמואל, עם חיפוש וסינון לפי תחום.</span></div><a class="pill btn-dark" href="/har-homa/pros/">לבעלי מקצוע ←</a></div></div>
+<div class="wrap"><div class="app-cta"><div style="min-width:0;flex:1 1 300px"><b>עוד בבעלי מקצוע</b><span>כל הרשימה בחומת שמואל, עם חיפוש וסינון.</span></div><a class="pill btn-dark" href="/har-homa/pros/">לבעלי מקצוע ←</a></div></div>
 </main>
 
 <footer><div class="wrap">

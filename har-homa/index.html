@@ -67,7 +67,7 @@ a.hood-item:hover{background:#F5F8FF}
 .m-only{display:none}@media (max-width:760px){.m-only{display:inline-flex}}
 /* שורת התחומים: במחשב שורות ממורכזות; בטלפון גלילה לצד עם דהייה */
 .chips{border-top:1px solid #EEF0F4}
-.chips .wrap{display:flex;flex-wrap:wrap;justify-content:center;gap:6px;padding-block:8px}
+.chips .wrap{display:flex;flex-wrap:wrap;justify-content:center;gap:6px;padding-block:8px;max-width:none}
 @media (max-width:760px){.chips{overflow-x:auto;scrollbar-width:none;-webkit-mask-image:linear-gradient(to left,#000 calc(100% - 28px),transparent);mask-image:linear-gradient(to left,#000 calc(100% - 28px),transparent)}.chips::-webkit-scrollbar{display:none}.chips .wrap{flex-wrap:nowrap;justify-content:flex-start;width:max-content;min-width:100%}}
 .chips a{flex:none;font-size:15px;font-weight:700;color:#3B4860;text-decoration:none;padding:6px 14px;border-radius:999px;background:#F4F5F7}
 .chips a:hover{background:#EFF4FF;color:var(--brand)}
@@ -306,6 +306,14 @@ footer .c{font-size:13px;color:#8A94A6}
 <div class="body"><b style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis">חנן שיאון</b><span class="field">תחזוקת בית</span><span class="rec"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z"/></svg>המלצה אחת</span></div>
 </a></div>
 <div class="slide"><a href="pros/" class="card pro lift">
+<div class="media"><img src="https://mebomrqnfnbqijiuawdh.supabase.co/storage/v1/object/public/images/professionals/profiles/b9077738-8a3f-44cd-a301-85ae14f8e62f.jpg?v=1791204871056" alt="מיטב מיגון אבטחה ופתרונות תקשורת" loading="lazy" decoding="async"></div>
+<div class="body"><b style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis">מיטב מיגון אבטחה ופתרונות תקשורת</b><span class="field">תחזוקת בית</span></div>
+</a></div>
+<div class="slide"><a href="pros/" class="card pro lift">
+<div class="media"><img src="https://mebomrqnfnbqijiuawdh.supabase.co/storage/v1/object/public/images/professionals/profiles/024841e7-3c59-465a-8a76-42657a257f02.jpg?v=1786476731140" alt="אביתר בראשי גז" loading="lazy" decoding="async"></div>
+<div class="body"><b style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis">אביתר בראשי גז</b><span class="field">תחזוקת בית</span></div>
+</a></div>
+<div class="slide"><a href="pros/" class="card pro lift">
 <div class="media"><img src="https://mebomrqnfnbqijiuawdh.supabase.co/storage/v1/object/public/images/professionals/profiles/7ee8425c-0ad6-4a67-864b-9579facb4619.jpg?v=1782915534123" alt="אוראל דניאלי" loading="lazy" decoding="async"></div>
 <div class="body"><b style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis">אוראל דניאלי</b><span class="field">לימודים והוראה</span></div>
 </a></div>
@@ -324,10 +332,6 @@ footer .c{font-size:13px;color:#8A94A6}
 <div class="slide"><a href="pros/" class="card pro lift">
 <div class="media"><img src="https://mebomrqnfnbqijiuawdh.supabase.co/storage/v1/object/public/images/professionals/profiles/ac13d66e-1b4d-4731-a9fd-34c2b089db55.jpg?v=1791494777283" alt="נתי" loading="lazy" decoding="async"></div>
 <div class="body"><b style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis">נתי</b><span class="field">תחזוקת בית</span></div>
-</a></div>
-<div class="slide"><a href="pros/" class="card pro lift">
-<div class="media"><img src="https://mebomrqnfnbqijiuawdh.supabase.co/storage/v1/object/public/images/professionals/profiles/b9077738-8a3f-44cd-a301-85ae14f8e62f.jpg?v=1791204871056" alt="מיטב מיגון אבטחה ופתרונות תקשורת" loading="lazy" decoding="async"></div>
-<div class="body"><b style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis">מיטב מיגון אבטחה ופתרונות תקשורת</b><span class="field">תחזוקת בית</span></div>
 </a></div>
 <div class="slide"><a href="pros/" class="card pro lift">
 <div class="media"><img src="https://mebomrqnfnbqijiuawdh.supabase.co/storage/v1/object/public/images/professionals/profiles/8e22b35b-9ed7-4e78-acce-173024199de7.jpg?v=1787732922908" alt="לי-אל כהן" loading="lazy" decoding="async"></div>
@@ -352,10 +356,6 @@ footer .c{font-size:13px;color:#8A94A6}
 <div class="slide"><a href="pros/" class="card pro lift">
 <div class="media"><img src="https://mebomrqnfnbqijiuawdh.supabase.co/storage/v1/object/public/images/professionals/profiles/900055f6-7798-4852-81be-56c39ca7bfd9.jpg?v=1781680559429" alt="זהבה אברגל" loading="lazy" decoding="async"></div>
 <div class="body"><b style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis">זהבה אברגל</b><span class="field">משפטים וכספים</span></div>
-</a></div>
-<div class="slide"><a href="pros/" class="card pro lift">
-<div class="media"><img src="https://mebomrqnfnbqijiuawdh.supabase.co/storage/v1/object/public/images/professionals/profiles/10911edb-629c-4bb9-a73b-ce277be41b7d.jpg?v=1781679183638" alt="אסנת אביקר" loading="lazy" decoding="async"></div>
-<div class="body"><b style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis">אסנת אביקר</b><span class="field">ייעוץ נפשי ואימון</span></div>
 </a></div>
 </div></div>
 </section>
