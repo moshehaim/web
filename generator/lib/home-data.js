@@ -238,15 +238,18 @@ export function shapeHome(raw, { now = new Date(), base = '' } = {}) {
 
 export async function fetchDirectory(db, communityId) {
   const q = (p) => p.then(({ data, error }) => { if (error) throw error; return data || []; });
-  const [businesses, professionals, businessTypes, businessCategories, profCategories] = await Promise.all([
+  const nowIso = new Date().toISOString();
+  const [businesses, professionals, businessTypes, businessCategories, profCategories, promos] = await Promise.all([
     q(db.from('businesses')
-      .select('id,name,phone,address,image_url,business_type,recommend_count,latitude,longitude,image_women_only,content_audience')
+      .select('id,name,phone,address,image_url,business_type,recommend_count,latitude,longitude,image_women_only,content_audience,' +
+        'weekly_schedule,kosher_info,event_services_description,appointment_system_status')
       .eq('community_id', communityId).not('is_active', 'is', false)
       .order('is_prominent', { ascending: false, nullsFirst: false })
       .order('priority', { ascending: false, nullsFirst: false })
       .order('name')),
     q(db.from('professionals')
-      .select('id,name,phone,main_category,sub_categories,image_url,recommend_count,image_women_only,content_audience')
+      .select('id,name,phone,main_category,sub_categories,image_url,recommend_count,image_women_only,content_audience,' +
+        'description,weekly_schedule,experience_years,price_range,provides_warranty,tags,address,latitude,longitude,appointment_system_status')
       .eq('community_id', communityId).not('is_active', 'is', false)
       .order('is_prominent', { ascending: false, nullsFirst: false })
       .order('priority', { ascending: false, nullsFirst: false })
@@ -254,8 +257,10 @@ export async function fetchDirectory(db, communityId) {
     q(db.from('business_types').select('id,category_id,name_he')),
     q(db.from('business_categories').select('id,name_he,display_order')),
     q(db.from('professional_categories').select('id,name_he,display_order')),
+    q(db.from('promotions').select('id,title,image_url,end_date,provider_id,image_women_only')
+      .eq('community_id', communityId).eq('is_active', true).or(`end_date.is.null,end_date.gte."${nowIso}"`)),
   ]);
-  return { businesses, professionals, businessTypes, businessCategories, profCategories };
+  return { businesses, professionals, businessTypes, businessCategories, profCategories, promos };
 }
 
 /** טלפון ישראלי → קישורי חיוג ו-WhatsApp (WhatsApp רק לנייד). */
@@ -272,6 +277,8 @@ export function phoneLinks(raw) {
 }
 
 export function shapeDirectory(raw) {
+  const promosOf = (id) => (raw.promos || []).filter((p) => p.provider_id === id)
+    .map((p) => ({ title: p.title, img: p.image_women_only ? null : p.image_url, until: until(p.end_date) }));
   const bt = Object.fromEntries(raw.businessTypes.map((t) => [t.id, t]));
   const bc = Object.fromEntries(raw.businessCategories.map((c) => [c.id, c]));
   const pc = Object.fromEntries(raw.profCategories.map((c) => [c.id, c]));
@@ -287,7 +294,12 @@ export function shapeDirectory(raw) {
         field: subs.slice(0, 3).join(' · ') || pc[p.main_category]?.name_he || '',
         // תמונה לנשים בלבד: הכרטיס מוצג, רק בלי התמונה
         img: p.image_women_only ? null : p.image_url,
-        rec: p.recommend_count || 0, where: '', phone: phoneLinks(p.phone), waze: null,
+        rec: p.recommend_count || 0, where: p.address || '', phone: phoneLinks(p.phone),
+        waze: p.latitude && p.longitude ? `https://waze.com/ul?ll=${p.latitude},${p.longitude}&navigate=yes` : null,
+        detail: { desc: p.description || '', schedule: p.weekly_schedule, booking: [2, 3].includes(p.appointment_system_status),
+          facts: [p.experience_years ? `${p.experience_years} שנות ניסיון` : '', p.price_range || '', p.provides_warranty ? 'נותן אחריות' : '']
+            .filter(Boolean), tags: [...subs.slice(3), ...(p.tags || [])], lat: p.latitude, lng: p.longitude,
+          promos: promosOf(p.id) },
       };
     }).sort(byImageThenOrder);
 
@@ -300,6 +312,9 @@ export function shapeDirectory(raw) {
         rec: b.recommend_count || 0,
         where: b.address || '', phone: phoneLinks(b.phone),
         waze: b.latitude && b.longitude ? `https://waze.com/ul?ll=${b.latitude},${b.longitude}&navigate=yes` : null,
+        detail: { desc: b.event_services_description || '', schedule: b.weekly_schedule, booking: [2, 3].includes(b.appointment_system_status),
+          facts: [b.kosher_info ? `כשרות: ${b.kosher_info}` : ''].filter(Boolean), tags: [], lat: b.latitude, lng: b.longitude,
+          promos: promosOf(b.id) },
       };
     }).sort(byImageThenOrder);
 
