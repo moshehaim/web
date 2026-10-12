@@ -394,3 +394,14 @@ export function eventsPage(vm, m, { base, home, api }) {
     join: '<b>נותנים שירות לאירועים? <span class="em">תופיעו כאן.</span></b><span>פרופיל עם תמונה, טלפון ו-WhatsApp.</span>', joinCta: 'להרשמת עסק',
   });
 }
+
+export function happeningsPage(vm, m, { base, home }) {
+  const d = m.happenings;
+  return collectionPage(vm, {
+    base, home, slug: 'happenings', label: 'אירועים', groups: [],
+    title: `אירועים ב${where(vm)} — שכונה`, desc: `אירועים קרובים ב${where(vm)}, ${vm.city}.`,
+    placeholder: 'שם אירוע או מקום…', emptyText: 'אין כרגע אירועים קרובים',
+    cards: d.items.map((e) => mediaCard(e, { lines: e.lines, cta: 'לפרטים באפליקציה' })).join('\n'),
+    join: '<b>מארגנים אירוע בשכונה? <span class="em">פרסמו אותו.</span></b><span>האירוע יופיע כאן ובאפליקציה.</span>', joinCta: 'לפרסום אירוע',
+  });
+}
