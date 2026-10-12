@@ -215,7 +215,7 @@ a.hood-item:hover{background:#F5F8FF}
 .pro .media{aspect-ratio:4/3;background:#DCE5F5}
 .pro .field{font-size:14px;font-weight:700;color:var(--accent)}
 /* המלצות: אותו אדום של הלב באפליקציה (RecommendHeartBadge.heartColor) */
-.rec{align-self:flex-start;display:inline-flex;align-items:center;gap:4px;font-size:13px;font-weight:800;background:#E24B4A;color:#fff;border-radius:999px;padding:2px 9px 2px 10px}
+.rec{position:absolute;top:10px;right:10px;display:inline-flex;align-items:center;gap:4px;font-size:13px;font-weight:800;background:#E24B4A;color:#fff;border-radius:999px;padding:3px 10px;box-shadow:0 2px 8px rgba(0,0,0,.22)}
 
 .mq-wrap{overflow:hidden;display:flex;flex-direction:column;gap:14px;padding-block:6px}
 .mq{display:flex;gap:14px;width:max-content;animation:mq 60s linear infinite}
@@ -348,8 +348,8 @@ function prosSection(pros) {
 <div class="sec-head">${head2('לבית, למשפחה ולאירועים', 'בעלי מקצוע', 'בשכונה')}<div class="ctrls">${arrows('pros')}<a class="more" href="pros/">לכל בעלי המקצוע ←</a></div></div>
 <div class="car car-pro" data-car="pros" data-auto="4000"><div class="track">
 ${pros.map((p) => `<div class="slide"><a href="pros/" class="card pro lift">
-<div class="media">${img(p.img, p.name)}</div>
-<div class="body"><b style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(p.name)}</b><span class="field">${esc(p.field)}</span>${p.rec ? `<span class="rec">${svg(ICON.heart, 14, 'currentColor', 2)}${p.rec === 1 ? 'המלצה אחת' : `${p.rec} המלצות`}</span>` : ''}</div>
+<div class="media">${img(p.img, p.name)}${p.rec ? `<span class="rec">${svg(ICON.heart, 14, 'currentColor', 2)}${p.rec === 1 ? 'המלצה אחת' : `${p.rec} המלצות`}</span>` : ''}</div>
+<div class="body"><b style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(p.name)}</b><span class="field">${esc(p.field)}</span></div>
 </a></div>`).join('\n')}
 </div></div>
 </section>`;
