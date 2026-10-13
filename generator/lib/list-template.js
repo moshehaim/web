@@ -78,7 +78,6 @@ background:linear-gradient(to top,var(--t2),transparent)}
 .dcard[hidden]{display:none}
 .dmedia{position:relative;aspect-ratio:4/3;max-width:100%;background:#DCE5F5;overflow:hidden;display:flex;align-items:center;justify-content:center}
 .dmedia img{width:100%;height:100%;object-fit:cover}
-.drec .rn{display:none}
 .drec{position:absolute;top:10px;right:10px;display:inline-flex;align-items:center;gap:4px;font-size:13px;font-weight:800;background:#E24B4A;color:#fff;border-radius:999px;padding:3px 10px;box-shadow:0 2px 8px rgba(0,0,0,.22)}
 .dbody{padding:14px 16px 4px;display:flex;flex-direction:column;gap:4px;flex:1}
 .dbody h3{margin:0;font-size:19px;font-weight:800;line-height:1.25}
@@ -99,6 +98,11 @@ background:linear-gradient(to top,var(--t2),transparent)}
 .a-wa{background:#E7F7EC;color:#15803D}.a-wa:hover{color:#15803D;background:#D8F1E0}
 .a-waze{background:none}.a-waze img{width:44px;height:44px;display:block;transition:transform .15s}.a-waze:hover img{transform:scale(1.06)}
 .dact a.a-app{flex:1 1 auto;width:auto;border-radius:12px;font-weight:800;font-size:15px}
+.drec .rp{display:inline-flex;align-items:center;gap:4px}
+.rh{display:none}
+@media (max-width:620px){.drec,.media .rec{background:none;padding:0;box-shadow:none;border:0;border-radius:0}.drec .rp,.media .rec .rp{display:none}.rh{display:block;position:relative;width:36px;height:36px;filter:drop-shadow(0 2px 3px rgba(0,0,0,.28))}.rh svg{display:block}.rh b{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;padding-bottom:2px;font-size:13px;font-weight:800;color:#fff;font-variant-numeric:tabular-nums}}
+/* מסך רחב: הכפתורים נפרשים לרוחב השורה */
+@media (min-width:621px){.dact a{flex:1 1 0;width:auto;border-radius:12px}.a-waze{background:#E3F4FB}.a-waze:hover{background:#D3EDF8}.a-waze img{width:28px;height:28px}.a-waze:hover img{transform:none}}
 .a-app{background:#F1F4F8;color:var(--navy)}
 .dact [data-tip]{position:relative}
 .dempty[hidden]{display:none}
@@ -111,8 +115,7 @@ background:linear-gradient(to top,var(--t2),transparent)}
 .dmedia{grid-area:m;aspect-ratio:1/1;margin:14px 0 0 14px;border-radius:14px;width:82px;overflow:visible}
 .dmedia img{border-radius:14px}
 .dmedia.noimg svg{width:36px;height:36px}
-.drec{top:-6px;right:auto;left:-6px;padding:2px 7px;gap:3px;font-size:12px;box-shadow:0 1px 4px rgba(0,0,0,.25);border:2px solid #fff}
-.drec .rt{display:none}.drec .rn{display:inline}
+.drec{top:-8px;right:auto;left:-8px}
 .dbody{grid-area:b;padding:14px 16px 0 12px}
 .dbody h3{font-size:17px}
 .dact{grid-area:a;padding:12px 14px 14px}
@@ -187,7 +190,7 @@ function card(p, kind) {
   const tone = p.img ? '' : ` noimg t-${(CAT_ICON[p.cat] || CAT_ICON.other)[1]}`;
   // בכרטיס הצר (טלפון) התג מתכווץ ללב עם מספר — כמו RecommendHeartBadge באפליקציה
   const recTxt = p.rec === 1 ? 'המלצה אחת' : `${p.rec} המלצות`;
-  const rec = p.rec > 0 ? `<span class="drec" aria-label="${recTxt}">${svg(ICON_HEART, 14, 'currentColor', 2)}<span class="rt">${recTxt}</span><span class="rn">${p.rec}</span></span>` : '';
+  const rec = p.rec > 0 ? `<span class="drec" role="img" aria-label="${recTxt}"><span class="rp">${svg(ICON_HEART, 14, 'currentColor', 2)}${recTxt}</span><span class="rh" aria-hidden="true"><svg viewBox="0 0 24 24" width="36" height="36"><path d="M12 21.3s-8.3-5.3-8.3-11.6A4.8 4.8 0 0 1 12 6.4a4.8 4.8 0 0 1 8.3 3.3c0 6.3-8.3 11.6-8.3 11.6z" fill="#E24B4A" stroke="#fff" stroke-width="1.8" stroke-linejoin="round"></path></svg><b>${p.rec}</b></span></span>` : '';
   const acts = [];
   if (p.phone) acts.push(`<a class="a-tel" href="${esc(p.phone.tel)}" data-num="${esc(p.phone.display)}" aria-label="טלפון של ${esc(p.name)}" title="טלפון">${svg(ICON_PHONE, 19, 'currentColor', 2.2)}<span class="ld"></span></a>`);
   if (p.phone?.wa) acts.push(`<a class="a-wa" href="${esc(p.phone.wa)}" target="_blank" rel="noopener" aria-label="WhatsApp ל${esc(p.name)}" title="WhatsApp">${svg(ICON_WA, 20, 'currentColor', 2)}</a>`);

@@ -216,6 +216,9 @@ a.hood-item:hover{background:#F5F8FF}
 .pro .field{font-size:14px;font-weight:700;color:var(--accent)}
 /* המלצות: אותו אדום של הלב באפליקציה (RecommendHeartBadge.heartColor) */
 .media .rec{position:absolute;top:10px;right:10px;display:inline-flex;align-items:center;gap:4px;font-size:13px;font-weight:800;background:#E24B4A;color:#fff;border-radius:999px;padding:3px 10px;box-shadow:0 2px 8px rgba(0,0,0,.22)}
+.media .rec .rp{display:inline-flex;align-items:center;gap:4px}
+.rh{display:none}
+@media (max-width:620px){.media .rec{background:none;padding:0;box-shadow:none;border:0;border-radius:0}.media .rec .rp{display:none}.rh{display:block;position:relative;width:36px;height:36px;filter:drop-shadow(0 2px 3px rgba(0,0,0,.28))}.rh svg{display:block}.rh b{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;padding-bottom:2px;font-size:13px;font-weight:800;color:#fff;font-variant-numeric:tabular-nums}}
 
 .mq-wrap{overflow:hidden;display:flex;flex-direction:column;gap:14px;padding-block:6px}
 .mq{display:flex;gap:14px;width:max-content;animation:mq 60s linear infinite}
@@ -348,7 +351,7 @@ function prosSection(pros) {
 <div class="sec-head">${head2('לבית, למשפחה ולאירועים', 'בעלי מקצוע', 'בשכונה')}<div class="ctrls">${arrows('pros')}<a class="more" href="pros/">לכל בעלי המקצוע ←</a></div></div>
 <div class="car car-pro" data-car="pros" data-auto="4000"><div class="track">
 ${pros.map((p) => `<div class="slide"><a href="pros/" class="card pro lift">
-<div class="media">${img(p.img, p.name)}${p.rec ? `<span class="rec">${svg(ICON.heart, 14, 'currentColor', 2)}${p.rec === 1 ? 'המלצה אחת' : `${p.rec} המלצות`}</span>` : ''}</div>
+<div class="media">${img(p.img, p.name)}${p.rec ? `<span class="rec" role="img" aria-label="${p.rec === 1 ? 'המלצה אחת' : `${p.rec} המלצות`}"><span class="rp">${svg(ICON.heart, 14, 'currentColor', 2)}${p.rec === 1 ? 'המלצה אחת' : `${p.rec} המלצות`}</span><span class="rh" aria-hidden="true"><svg viewBox="0 0 24 24" width="36" height="36"><path d="M12 21.3s-8.3-5.3-8.3-11.6A4.8 4.8 0 0 1 12 6.4a4.8 4.8 0 0 1 8.3 3.3c0 6.3-8.3 11.6-8.3 11.6z" fill="#E24B4A" stroke="#fff" stroke-width="1.8" stroke-linejoin="round"></path></svg><b>${p.rec}</b></span></span>` : ''}</div>
 <div class="body"><b style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(p.name)}</b><span class="field">${esc(p.field)}</span></div>
 </a></div>`).join('\n')}
 </div></div>
