@@ -175,6 +175,9 @@ a.hood-item:hover{background:#F5F8FF}
 .pro .field{font-size:14px;font-weight:700;color:var(--accent)}
 /* המלצות: אותו אדום של הלב באפליקציה (RecommendHeartBadge.heartColor) */
 .media .rec{position:absolute;top:10px;right:10px;display:inline-flex;align-items:center;gap:4px;font-size:13px;font-weight:800;background:#E24B4A;color:#fff;border-radius:999px;padding:3px 10px;box-shadow:0 2px 8px rgba(0,0,0,.22)}
+.media .rec .rp{display:inline-flex;align-items:center;gap:4px}
+.rh{display:none}
+@media (max-width:620px){.media .rec{background:none;padding:0;box-shadow:none;border:0;border-radius:0}.media .rec .rp{display:none}.rh{display:block;position:relative;width:36px;height:36px;filter:drop-shadow(0 2px 3px rgba(0,0,0,.28))}.rh svg{display:block}.rh b{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;padding-bottom:2px;font-size:13px;font-weight:800;color:#fff;font-variant-numeric:tabular-nums}}
 
 .mq-wrap{overflow:hidden;display:flex;flex-direction:column;gap:14px;padding-block:6px}
 .mq{display:flex;gap:14px;width:max-content;animation:mq 60s linear infinite}

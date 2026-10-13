@@ -175,6 +175,9 @@ a.hood-item:hover{background:#F5F8FF}
 .pro .field{font-size:14px;font-weight:700;color:var(--accent)}
 /* המלצות: אותו אדום של הלב באפליקציה (RecommendHeartBadge.heartColor) */
 .media .rec{position:absolute;top:10px;right:10px;display:inline-flex;align-items:center;gap:4px;font-size:13px;font-weight:800;background:#E24B4A;color:#fff;border-radius:999px;padding:3px 10px;box-shadow:0 2px 8px rgba(0,0,0,.22)}
+.media .rec .rp{display:inline-flex;align-items:center;gap:4px}
+.rh{display:none}
+@media (max-width:620px){.media .rec{background:none;padding:0;box-shadow:none;border:0;border-radius:0}.media .rec .rp{display:none}.rh{display:block;position:relative;width:36px;height:36px;filter:drop-shadow(0 2px 3px rgba(0,0,0,.28))}.rh svg{display:block}.rh b{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;padding-bottom:2px;font-size:13px;font-weight:800;color:#fff;font-variant-numeric:tabular-nums}}
 
 .mq-wrap{overflow:hidden;display:flex;flex-direction:column;gap:14px;padding-block:6px}
 .mq{display:flex;gap:14px;width:max-content;animation:mq 60s linear infinite}
@@ -304,7 +307,6 @@ background:linear-gradient(to top,var(--t2),transparent)}
 .dcard[hidden]{display:none}
 .dmedia{position:relative;aspect-ratio:4/3;max-width:100%;background:#DCE5F5;overflow:hidden;display:flex;align-items:center;justify-content:center}
 .dmedia img{width:100%;height:100%;object-fit:cover}
-.drec .rn{display:none}
 .drec{position:absolute;top:10px;right:10px;display:inline-flex;align-items:center;gap:4px;font-size:13px;font-weight:800;background:#E24B4A;color:#fff;border-radius:999px;padding:3px 10px;box-shadow:0 2px 8px rgba(0,0,0,.22)}
 .dbody{padding:14px 16px 4px;display:flex;flex-direction:column;gap:4px;flex:1}
 .dbody h3{margin:0;font-size:19px;font-weight:800;line-height:1.25}
@@ -325,6 +327,11 @@ background:linear-gradient(to top,var(--t2),transparent)}
 .a-wa{background:#E7F7EC;color:#15803D}.a-wa:hover{color:#15803D;background:#D8F1E0}
 .a-waze{background:none}.a-waze img{width:44px;height:44px;display:block;transition:transform .15s}.a-waze:hover img{transform:scale(1.06)}
 .dact a.a-app{flex:1 1 auto;width:auto;border-radius:12px;font-weight:800;font-size:15px}
+.drec .rp{display:inline-flex;align-items:center;gap:4px}
+.rh{display:none}
+@media (max-width:620px){.drec,.media .rec{background:none;padding:0;box-shadow:none;border:0;border-radius:0}.drec .rp,.media .rec .rp{display:none}.rh{display:block;position:relative;width:36px;height:36px;filter:drop-shadow(0 2px 3px rgba(0,0,0,.28))}.rh svg{display:block}.rh b{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;padding-bottom:2px;font-size:13px;font-weight:800;color:#fff;font-variant-numeric:tabular-nums}}
+/* מסך רחב: הכפתורים נפרשים לרוחב השורה */
+@media (min-width:621px){.dact a{flex:1 1 0;width:auto;border-radius:12px}.a-waze{background:#E3F4FB}.a-waze:hover{background:#D3EDF8}.a-waze img{width:28px;height:28px}.a-waze:hover img{transform:none}}
 .a-app{background:#F1F4F8;color:var(--navy)}
 .dact [data-tip]{position:relative}
 .dempty[hidden]{display:none}
@@ -337,8 +344,7 @@ background:linear-gradient(to top,var(--t2),transparent)}
 .dmedia{grid-area:m;aspect-ratio:1/1;margin:14px 0 0 14px;border-radius:14px;width:82px;overflow:visible}
 .dmedia img{border-radius:14px}
 .dmedia.noimg svg{width:36px;height:36px}
-.drec{top:-6px;right:auto;left:-6px;padding:2px 7px;gap:3px;font-size:12px;box-shadow:0 1px 4px rgba(0,0,0,.25);border:2px solid #fff}
-.drec .rt{display:none}.drec .rn{display:inline}
+.drec{top:-8px;right:auto;left:-8px}
 .dbody{grid-area:b;padding:14px 16px 0 12px}
 .dbody h3{font-size:17px}
 .dact{grid-area:a;padding:12px 14px 14px}
@@ -503,7 +509,7 @@ background:linear-gradient(to top,var(--t2),transparent)}
 <div class="dact"><a class="a-tel" href="tel:0503484248" data-num="050-3484248" aria-label="טלפון של חן אבגי" title="טלפון"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2"/></svg><span class="ld"></span></a><a class="a-wa" href="https://wa.me/972503484248" target="_blank" rel="noopener" aria-label="WhatsApp לחן אבגי" title="WhatsApp"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20l1.3-4A8 8 0 1 1 8 18.7zM9 9.5c.3 2 2.3 4.2 4.5 4.6l1-1.2 1.8.8-.4 1.6c-3.3.2-7-3.4-7-6.8l1.5-.5.8 1.8z"/></svg></a></div>
 </article>
 <article class="dcard lift" data-group="תחזוקת בית" data-text="חנן שיאון טכנאי מוצרי חשמל תחזוקת בית " data-id="b5a9ada3-9c64-4f5d-bf54-498cf91283f5" data-t="professionals">
-<div class="dmedia"><img src="https://mebomrqnfnbqijiuawdh.supabase.co/storage/v1/object/public/images/professionals/profiles/b5a9ada3-9c64-4f5d-bf54-498cf91283f5.jpg?v=1791311564695" alt="חנן שיאון" loading="lazy" decoding="async"><span class="drec" aria-label="המלצה אחת"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z"/></svg><span class="rt">המלצה אחת</span><span class="rn">1</span></span></div>
+<div class="dmedia"><img src="https://mebomrqnfnbqijiuawdh.supabase.co/storage/v1/object/public/images/professionals/profiles/b5a9ada3-9c64-4f5d-bf54-498cf91283f5.jpg?v=1791311564695" alt="חנן שיאון" loading="lazy" decoding="async"><span class="drec" role="img" aria-label="המלצה אחת"><span class="rp"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z"/></svg>המלצה אחת</span><span class="rh" aria-hidden="true"><svg viewBox="0 0 24 24" width="36" height="36"><path d="M12 21.3s-8.3-5.3-8.3-11.6A4.8 4.8 0 0 1 12 6.4a4.8 4.8 0 0 1 8.3 3.3c0 6.3-8.3 11.6-8.3 11.6z" fill="#E24B4A" stroke="#fff" stroke-width="1.8" stroke-linejoin="round"></path></svg><b>1</b></span></span></div>
 <div class="dbody"><h3><a class="stretch" href="/har-homa/pros/%D7%97%D7%A0%D7%9F-%D7%A9%D7%99%D7%90%D7%95%D7%9F/">חנן שיאון</a></h3><span class="f">טכנאי מוצרי חשמל</span></div>
 <div class="dact"><a class="a-tel" href="tel:0522218764" data-num="052-2218764" aria-label="טלפון של חנן שיאון" title="טלפון"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2"/></svg><span class="ld"></span></a><a class="a-wa" href="https://wa.me/972522218764" target="_blank" rel="noopener" aria-label="WhatsApp לחנן שיאון" title="WhatsApp"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20l1.3-4A8 8 0 1 1 8 18.7zM9 9.5c.3 2 2.3 4.2 4.5 4.6l1-1.2 1.8.8-.4 1.6c-3.3.2-7-3.4-7-6.8l1.5-.5.8 1.8z"/></svg></a><a class="a-waze" href="https://waze.com/ul?ll=31.721269,35.22506&amp;navigate=yes" target="_blank" rel="noopener" aria-label="ניווט לחנן שיאון ב-Waze" title="ניווט ב-Waze"><img src="/img/waze.png" alt="" width="44" height="44"></a></div>
 </article>
@@ -573,7 +579,7 @@ background:linear-gradient(to top,var(--t2),transparent)}
 <div class="dact"><a class="a-tel" href="tel:0542345490" data-num="054-2345490" aria-label="טלפון של רן הגנן" title="טלפון"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2"/></svg><span class="ld"></span></a><a class="a-wa" href="https://wa.me/972542345490" target="_blank" rel="noopener" aria-label="WhatsApp לרן הגנן" title="WhatsApp"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20l1.3-4A8 8 0 1 1 8 18.7zM9 9.5c.3 2 2.3 4.2 4.5 4.6l1-1.2 1.8.8-.4 1.6c-3.3.2-7-3.4-7-6.8l1.5-.5.8 1.8z"/></svg></a></div>
 </article>
 <article class="dcard lift" data-group="תחזוקת בית" data-text="שלומי טדגי אינסטלטור · שיפוצים · נגרות תחזוקת בית " data-id="7bfe6858-e757-4af2-858f-956f6489148d" data-t="professionals">
-<div class="dmedia"><img src="https://mebomrqnfnbqijiuawdh.supabase.co/storage/v1/object/public/images/professionals/profiles/7bfe6858-e757-4af2-858f-956f6489148d.jpg?v=1791785302843" alt="שלומי טדגי" loading="lazy" decoding="async"><span class="drec" aria-label="המלצה אחת"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z"/></svg><span class="rt">המלצה אחת</span><span class="rn">1</span></span></div>
+<div class="dmedia"><img src="https://mebomrqnfnbqijiuawdh.supabase.co/storage/v1/object/public/images/professionals/profiles/7bfe6858-e757-4af2-858f-956f6489148d.jpg?v=1791785302843" alt="שלומי טדגי" loading="lazy" decoding="async"><span class="drec" role="img" aria-label="המלצה אחת"><span class="rp"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z"/></svg>המלצה אחת</span><span class="rh" aria-hidden="true"><svg viewBox="0 0 24 24" width="36" height="36"><path d="M12 21.3s-8.3-5.3-8.3-11.6A4.8 4.8 0 0 1 12 6.4a4.8 4.8 0 0 1 8.3 3.3c0 6.3-8.3 11.6-8.3 11.6z" fill="#E24B4A" stroke="#fff" stroke-width="1.8" stroke-linejoin="round"></path></svg><b>1</b></span></span></div>
 <div class="dbody"><h3><a class="stretch" href="/har-homa/pros/%D7%A9%D7%9C%D7%95%D7%9E%D7%99-%D7%98%D7%93%D7%92%D7%99/">שלומי טדגי</a></h3><span class="f">אינסטלטור · שיפוצים · נגרות</span></div>
 <div class="dact"><a class="a-tel" href="tel:0524643430" data-num="052-4643430" aria-label="טלפון של שלומי טדגי" title="טלפון"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2"/></svg><span class="ld"></span></a><a class="a-wa" href="https://wa.me/972524643430" target="_blank" rel="noopener" aria-label="WhatsApp לשלומי טדגי" title="WhatsApp"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20l1.3-4A8 8 0 1 1 8 18.7zM9 9.5c.3 2 2.3 4.2 4.5 4.6l1-1.2 1.8.8-.4 1.6c-3.3.2-7-3.4-7-6.8l1.5-.5.8 1.8z"/></svg></a><a class="a-waze" href="https://waze.com/ul?ll=31.721269,35.22506&amp;navigate=yes" target="_blank" rel="noopener" aria-label="ניווט לשלומי טדגי ב-Waze" title="ניווט ב-Waze"><img src="/img/waze.png" alt="" width="44" height="44"></a></div>
 </article>
