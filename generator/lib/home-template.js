@@ -147,7 +147,7 @@ a.hood-item:hover{background:#F5F8FF}
 /* hero */
 .hero{background:var(--navy);color:#fff;position:relative;overflow:hidden}
 .hero-sky{position:absolute;bottom:46px;left:0}
-.hero-row{display:flex;flex-wrap:wrap;align-items:center;gap:28px 48px;padding-block:34px 32px;position:relative}
+.hero-row{display:flex;flex-wrap:wrap;align-items:center;gap:24px 32px;padding-block:34px 32px;position:relative}
 .hero-text{flex:1 1 420px;min-width:0;display:flex;flex-direction:column;gap:18px;justify-content:center}
 .now{display:flex;align-items:center;gap:8px;font-size:15px;font-weight:700;color:#A9BAD4}
 .dot{width:8px;height:8px;border-radius:50%;background:var(--ok);animation:pulse 1.6s ease-in-out infinite}
@@ -162,8 +162,11 @@ a.hood-item:hover{background:#F5F8FF}
 .fr i img{width:100%;height:100%;object-fit:cover}
 .fr-t{flex:1;min-width:0}.fr-t b{display:block;font-size:16px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.fr-t small{display:block;font-size:13px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .hero-row .dl{align-self:center}
+/* הכותרת והמשפט באותה שורה — חוסך גובה */
+.h-row{display:flex;flex-direction:column;gap:12px}
+@media (min-width:1101px){.h-row{flex-direction:row;align-items:center;gap:24px}.h-row h1{flex:none}.h-row p{max-width:320px;min-width:280px;font-size:16px;line-height:1.5;padding-inline-start:24px;border-inline-start:2px solid rgba(140,203,242,.4)}}
 /* מקום לפרסום בהירו — עד שיש מפרסם: מודעה של שכונה עצמה, רק במסך רחב */
-.adslot{flex:0 1 460px;min-height:128px;display:flex;align-items:center;gap:16px;padding:16px 20px;border-radius:20px;border:1.5px dashed rgba(140,203,242,.45);background:rgba(23,47,87,.92);color:#C9D6EA;text-decoration:none;position:relative}
+.adslot{flex:0 1 360px;min-height:128px;display:flex;align-items:center;gap:16px;padding:16px 20px;border-radius:20px;border:1.5px dashed rgba(140,203,242,.45);background:rgba(23,47,87,.92);color:#C9D6EA;text-decoration:none;position:relative}
 .adslot:hover{background:#1D3A68;color:#fff}.adslot i{width:56px;height:56px;border-radius:14px;background:rgba(140,203,242,.15);color:var(--sky);display:flex;align-items:center;justify-content:center;flex:none}
 .adslot b{display:block;font-size:18px;color:#fff}.adslot small{display:block;font-size:14px;margin-top:2px}.adslot em{position:absolute;top:8px;left:12px;font-style:normal;font-size:11px;font-weight:800;color:#8FA3C2}
 @media (max-width:900px){.adslot{display:none}}
@@ -747,8 +750,8 @@ ${siteHeader(vm, pagePath, navChips(pagePath, 'home'))}
 <div class="wrap hero-row">
 <div class="hero-text">
 <span class="now"><span class="dot"></span><span data-day>${esc(vm.name)}</span> · <span data-greet>ברוכים הבאים</span></span>
-<h1>מה חדש <span class="emd">ב${esc(vm.name)}</span></h1>
-<p>מניינים, עסקים, בעלי מקצוע, מבצעים וגמ״חים — מעודכנים על ידי השכנים והעסקים עצמם.</p>
+<div class="h-row"><h1>מה חדש <span class="emd">ב${esc(vm.name)}</span></h1>
+<p>מניינים, עסקים, בעלי מקצוע, מבצעים וגמ״חים — מעודכנים על ידי השכנים והעסקים עצמם.</p></div>
 ${shabbatCard(shabbat)}
 </div>
 <a class="pill btn-sky dl m-only" href="${DOWNLOAD}">להורדת האפליקציה</a>
