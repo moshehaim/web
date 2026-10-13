@@ -162,6 +162,14 @@ a.hood-item:hover{background:#F5F8FF}
 .fr i img{width:100%;height:100%;object-fit:cover}
 .fr-t{flex:1;min-width:0}.fr-t b{display:block;font-size:16px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.fr-t small{display:block;font-size:13px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .hero-row .dl{align-self:center}
+.disc{padding-block:48px 8px;display:flex;flex-direction:column;gap:18px}
+.disc-row{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px}
+@media (max-width:900px){.disc-row{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}}
+.disc-card{background:#fff;border-radius:20px;overflow:hidden;text-decoration:none;color:var(--ink);box-shadow:0 2px 12px rgba(0,0,0,.06);display:flex;flex-direction:column}
+.disc-card:hover{color:var(--ink)}.disc-media{aspect-ratio:4/3;display:flex;align-items:center;justify-content:center;overflow:hidden}
+.disc-media img{width:100%;height:100%;object-fit:cover}
+.disc-body{padding:12px 14px 14px;display:flex;flex-direction:column;gap:3px}.disc-body em{align-self:flex-start;font-style:normal;font-size:12px;font-weight:800;background:var(--soft);color:var(--brand);border-radius:6px;padding:1px 8px}
+.disc-body b{font-size:17px;font-weight:800;line-height:1.3}.disc-body small{font-size:13px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .phstrip{background:#fff;border-top:1px solid var(--line);margin-top:40px}.phstrip .wrap{display:flex;flex-wrap:wrap;gap:6px 22px;padding-block:12px;font-size:14px;color:#566173}
 .phstrip a{font-weight:800;text-decoration:none;color:var(--brand);font-variant-numeric:tabular-nums}.phstrip a.hot{color:var(--red)}
 .tiles{flex:1 1 420px;min-width:0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;align-content:center}
@@ -699,11 +707,21 @@ ${rows.map((r) => `<a class="fr" href="${esc(r.h)}"><i>${av(r)}</i><span class="
 </div>`;
 }
 
+const DISC_ICON = { parks: ICON.tree, education: ICON.school, health: ICON.health, services: ICON.civic, gmach: ICON.heart, halls: ICON.hall };
+const DISC_TONE = { parks: 'green', education: 'teal', health: 'teal', services: 'teal', gmach: 'green', halls: 'amber' };
+function discoverSection(rows) {
+  if (!rows?.length) return '';
+  return `<section id="discover" aria-label="גלו את השכונה" class="wrap disc">
+<div class="sec-head">${head2('מקומות ושירותים קרובים', 'גלו את', 'השכונה')}</div>
+<div class="disc-row">${rows.map((r) => `<a class="disc-card lift" href="${esc(r.h)}"><div class="disc-media z-${DISC_TONE[r.seg] || 'blue'}">${r.img ? img(r.img, r.n) : svg(DISC_ICON[r.seg] || ICON.star, 40, 'currentColor', 1.6)}</div><div class="disc-body"><em>${esc(r.label)}</em><b class="clamp2">${esc(r.n)}</b>${r.s ? `<small>${esc(r.s)}</small>` : ''}</div></a>`).join('')}</div>
+</section>`;
+}
+
 function phonesStrip() {
   return `<div class="phstrip" aria-label="טלפונים חשובים"><div class="wrap">${PHONES.map(([n, num, hot]) => `<span>${esc(n)} <a${hot ? ' class="hot"' : ''} href="tel:${num}">${num}</a></span>`).join('')}</div></div>`;
 }
 
-export function homePage(vm, { base, path: pagePath, shabbat = null, fresh = [] }) {
+export function homePage(vm, { base, path: pagePath, shabbat = null, fresh = [], discover = [] }) {
   vm.fresh = fresh;
   const url = `${base}${pagePath}`;
   const title = `${vm.name}${vm.alias ? ` (${vm.alias})` : ''} — שכונה | מניינים, עסקים, גמ״חים ומבצעים`;
@@ -734,6 +752,7 @@ ${vm.promos.length >= 3 ? promosSection(vm.promos) : promosStrip(vm.promos)}
 ${prosSection(vm.professionals)}
 ${bizSection(vm.businesses)}
 ${realEstateSection(vm.realEstate)}
+${discoverSection(discover)}
 
 <section id="zones" aria-label="כל התחומים" class="wrap" style="display:flex;flex-direction:column;gap:18px">
 <h2 style="margin:0;font-size:30px;font-weight:800;color:var(--navy)">כל <span class="em">התחומים</span></h2>

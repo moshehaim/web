@@ -99,6 +99,24 @@ function prune(dir, keep) {
   }
 }
 
+/** "גלו את השכונה": 4 מקומות מהתחומים הקבועים, מתחלפים פעם ביום (לפי התאריך בירושלים) */
+const DISCOVER = [['parks', 'גנים ופארקים'], ['education', 'מוסדות חינוך'], ['health', 'בריאות'], ['services', 'שירותי קהילה'], ['gmach', 'גמ״חים'], ['halls', 'אולמות']];
+function discoverItems(details, now = new Date()) {
+  const day = Math.floor(new Date(now.toLocaleDateString('en-CA', { timeZone: 'Asia/Jerusalem' })).getTime() / 86400000);
+  const pool = DISCOVER.map(([seg, label]) => {
+    const all = (details || []).filter((d) => d.href && (seg === 'gmach' ? d.boardKey === 'gmach' : d.seg === seg));
+    const withImg = all.filter((d) => d.img);
+    return { seg, label, items: withImg.length >= 3 ? withImg : all };
+  }).filter((c) => c.items.length);
+  const out = [];
+  for (let i = 0; i < pool.length && out.length < 4; i++) {
+    const c = pool[(day + i) % pool.length];
+    const d = c.items[(day * 7 + i * 3) % c.items.length];
+    out.push({ seg: c.seg, label: c.label, n: d.name, s: d.where || ([d.kicker].find((k) => k && k !== c.label && k !== d.name && !c.label.startsWith(k.replace(/״/g, ''))) || ''), img: d.img, h: d.href });
+  }
+  return out;
+}
+
 /** "חדש בשכונה": 4 הפריטים האחרונים מכל הקטגוריות, חלון של 14 יום */
 const BOARD_KIND = { jobs: 'דרושים', second: 'יד שנייה', gmach: 'גמ״ח', vol: 'התנדבות' };
 function freshItems(dir, details, detRaw, hrefById) {
@@ -178,7 +196,7 @@ const writeHome = (raw, dirRaw, lsRaw, moreRaw, synSlugs, detRaw) => {
   addSearch('שיעורי תורה', 'תחום', '', `${home}lessons/`, 1); addSearch('אירוח', 'תחום', '', `${home}halls/`, 1);
   // 0. עמוד הבית — אחרי שלכל ישות יש קישור (בשביל "חדש בשכונה")
   const shabbat = raw.community.latitude ? nextShabbat(raw.community.latitude, raw.community.longitude) : null;
-  write(path.join(HOME, 'index.html'), homePage(vm, { base: BASE, path: home, shabbat, fresh: dir ? freshItems(dir, allDetails, detRaw, hrefById) : [] }));
+  write(path.join(HOME, 'index.html'), homePage(vm, { base: BASE, path: home, shabbat, fresh: dir ? freshItems(dir, allDetails, detRaw, hrefById) : [], discover: discoverItems(allDetails) }));
   console.log(`  ${HOME}/  · ${vm.promos.length} מבצעים · ${vm.professionals.length} בעלי מקצוע · ` +
     `${vm.businesses.length} עסקים · ${vm.realEstate.length} נכסים · ${vm.prayers.length} מניינים היום`);
 
