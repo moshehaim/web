@@ -99,19 +99,22 @@ function prune(dir, keep) {
   }
 }
 
-/** "חדש בשכונה": העסקים, בעלי המקצוע והמבצעים שנוספו לאחרונה (עד 45 יום), 4 לכל היותר */
-function freshItems(dir, hrefById) {
-  const now = Date.now(), MAX = 45 * 86400000;
-  const ok = (x) => x.created && now - new Date(x.created) < MAX && now >= new Date(x.created);
-  const days = (c) => Math.floor((now - new Date(c)) / 86400000);
-  const when = (c) => { const d = days(c); return d <= 0 ? 'היום' : d === 1 ? 'אתמול' : d < 7 ? `לפני ${d} ימים` : d < 14 ? 'לפני שבוע' : `לפני ${Math.floor(d / 7)} שבועות`; };
+/** "חדש בשכונה": 4 הפריטים האחרונים מכל הקטגוריות, חלון של 14 יום */
+const BOARD_KIND = { jobs: 'דרושים', second: 'יד שנייה', gmach: 'גמ״ח', vol: 'התנדבות' };
+function freshItems(dir, details, detRaw, hrefById) {
+  const now = Date.now(), MAX = 14 * 86400000;
+  const created = {};
+  for (const rows of Object.values(detRaw || {})) for (const r of rows || []) if (r?.id && r.created_at) created[r.id] = r.created_at;
+  const ok = (c) => c && now - new Date(c) < MAX && now >= new Date(c);
   const rows = [
-    ...dir.pros.items.filter((x) => ok(x) && !x.quiet && x.href).map((x) => ({ k: 'בעל מקצוע', n: x.name, s: x.field, img: x.img, h: x.href, c: x.created })),
-    ...dir.biz.items.filter((x) => ok(x) && !x.quiet && x.href).map((x) => ({ k: 'עסק', n: x.name, s: x.field, img: x.img, h: x.href, c: x.created })),
-    ...dir.promos.filter((x) => ok(x) && (hrefById[x.id] || hrefById[x.providerId])).map((x) => ({ k: 'מבצע', n: x.title, s: x.provider, img: x.img,
-      h: hrefById[x.id] || hrefById[x.providerId], c: x.created })),
-  ].sort((a, b) => new Date(b.c) - new Date(a.c)).slice(0, 4);
-  return rows.map((r) => ({ ...r, w: when(r.c) }));
+    ...dir.pros.items.filter((x) => ok(x.created) && !x.quiet && x.href).map((x) => ({ k: 'בעל מקצוע', n: x.name, s: x.field, img: x.img, h: x.href, c: x.created })),
+    ...dir.biz.items.filter((x) => ok(x.created) && !x.quiet && x.href).map((x) => ({ k: 'עסק', n: x.name, s: x.field, img: x.img, h: x.href, c: x.created })),
+    ...(details || []).filter((d) => ['promos', 'realestate', 'board'].includes(d.seg) && d.href && ok(created[d.id])).map((d) => ({
+      k: d.seg === 'promos' ? 'מבצע' : d.seg === 'realestate' ? 'נדל״ן' : BOARD_KIND[d.boardKey] || d.kicker,
+      n: d.name, s: d.seg === 'promos' ? (d.provider || d.kicker) : d.seg === 'realestate' ? d.kicker : '', img: d.img, h: d.href, c: created[d.id] })),
+  ].sort((a, b) => new Date(b.c) - new Date(a.c));
+  const seen = new Set();
+  return rows.filter((r) => !seen.has(r.h) && seen.add(r.h)).slice(0, 4);
 }
 
 const writeHome = (raw, dirRaw, lsRaw, moreRaw, synSlugs, detRaw) => {
@@ -123,6 +126,7 @@ const writeHome = (raw, dirRaw, lsRaw, moreRaw, synSlugs, detRaw) => {
 
   // 1. עסקים ובעלי מקצוע — slug יציב לכל ישות (נשמר ב-slugs.json)
   const hrefById = {};
+  let allDetails = [];
   // התחומים עצמם — "גמ״ח" או "אולמות" מובילים לרשימה
   for (const m of navChips(home).matchAll(/<a href="([^"]+)">([^<]+)<\/a>/g)) if (m[1] !== home) addSearch(m[2], 'תחום', '', m[1], 1);
   const dir = dirRaw ? shapeDirectory(dirRaw) : null;
@@ -143,7 +147,7 @@ const writeHome = (raw, dirRaw, lsRaw, moreRaw, synSlugs, detRaw) => {
 
   // 2. כל שאר הרכיבים — עמוד מלא לכל אחד
   if (detRaw) {
-    const all = shapeDetails(detRaw, raw.community);
+    const all = allDetails = shapeDetails(detRaw, raw.community);
     const bySeg = {};
     for (const d of all) (bySeg[d.seg] ||= []).push(d);
     for (const [seg, items] of Object.entries(bySeg)) {
@@ -168,9 +172,13 @@ const writeHome = (raw, dirRaw, lsRaw, moreRaw, synSlugs, detRaw) => {
   }
   const link = (items) => { for (const x of items) if (!x.href && hrefById[x.id]) x.href = hrefById[x.id]; };
 
+  // לוח השכונה בעמוד הבית: כל מודעה לעמוד המלא שלה
+  for (const t of vm.board || []) for (const x of t.items) if (!x.href && hrefById[x.id]) x.href = hrefById[x.id];
+  // תחומים שאוחדו בשורת התחומים — עדיין נמצאים בחיפוש
+  addSearch('שיעורי תורה', 'תחום', '', `${home}lessons/`, 1); addSearch('אירוח', 'תחום', '', `${home}halls/`, 1);
   // 0. עמוד הבית — אחרי שלכל ישות יש קישור (בשביל "חדש בשכונה")
   const shabbat = raw.community.latitude ? nextShabbat(raw.community.latitude, raw.community.longitude) : null;
-  write(path.join(HOME, 'index.html'), homePage(vm, { base: BASE, path: home, shabbat, fresh: dir ? freshItems(dir, hrefById) : [] }));
+  write(path.join(HOME, 'index.html'), homePage(vm, { base: BASE, path: home, shabbat, fresh: dir ? freshItems(dir, allDetails, detRaw, hrefById) : [] }));
   console.log(`  ${HOME}/  · ${vm.promos.length} מבצעים · ${vm.professionals.length} בעלי מקצוע · ` +
     `${vm.businesses.length} עסקים · ${vm.realEstate.length} נכסים · ${vm.prayers.length} מניינים היום`);
 

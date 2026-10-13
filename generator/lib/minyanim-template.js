@@ -18,6 +18,7 @@ const CSS = `
 .crumb{font-size:14px;color:#A9BAD4}.crumb a{color:#C9D6EA}
 .mn-hero h1{margin:0;font-size:clamp(30px,5vw,46px);font-weight:800;line-height:1.1;text-wrap:balance}
 .mn-hero p{margin:0;font-size:17px;color:#C9D6EA;max-width:40em}
+.mn-tabs{display:flex;flex-wrap:wrap;gap:8px}.mn-tabs a{height:40px;padding:0 16px;border-radius:999px;display:inline-flex;align-items:center;font-weight:800;font-size:15px;text-decoration:none;background:rgba(255,255,255,.12);color:#fff}.mn-tabs a:hover{background:rgba(255,255,255,.2);color:#fff}.mn-tabs a.on{background:var(--sky);color:var(--navy)}
 .mn-chips{display:flex;flex-wrap:wrap;gap:8px}
 .mn-chip{font-size:14px;font-weight:700;background:rgba(255,255,255,.12);color:#fff;border-radius:999px;padding:5px 12px}
 .mn-chip.hi{background:var(--sky);color:var(--navy)}
@@ -148,6 +149,7 @@ ${siteHeader(vm, home, nav(home))}
 <nav class="crumb" aria-label="פירורי לחם"><a href="${home}">${esc(vm.name)}</a> · תפילות</nav>
 <h1>מניינים <span class="emd">ב${esc(vm.name)}</span></h1>
 <p>זמני התפילה בבתי הכנסת בשכונה, כפי שנמסרו על ידי הגבאים והמתפללים. הזמנים לפי שקיעה והנץ מחושבים להיום.</p>
+<nav class="mn-tabs" aria-label="מניינים ושיעורים"><a class="on" href="#next" aria-current="page">מניינים</a><a href="${home}lessons/">שיעורי תורה</a><a href="#syns">בתי כנסת</a></nav>
 <label class="mn-q">${svg('M11 4a7 7 0 1 0 0 14a7 7 0 1 0 0-14zM20 20l-4-4', 19, 'currentColor', 2)}<span class="sr">חיפוש בית כנסת</span><input id="mn-q" type="search" autocomplete="off" placeholder="שם בית כנסת, רחוב או נוסח…"></label>
 </div></section>
 
@@ -157,7 +159,7 @@ ${siteHeader(vm, home, nav(home))}
 <div class="next"><div id="next-list"><p class="nempty">טוען את הזמנים…</p></div><button type="button" class="nmore" id="next-more" hidden></button></div>
 </section>
 
-<section class="wrap mn-sec" aria-label="בתי כנסת">
+<section id="syns" class="wrap mn-sec" aria-label="בתי כנסת">
 <h2>בתי <span class="em">הכנסת</span></h2>
 ${nusachim.length > 1 ? `<div class="fchips" role="group" aria-label="סינון לפי נוסח"><button type="button" data-g="" aria-pressed="true">כל הנוסחים</button>${nusachim.map((n) => `<button type="button" data-g="${esc(n)}" aria-pressed="false">${esc(n)}</button>`).join('')}</div>` : ''}
 <div class="sgrid">
