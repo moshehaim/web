@@ -104,7 +104,8 @@ const DISCOVER = [['parks', 'גנים ופארקים'], ['education', 'מוסד�
 function discoverItems(details, now = new Date()) {
   const day = Math.floor(new Date(now.toLocaleDateString('en-CA', { timeZone: 'Asia/Jerusalem' })).getTime() / 86400000);
   const pool = DISCOVER.map(([seg, label]) => {
-    const all = (details || []).filter((d) => d.href && (seg === 'gmach' ? d.boardKey === 'gmach' : d.seg === seg));
+    // דפיברילטור הוא נקודת חירום, לא "מקום לגלות"
+    const all = (details || []).filter((d) => d.href && (seg === 'gmach' ? d.boardKey === 'gmach' : d.seg === seg) && d.kicker !== 'דפיברילטור');
     const withImg = all.filter((d) => d.img);
     return { seg, label, items: withImg.length >= 3 ? withImg : all };
   }).filter((c) => c.items.length);
