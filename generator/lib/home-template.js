@@ -418,11 +418,7 @@ function boardSection(vm) {
 
   return `<section id="board" aria-label="לוח השכונה" class="wrap"><div class="board-grid">
 
-<div class="panel pray">
-<div class="panel-head"><h2>תפילות <span class="emd">קרובות</span></h2><span class="clock mono" data-clock></span></div>
-<div data-next-prayers>${ssr.map(prow).join('')}</div>
-<a class="all" href="${MINYANIM}">כל המניינים והשיעורים ←</a>
-</div>
+${freshPanel(vm.fresh)}
 
 <div class="panel span2">
 <div class="panel-head"><h2>לוח <span class="em">השכונה</span></h2><a href="${APP}" style="font-weight:800;font-size:14px;text-decoration:none">+ פרסום בלוח</a></div>
@@ -437,7 +433,11 @@ ${t.items.length
 </div>`).join('\n')}
 </div>
 
-${freshPanel(vm.fresh)}
+<div class="panel pray">
+<div class="panel-head"><h2>תפילות <span class="emd">קרובות</span></h2><span class="clock mono" data-clock></span></div>
+<div data-next-prayers>${ssr.map(prow).join('')}</div>
+<a class="all" href="${MINYANIM}">כל המניינים והשיעורים ←</a>
+</div>
 
 </div></section>`;
 }
@@ -720,7 +720,7 @@ ${siteHeader(vm, pagePath, navChips(pagePath, 'home'))}
 <p>מניינים, עסקים, בעלי מקצוע, מבצעים וגמ״חים — מעודכנים על ידי השכנים והעסקים עצמם.</p>
 ${shabbatCard(shabbat)}
 </div>
-<a class="pill btn-sky dl" href="${DOWNLOAD}">להורדת האפליקציה</a>
+<a class="pill btn-sky dl m-only" href="${DOWNLOAD}">להורדת האפליקציה</a>
 </div>
 ${ticker(vm)}
 </section>
