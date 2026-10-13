@@ -121,6 +121,14 @@ a.hood-item:hover{background:#F5F8FF}
 .fr i img{width:100%;height:100%;object-fit:cover}
 .fr-t{flex:1;min-width:0}.fr-t b{display:block;font-size:16px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.fr-t small{display:block;font-size:13px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .hero-row .dl{align-self:center}
+.disc{padding-block:48px 8px;display:flex;flex-direction:column;gap:18px}
+.disc-row{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px}
+@media (max-width:900px){.disc-row{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}}
+.disc-card{background:#fff;border-radius:20px;overflow:hidden;text-decoration:none;color:var(--ink);box-shadow:0 2px 12px rgba(0,0,0,.06);display:flex;flex-direction:column}
+.disc-card:hover{color:var(--ink)}.disc-media{aspect-ratio:4/3;display:flex;align-items:center;justify-content:center;overflow:hidden}
+.disc-media img{width:100%;height:100%;object-fit:cover}
+.disc-body{padding:12px 14px 14px;display:flex;flex-direction:column;gap:3px}.disc-body em{align-self:flex-start;font-style:normal;font-size:12px;font-weight:800;background:var(--soft);color:var(--brand);border-radius:6px;padding:1px 8px}
+.disc-body b{font-size:17px;font-weight:800;line-height:1.3}.disc-body small{font-size:13px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .phstrip{background:#fff;border-top:1px solid var(--line);margin-top:40px}.phstrip .wrap{display:flex;flex-wrap:wrap;gap:6px 22px;padding-block:12px;font-size:14px;color:#566173}
 .phstrip a{font-weight:800;text-decoration:none;color:var(--brand);font-variant-numeric:tabular-nums}.phstrip a.hot{color:var(--red)}
 .tiles{flex:1 1 420px;min-width:0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;align-content:center}
@@ -200,10 +208,14 @@ a.hood-item:hover{background:#F5F8FF}
 .ps-head{display:flex;align-items:center;justify-content:space-between;gap:12px}.ps-head h2{margin:0;font-size:22px;font-weight:800;color:var(--navy)}
 .ps-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:12px}
 .ps-item{display:flex;align-items:center;gap:12px;background:#fff;border-radius:18px;padding:12px;text-decoration:none;color:var(--ink);box-shadow:0 2px 10px rgba(0,0,0,.04);min-width:0}
-.ps-item:hover{color:var(--ink)}.ps-item i{width:64px;height:64px;border-radius:12px;overflow:hidden;flex:none;display:flex;align-items:center;justify-content:center;background:var(--soft);color:var(--brand)}
-.ps-item i img{width:100%;height:100%;object-fit:cover}.ps-item span{min-width:0}.ps-item em{display:inline-block;font-style:normal;font-size:12px;font-weight:800;background:var(--soft);color:var(--brand);border-radius:6px;padding:1px 7px}
+.ps-item:hover{color:var(--ink)}.ps-item i{width:130px;height:130px;border-radius:12px;overflow:hidden;flex:none;display:flex;align-items:center;justify-content:center;background:var(--soft);color:var(--brand)}
+.ps-item i img{width:100%;height:100%;object-fit:contain}.ps-item span{min-width:0}.ps-item em{display:inline-block;font-style:normal;font-size:12px;font-weight:800;background:var(--soft);color:var(--brand);border-radius:6px;padding:1px 7px}
 .ps-item b{display:block;font-size:16px;font-weight:800;line-height:1.3}.ps-item small{display:block;font-size:13px;color:var(--muted)}
-.ps-cta{background:var(--soft);box-shadow:none;border:1.5px dashed #C9D6EA}.ps-cta b{color:var(--navy)}
+.ps-item{min-height:154px}
+.ps-cta{background:var(--soft);box-shadow:none;border:1.5px dashed #C9D6EA;padding-inline:20px}
+@media (max-width:620px){.ps-item i{width:96px;height:96px}.ps-item{min-height:0}}
+/* מבצע = פלאייר שהעסק עיצב: מוצג שלם, לאורך, לא חתוך */
+.card.promo .media{aspect-ratio:4/5;background:#EEF2F8}.card.promo .media img{object-fit:contain}.ps-cta b{color:var(--navy)}
 .span2{grid-column:span 2}
 @media (max-width:1100px){.board-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.span2{grid-column:1/-1;order:3}}
 @media (max-width:700px){.board-grid{grid-template-columns:minmax(0,1fr)}}
@@ -518,6 +530,10 @@ footer .c{font-size:13px;color:#8A94A6}
 <div class="body"><b>שטח מסחרי</b><span class="sub">12 מ״ר · קומת קרקע</span><span class="fine">שאול אביגור</span></div>
 </a></div>
 </div></div>
+</section>
+<section id="discover" aria-label="גלו את השכונה" class="wrap disc">
+<div class="sec-head"><div><small>מקומות ושירותים קרובים</small><h2>גלו את <span class="em">השכונה</span></h2></div></div>
+<div class="disc-row"><a class="disc-card lift" href="/har-homa/services/%D7%93%D7%A4%D7%99%D7%91%D7%A8%D7%99%D7%9C%D7%98%D7%95%D7%A8/"><div class="disc-media z-teal"><img src="https://mebomrqnfnbqijiuawdh.supabase.co/storage/v1/object/public/images/community_services/0b6983bf-fad8-4908-a1b4-c081936b9bae.jpg?v=1783230941567" alt="דפיברילטור" loading="lazy" decoding="async"></div><div class="disc-body"><em>שירותי קהילה</em><b class="clamp2">דפיברילטור</b><small>הרב מן ההר 20</small></div></a><a class="disc-card lift" href="/har-homa/board/%D7%92%D7%9E%D7%97-%D7%9B%D7%9C%D7%99-%D7%A2%D7%91%D7%95%D7%93%D7%94-%E2%80%94-%D7%9E%D7%90%D7%99%D7%A8-%D7%93%D7%94%D7%90%D7%9F/"><div class="disc-media z-green"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z"/></svg></div><div class="disc-body"><em>גמ״חים</em><b class="clamp2">גמ&quot;ח כלי עבודה — מאיר דהאן</b><small>גמ״ח</small></div></a><a class="disc-card lift" href="/har-homa/halls/%D7%A9%D7%A2%D7%A8%D7%99-%D7%94%D7%97%D7%95%D7%9E%D7%94/"><div class="disc-media z-amber"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20h16M6 20V8h12v12M9 8V5h6v3M10 20v-5h4v5"/></svg></div><div class="disc-body"><em>אולמות</em><b class="clamp2">שערי החומה</b><small>ליכטנשטיין 25</small></div></a><a class="disc-card lift" href="/har-homa/parks/%D7%92%D7%9F-%D7%90%D7%91%D7%99%D7%92%D7%95%D7%A8/"><div class="disc-media z-green"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l6 9H6zM12 8l7 9H5zM12 17v4"/></svg></div><div class="disc-body"><em>גנים ופארקים</em><b class="clamp2">גן אביגור</b><small>שאול אביגור 14</small></div></a></div>
 </section>
 
 <section id="zones" aria-label="כל התחומים" class="wrap" style="display:flex;flex-direction:column;gap:18px">
