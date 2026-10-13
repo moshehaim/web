@@ -241,10 +241,14 @@ a.hood-item:hover{background:#F5F8FF}
 .ps-head{display:flex;align-items:center;justify-content:space-between;gap:12px}.ps-head h2{margin:0;font-size:22px;font-weight:800;color:var(--navy)}
 .ps-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:12px}
 .ps-item{display:flex;align-items:center;gap:12px;background:#fff;border-radius:18px;padding:12px;text-decoration:none;color:var(--ink);box-shadow:0 2px 10px rgba(0,0,0,.04);min-width:0}
-.ps-item:hover{color:var(--ink)}.ps-item i{width:64px;height:64px;border-radius:12px;overflow:hidden;flex:none;display:flex;align-items:center;justify-content:center;background:var(--soft);color:var(--brand)}
-.ps-item i img{width:100%;height:100%;object-fit:cover}.ps-item span{min-width:0}.ps-item em{display:inline-block;font-style:normal;font-size:12px;font-weight:800;background:var(--soft);color:var(--brand);border-radius:6px;padding:1px 7px}
+.ps-item:hover{color:var(--ink)}.ps-item i{width:130px;height:130px;border-radius:12px;overflow:hidden;flex:none;display:flex;align-items:center;justify-content:center;background:var(--soft);color:var(--brand)}
+.ps-item i img{width:100%;height:100%;object-fit:contain}.ps-item span{min-width:0}.ps-item em{display:inline-block;font-style:normal;font-size:12px;font-weight:800;background:var(--soft);color:var(--brand);border-radius:6px;padding:1px 7px}
 .ps-item b{display:block;font-size:16px;font-weight:800;line-height:1.3}.ps-item small{display:block;font-size:13px;color:var(--muted)}
-.ps-cta{background:var(--soft);box-shadow:none;border:1.5px dashed #C9D6EA}.ps-cta b{color:var(--navy)}
+.ps-item{min-height:154px}
+.ps-cta{background:var(--soft);box-shadow:none;border:1.5px dashed #C9D6EA;padding-inline:20px}
+@media (max-width:620px){.ps-item i{width:96px;height:96px}.ps-item{min-height:0}}
+/* מבצע = פלאייר שהעסק עיצב: מוצג שלם, לאורך, לא חתוך */
+.card.promo .media{aspect-ratio:4/5;background:#EEF2F8}.card.promo .media img{object-fit:contain}.ps-cta b{color:var(--navy)}
 .span2{grid-column:span 2}
 @media (max-width:1100px){.board-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.span2{grid-column:1/-1;order:3}}
 @media (max-width:700px){.board-grid{grid-template-columns:minmax(0,1fr)}}
@@ -325,7 +329,7 @@ const arrows = (id) =>
 const img = (src, alt) => `<img src="${esc(src)}" alt="${esc(alt)}" loading="lazy" decoding="async">`;
 
 function promoCard(p) {
-  return `<a href="${APP}" class="card lift${p.coupon ? ' coupon' : ''}">
+  return `<a href="${APP}" class="card promo lift${p.coupon ? ' coupon' : ''}">
 <div class="media">${img(p.img, p.title)}<span class="tag">${esc(p.kind)}</span></div>
 <div class="body"><b class="clamp2">${esc(p.title)}</b>${p.provider ? `<span class="sub">${esc(p.provider)}</span>` : ''}<span class="fine">${esc(p.until)}${p.coupon ? ' · הקוד באפליקציה' : ''}</span></div>
 </a>`;
