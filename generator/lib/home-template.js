@@ -162,6 +162,11 @@ a.hood-item:hover{background:#F5F8FF}
 .fr i img{width:100%;height:100%;object-fit:cover}
 .fr-t{flex:1;min-width:0}.fr-t b{display:block;font-size:16px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.fr-t small{display:block;font-size:13px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .hero-row .dl{align-self:center}
+/* מקום לפרסום בהירו — עד שיש מפרסם: מודעה של שכונה עצמה, רק במסך רחב */
+.adslot{flex:0 1 460px;min-height:128px;display:flex;align-items:center;gap:16px;padding:16px 20px;border-radius:20px;border:1.5px dashed rgba(140,203,242,.45);background:rgba(23,47,87,.92);color:#C9D6EA;text-decoration:none;position:relative}
+.adslot:hover{background:#1D3A68;color:#fff}.adslot i{width:56px;height:56px;border-radius:14px;background:rgba(140,203,242,.15);color:var(--sky);display:flex;align-items:center;justify-content:center;flex:none}
+.adslot b{display:block;font-size:18px;color:#fff}.adslot small{display:block;font-size:14px;margin-top:2px}.adslot em{position:absolute;top:8px;left:12px;font-style:normal;font-size:11px;font-weight:800;color:#8FA3C2}
+@media (max-width:900px){.adslot{display:none}}
 .disc{padding-block:48px 8px;display:flex;flex-direction:column;gap:18px}
 .disc-row{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px}
 @media (max-width:900px){.disc-row{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}}
@@ -717,6 +722,10 @@ function discoverSection(rows) {
 </section>`;
 }
 
+function adSlot() {
+  return `<a class="adslot" href="${APP}"><i>${svg(ICON.store, 26, 'currentColor', 2)}</i><span><b>המקום הזה פנוי לעסק שלכם</b><small>הופיעו כאן מול כל השכונה ←</small></span></a>`;
+}
+
 function phonesStrip() {
   return `<div class="phstrip" aria-label="טלפונים חשובים"><div class="wrap">${PHONES.map(([n, num, hot]) => `<span>${esc(n)} <a${hot ? ' class="hot"' : ''} href="tel:${num}">${num}</a></span>`).join('')}</div></div>`;
 }
@@ -743,6 +752,7 @@ ${siteHeader(vm, pagePath, navChips(pagePath, 'home'))}
 ${shabbatCard(shabbat)}
 </div>
 <a class="pill btn-sky dl m-only" href="${DOWNLOAD}">להורדת האפליקציה</a>
+${adSlot()}
 </div>
 ${ticker(vm)}
 </section>
