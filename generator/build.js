@@ -112,7 +112,7 @@ function discoverItems(details, now = new Date()) {
   for (let i = 0; i < pool.length && out.length < 4; i++) {
     const c = pool[(day + i) % pool.length];
     const d = c.items[(day * 7 + i * 3) % c.items.length];
-    out.push({ seg: c.seg, label: c.label, n: d.name, s: d.where || ([d.kicker].find((k) => k && k !== c.label && k !== d.name && !c.label.startsWith(k.replace(/״/g, ''))) || ''), img: d.img, h: d.href });
+    out.push({ seg: c.seg, label: c.label, n: d.name, s: d.where || ([d.kicker].find((k) => k && k !== c.label && k !== d.name && !c.label.replace(/״/g, '').startsWith(k.replace(/״/g, ''))) || ''), img: d.img, h: d.href });
   }
   return out;
 }
