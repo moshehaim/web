@@ -162,6 +162,14 @@ a.hood-item:hover{background:#F5F8FF}
 .fr i img{width:100%;height:100%;object-fit:cover}
 .fr-t{flex:1;min-width:0}.fr-t b{display:block;font-size:16px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.fr-t small{display:block;font-size:13px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .hero-row .dl{align-self:center}
+.disc{padding-block:48px 8px;display:flex;flex-direction:column;gap:18px}
+.disc-row{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px}
+@media (max-width:900px){.disc-row{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}}
+.disc-card{background:#fff;border-radius:20px;overflow:hidden;text-decoration:none;color:var(--ink);box-shadow:0 2px 12px rgba(0,0,0,.06);display:flex;flex-direction:column}
+.disc-card:hover{color:var(--ink)}.disc-media{aspect-ratio:4/3;display:flex;align-items:center;justify-content:center;overflow:hidden}
+.disc-media img{width:100%;height:100%;object-fit:cover}
+.disc-body{padding:12px 14px 14px;display:flex;flex-direction:column;gap:3px}.disc-body em{align-self:flex-start;font-style:normal;font-size:12px;font-weight:800;background:var(--soft);color:var(--brand);border-radius:6px;padding:1px 8px}
+.disc-body b{font-size:17px;font-weight:800;line-height:1.3}.disc-body small{font-size:13px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .phstrip{background:#fff;border-top:1px solid var(--line);margin-top:40px}.phstrip .wrap{display:flex;flex-wrap:wrap;gap:6px 22px;padding-block:12px;font-size:14px;color:#566173}
 .phstrip a{font-weight:800;text-decoration:none;color:var(--brand);font-variant-numeric:tabular-nums}.phstrip a.hot{color:var(--red)}
 .tiles{flex:1 1 420px;min-width:0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;align-content:center}
@@ -241,10 +249,14 @@ a.hood-item:hover{background:#F5F8FF}
 .ps-head{display:flex;align-items:center;justify-content:space-between;gap:12px}.ps-head h2{margin:0;font-size:22px;font-weight:800;color:var(--navy)}
 .ps-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:12px}
 .ps-item{display:flex;align-items:center;gap:12px;background:#fff;border-radius:18px;padding:12px;text-decoration:none;color:var(--ink);box-shadow:0 2px 10px rgba(0,0,0,.04);min-width:0}
-.ps-item:hover{color:var(--ink)}.ps-item i{width:64px;height:64px;border-radius:12px;overflow:hidden;flex:none;display:flex;align-items:center;justify-content:center;background:var(--soft);color:var(--brand)}
-.ps-item i img{width:100%;height:100%;object-fit:cover}.ps-item span{min-width:0}.ps-item em{display:inline-block;font-style:normal;font-size:12px;font-weight:800;background:var(--soft);color:var(--brand);border-radius:6px;padding:1px 7px}
+.ps-item:hover{color:var(--ink)}.ps-item i{width:130px;height:130px;border-radius:12px;overflow:hidden;flex:none;display:flex;align-items:center;justify-content:center;background:var(--soft);color:var(--brand)}
+.ps-item i img{width:100%;height:100%;object-fit:contain}.ps-item span{min-width:0}.ps-item em{display:inline-block;font-style:normal;font-size:12px;font-weight:800;background:var(--soft);color:var(--brand);border-radius:6px;padding:1px 7px}
 .ps-item b{display:block;font-size:16px;font-weight:800;line-height:1.3}.ps-item small{display:block;font-size:13px;color:var(--muted)}
-.ps-cta{background:var(--soft);box-shadow:none;border:1.5px dashed #C9D6EA}.ps-cta b{color:var(--navy)}
+.ps-item{min-height:154px}
+.ps-cta{background:var(--soft);box-shadow:none;border:1.5px dashed #C9D6EA;padding-inline:20px}
+@media (max-width:620px){.ps-item i{width:96px;height:96px}.ps-item{min-height:0}}
+/* מבצע = פלאייר שהעסק עיצב: מוצג שלם, לאורך, לא חתוך */
+.card.promo .media{aspect-ratio:4/5;background:#EEF2F8}.card.promo .media img{object-fit:contain}.ps-cta b{color:var(--navy)}
 .span2{grid-column:span 2}
 @media (max-width:1100px){.board-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.span2{grid-column:1/-1;order:3}}
 @media (max-width:700px){.board-grid{grid-template-columns:minmax(0,1fr)}}
@@ -325,7 +337,7 @@ const arrows = (id) =>
 const img = (src, alt) => `<img src="${esc(src)}" alt="${esc(alt)}" loading="lazy" decoding="async">`;
 
 function promoCard(p) {
-  return `<a href="${APP}" class="card lift${p.coupon ? ' coupon' : ''}">
+  return `<a href="${APP}" class="card promo lift${p.coupon ? ' coupon' : ''}">
 <div class="media">${img(p.img, p.title)}<span class="tag">${esc(p.kind)}</span></div>
 <div class="body"><b class="clamp2">${esc(p.title)}</b>${p.provider ? `<span class="sub">${esc(p.provider)}</span>` : ''}<span class="fine">${esc(p.until)}${p.coupon ? ' · הקוד באפליקציה' : ''}</span></div>
 </a>`;
@@ -695,11 +707,21 @@ ${rows.map((r) => `<a class="fr" href="${esc(r.h)}"><i>${av(r)}</i><span class="
 </div>`;
 }
 
+const DISC_ICON = { parks: ICON.tree, education: ICON.school, health: ICON.health, services: ICON.civic, gmach: ICON.heart, halls: ICON.hall };
+const DISC_TONE = { parks: 'green', education: 'teal', health: 'teal', services: 'teal', gmach: 'green', halls: 'amber' };
+function discoverSection(rows) {
+  if (!rows?.length) return '';
+  return `<section id="discover" aria-label="גלו את השכונה" class="wrap disc">
+<div class="sec-head">${head2('מקומות ושירותים קרובים', 'גלו את', 'השכונה')}</div>
+<div class="disc-row">${rows.map((r) => `<a class="disc-card lift" href="${esc(r.h)}"><div class="disc-media z-${DISC_TONE[r.seg] || 'blue'}">${r.img ? img(r.img, r.n) : svg(DISC_ICON[r.seg] || ICON.star, 40, 'currentColor', 1.6)}</div><div class="disc-body"><em>${esc(r.label)}</em><b class="clamp2">${esc(r.n)}</b>${r.s ? `<small>${esc(r.s)}</small>` : ''}</div></a>`).join('')}</div>
+</section>`;
+}
+
 function phonesStrip() {
   return `<div class="phstrip" aria-label="טלפונים חשובים"><div class="wrap">${PHONES.map(([n, num, hot]) => `<span>${esc(n)} <a${hot ? ' class="hot"' : ''} href="tel:${num}">${num}</a></span>`).join('')}</div></div>`;
 }
 
-export function homePage(vm, { base, path: pagePath, shabbat = null, fresh = [] }) {
+export function homePage(vm, { base, path: pagePath, shabbat = null, fresh = [], discover = [] }) {
   vm.fresh = fresh;
   const url = `${base}${pagePath}`;
   const title = `${vm.name}${vm.alias ? ` (${vm.alias})` : ''} — שכונה | מניינים, עסקים, גמ״חים ומבצעים`;
@@ -730,6 +752,7 @@ ${vm.promos.length >= 3 ? promosSection(vm.promos) : promosStrip(vm.promos)}
 ${prosSection(vm.professionals)}
 ${bizSection(vm.businesses)}
 ${realEstateSection(vm.realEstate)}
+${discoverSection(discover)}
 
 <section id="zones" aria-label="כל התחומים" class="wrap" style="display:flex;flex-direction:column;gap:18px">
 <h2 style="margin:0;font-size:30px;font-weight:800;color:var(--navy)">כל <span class="em">התחומים</span></h2>
