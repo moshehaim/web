@@ -27,14 +27,14 @@ export async function fetchDetails(db, communityId) {
     q(by('parks', 'id,name,description,location,image,park_type,facilities,has_restrooms,has_picnic_area,has_parking,is_accessible,latitude,longitude,user_id')),
     q(by('community_services', 'id,name,type,address,phone,notes,image_url,image_gallery,lat,lng,user_id').eq('is_active', true)),
     q(by('healthcare_facility', 'id,name,facility_type,address,phone,image_url,services,is_24_7,has_parking,has_accessibility,has_emergency,network,weekly_schedule,latitude,longitude,user_id').not('is_active', 'is', false)),
-    q(by('approve_property', 'id,full_address,asking_price,area_in_sqm,num_rooms,floor,total_floors,description,property_type,property_condition,available_date,has_elevator,has_parking,parking_spots,has_storage,has_balcony,balcony_area_in_sqm,has_sukkah_balcony,has_safe_room,has_rental_units,image_urls,latitude,longitude,is_broker')),
-    q(by('approved_rental_properties', 'id,full_address,monthly_rent,area_in_sqm,num_rooms,floor,total_floors,description,property_type,property_condition,available_date,has_elevator,has_parking,has_storage,has_balcony,has_sukkah_balcony,has_safe_room,includes_furniture,municipal_tax,maintenance_fees,image_urls,latitude,longitude,is_broker')),
-    q(by('promotions', 'id,title,description,content,image_url,end_date,terms_and_conditions,provider_id,provider_name,image_women_only')
+    q(by('approve_property', 'id,created_at,full_address,asking_price,area_in_sqm,num_rooms,floor,total_floors,description,property_type,property_condition,available_date,has_elevator,has_parking,parking_spots,has_storage,has_balcony,balcony_area_in_sqm,has_sukkah_balcony,has_safe_room,has_rental_units,image_urls,latitude,longitude,is_broker')),
+    q(by('approved_rental_properties', 'id,created_at,full_address,monthly_rent,area_in_sqm,num_rooms,floor,total_floors,description,property_type,property_condition,available_date,has_elevator,has_parking,has_storage,has_balcony,has_sukkah_balcony,has_safe_room,includes_furniture,municipal_tax,maintenance_fees,image_urls,latitude,longitude,is_broker')),
+    q(by('promotions', 'id,created_at,title,description,content,image_url,end_date,terms_and_conditions,provider_id,provider_name,image_women_only')
       .eq('is_active', true).or(`end_date.is.null,end_date.gte."${nowIso}"`)),
     q(by('jobs', 'id,title,description,job_type,category,employment_type,salary_info,requirements,experience_required,education_required,location_name,location_address,remote_option,company_name,company_description,created_at')
       .not('is_active', 'is', false).or(`expires_at.is.null,expires_at.gt."${nowIso}"`)),
     q(by('second_hand_items', 'id,name,description,price,is_free,category,condition,address,image_urls,created_at')),
-    q(by('gmachim', 'id,name,address,description,categories,weekly_schedule,latitude,longitude')),
+    q(by('gmachim', 'id,created_at,name,address,description,categories,weekly_schedule,latitude,longitude')),
     q(by('volunteering', 'id,title,description,organization_name,organization_description,volunteer_hours,frequency,location_name,location_address,created_at')
       .not('is_active', 'is', false).or(`expires_at.is.null,expires_at.gt."${nowIso}"`)),
     q(by('lost_and_found', 'id,status,title,description,image_url,created_at')),
@@ -155,7 +155,7 @@ export function shapeDetails(raw, community) {
   for (const p of raw.promos) add({ seg: 'promos', list: 'מבצעים וקופונים', ld: 'Offer', id: p.id, table: null, cat: 'retail',
     name: p.title, kicker: 'מבצע', img: p.image_women_only ? null : p.image_url, desc: [p.description, p.content].filter(Boolean).join('\n\n'),
     facts: [p.provider_name, p.end_date && `בתוקף עד ${dateHe(p.end_date)}`].filter(Boolean),
-    sections: p.terms_and_conditions ? [{ title: 'תנאים', text: p.terms_and_conditions }] : [], providerId: p.provider_id, owner: 'owner', appOnly: true });
+    sections: p.terms_and_conditions ? [{ title: 'תנאים', text: p.terms_and_conditions }] : [], providerId: p.provider_id, provider: p.provider_name || '', owner: 'owner', appOnly: true });
 
   for (const j of raw.jobs) add({ seg: 'board', list: 'לוח השכונה', ld: 'JobPosting', id: j.id, table: 'jobs', cat: 'other', boardKey: 'jobs',
     name: j.title, kicker: 'דרושים', desc: j.description,

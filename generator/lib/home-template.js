@@ -41,12 +41,12 @@ export const svg = (d, size = 24, stroke = 'currentColor', w = 1.9) =>
   `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="${stroke}" stroke-width="${w}" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="${d}"/></svg>`;
 
 const ZONES = [
-  ['מניינים', ICON.clock, 'blue', MINYANIM], ['שיעורי תורה', ICON.book, 'blue', 'lessons/'],
+  ['מניינים ושיעורים', ICON.clock, 'blue', MINYANIM],
   ['עסקים', ICON.store, 'sky', 'biz/'], ['בעלי מקצוע', ICON.wrench, 'sky', 'pros/'],
   ['מבצעים', ICON.tag, 'sky', 'promos/'], ['קופונים', ICON.ticket, 'sky', 'promos/#קופונים'],
   ['שירותי קהילה', ICON.civic, 'teal', 'services/'], ['גמ״חים', ICON.heart, 'green', 'board/#gmach'], ['אירועים', ICON.star, 'green', 'happenings/', 'happenings'],
   ['דרושים', ICON.brief, 'violet', 'board/#jobs'], ['יד שנייה', ICON.bag, 'violet', 'board/#second'], ['אבידות ומציאות', ICON.lost, 'violet', 'board/#lost'], ['נדל״ן', ICON.key, 'violet', 'realestate/'], ['התנדבות', ICON.hand, 'green', 'board/#vol'],
-  ['אולמות אירועים', ICON.hall, 'amber', 'halls/'], ['אירוח', ICON.bed, 'amber', 'hosting/'], ['הכל לאירוע', ICON.party, 'amber', 'events/'],
+  ['אולמות ואירוח', ICON.hall, 'amber', 'halls/'], ['הכל לאירוע', ICON.party, 'amber', 'events/'],
   ['מוסדות חינוך', ICON.school, 'teal', 'education/'], ['גנים ופארקים', ICON.tree, 'teal', 'parks/'], ['בריאות', ICON.health, 'teal', 'health/'],
 ];
 
@@ -156,15 +156,14 @@ a.hood-item:hover{background:#F5F8FF}
 .hero p{margin:0;font-size:19px;line-height:1.6;color:#C9D6EA;max-width:520px}
 .shab{align-self:flex-start;display:inline-flex;flex-wrap:wrap;align-items:center;gap:6px 16px;margin:0!important;padding:9px 16px;border-radius:14px;background:var(--navy2);border:1px solid rgba(140,203,242,.35);font-size:16px!important;color:#C9D6EA!important;max-width:none!important}
 .shab[hidden]{display:none}.shab svg{color:var(--sky)}.shab>b{color:#fff}.shab span b{color:var(--sky);font-size:17px;margin-inline-start:4px}
-.fresh{flex:0 1 460px;min-width:0;background:rgba(33,62,110,.85);border:1px solid rgba(255,255,255,.1);border-radius:22px;padding:16px 16px 10px;display:flex;flex-direction:column;backdrop-filter:blur(2px)}
-.fresh h2{margin:0 6px 6px;font-size:20px;font-weight:800;color:#fff}
-.fr{display:flex;align-items:center;gap:12px;padding:9px 6px;border-top:1px solid rgba(255,255,255,.08);color:#fff;text-decoration:none;border-radius:12px}
-.fr:first-of-type{border-top:0}.fr:hover{background:rgba(255,255,255,.06);color:#fff}
-.fr i{width:44px;height:44px;border-radius:12px;overflow:hidden;flex:none;background:var(--sky);color:var(--navy);display:flex;align-items:center;justify-content:center;font-style:normal;font-weight:800;font-size:19px}
+.fr{display:flex;align-items:center;gap:12px;padding:10px 0;border-top:1px solid var(--line);color:var(--ink);text-decoration:none}
+.fr:first-of-type{border-top:0}.fr:hover{color:var(--brand)}
+.fr i{width:44px;height:44px;border-radius:12px;overflow:hidden;flex:none;background:var(--soft);color:var(--brand);display:flex;align-items:center;justify-content:center}
 .fr i img{width:100%;height:100%;object-fit:cover}
-.fr-t{flex:1;min-width:0}.fr-t b{display:block;font-size:16px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.fr-t small{display:block;font-size:13px;color:#A9BAD4;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.fr em{flex:none;font-style:normal;font-size:12px;font-weight:800;color:var(--sky)}
-@media (max-width:760px){.fresh{flex:1 1 100%}.fr:nth-of-type(n+4){display:none}}
+.fr-t{flex:1;min-width:0}.fr-t b{display:block;font-size:16px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.fr-t small{display:block;font-size:13px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.hero-row .dl{align-self:center}
+.phstrip{background:#fff;border-top:1px solid var(--line);margin-top:40px}.phstrip .wrap{display:flex;flex-wrap:wrap;gap:6px 22px;padding-block:12px;font-size:14px;color:#566173}
+.phstrip a{font-weight:800;text-decoration:none;color:var(--brand);font-variant-numeric:tabular-nums}.phstrip a.hot{color:var(--red)}
 .tiles{flex:1 1 420px;min-width:0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;align-content:center}
 @media (max-width:460px){.tiles{grid-template-columns:minmax(0,1fr)}}
 .tile{display:flex;align-items:center;gap:12px;padding:16px;border-radius:18px;background:var(--navy2);color:#fff;text-decoration:none}
@@ -195,7 +194,7 @@ a.hood-item:hover{background:#F5F8FF}
 .track{display:flex;gap:16px;transition:transform .7s cubic-bezier(.4,.1,.2,1)}
 .slide{flex:0 0 calc((100% - (var(--v) - 1) * 16px) / var(--v));min-width:0}
 .slide[hidden]{display:none}
-.grid-auto{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(280px,100%),1fr));gap:16px}
+.grid-auto{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(280px,100%),1fr));gap:16px}
 
 .card{background:#fff;border-radius:20px;overflow:hidden;box-shadow:0 2px 12px rgba(0,0,0,.07);display:flex;flex-direction:column;height:100%;text-decoration:none;color:var(--ink)}
 .card:hover{color:var(--ink)}
@@ -240,7 +239,7 @@ a.hood-item:hover{background:#F5F8FF}
 .board-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px;padding-block:40px 12px}
 .pstrip{padding-block:36px 4px;display:flex;flex-direction:column;gap:12px}
 .ps-head{display:flex;align-items:center;justify-content:space-between;gap:12px}.ps-head h2{margin:0;font-size:22px;font-weight:800;color:var(--navy)}
-.ps-row{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px}
+.ps-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:12px}
 .ps-item{display:flex;align-items:center;gap:12px;background:#fff;border-radius:18px;padding:12px;text-decoration:none;color:var(--ink);box-shadow:0 2px 10px rgba(0,0,0,.04);min-width:0}
 .ps-item:hover{color:var(--ink)}.ps-item i{width:64px;height:64px;border-radius:12px;overflow:hidden;flex:none;display:flex;align-items:center;justify-content:center;background:var(--soft);color:var(--brand)}
 .ps-item i img{width:100%;height:100%;object-fit:cover}.ps-item span{min-width:0}.ps-item em{display:inline-block;font-style:normal;font-size:12px;font-weight:800;background:var(--soft);color:var(--brand);border-radius:6px;padding:1px 7px}
@@ -275,8 +274,8 @@ a.hood-item:hover{background:#F5F8FF}
 .phone{display:flex;align-items:center;justify-content:space-between;gap:10px;min-height:48px;border-top:1px solid #EEF0F4;text-decoration:none;color:var(--ink);font-weight:700}
 .phone .n{font-size:18px;color:var(--brand)}.phone .n.hot{color:var(--red)}
 
-.zones{display:grid;grid-template-columns:repeat(auto-fill,minmax(118px,1fr));gap:10px}
-@media (min-width:1000px){.zones{grid-template-columns:repeat(10,minmax(0,1fr))}.zones .zone{padding-inline:6px;font-size:14.5px;line-height:1.3}}
+.zones{display:grid;grid-template-columns:repeat(auto-fit,minmax(118px,1fr));gap:10px}
+@media (min-width:1000px){.zones{grid-template-columns:repeat(9,minmax(0,1fr))}.zones .zone{padding-inline:6px;font-size:14.5px;line-height:1.3}}
 .zone{background:#fff;border-radius:18px;padding:16px 10px;text-decoration:none;color:var(--ink);display:flex;flex-direction:column;align-items:center;gap:10px;text-align:center;box-shadow:0 2px 10px rgba(0,0,0,.04);font-size:15px;font-weight:800}
 .zone:hover{color:var(--ink)}
 .zone i{width:48px;height:48px;border-radius:15px;display:flex;align-items:center;justify-content:center}
@@ -422,7 +421,7 @@ function boardSection(vm) {
 <div class="panel pray">
 <div class="panel-head"><h2>תפילות <span class="emd">קרובות</span></h2><span class="clock mono" data-clock></span></div>
 <div data-next-prayers>${ssr.map(prow).join('')}</div>
-<a class="all" href="${MINYANIM}">כל המניינים ←</a>
+<a class="all" href="${MINYANIM}">כל המניינים והשיעורים ←</a>
 </div>
 
 <div class="panel span2">
@@ -432,16 +431,13 @@ ${tabs.map((t, i) => `<button type="button" role="tab" id="tab-${t.key}" aria-co
 </div>
 ${tabs.map((t, i) => `<div role="tabpanel" id="tp-${t.key}" aria-labelledby="tab-${t.key}"${i === first ? '' : ' hidden'}>
 ${t.items.length
-    ? t.items.slice(0, 5).map((x) => `<a class="bitem" href="${APP}"><span><b>${esc(x.t)}</b><small>${esc(x.sub)}</small></span>${x.b ? `<span class="bbadge">${esc(x.b)}</span>` : ''}</a>`).join('')
+    ? t.items.slice(0, 5).map((x) => `<a class="bitem" href="${esc(x.href || APP)}"><span><b>${esc(x.t)}</b><small>${esc(x.sub)}</small></span>${x.b ? `<span class="bbadge">${esc(x.b)}</span>` : ''}</a>`).join('')
     : `<p class="bempty">אין כרגע מודעות ב${esc(t.label)}. רוצים לפרסם? זה דרך האפליקציה.</p>`}
 <a href="board/#${t.key}" style="display:inline-block;font-weight:800;font-size:14px;text-decoration:none;margin-top:10px">${esc(t.more)} ←</a>
 </div>`).join('\n')}
 </div>
 
-<div class="panel phones">
-<h2>טלפונים <span class="em">חשובים</span></h2>
-${PHONES.map(([n, num, hot]) => `<a class="phone" href="tel:${num}"><span>${esc(n)}</span><span class="n mono${hot ? ' hot' : ''}">${num}</span></a>`).join('')}
-</div>
+${freshPanel(vm.fresh)}
 
 </div></section>`;
 }
@@ -586,13 +582,13 @@ export const HIDDEN_NAV = new Set(['happenings']);
 export function navChips(home, current = '') {
   const M = '/minyanim-har-homa/';
   const items = [
-    ['home', 'דף השכונה', home], ['minyanim', 'מניינים', M], ['lessons', 'שיעורים', `${home}lessons/`],
+    ['home', 'דף השכונה', home], ['minyanim', 'מניינים ושיעורים', M],
     ['biz', 'עסקים', `${home}biz/`], ['pros', 'בעלי מקצוע', `${home}pros/`],
     ['promos', 'מבצעים', `${home}promos/`], ['coupons', 'קופונים', `${home}promos/#קופונים`],
     ['gmach', 'גמ״חים', `${home}board/#gmach`], ['jobs', 'דרושים', `${home}board/#jobs`],
     ['second', 'יד שנייה', `${home}board/#second`], ['realestate', 'נדל״ן', `${home}realestate/`],
     ['vol', 'התנדבות', `${home}board/#vol`], ['lost', 'אבידות ומציאות', `${home}board/#lost`],
-    ['halls', 'אולמות', `${home}halls/`], ['hosting', 'אירוח', `${home}hosting/`], ['events', 'הכל לאירוע', `${home}events/`],
+    ['halls', 'אולמות ואירוח', `${home}halls/`], ['events', 'הכל לאירוע', `${home}events/`],
     ['education', 'מוסדות חינוך', `${home}education/`], ['parks', 'גנים ופארקים', `${home}parks/`],
     ['services', 'שירותי קהילה', `${home}services/`], ['health', 'בריאות', `${home}health/`], ['happenings', 'אירועים', `${home}happenings/`],
   ];
@@ -689,16 +685,22 @@ function shabbatCard(sh) {
   return `<p class="shab" data-from="${sh.candle.iso}" data-to="${sh.havdalah.iso}" title="מנהג ירושלים: הדלקה 40 דקות לפני השקיעה" hidden>${svg('M12 3c2 2.6 3 4.2 3 6a3 3 0 0 1-6 0c0-1.8 1-3.4 3-6zM9.5 14h5v7h-5z', 18, 'currentColor', 2)}<b>${esc(sh.title)}</b><span>הדלקת נרות <b class="mono">${sh.candle.t}</b></span><span>${out} <b class="mono">${sh.havdalah.t}</b></span></p>`;
 }
 
+const FRESH_ICON = { 'מבצע': ICON.tag, 'עסק': ICON.store, 'בעל מקצוע': ICON.wrench, 'נדל״ן': ICON.key, 'יד שנייה': ICON.bag, 'דרושים': ICON.brief, 'גמ״ח': ICON.heart, 'התנדבות': ICON.hand, 'אבידה': ICON.lost, 'מציאה': ICON.lost };
 function freshPanel(rows) {
   if (!rows?.length) return '';
-  const av = (r) => r.img ? `<img src="${esc(r.img)}" alt="" loading="lazy" width="44" height="44">` : svg(r.k === 'מבצע' ? ICON.tag : r.k === 'עסק' ? ICON.store : ICON.wrench, 22, 'currentColor', 2);
-  return `<aside class="fresh" aria-label="חדש בשכונה">
-<h2>חדש <span class="emd">בשכונה</span></h2>
-${rows.map((r) => `<a class="fr" href="${esc(r.h)}"><i>${av(r)}</i><span class="fr-t"><b>${esc(r.n)}</b><small>${esc(r.k)}${r.s ? ` · ${esc(r.s)}` : ''}</small></span><em>${esc(r.w)}</em></a>`).join('\n')}
-</aside>`;
+  const av = (r) => r.img ? `<img src="${esc(r.img)}" alt="" loading="lazy" width="44" height="44">` : svg(FRESH_ICON[r.k] || ICON.star, 22, 'currentColor', 2);
+  return `<div class="panel fresh">
+<div class="panel-head"><h2>חדש <span class="em">בשכונה</span></h2></div>
+${rows.map((r) => `<a class="fr" href="${esc(r.h)}"><i>${av(r)}</i><span class="fr-t"><b>${esc(r.n)}</b><small>${esc(r.k)}${r.s && r.s !== r.k ? ` · ${esc(r.s)}` : ''}</small></span></a>`).join('\n')}
+</div>`;
+}
+
+function phonesStrip() {
+  return `<div class="phstrip" aria-label="טלפונים חשובים"><div class="wrap">${PHONES.map(([n, num, hot]) => `<span>${esc(n)} <a${hot ? ' class="hot"' : ''} href="tel:${num}">${num}</a></span>`).join('')}</div></div>`;
 }
 
 export function homePage(vm, { base, path: pagePath, shabbat = null, fresh = [] }) {
+  vm.fresh = fresh;
   const url = `${base}${pagePath}`;
   const title = `${vm.name}${vm.alias ? ` (${vm.alias})` : ''} — שכונה | מניינים, עסקים, גמ״חים ומבצעים`;
   const desc = `כל מה שקורה ב${vm.name}${vm.alias ? ` (${vm.alias})` : ''}, ${vm.city}: זמני תפילה, בעלי מקצוע, עסקים, מבצעים, נדל״ן, דרושים, יד שנייה וגמ״חים — מעודכן על ידי השכנים.`;
@@ -717,18 +719,16 @@ ${siteHeader(vm, pagePath, navChips(pagePath, 'home'))}
 <h1>מה חדש <span class="emd">ב${esc(vm.name)}</span></h1>
 <p>מניינים, עסקים, בעלי מקצוע, מבצעים וגמ״חים — מעודכנים על ידי השכנים והעסקים עצמם.</p>
 ${shabbatCard(shabbat)}
-<a class="pill btn-sky" href="${DOWNLOAD}" style="align-self:flex-start">להורדת האפליקציה</a>
 </div>
-${freshPanel(fresh)}
+<a class="pill btn-sky dl" href="${DOWNLOAD}">להורדת האפליקציה</a>
 </div>
 ${ticker(vm)}
 </section>
 
 ${boardSection(vm)}
-${vm.promos.length >= 3 ? promosSection(vm.promos) : ''}
+${vm.promos.length >= 3 ? promosSection(vm.promos) : promosStrip(vm.promos)}
 ${prosSection(vm.professionals)}
 ${bizSection(vm.businesses)}
-${vm.promos.length < 3 ? promosStrip(vm.promos) : ''}
 ${realEstateSection(vm.realEstate)}
 
 <section id="zones" aria-label="כל התחומים" class="wrap" style="display:flex;flex-direction:column;gap:18px">
@@ -762,6 +762,7 @@ ${FAQ.map(([q, a]) => `<details><summary>${esc(q)}</summary><p>${esc(a)}</p></de
 
 </main>
 
+${phonesStrip()}
 ${siteFooter()}
 
 <script type="application/json" id="prayers-data">${JSON.stringify(vm.prayers).replace(/</g, '\\u003c')}</script>

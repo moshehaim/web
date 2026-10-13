@@ -354,12 +354,17 @@ export function lessonsPage(vm, m, { base, home }) {
   });
 }
 
+/** אולמות ואירוח — עמוד אחד, כמו באפליקציה (halls מנווט למסך משותף) */
 export function hallsPage(vm, m, { base, home, api }) {
+  const halls = m.halls.items.map((h) => ({ ...h, group: 'אולמות' }));
+  const hosting = m.hosting.items;
+  const groups = [...(halls.length ? ['אולמות'] : []), ...m.hosting.groups];
   return collectionPage(vm, {
-    base, home, api, slug: 'halls', label: 'אולמות', groups: [],
-    title: `אולמות ב${where(vm)} — שכונה`, desc: `אולמות לאירועים ולשמחות ב${where(vm)}, ${vm.city} — קיבולת, קייטרינג ונגישות.`,
-    placeholder: 'שם אולם או רחוב…', cards: dirCards(m.halls.items), emptyText: 'אין כרגע אולמות',
-    join: '<b>יש לכם אולם? <span class="em">הוסיפו אותו.</span></b><span>פרופיל עם תמונות, קיבולת ויצירת קשר.</span>', joinCta: 'להוספת אולם',
+    base, home, api, slug: 'halls', label: 'אולמות ואירוח', groups,
+    title: `אולמות ואירוח ב${where(vm)} — שכונה`, desc: `אולמות לאירועים ולשמחות ומקומות אירוח לשבת ב${where(vm)}, ${vm.city} — קיבולת, קייטרינג ונגישות.`,
+    placeholder: 'שם אולם, מקום אירוח או רחוב…', emptyText: 'אין כרגע אולמות או מקומות אירוח',
+    cards: dirCards(halls) + '\n' + hosting.map((h) => mediaCard(h, { lines: h.lines, cta: 'לפרטים ויצירת קשר באפליקציה' })).join('\n'),
+    join: '<b>יש לכם אולם או מקום אירוח? <span class="em">הוסיפו אותו.</span></b><span>פרופיל עם תמונות, קיבולת ויצירת קשר.</span>', joinCta: 'להוספה',
   });
 }
 
