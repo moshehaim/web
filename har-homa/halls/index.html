@@ -254,7 +254,7 @@ a.hood-item:hover{background:#F5F8FF}
 .phone .n{font-size:18px;color:var(--brand)}.phone .n.hot{color:var(--red)}
 
 .zones{display:grid;grid-template-columns:repeat(auto-fit,minmax(118px,1fr));gap:10px}
-@media (min-width:1000px){.zones{grid-template-columns:repeat(9,minmax(0,1fr))}.zones .zone{padding-inline:6px;font-size:14.5px;line-height:1.3}}
+@media (min-width:1000px){.zones{grid-template-columns:repeat(8,minmax(0,1fr))}.zones .zone{padding-inline:6px;font-size:14.5px;line-height:1.3}}
 .zone{background:#fff;border-radius:18px;padding:16px 10px;text-decoration:none;color:var(--ink);display:flex;flex-direction:column;align-items:center;gap:10px;text-align:center;box-shadow:0 2px 10px rgba(0,0,0,.04);font-size:15px;font-weight:800}
 .zone:hover{color:var(--ink)}
 .zone i{width:48px;height:48px;border-radius:15px;display:flex;align-items:center;justify-content:center}
@@ -308,6 +308,8 @@ background:linear-gradient(to top,var(--t2),transparent)}
 .dir-tools{display:flex;flex-wrap:wrap;gap:12px;align-items:center}
 
 .map-btn{height:48px;padding:0 18px;border-radius:14px;border:0;background:rgba(255,255,255,.12);color:#fff;font:inherit;font-size:16px;font-weight:800;display:inline-flex;align-items:center;gap:8px;cursor:pointer}
+.dir-tools .map-btn{margin-inline-start:auto}
+@media (max-width:620px){.dir-tools .map-btn{order:2;height:44px}.dir-tools .dir-q{order:3;flex-basis:100%}}
 .map-btn[aria-pressed=true]{background:var(--sky);color:var(--navy)}
 .dmap{position:relative;height:440px;border-radius:20px;overflow:hidden;margin-bottom:18px;box-shadow:0 2px 12px rgba(0,0,0,.08);z-index:0}.dmap[hidden]{display:none}
 @media (max-width:620px){.dmap{height:60vh}}
@@ -363,6 +365,7 @@ background:linear-gradient(to top,var(--t2),transparent)}
 .a-app{background:#F1F4F8;color:var(--navy)}
 .dact [data-tip]{position:relative}
 .dempty[hidden]{display:none}
+.grow-h{grid-column:1/-1;margin:8px 0 -4px;font-size:24px;font-weight:800;color:var(--navy)}.grow-h:first-child{margin-top:0}
 .dempty{background:#fff;border-radius:20px;padding:36px 24px;text-align:center;display:flex;flex-direction:column;gap:8px;align-items:center}
 .dempty b{font-size:20px}.dempty span{font-size:16px;color:#566173}
 .dgrid .dcard:hover{transform:none}
@@ -452,7 +455,7 @@ background:linear-gradient(to top,var(--t2),transparent)}
 </div>
 </div>
 <nav class="chips" aria-label="תחומים"><button type="button" class="cnav prev" aria-label="תחומים קודמים">→</button><button type="button" class="cnav next" aria-label="תחומים נוספים">←</button><div class="wrap">
-<a href="/har-homa/">דף השכונה</a><a href="/har-homa/minyanim/">מניינים ושיעורים</a><a href="/har-homa/biz/">עסקים</a><a href="/har-homa/pros/">בעלי מקצוע</a><a href="/har-homa/promos/">מבצעים</a><a href="/har-homa/promos/#קופונים">קופונים</a><a href="/har-homa/board/#gmach">גמ״חים</a><a href="/har-homa/board/#jobs">דרושים</a><a href="/har-homa/board/#second">יד שנייה</a><a href="/har-homa/realestate/">נדל״ן</a><a href="/har-homa/board/#vol">התנדבות</a><a href="/har-homa/board/#lost">אבידות ומציאות</a><a href="/har-homa/halls/" aria-current="page" class="on">אולמות ואירוח</a><a href="/har-homa/events/">הכל לאירוע</a><a href="/har-homa/education/">מוסדות חינוך</a><a href="/har-homa/parks/">גנים ופארקים</a><a href="/har-homa/services/">שירותי קהילה</a><a href="/har-homa/health/">בריאות</a>
+<a href="/har-homa/">דף השכונה</a><a href="/har-homa/minyanim/">מניינים ושיעורים</a><a href="/har-homa/biz/">עסקים</a><a href="/har-homa/pros/">בעלי מקצוע</a><a href="/har-homa/promos/">מבצעים וקופונים</a><a href="/har-homa/board/#gmach">גמ״חים</a><a href="/har-homa/board/#jobs">דרושים</a><a href="/har-homa/board/#second">יד שנייה</a><a href="/har-homa/realestate/">נדל״ן</a><a href="/har-homa/board/#vol">התנדבות</a><a href="/har-homa/board/#lost">אבידות ומציאות</a><a href="/har-homa/halls/" aria-current="page" class="on">אולמות ואירוח</a><a href="/har-homa/events/">הכל לאירוע</a><a href="/har-homa/education/">מוסדות חינוך</a><a href="/har-homa/parks/">גנים ופארקים</a><a href="/har-homa/services/">שירותי קהילה</a><a href="/har-homa/health/">בריאות</a>
 </div></nav></header>
 
 
@@ -461,8 +464,8 @@ background:linear-gradient(to top,var(--t2),transparent)}
 <nav class="crumb" aria-label="פירורי לחם"><a href="/har-homa/">חומת שמואל</a> · אולמות ואירוח</nav>
 <h1>אולמות ואירוח <span class="emd">בחומת שמואל</span></h1>
 <div class="dir-tools">
-<button type="button" class="map-btn" id="map-btn" aria-pressed="false" aria-controls="dmap"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 4L3 6v14l6-2 6 2 6-2V4l-6 2zM9 4v14M15 6v14"/></svg>מפה</button>
-<label class="dir-q"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 4a7 7 0 1 0 0 14a7 7 0 1 0 0-14zM20 20l-4-4"/></svg><span class="sr">חיפוש</span><input id="dir-q" type="search" autocomplete="off" placeholder="שם אולם, מקום אירוח או רחוב…"></label>
+
+<label class="dir-q"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 4a7 7 0 1 0 0 14a7 7 0 1 0 0-14zM20 20l-4-4"/></svg><span class="sr">חיפוש</span><input id="dir-q" type="search" autocomplete="off" placeholder="שם אולם, מקום אירוח או רחוב…"></label><button type="button" class="map-btn" id="map-btn" aria-pressed="false" aria-controls="dmap"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 4L3 6v14l6-2 6 2 6-2V4l-6 2zM9 4v14M15 6v14"/></svg>מפה</button>
 </div>
 </div></section>
 
