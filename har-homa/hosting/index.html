@@ -331,6 +331,8 @@ background:linear-gradient(to top,var(--t2),transparent)}
 .dbody h3{margin:0;font-size:19px;font-weight:800;line-height:1.25}
 .dbody .f{font-size:14px;font-weight:700;color:var(--accent)}
 .dbody .w{font-size:14px;color:var(--muted)}
+.oh{align-self:flex-start;font-size:13px;font-weight:800;border-radius:7px;padding:2px 8px;margin-top:2px}.oh[hidden]{display:none}
+.oh-on{background:#E7F7EC;color:#166534}.oh-soon{background:#FEF3C7;color:#92400E}.oh-off{background:#F1F4F8;color:#566173}
 .dact{padding:12px 16px 16px;display:flex;gap:10px;align-items:center;position:relative;z-index:1}
 /* כל הכרטיס לחיץ לעמוד המלא; כפתורי הפעולה מעליו */
 .dcard{position:relative}
@@ -473,6 +475,7 @@ background:linear-gradient(to top,var(--t2),transparent)}
 <div class="dact"><a class="a-app" href="/har-homa/hosting/%D7%97%D7%A1%D7%93%D7%99-%D7%A9%D7%9E%D7%95%D7%90%D7%9C/">לפרטים</a></div>
 </article>
 </div>
+
 <div class="dempty" id="dir-empty" hidden><b>לא מצאנו בשכונה את מה שחיפשת</b><span>נסו מילה אחרת, או בחרו "הכל".</span></div>
 </section>
 
@@ -491,6 +494,17 @@ background:linear-gradient(to top,var(--t2),transparent)}
 
 
 <script>(function(){
+/* פתוח עכשיו */
+(function(){var s=new Date().toLocaleString('en-US',{timeZone:'Asia/Jerusalem'}),n=new Date(s),d=n.getDay(),m=n.getHours()*60+n.getMinutes();
+function hm(x){x=x%1440;return (x<600?'0':'')+Math.floor(x/60)+':'+(x%60<10?'0':'')+(x%60);}
+[].forEach.call(document.querySelectorAll('[data-h]'),function(el){var h;try{h=JSON.parse(el.getAttribute('data-h'));}catch(e){return;}
+  var y=h[(d+6)%7]||[],t=h[d]||[],i,r;
+  for(i=0;i<y.length;i++){if(y[i][1]>1440&&m<y[i][1]-1440){r=['on','פתוח · עד '+hm(y[i][1])];}}
+  for(i=0;!r&&i<t.length;i++){if(m>=t[i][0]&&m<t[i][1]){r=t[i][1]-m<=60?['soon','נסגר בעוד '+(t[i][1]-m)+' דק׳']:['on','פתוח · עד '+hm(t[i][1])];}}
+  if(!r){for(i=0;i<t.length;i++){if(t[i][0]>m){r=['off','סגור · נפתח ב־'+hm(t[i][0])];break;}}}
+  if(!r){var k=(d+1)%7;if((h[k]||[]).length)r=['off','סגור · נפתח מחר '+hm(h[k][0][0])];else r=['off','סגור עכשיו'];}
+  el.textContent=r[1];el.className='oh oh-'+r[0];el.hidden=false;});})();
+
 var q=document.getElementById('dir-q'),cards=[].slice.call(document.querySelectorAll('.dcard')),
     chips=[].slice.call(document.querySelectorAll('.fchips button')),empty=document.getElementById('dir-empty'),g='';
 function run(){var t=(q.value||'').trim(),n=0;

@@ -331,6 +331,8 @@ background:linear-gradient(to top,var(--t2),transparent)}
 .dbody h3{margin:0;font-size:19px;font-weight:800;line-height:1.25}
 .dbody .f{font-size:14px;font-weight:700;color:var(--accent)}
 .dbody .w{font-size:14px;color:var(--muted)}
+.oh{align-self:flex-start;font-size:13px;font-weight:800;border-radius:7px;padding:2px 8px;margin-top:2px}.oh[hidden]{display:none}
+.oh-on{background:#E7F7EC;color:#166534}.oh-soon{background:#FEF3C7;color:#92400E}.oh-off{background:#F1F4F8;color:#566173}
 .dact{padding:12px 16px 16px;display:flex;gap:10px;align-items:center;position:relative;z-index:1}
 /* כל הכרטיס לחיץ לעמוד המלא; כפתורי הפעולה מעליו */
 .dcard{position:relative}
@@ -633,6 +635,7 @@ background:linear-gradient(to top,var(--t2),transparent)}
 <div class="dact"><a class="a-waze" href="https://waze.com/ul?ll=31.7192,35.2233&amp;navigate=yes" target="_blank" rel="noopener" aria-label="ניווט לפארק 850 ב-Waze" title="ניווט ב-Waze"><img src="/img/waze.png" alt="" width="44" height="44"></a></div>
 </article>
 </div>
+
 <div class="dempty" id="dir-empty" hidden><b>לא מצאנו בשכונה את מה שחיפשת</b><span>נסו מילה אחרת, או בחרו "הכל".</span></div>
 </section>
 
@@ -651,6 +654,17 @@ background:linear-gradient(to top,var(--t2),transparent)}
 
 <script>window.__SB={"url":"https://mebomrqnfnbqijiuawdh.supabase.co","key":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1lYm9tcnFuZm5icWlqaXVhd2RoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzkxOTc3MDEsImV4cCI6MjA1NDc3MzcwMX0.OSpzG4pnsgIiOEefWK0Z29ZHOo12bIhp0QXTdk2Hsg4"};</script>
 <script>(function(){
+/* פתוח עכשיו */
+(function(){var s=new Date().toLocaleString('en-US',{timeZone:'Asia/Jerusalem'}),n=new Date(s),d=n.getDay(),m=n.getHours()*60+n.getMinutes();
+function hm(x){x=x%1440;return (x<600?'0':'')+Math.floor(x/60)+':'+(x%60<10?'0':'')+(x%60);}
+[].forEach.call(document.querySelectorAll('[data-h]'),function(el){var h;try{h=JSON.parse(el.getAttribute('data-h'));}catch(e){return;}
+  var y=h[(d+6)%7]||[],t=h[d]||[],i,r;
+  for(i=0;i<y.length;i++){if(y[i][1]>1440&&m<y[i][1]-1440){r=['on','פתוח · עד '+hm(y[i][1])];}}
+  for(i=0;!r&&i<t.length;i++){if(m>=t[i][0]&&m<t[i][1]){r=t[i][1]-m<=60?['soon','נסגר בעוד '+(t[i][1]-m)+' דק׳']:['on','פתוח · עד '+hm(t[i][1])];}}
+  if(!r){for(i=0;i<t.length;i++){if(t[i][0]>m){r=['off','סגור · נפתח ב־'+hm(t[i][0])];break;}}}
+  if(!r){var k=(d+1)%7;if((h[k]||[]).length)r=['off','סגור · נפתח מחר '+hm(h[k][0][0])];else r=['off','סגור עכשיו'];}
+  el.textContent=r[1];el.className='oh oh-'+r[0];el.hidden=false;});})();
+
 var q=document.getElementById('dir-q'),cards=[].slice.call(document.querySelectorAll('.dcard')),
     chips=[].slice.call(document.querySelectorAll('.fchips button')),empty=document.getElementById('dir-empty'),g='';
 function run(){var t=(q.value||'').trim(),n=0;
