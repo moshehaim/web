@@ -11,9 +11,10 @@ export const esc = (s) => String(s ?? '')
   .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
 
 export const APP = '/app/';
-// התחברות = האפליקציה (מי שלא מחובר נוחת שם על מסך הכניסה). login.html הוא פורטל המנויים לבעלי עסקים
+// התחברות = האפליקציה (מי שלא מחובר נוחת שם על מסך הכניסה).
 const LOGIN = '/app/';
-const BIZ_PORTAL = '/login.html';
+// בעלי עסקים — למסך ניהול העסק באפליקציה (כשה-route /my-business יהיה באפליקציה — להחליף ל-/app/#/my-business)
+const BIZ_PORTAL = '/app/';
 const DOWNLOAD = '/b/';
 const MINYANIM = '/har-homa/minyanim/';
 
@@ -702,7 +703,7 @@ export function siteFooter() {
   return `<footer><div class="wrap">
 <img src="/app_icon.png" alt="שכונה" width="48" height="48" loading="lazy">
 <span>שכונה · <a href="mailto:info@shchuna.co.il">info@shchuna.co.il</a></span>
-<nav aria-label="קישורים"><a href="/">כל השכונות</a><a href="${BIZ_PORTAL}">ניהול מנוי לבעלי עסקים</a><a href="/terms.html">תנאי שימוש</a><a href="/privacy.html">פרטיות</a></nav>
+<nav aria-label="קישורים"><a href="/">כל השכונות</a><a href="${BIZ_PORTAL}">כניסה לבעלי עסקים</a><a href="/terms.html">תנאי שימוש</a><a href="/privacy.html">פרטיות</a></nav>
 <span class="c">© שכונה, כל הזכויות שמורות</span>
 </div></footer>`;
 }
@@ -789,7 +790,7 @@ ${ZONES.filter((z) => !HIDDEN_NAV.has(z[4])).map(([n, d, c, href]) => `<a class=
 <h2>השכנים כבר <span class="emd">מחפשים אותך.</span></h2>
 <p>פרופיל עסק, מבצעים וקופונים והמלצות מלקוחות — במקום אחד.</p>
 <div style="display:flex;gap:12px;flex-wrap:wrap"><a class="pill btn-sky" href="${APP}">להרשמת עסק</a><a class="pill btn-out" href="${DOWNLOAD}">להורדת האפליקציה</a></div>
-<a href="${BIZ_PORTAL}" style="color:var(--sky);font-weight:800;font-size:15px">כבר יש לכם מנוי? לניהול המנוי והתשלומים ←</a>
+<a href="${BIZ_PORTAL}" style="color:var(--sky);font-weight:800;font-size:15px">כבר רשומים? לכניסה ולניהול העסק ←</a>
 </div>
 <div class="feat">
 <div><b>פרופיל עסק</b><span>שעות, טלפון, WhatsApp ו-Waze</span></div>
