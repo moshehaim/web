@@ -167,16 +167,16 @@ export function shapeHome(raw, { now = new Date(), base = '' } = {}) {
   const businesses = raw.businesses
     .filter((b) => SHOW(b) && b.image_url)
     .slice(0, 18)
-    .map((b) => ({ name: b.name, type: bt[b.business_type] || '', img: b.image_url }));
+    .map((b) => ({ id: b.id, name: b.name, type: bt[b.business_type] || '', img: b.image_url }));
 
   const professionals = raw.professionals
     .filter((p) => SHOW(p) && p.image_url)
     .slice(0, 14)
-    .map((p) => ({ name: p.name, field: pc[p.main_category] || '', img: p.image_url, rec: p.recommend_count || 0 }));
+    .map((p) => ({ id: p.id, name: p.name, field: pc[p.main_category] || '', img: p.image_url, rec: p.recommend_count || 0 }));
 
   const promos = [
     ...raw.promotions.filter(SHOW).map((p) => ({
-      kind: 'מבצע', title: p.title, provider: p.provider_name || '', img: p.image_url, until: until(p.end_date),
+      id: p.id, kind: 'מבצע', title: p.title, provider: p.provider_name || '', img: p.image_url, until: until(p.end_date),
     })),
     ...(raw.coupons || []).filter(SHOW).map((c) => ({
       kind: 'קופון', title: c.text_content, provider: '', img: c.image_url, until: until(c.expires_at), coupon: true,
@@ -188,7 +188,7 @@ export function shapeHome(raw, { now = new Date(), base = '' } = {}) {
     if (!img || !price || price < 300) return null;  // בלי תמונה או מחיר לא סביר — לא בקרוסלה
     const rooms = r.num_rooms ? `${r.num_rooms} חד׳` : '';
     return {
-      kind, img,
+      id: r.id, kind, img,
       price: kind === 'להשכרה' ? `${ils(price)} לחודש` : ils(price),
       title: [PROPERTY_TYPES[r.property_type] || 'נכס', rooms].filter(Boolean).join(' · '),
       meta: [r.area_in_sqm ? `${r.area_in_sqm} מ״ר` : '', r.floor != null ? (r.floor === 0 ? 'קומת קרקע' : `קומה ${r.floor}`) : '']
@@ -203,16 +203,16 @@ export function shapeHome(raw, { now = new Date(), base = '' } = {}) {
 
   const board = [
     { key: 'jobs', label: 'דרושים', more: 'לכל המשרות', items: raw.jobs.map((j) => ({
-      t: j.title, sub: [j.company_name, ago(j.created_at, now)].filter(Boolean).join(' · '),
+      id: j.id, t: j.title, sub: [j.company_name, ago(j.created_at, now)].filter(Boolean).join(' · '),
       b: EMPLOYMENT[j.employment_type] || '' })) },
     { key: 'second', label: 'יד שנייה', more: 'לכל המודעות', items: raw.secondHand.map((s) => ({
-      t: s.name, sub: ago(s.created_at, now), b: s.is_free || !s.price ? 'למסירה' : ils(s.price) })) },
+      id: s.id, t: s.name, sub: ago(s.created_at, now), b: s.is_free || !s.price ? 'למסירה' : ils(s.price) })) },
     { key: 'gmach', label: 'גמ״חים', more: 'לכל הגמ״חים', items: raw.gmachim.map((g) => ({
-      t: g.name, sub: (g.categories || []).join(' · ') || 'גמ״ח', b: '' })) },
+      id: g.id, t: g.name, sub: (g.categories || []).join(' · ') || 'גמ״ח', b: '' })) },
     { key: 'vol', label: 'התנדבות', more: 'לכל ההתנדבויות', items: raw.volunteering.map((v) => ({
-      t: v.title, sub: [v.organization_name, ago(v.created_at, now)].filter(Boolean).join(' · '), b: '' })) },
+      id: v.id, t: v.title, sub: [v.organization_name, ago(v.created_at, now)].filter(Boolean).join(' · '), b: '' })) },
     { key: 'lost', label: 'אבידות ומציאות', more: 'לכל המודעות', items: raw.lostFound.map((l) => ({
-      t: l.title, sub: ago(l.created_at, now), b: l.status === 'lost' ? 'אבד' : 'נמצא' })) },
+      id: l.id, t: l.title, sub: ago(l.created_at, now), b: l.status === 'lost' ? 'אבד' : 'נמצא' })) },
   ];
 
   const active = new Set(raw.communities.filter((c) => c.is_active).map((c) => c.id));

@@ -83,6 +83,8 @@ background:linear-gradient(to top,var(--t2),transparent)}
 .dbody h3{margin:0;font-size:19px;font-weight:800;line-height:1.25}
 .dbody .f{font-size:14px;font-weight:700;color:var(--accent)}
 .dbody .w{font-size:14px;color:var(--muted)}
+.oh{align-self:flex-start;font-size:13px;font-weight:800;border-radius:7px;padding:2px 8px;margin-top:2px}.oh[hidden]{display:none}
+.oh-on{background:#E7F7EC;color:#166534}.oh-soon{background:#FEF3C7;color:#92400E}.oh-off{background:#F1F4F8;color:#566173}
 .dact{padding:12px 16px 16px;display:flex;gap:10px;align-items:center;position:relative;z-index:1}
 /* כל הכרטיס לחיץ לעמוד המלא; כפתורי הפעולה מעליו */
 .dcard{position:relative}
@@ -141,7 +143,41 @@ background:linear-gradient(to top,var(--t2),transparent)}
 .join b{display:block;font-size:24px;color:var(--navy)}.join span{font-size:16px;color:#3B4860}
 `;
 
+/* ── "פתוח עכשיו": שעות הפעילות בדקות לכל יום (0=ראשון) — הדפדפן מחשב לפי השעה בירושלים ── */
+const DAY_KEYS = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
+export function compactHours(schedule, st, dst) {
+  if (!schedule || typeof schedule !== 'object') return null;
+  const jm = (d) => { const p = d.toLocaleTimeString('en-GB', { timeZone: 'Asia/Jerusalem', hour: '2-digit', minute: '2-digit' }).split(':'); return +p[0] * 60 + +p[1]; };
+  const toMin = (t) => {
+    if (!t) return null;
+    if (t.includes('|')) { const [w, s] = t.split('|'); t = dst ? s : w; }
+    let m = /^(\d{1,2}):(\d{2})$/.exec(t.trim());
+    if (m) return +m[1] * 60 + +m[2];
+    m = /^(candle_lighting|havdalah)([+-]\d+)?$/.exec(t.trim());
+    if (m && st) return jm(m[1] === 'candle_lighting' ? st.candle : st.havdalah) + parseInt(m[2] || '0', 10);
+    return null;
+  };
+  let any = false, unknown = false;
+  const days = DAY_KEYS.map((k) => (Array.isArray(schedule[k]) ? schedule[k] : []).map((r) => {
+    const a = toMin(r.start), b = toMin(r.end);
+    if (a == null || b == null) { unknown = true; return null; }
+    any = true; return [a, b <= a ? b + 1440 : b];
+  }).filter(Boolean));
+  return any && !unknown ? JSON.stringify(days) : null;
+}
+
 const JS = `(function(){
+/* פתוח עכשיו */
+(function(){var s=new Date().toLocaleString('en-US',{timeZone:'Asia/Jerusalem'}),n=new Date(s),d=n.getDay(),m=n.getHours()*60+n.getMinutes();
+function hm(x){x=x%1440;return (x<600?'0':'')+Math.floor(x/60)+':'+(x%60<10?'0':'')+(x%60);}
+[].forEach.call(document.querySelectorAll('[data-h]'),function(el){var h;try{h=JSON.parse(el.getAttribute('data-h'));}catch(e){return;}
+  var y=h[(d+6)%7]||[],t=h[d]||[],i,r;
+  for(i=0;i<y.length;i++){if(y[i][1]>1440&&m<y[i][1]-1440){r=['on','פתוח · עד '+hm(y[i][1])];}}
+  for(i=0;!r&&i<t.length;i++){if(m>=t[i][0]&&m<t[i][1]){r=t[i][1]-m<=60?['soon','נסגר בעוד '+(t[i][1]-m)+' דק׳']:['on','פתוח · עד '+hm(t[i][1])];}}
+  if(!r){for(i=0;i<t.length;i++){if(t[i][0]>m){r=['off','סגור · נפתח ב־'+hm(t[i][0])];break;}}}
+  if(!r){var k=(d+1)%7;if((h[k]||[]).length)r=['off','סגור · נפתח מחר '+hm(h[k][0][0])];else r=['off','סגור עכשיו'];}
+  el.textContent=r[1];el.className='oh oh-'+r[0];el.hidden=false;});})();
+
 var q=document.getElementById('dir-q'),cards=[].slice.call(document.querySelectorAll('.dcard')),
     chips=[].slice.call(document.querySelectorAll('.fchips button')),empty=document.getElementById('dir-empty'),g='';
 function run(){var t=(q.value||'').trim(),n=0;
@@ -198,7 +234,7 @@ function card(p, kind) {
   if (!acts.length) acts.push(`<a class="a-app" href="${APP}">לפרטים באפליקציה</a>`);
   return `<article class="dcard lift" data-group="${esc(p.group)}" data-text="${esc(text)}" data-id="${esc(p.id)}" data-t="${esc(p.table)}">
 <div class="dmedia${tone}">${media}${rec}</div>
-<div class="dbody"><h3>${p.href ? `<a class="stretch" href="${esc(p.href)}">${esc(p.name)}</a>` : esc(p.name)}</h3>${p.field ? `<span class="f">${esc(p.field)}</span>` : ''}${p.where ? `<span class="w">${esc(p.where)}</span>` : ''}</div>
+<div class="dbody"><h3>${p.href ? `<a class="stretch" href="${esc(p.href)}">${esc(p.name)}</a>` : esc(p.name)}</h3>${p.field ? `<span class="f">${esc(p.field)}</span>` : ''}${p.where ? `<span class="w">${esc(p.where)}</span>` : ''}${p.hoursJ ? `<span class="oh" data-h="${esc(p.hoursJ)}" hidden></span>` : ''}</div>
 <div class="dact">${acts.join('')}</div>
 </article>`;
 }
@@ -237,6 +273,7 @@ ${chips ? `<div class="fbar">${chips}</div>` : ''}
 <div class="dgrid${o.gridClass ? ' ' + o.gridClass : ''}">
 ${o.cards}
 </div>
+${o.ld ? `<script type="application/ld+json">${o.ld}</script>` : ''}
 <div class="dempty" id="dir-empty"${o.cards.trim() ? ' hidden' : ''}><b>${o.cards.trim() ? 'לא מצאנו בשכונה את מה שחיפשת' : esc(o.emptyText || 'אין כרגע מודעות')}</b><span>${o.cards.trim() ? 'נסו מילה אחרת, או בחרו "הכל".' : 'רוצים לפרסם? זה דרך האפליקציה.'}</span></div>
 </section>
 
@@ -271,6 +308,9 @@ export function listPage(vm, dir, kind, { base, home, api }) {
     tabs: `<nav class="dir-tabs" aria-label="סוג"><a href="${home}pros/"${isPro ? ' aria-current="page"' : ''}>בעלי מקצוע</a><a href="${home}biz/"${!isPro ? ' aria-current="page"' : ''}>עסקים</a></nav>`,
     placeholder: isPro ? 'חשמלאי, אינסטלטור, מורה פרטי…' : 'מכולת, קצבייה, מתנות…',
     cards: data.items.map((p) => card(p, kind)).join('\n'),
+    // ItemList לגוגל: כל הפריטים ברשימה עם הקישור לעמוד המלא
+    ld: JSON.stringify({ '@context': 'https://schema.org', '@type': 'ItemList', name: `${label} ב${vm.name}`,
+      itemListElement: data.items.filter((p) => p.href).map((p, i) => ({ '@type': 'ListItem', position: i + 1, name: p.name, url: `${base}${p.href}` })) }).replace(/</g, '\\u003c'),
     join: '<b>עובדים בשכונה? <span class="em">תופיעו כאן.</span></b><span>פרופיל עם תמונה, טלפון, WhatsApp ו-Waze, מבצעים והמלצות מלקוחות.</span>',
     joinCta: 'להרשמת עסק',
   });

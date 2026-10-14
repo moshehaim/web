@@ -40,6 +40,11 @@ const CSS = `
 .e-rec{background:#FDECEC;color:#C0362F}.e-rec:hover{color:#C0362F;background:#FBDCDC}.e-rec svg{color:#E24B4A}
 .e-grid{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(0,1fr);gap:18px;align-items:start;padding-block:24px 8px}
 @media (max-width:900px){.e-grid{grid-template-columns:minmax(0,1fr)}.e-grid:not(.ad) .e-side{order:-1}}
+.rel{padding-block:8px 24px;display:flex;flex-direction:column;gap:14px}.rel h2{margin:0;font-size:26px;font-weight:800;color:var(--navy)}
+.rel-row{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}@media (max-width:900px){.rel-row{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}}
+.rel-card{background:#fff;border-radius:18px;overflow:hidden;text-decoration:none;color:var(--ink);box-shadow:0 2px 10px rgba(0,0,0,.05)}.rel-card:hover{color:var(--ink)}
+.rel-media{aspect-ratio:16/10;background:var(--soft)}.rel-media img{width:100%;height:100%;object-fit:cover}
+.rel-body{padding:10px 12px 12px}.rel-body b{display:block;font-size:16px;font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.rel-body small{display:block;font-size:13px;color:var(--accent);font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .e-card{background:#fff;border-radius:22px;padding:20px 22px;box-shadow:0 2px 12px rgba(0,0,0,.05);display:flex;flex-direction:column;gap:12px}
 .e-card h2{margin:0;font-size:20px;font-weight:800;color:var(--navy)}
 .e-img{border-radius:22px;overflow:hidden;background:#DCE5F5;aspect-ratio:16/10;max-width:100%}
@@ -196,6 +201,8 @@ ${hours(d.schedule, st)}
 </aside>
 </div>
 
+${e.related?.length ? `<section class="wrap rel" aria-label="עוד ב${esc(e.group || listLabel)}"><h2>עוד ב<span class="em">${esc(e.group || listLabel)}</span></h2>
+<div class="rel-row">${e.related.map((o) => `<a class="rel-card lift" href="${esc(o.href)}"><div class="rel-media">${o.img ? `<img src="${esc(o.img)}" alt="" loading="lazy">` : ''}</div><div class="rel-body"><b>${esc(o.name)}</b>${o.field ? `<small>${esc(o.field)}</small>` : ''}</div></a>`).join('')}</div></section>` : ''}
 <div class="wrap"><div class="app-cta"><div style="min-width:0;flex:1 1 300px"><b>עוד ב${esc(listLabel)}</b><span>כל הרשימה ב${esc(vm.name)}, עם חיפוש וסינון.</span></div><a class="pill btn-dark" href="${listHref || `${home}${kind}/`}">ל${esc(listLabel)} ←</a></div></div>
 </main>
 
