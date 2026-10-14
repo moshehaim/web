@@ -306,6 +306,11 @@ background:linear-gradient(to top,var(--t2),transparent)}
 .crumb{font-size:14px;color:#A9BAD4}.crumb a{color:#C9D6EA}
 .dir-hero h1{margin:0;font-size:clamp(30px,5vw,46px);font-weight:800;line-height:1.1}
 .dir-tools{display:flex;flex-wrap:wrap;gap:12px;align-items:center}
+.map-btn{height:48px;padding:0 18px;border-radius:14px;border:0;background:rgba(255,255,255,.12);color:#fff;font:inherit;font-size:16px;font-weight:800;display:inline-flex;align-items:center;gap:8px;cursor:pointer}
+.map-btn[aria-pressed=true]{background:var(--sky);color:var(--navy)}
+.dmap{position:relative;height:440px;border-radius:20px;overflow:hidden;margin-bottom:18px;box-shadow:0 2px 12px rgba(0,0,0,.08);z-index:0}.dmap[hidden]{display:none}
+@media (max-width:620px){.dmap{height:60vh}}
+.leaflet-popup-content{font-family:inherit;direction:rtl;text-align:right;font-size:15px}.leaflet-popup-content a,.leaflet-popup-content b{font-weight:800}.mp-f{color:#566173;font-size:13px}
 .dir-tabs{display:flex;gap:4px;background:rgba(255,255,255,.1);padding:4px;border-radius:14px}
 .dir-tabs a{height:40px;padding:0 18px;border-radius:10px;display:flex;align-items:center;color:#fff;font-weight:600;text-decoration:none;font-size:16px}
 .dir-tabs a[aria-current]{background:#fff;color:var(--navy);font-weight:800}
@@ -461,6 +466,7 @@ background:linear-gradient(to top,var(--t2),transparent)}
 
 
 <section id="list" class="wrap dir-list" aria-label="מבצעים וקופונים">
+
 <div class="dgrid">
 <article class="dcard lift" data-group="מבצעים" data-text="רביעי יום שוק בשפע זול שפע זול בתוקף עד 14.10 מבצעים">
 <div class="dmedia"><img src="https://mebomrqnfnbqijiuawdh.supabase.co/storage/v1/object/public/images/promotions/general/7a1f4c3e-8b62-4d09-9e5a-2c6b0f8d1e47.jpg" alt="רביעי יום שוק בשפע זול" loading="lazy" decoding="async"><span class="dtag">מבצע</span></div>
@@ -502,7 +508,7 @@ var q=document.getElementById('dir-q'),cards=[].slice.call(document.querySelecto
     chips=[].slice.call(document.querySelectorAll('.fchips button')),empty=document.getElementById('dir-empty'),g='';
 function run(){var t=(q.value||'').trim(),n=0;
   cards.forEach(function(c){var ok=(!g||c.getAttribute('data-group')===g)&&(!t||c.getAttribute('data-text').indexOf(t)>=0);c.hidden=!ok;if(ok)n++;});
-  empty.hidden=n>0;}
+  empty.hidden=n>0;if(typeof marks==='function')marks();}
 chips.forEach(function(b){b.addEventListener('click',function(){g=b.getAttribute('data-g');
   chips.forEach(function(x){x.setAttribute('aria-pressed',x===b);});run();});});
 q.addEventListener('input',function(){run();});
@@ -536,6 +542,24 @@ document.addEventListener('click',function(e){
   if(navigator.clipboard){navigator.clipboard.writeText(num).then(function(){d.textContent='הועתק ✓';
     setTimeout(function(){d.textContent=num;},1500);},function(){});}
 });
+
+/* מפה: נטענת רק בלחיצה הראשונה (Leaflet + OpenStreetMap), מציגה את הכרטיסים המסוננים */
+var mb=document.getElementById('map-btn'),mbox=document.getElementById('dmap'),map=null,layer=null;
+function marks(){if(!map)return;layer.clearLayers();var pts=[];
+  cards.forEach(function(c){var ll=c.getAttribute('data-ll');if(!ll||c.hidden)return;var p=ll.split(',').map(Number);pts.push(p);
+    var a=c.querySelector('.stretch, h3 a'),box=document.createElement('div'),b=document.createElement(a?'a':'b');
+    b.textContent=(c.querySelector('h3')||{}).textContent||'';if(a){b.href=a.getAttribute('href');}box.appendChild(b);
+    var f=c.querySelector('.dbody .f');if(f){var s=document.createElement('div');s.textContent=f.textContent;s.className='mp-f';box.appendChild(s);}
+    L.circleMarker(p,{radius:9,color:'#fff',weight:2,fillColor:'#244782',fillOpacity:1}).bindPopup(box).addTo(layer);});
+  if(pts.length)map.fitBounds(pts,{padding:[30,30],maxZoom:16});}
+function openMap(){mbox.hidden=false;mb.setAttribute('aria-pressed','true');
+  if(map){map.invalidateSize();marks();return;}
+  var css=document.createElement('link');css.rel='stylesheet';css.href='https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css';document.head.appendChild(css);
+  var sc=document.createElement('script');sc.src='https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js';
+  sc.onload=function(){map=L.map(mbox,{scrollWheelZoom:false});
+    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,attribution:'&copy; OpenStreetMap'}).addTo(map);
+    layer=L.layerGroup().addTo(map);marks();};document.head.appendChild(sc);}
+if(mb)mb.addEventListener('click',function(){if(mbox.hidden)openMap();else{mbox.hidden=true;mb.setAttribute('aria-pressed','false');}});
 })();</script>
 <script>(function(){
 /* תחום נוכחי בשורת התחומים — לגלול אליו שיהיה גלוי */

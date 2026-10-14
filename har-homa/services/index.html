@@ -306,6 +306,11 @@ background:linear-gradient(to top,var(--t2),transparent)}
 .crumb{font-size:14px;color:#A9BAD4}.crumb a{color:#C9D6EA}
 .dir-hero h1{margin:0;font-size:clamp(30px,5vw,46px);font-weight:800;line-height:1.1}
 .dir-tools{display:flex;flex-wrap:wrap;gap:12px;align-items:center}
+.map-btn{height:48px;padding:0 18px;border-radius:14px;border:0;background:rgba(255,255,255,.12);color:#fff;font:inherit;font-size:16px;font-weight:800;display:inline-flex;align-items:center;gap:8px;cursor:pointer}
+.map-btn[aria-pressed=true]{background:var(--sky);color:var(--navy)}
+.dmap{position:relative;height:440px;border-radius:20px;overflow:hidden;margin-bottom:18px;box-shadow:0 2px 12px rgba(0,0,0,.08);z-index:0}.dmap[hidden]{display:none}
+@media (max-width:620px){.dmap{height:60vh}}
+.leaflet-popup-content{font-family:inherit;direction:rtl;text-align:right;font-size:15px}.leaflet-popup-content a,.leaflet-popup-content b{font-weight:800}.mp-f{color:#566173;font-size:13px}
 .dir-tabs{display:flex;gap:4px;background:rgba(255,255,255,.1);padding:4px;border-radius:14px}
 .dir-tabs a{height:40px;padding:0 18px;border-radius:10px;display:flex;align-items:center;color:#fff;font-weight:600;text-decoration:none;font-size:16px}
 .dir-tabs a[aria-current]{background:#fff;color:var(--navy);font-weight:800}
@@ -454,7 +459,7 @@ background:linear-gradient(to top,var(--t2),transparent)}
 <nav class="crumb" aria-label="פירורי לחם"><a href="/har-homa/">חומת שמואל</a> · שירותי קהילה</nav>
 <h1>שירותי קהילה <span class="emd">בחומת שמואל</span></h1>
 <div class="dir-tools">
-
+<button type="button" class="map-btn" id="map-btn" aria-pressed="false" aria-controls="dmap"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 4L3 6v14l6-2 6 2 6-2V4l-6 2zM9 4v14M15 6v14"/></svg>מפה</button>
 <label class="dir-q"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 4a7 7 0 1 0 0 14a7 7 0 1 0 0-14zM20 20l-4-4"/></svg><span class="sr">חיפוש</span><input id="dir-q" type="search" autocomplete="off" placeholder="מקווה, דואר, כספומט…"></label>
 </div>
 </div></section>
@@ -463,58 +468,59 @@ background:linear-gradient(to top,var(--t2),transparent)}
 <button type="button" data-g="" aria-pressed="true">הכל</button><button type="button" data-g="דואר" data-k="דואר" aria-pressed="false">דואר</button><button type="button" data-g="דפיברילטורים" data-k="דפיברילטורים" aria-pressed="false">דפיברילטורים</button><button type="button" data-g="כספומטים" data-k="כספומטים" aria-pressed="false">כספומטים</button><button type="button" data-g="מקוואות" data-k="מקוואות" aria-pressed="false">מקוואות</button><button type="button" data-g="מרכז קהילתי" data-k="מרכז קהילתי" aria-pressed="false">מרכז קהילתי</button><button type="button" data-g="משרדי ממשלה" data-k="משרדי ממשלה" aria-pressed="false">משרדי ממשלה</button>
 </div></div>
 <section id="list" class="wrap dir-list has-bar" aria-label="שירותי קהילה">
+<div id="dmap" class="dmap" hidden></div>
 <div class="dgrid">
-<article class="dcard lift" data-group="דואר" data-text="דואר  דואר שאול אביגור 11" data-id="38a43491-3264-4578-a054-1157b65c8cd9" data-t="community_services">
+<article class="dcard lift" data-group="דואר" data-text="דואר  דואר שאול אביגור 11" data-id="38a43491-3264-4578-a054-1157b65c8cd9" data-t="community_services" data-ll="31.72323,35.21971">
 <div class="dmedia noimg t-teal"><svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 21V5h10v16M14 9h6v12M7 9h4M7 13h4M7 17h4"/></svg></div>
 <div class="dbody"><h3><a class="stretch" href="/har-homa/services/%D7%93%D7%95%D7%90%D7%A8/">דואר</a></h3><span class="w">שאול אביגור 11</span></div>
 <div class="dact"><a class="a-waze" href="https://waze.com/ul?ll=31.7232275,35.2197055&amp;navigate=yes" target="_blank" rel="noopener" aria-label="ניווט לדואר ב-Waze" title="ניווט ב-Waze"><img src="/img/waze.png" alt="" width="44" height="44"></a></div>
 </article>
-<article class="dcard lift" data-group="דפיברילטורים" data-text="דפיברילטור  דפיברילטורים הרב מן ההר 20" data-id="0b6983bf-fad8-4908-a1b4-c081936b9bae" data-t="community_services">
+<article class="dcard lift" data-group="דפיברילטורים" data-text="דפיברילטור  דפיברילטורים הרב מן ההר 20" data-id="0b6983bf-fad8-4908-a1b4-c081936b9bae" data-t="community_services" data-ll="31.72201,35.22527">
 <div class="dmedia"><img src="https://mebomrqnfnbqijiuawdh.supabase.co/storage/v1/object/public/images/community_services/0b6983bf-fad8-4908-a1b4-c081936b9bae.jpg?v=1783230941567" alt="דפיברילטור" loading="lazy" decoding="async"></div>
 <div class="dbody"><h3><a class="stretch" href="/har-homa/services/%D7%93%D7%A4%D7%99%D7%91%D7%A8%D7%99%D7%9C%D7%98%D7%95%D7%A8/">דפיברילטור</a></h3><span class="w">הרב מן ההר 20</span></div>
 <div class="dact"><a class="a-waze" href="https://waze.com/ul?ll=31.7220074,35.2252691&amp;navigate=yes" target="_blank" rel="noopener" aria-label="ניווט לדפיברילטור ב-Waze" title="ניווט ב-Waze"><img src="/img/waze.png" alt="" width="44" height="44"></a></div>
 </article>
-<article class="dcard lift" data-group="דפיברילטורים" data-text="דפיברילטור אביגור  דפיברילטורים שאול אביגור" data-id="b7df308d-e866-4230-8773-a35de202ec27" data-t="community_services">
+<article class="dcard lift" data-group="דפיברילטורים" data-text="דפיברילטור אביגור  דפיברילטורים שאול אביגור" data-id="b7df308d-e866-4230-8773-a35de202ec27" data-t="community_services" data-ll="31.72547,35.22473">
 <div class="dmedia"><img src="https://mebomrqnfnbqijiuawdh.supabase.co/storage/v1/object/public/images/community_services/b7df308d-e866-4230-8773-a35de202ec27.jpg?v=1787724441582" alt="דפיברילטור אביגור" loading="lazy" decoding="async"></div>
 <div class="dbody"><h3><a class="stretch" href="/har-homa/services/%D7%93%D7%A4%D7%99%D7%91%D7%A8%D7%99%D7%9C%D7%98%D7%95%D7%A8-%D7%90%D7%91%D7%99%D7%92%D7%95%D7%A8-2/">דפיברילטור אביגור</a></h3><span class="w">שאול אביגור</span></div>
 <div class="dact"><a class="a-waze" href="https://waze.com/ul?ll=31.7254705298128,35.2247314211355&amp;navigate=yes" target="_blank" rel="noopener" aria-label="ניווט לדפיברילטור אביגור ב-Waze" title="ניווט ב-Waze"><img src="/img/waze.png" alt="" width="44" height="44"></a></div>
 </article>
-<article class="dcard lift" data-group="דפיברילטורים" data-text="דפיברילטור אביגור  דפיברילטורים שאול אביגור 7" data-id="fd93c748-eae7-467e-bc75-ee0062496921" data-t="community_services">
+<article class="dcard lift" data-group="דפיברילטורים" data-text="דפיברילטור אביגור  דפיברילטורים שאול אביגור 7" data-id="fd93c748-eae7-467e-bc75-ee0062496921" data-t="community_services" data-ll="31.72410,35.22109">
 <div class="dmedia"><img src="https://mebomrqnfnbqijiuawdh.supabase.co/storage/v1/object/public/images/community_services/fd93c748-eae7-467e-bc75-ee0062496921.jpg?v=1787681656126" alt="דפיברילטור אביגור" loading="lazy" decoding="async"></div>
 <div class="dbody"><h3><a class="stretch" href="/har-homa/services/%D7%93%D7%A4%D7%99%D7%91%D7%A8%D7%99%D7%9C%D7%98%D7%95%D7%A8-%D7%90%D7%91%D7%99%D7%92%D7%95%D7%A8/">דפיברילטור אביגור</a></h3><span class="w">שאול אביגור 7</span></div>
 <div class="dact"><a class="a-waze" href="https://waze.com/ul?ll=31.7240984,35.2210932&amp;navigate=yes" target="_blank" rel="noopener" aria-label="ניווט לדפיברילטור אביגור ב-Waze" title="ניווט ב-Waze"><img src="/img/waze.png" alt="" width="44" height="44"></a></div>
 </article>
-<article class="dcard lift" data-group="כספומטים" data-text="כספומט בנק ירושלים - אליהו קורן 29  כספומטים אליהו קורן 29" data-id="c48275f3-5782-490f-af0d-4d1ea0dc6f34" data-t="community_services">
+<article class="dcard lift" data-group="כספומטים" data-text="כספומט בנק ירושלים - אליהו קורן 29  כספומטים אליהו קורן 29" data-id="c48275f3-5782-490f-af0d-4d1ea0dc6f34" data-t="community_services" data-ll="31.72414,35.22568">
 <div class="dmedia noimg t-teal"><svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 21V5h10v16M14 9h6v12M7 9h4M7 13h4M7 17h4"/></svg></div>
 <div class="dbody"><h3><a class="stretch" href="/har-homa/services/%D7%9B%D7%A1%D7%A4%D7%95%D7%9E%D7%98-%D7%91%D7%A0%D7%A7-%D7%99%D7%A8%D7%95%D7%A9%D7%9C%D7%99%D7%9D-%D7%90%D7%9C%D7%99%D7%94%D7%95-%D7%A7%D7%95%D7%A8%D7%9F-29/">כספומט בנק ירושלים - אליהו קורן 29</a></h3><span class="w">אליהו קורן 29</span></div>
 <div class="dact"><a class="a-waze" href="https://waze.com/ul?ll=31.72414,35.22568&amp;navigate=yes" target="_blank" rel="noopener" aria-label="ניווט לכספומט בנק ירושלים - אליהו קורן 29 ב-Waze" title="ניווט ב-Waze"><img src="/img/waze.png" alt="" width="44" height="44"></a></div>
 </article>
-<article class="dcard lift" data-group="מקוואות" data-text="מקווה רפאל בר לביא  מקוואות רפאל בן לביא" data-id="d79cbbb4-0e4f-426f-8984-5270dbb0ca7b" data-t="community_services">
+<article class="dcard lift" data-group="מקוואות" data-text="מקווה רפאל בר לביא  מקוואות רפאל בן לביא" data-id="d79cbbb4-0e4f-426f-8984-5270dbb0ca7b" data-t="community_services" data-ll="31.72581,35.22603">
 <div class="dmedia noimg t-teal"><svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 21V5h10v16M14 9h6v12M7 9h4M7 13h4M7 17h4"/></svg></div>
 <div class="dbody"><h3><a class="stretch" href="/har-homa/services/%D7%9E%D7%A7%D7%95%D7%95%D7%94-%D7%A8%D7%A4%D7%90%D7%9C-%D7%91%D7%A8-%D7%9C%D7%91%D7%99%D7%90/">מקווה רפאל בר לביא</a></h3><span class="w">רפאל בן לביא</span></div>
 <div class="dact"><a class="a-waze" href="https://waze.com/ul?ll=31.7258080310896,35.2260341743744&amp;navigate=yes" target="_blank" rel="noopener" aria-label="ניווט למקווה רפאל בר לביא ב-Waze" title="ניווט ב-Waze"><img src="/img/waze.png" alt="" width="44" height="44"></a></div>
 </article>
-<article class="dcard lift" data-group="מקוואות" data-text="מקווה (שלב א)  מקוואות הממציא 17" data-id="f3230ba1-f9dd-43a8-82bb-3358764ad972" data-t="community_services">
+<article class="dcard lift" data-group="מקוואות" data-text="מקווה (שלב א)  מקוואות הממציא 17" data-id="f3230ba1-f9dd-43a8-82bb-3358764ad972" data-t="community_services" data-ll="31.72698,35.22069">
 <div class="dmedia noimg t-teal"><svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 21V5h10v16M14 9h6v12M7 9h4M7 13h4M7 17h4"/></svg></div>
 <div class="dbody"><h3><a class="stretch" href="/har-homa/services/%D7%9E%D7%A7%D7%95%D7%95%D7%94-%D7%A9%D7%9C%D7%91-%D7%90/">מקווה (שלב א)</a></h3><span class="w">הממציא 17</span></div>
 <div class="dact"><a class="a-tel" href="tel:026452431" data-num="02-6452431" aria-label="טלפון של מקווה (שלב א)" title="טלפון"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2"/></svg><span class="ld"></span></a><a class="a-waze" href="https://waze.com/ul?ll=31.726984,35.2206863&amp;navigate=yes" target="_blank" rel="noopener" aria-label="ניווט למקווה (שלב א) ב-Waze" title="ניווט ב-Waze"><img src="/img/waze.png" alt="" width="44" height="44"></a></div>
 </article>
-<article class="dcard lift" data-group="מקוואות" data-text="מקווה שלב ב  מקוואות הרב מן ההר 6" data-id="8ac03378-266c-4098-be12-a2f040547500" data-t="community_services">
+<article class="dcard lift" data-group="מקוואות" data-text="מקווה שלב ב  מקוואות הרב מן ההר 6" data-id="8ac03378-266c-4098-be12-a2f040547500" data-t="community_services" data-ll="31.72201,35.22527">
 <div class="dmedia noimg t-teal"><svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 21V5h10v16M14 9h6v12M7 9h4M7 13h4M7 17h4"/></svg></div>
 <div class="dbody"><h3><a class="stretch" href="/har-homa/services/%D7%9E%D7%A7%D7%95%D7%95%D7%94-%D7%A9%D7%9C%D7%91-%D7%91/">מקווה שלב ב</a></h3><span class="w">הרב מן ההר 6</span></div>
 <div class="dact"><a class="a-tel" href="tel:026259755" data-num="02-6259755" aria-label="טלפון של מקווה שלב ב" title="טלפון"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2"/></svg><span class="ld"></span></a><a class="a-waze" href="https://waze.com/ul?ll=31.7220074,35.2252691&amp;navigate=yes" target="_blank" rel="noopener" aria-label="ניווט למקווה שלב ב ב-Waze" title="ניווט ב-Waze"><img src="/img/waze.png" alt="" width="44" height="44"></a></div>
 </article>
-<article class="dcard lift" data-group="מקוואות" data-text="מקווה שלב ג  מקוואות הבבא סאלי 26" data-id="b6ba2841-9183-4506-95b5-28e34d2f615b" data-t="community_services">
+<article class="dcard lift" data-group="מקוואות" data-text="מקווה שלב ג  מקוואות הבבא סאלי 26" data-id="b6ba2841-9183-4506-95b5-28e34d2f615b" data-t="community_services" data-ll="31.72155,35.22871">
 <div class="dmedia noimg t-teal"><svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 21V5h10v16M14 9h6v12M7 9h4M7 13h4M7 17h4"/></svg></div>
 <div class="dbody"><h3><a class="stretch" href="/har-homa/services/%D7%9E%D7%A7%D7%95%D7%95%D7%94-%D7%A9%D7%9C%D7%91-%D7%92/">מקווה שלב ג</a></h3><span class="w">הבבא סאלי 26</span></div>
 <div class="dact"><a class="a-tel" href="tel:026360766" data-num="02-6360766" aria-label="טלפון של מקווה שלב ג" title="טלפון"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2"/></svg><span class="ld"></span></a><a class="a-waze" href="https://waze.com/ul?ll=31.7215511,35.2287101&amp;navigate=yes" target="_blank" rel="noopener" aria-label="ניווט למקווה שלב ג ב-Waze" title="ניווט ב-Waze"><img src="/img/waze.png" alt="" width="44" height="44"></a></div>
 </article>
-<article class="dcard lift" data-group="מרכז קהילתי" data-text="מרכז קהילתי  מרכז קהילתי רזיאל נאור אסתר 10" data-id="7708ff8b-3954-48d8-9676-13019a3b14a6" data-t="community_services">
+<article class="dcard lift" data-group="מרכז קהילתי" data-text="מרכז קהילתי  מרכז קהילתי רזיאל נאור אסתר 10" data-id="7708ff8b-3954-48d8-9676-13019a3b14a6" data-t="community_services" data-ll="31.72466,35.22738">
 <div class="dmedia noimg t-teal"><svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 21V5h10v16M14 9h6v12M7 9h4M7 13h4M7 17h4"/></svg></div>
 <div class="dbody"><h3><a class="stretch" href="/har-homa/services/%D7%9E%D7%A8%D7%9B%D7%96-%D7%A7%D7%94%D7%99%D7%9C%D7%AA%D7%99/">מרכז קהילתי</a></h3><span class="w">רזיאל נאור אסתר 10</span></div>
 <div class="dact"><a class="a-tel" href="tel:026453891" data-num="02-6453891" aria-label="טלפון של מרכז קהילתי" title="טלפון"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2"/></svg><span class="ld"></span></a><a class="a-waze" href="https://waze.com/ul?ll=31.7246624,35.2273803&amp;navigate=yes" target="_blank" rel="noopener" aria-label="ניווט למרכז קהילתי ב-Waze" title="ניווט ב-Waze"><img src="/img/waze.png" alt="" width="44" height="44"></a></div>
 </article>
-<article class="dcard lift" data-group="משרדי ממשלה" data-text="משרד הפנים  משרדי ממשלה אליהו קורן 25" data-id="b46cbced-c7b7-430f-be73-7ed7e984c0e9" data-t="community_services">
+<article class="dcard lift" data-group="משרדי ממשלה" data-text="משרד הפנים  משרדי ממשלה אליהו קורן 25" data-id="b46cbced-c7b7-430f-be73-7ed7e984c0e9" data-t="community_services" data-ll="31.71971,35.22105">
 <div class="dmedia noimg t-teal"><svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 21V5h10v16M14 9h6v12M7 9h4M7 13h4M7 17h4"/></svg></div>
 <div class="dbody"><h3><a class="stretch" href="/har-homa/services/%D7%9E%D7%A9%D7%A8%D7%93-%D7%94%D7%A4%D7%A0%D7%99%D7%9D/">משרד הפנים</a></h3><span class="w">אליהו קורן 25</span></div>
 <div class="dact"><a class="a-waze" href="https://waze.com/ul?ll=31.719708,35.2210499&amp;navigate=yes" target="_blank" rel="noopener" aria-label="ניווט למשרד הפנים ב-Waze" title="ניווט ב-Waze"><img src="/img/waze.png" alt="" width="44" height="44"></a></div>
@@ -554,7 +560,7 @@ var q=document.getElementById('dir-q'),cards=[].slice.call(document.querySelecto
     chips=[].slice.call(document.querySelectorAll('.fchips button')),empty=document.getElementById('dir-empty'),g='';
 function run(){var t=(q.value||'').trim(),n=0;
   cards.forEach(function(c){var ok=(!g||c.getAttribute('data-group')===g)&&(!t||c.getAttribute('data-text').indexOf(t)>=0);c.hidden=!ok;if(ok)n++;});
-  empty.hidden=n>0;}
+  empty.hidden=n>0;if(typeof marks==='function')marks();}
 chips.forEach(function(b){b.addEventListener('click',function(){g=b.getAttribute('data-g');
   chips.forEach(function(x){x.setAttribute('aria-pressed',x===b);});run();});});
 q.addEventListener('input',function(){run();});
@@ -588,6 +594,24 @@ document.addEventListener('click',function(e){
   if(navigator.clipboard){navigator.clipboard.writeText(num).then(function(){d.textContent='הועתק ✓';
     setTimeout(function(){d.textContent=num;},1500);},function(){});}
 });
+
+/* מפה: נטענת רק בלחיצה הראשונה (Leaflet + OpenStreetMap), מציגה את הכרטיסים המסוננים */
+var mb=document.getElementById('map-btn'),mbox=document.getElementById('dmap'),map=null,layer=null;
+function marks(){if(!map)return;layer.clearLayers();var pts=[];
+  cards.forEach(function(c){var ll=c.getAttribute('data-ll');if(!ll||c.hidden)return;var p=ll.split(',').map(Number);pts.push(p);
+    var a=c.querySelector('.stretch, h3 a'),box=document.createElement('div'),b=document.createElement(a?'a':'b');
+    b.textContent=(c.querySelector('h3')||{}).textContent||'';if(a){b.href=a.getAttribute('href');}box.appendChild(b);
+    var f=c.querySelector('.dbody .f');if(f){var s=document.createElement('div');s.textContent=f.textContent;s.className='mp-f';box.appendChild(s);}
+    L.circleMarker(p,{radius:9,color:'#fff',weight:2,fillColor:'#244782',fillOpacity:1}).bindPopup(box).addTo(layer);});
+  if(pts.length)map.fitBounds(pts,{padding:[30,30],maxZoom:16});}
+function openMap(){mbox.hidden=false;mb.setAttribute('aria-pressed','true');
+  if(map){map.invalidateSize();marks();return;}
+  var css=document.createElement('link');css.rel='stylesheet';css.href='https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css';document.head.appendChild(css);
+  var sc=document.createElement('script');sc.src='https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js';
+  sc.onload=function(){map=L.map(mbox,{scrollWheelZoom:false});
+    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,attribution:'&copy; OpenStreetMap'}).addTo(map);
+    layer=L.layerGroup().addTo(map);marks();};document.head.appendChild(sc);}
+if(mb)mb.addEventListener('click',function(){if(mbox.hidden)openMap();else{mbox.hidden=true;mb.setAttribute('aria-pressed','false');}});
 })();</script>
 <script>(function(){
 /* תחום נוכחי בשורת התחומים — לגלול אליו שיהיה גלוי */
