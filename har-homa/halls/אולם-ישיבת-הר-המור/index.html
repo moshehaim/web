@@ -436,6 +436,7 @@ footer .c{font-size:13px;color:#8A94A6}
 <nav aria-label="קישורים"><a href="/">כל השכונות</a><a href="/app/">כניסה לבעלי עסקים</a><a href="/terms.html">תנאי שימוש</a><a href="/privacy.html">פרטיות</a></nav>
 <span class="c">© שכונה, כל הזכויות שמורות</span>
 </div></footer>
+<script src="/js/auth.js?v=1" defer></script>
 
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"EventVenue","name":"אולם ישיבת הר-המור","url":"https://shchuna.co.il/har-homa/halls/%D7%90%D7%95%D7%9C%D7%9D-%D7%99%D7%A9%D7%99%D7%91%D7%AA-%D7%94%D7%A8-%D7%94%D7%9E%D7%95%D7%A8/","telephone":"052-8119323","address":{"@type":"PostalAddress","streetAddress":"ורשבסקי 8","addressLocality":"ירושלים","addressCountry":"IL"},"geo":{"@type":"GeoCoordinates","latitude":31.7275474,"longitude":35.2173995}}</script>
 <script>window.__SB={"url":"https://mebomrqnfnbqijiuawdh.supabase.co","key":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1lYm9tcnFuZm5icWlqaXVhd2RoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzkxOTc3MDEsImV4cCI6MjA1NDc3MzcwMX0.OSpzG4pnsgIiOEefWK0Z29ZHOo12bIhp0QXTdk2Hsg4"};</script>
@@ -456,13 +457,7 @@ var dow=new Date(new Date().toLocaleString('en-US',{timeZone:'Asia/Jerusalem'}))
 var r=document.querySelector('.hrow[data-d="'+dow+'"]');if(r)r.classList.add('today');
 })();</script>
 <script>(function(){
-/* מחובר לאפליקציה באותו דפדפן? (אותה כתובת — אותו localStorage) מציגים את השם במקום "התחברות" */
-(function(){var a=document.getElementById('acct');if(!a)return;var raw=null,k='sb-mebomrqnfnbqijiuawdh-auth-token';
-  try{raw=localStorage.getItem(k)||localStorage.getItem('flutter.'+k);}catch(e){}
-  if(!raw)return;var s=null;try{s=JSON.parse(raw);if(typeof s==='string')s=JSON.parse(s);}catch(e){return;}
-  var u=s&&(s.user||(s.currentSession&&s.currentSession.user));if(!u||!s.refresh_token&&!(s.currentSession&&s.currentSession.refresh_token))return;
-  var m=u.user_metadata||{},n=(m.full_name||m.name||'').trim().split(' ')[0];
-  a.querySelector('.lbl').textContent=n?'שלום, '+n:'החשבון שלי';a.setAttribute('aria-label',n?'החשבון של '+n:'החשבון שלי');a.classList.add('in');})();
+/* התחברות / החשבון שלי — ב-/js/auth.js */
 /* תחום נוכחי בשורת התחומים — לגלול אליו שיהיה גלוי */
 var on=document.querySelector('.chips a.on');if(on&&on.scrollIntoView){try{on.scrollIntoView({block:'nearest',inline:'center'});}catch(_){}}
 /* חיצים לשורת התחומים */
