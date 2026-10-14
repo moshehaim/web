@@ -457,8 +457,8 @@
         else { v.innerHTML = '<button type="button" style="padding:0;color:#B26A00;font-size:13px">הטלפון עוד לא מאומת — לאימות</button>'; v.querySelector('button').addEventListener('click', function () { toggleMenu(false); phoneView(sb, function () { close(); toast('הטלפון אומת ✓'); }); }); }
       }).catch(function () {});
       Promise.all([
-        sb.from('businesses').select('id', { count: 'exact', head: true }).eq('user_id', user.id),
-        sb.from('professionals').select('id', { count: 'exact', head: true }).eq('user_id', user.id)
+        sb.from('businesses').select('id', { count: 'exact', head: true }).eq('user_id', user.id).eq('is_locked', true).eq('is_active', true),
+        sb.from('professionals').select('id', { count: 'exact', head: true }).eq('user_id', user.id).eq('is_active', true)
       ]).then(function (r) {
         var own = menu.querySelector('[data-own]'); if (!own) return;
         var h = '';

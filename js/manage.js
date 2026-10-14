@@ -4,6 +4,7 @@
  *  - תמונה: bucket images, businesses/profiles/{id}.jpg (JPEG), URL עם ?v=, ואז image_url. מודרציה — טריגר בשרת.
  *  - שירותי אירועים: event_services_description — רק לסוגי העסק שבאפליקציה (_isEligibleForEventServices)
  * רענון באפליקציה: trg_businesses_modified מעדכן את table_last_modified.
+ * "העסקים שלי" = כמו getBusinessesByOwner: user_id שלי + is_locked (בעלות מאומתת) + is_active. מי שרק הוסיף עסק — לא בעלים.
  */
 (function () {
   'use strict';
@@ -41,7 +42,7 @@
     $('#mb-login').addEventListener('click', function () { A.login('כניסה לניהול העסק — אותו חשבון כמו באפליקציה.'); });
   }
   function showNone() {
-    state('<h1>לא מצאנו עסק בחשבון הזה</h1><p>הוספת עסק חדש נעשית כרגע באפליקציה. אם רשמתם את העסק עם חשבון אחר — התנתקו והתחברו איתו.</p>' +
+    state('<h1>לא מצאנו עסק בבעלותכם</h1><p>כאן מנהלים עסק שאישרתם שהוא שלכם. אם רשמתם את העסק עם חשבון אחר — התנתקו והתחברו איתו. רישום עסק או אישור בעלות — כרגע באפליקציה.</p>' +
       '<a class="mb-btn" href="/app/">לאפליקציה</a>');
   }
   function showError() {
@@ -55,7 +56,7 @@
     A.getUser().then(function (x) {
       sb = x.sb; user = x.user;
       if (!user) return showLogin();
-      return sb.from('businesses').select(COLS).eq('user_id', user.id).order('created_at', { ascending: true }).then(function (r) {
+      return sb.from('businesses').select(COLS).eq('user_id', user.id).eq('is_locked', true).eq('is_active', true).order('created_at', { ascending: true }).then(function (r) {
         if (r.error) throw r.error;
         list = r.data || [];
         if (!list.length) return showNone();
