@@ -60,8 +60,9 @@ const args   = process.argv.slice(2);
 const DRY    = args.includes('--dry');
 const outIdx = args.indexOf('--out');
 const OUT    = path.resolve(__dirname, outIdx > -1 ? args[outIdx + 1] : '../out');
-const SECTION = 'minyanim-har-homa';
 const HOME    = 'har-homa';          // עמוד הבית החדש של השכונה: /har-homa/
+const SECTION = `${HOME}/minyanim`;  // המניינים, כמו כל שאר עמודי המידע: /har-homa/minyanim/
+const OLD_SECTION = 'minyanim-har-homa';  // הכתובת הישנה — נשארת כהפניות, גוגל כבר מכיר אותה
 const fxIdx   = args.indexOf('--fixture');
 const FIXTURE = fxIdx > -1 ? path.resolve(process.cwd(), args[fxIdx + 1]) : null;
 
@@ -242,6 +243,21 @@ const writeHome = (raw, dirRaw, lsRaw, moreRaw, synSlugs, detRaw) => {
   return vm;
 };
 
+/** slug יציב לבתי הכנסת: בפעם הראשונה בכתובת החדשה — יורש את ה-slugs מהכתובת הישנה */
+function synSlugStore() {
+  const file = path.join(OUT, SECTION, 'slugs.json'), old = path.join(OUT, OLD_SECTION, 'slugs.json');
+  if (!DRY && !fs.existsSync(file) && fs.existsSync(old)) { fs.mkdirSync(path.dirname(file), { recursive: true }); fs.copyFileSync(old, file); }
+  return new SlugStore(file);
+}
+
+/** הפניה מכתובת ישנה: canonical + meta refresh מיידי (גוגל מתייחס לזה כהפניה קבועה) */
+const redirectPage = (to) => `<!DOCTYPE html>
+<html lang="he" dir="rtl"><head><meta charset="utf-8"><title>הועבר</title>
+<link rel="canonical" href="${BASE}${to}"><meta name="robots" content="noindex,follow">
+<meta http-equiv="refresh" content="0; url=${to}"><script>location.replace(${JSON.stringify(to)}+location.hash)</script>
+</head><body><p>העמוד עבר: <a href="${to}">${BASE}${to}</a></p></body></html>
+`;
+
 /** עמודי המניינים (אינדקס + בית כנסת). vm — לראש העמוד המשותף. */
 function writeMinyanim({ vm, community, syns, prayers, lessons, slugs, urls }) {
   const home = `/${HOME}/`;
@@ -259,6 +275,7 @@ function writeMinyanim({ vm, community, syns, prayers, lessons, slugs, urls }) {
     syn.slug = slugs.get(syn.id, syn.name);
     const p = (P[String(syn.id)] || []).filter((x) => isPrayerInSeason(x));
     const l = L[String(syn.id)] || [];
+    write(path.join(OLD_SECTION, syn.slug, 'index.html'), redirectPage(`/${SECTION}/${encodeURIComponent(syn.slug)}/`));
     write(path.join(SECTION, syn.slug, 'index.html'),
       synagoguePageNew({ vm, home, syn, prayers: p, lessons: l, zmanim, today: todayList, base: BASE }));
     urls.push({ loc: `${BASE}/${SECTION}/${encodeURIComponent(syn.slug)}/`, freq: 'weekly', pri: '0.7' });
@@ -274,6 +291,7 @@ function writeMinyanim({ vm, community, syns, prayers, lessons, slugs, urls }) {
   }
   // בתי כנסת עם זמנים קודם, ואז לפי א״ב
   listed.sort((a, b) => (b.has - a.has) || a.name.localeCompare(b.name, 'he'));
+  write(path.join(OLD_SECTION, 'index.html'), redirectPage(`/${SECTION}/`));
   write(path.join(SECTION, 'index.html'), minyanimIndexPage({ vm, home, synagogues: listed, today: todayList, base: BASE }));
   console.log(`  ${SECTION}/ · ${syns.length} בתי כנסת · ${todayList.length} מניינים היום`);
 }
@@ -288,7 +306,7 @@ async function main() {
     const vm = writeHome(fx, fx.directory, fx.listings, fx.more, {}, fx.details);
     if (fx.minyanim) {
       writeMinyanim({ vm, community: fx.community, ...fx.minyanim,
-        slugs: new SlugStore(path.join(OUT, SECTION, 'slugs.json')), urls: [] });
+        slugs: synSlugStore(), urls: [] });
     }
     writeSearch();
     return;
@@ -315,7 +333,7 @@ async function main() {
   ]);
   if (e2 || e3) throw e2 || e3;
 
-  const slugs  = new SlugStore(path.join(OUT, SECTION, 'slugs.json'));
+  const slugs  = synSlugStore();
 
   // דפי השורש הידניים. חייבים להיות זהים תו-לתו ל-canonical שבקבצים
   // עצמם (index.html, privacy.html, terms.html) — פער ביניהם הוא סתירה.

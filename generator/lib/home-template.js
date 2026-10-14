@@ -13,7 +13,7 @@ export const esc = (s) => String(s ?? '')
 export const APP = '/app/';
 const LOGIN = '/login.html';
 const DOWNLOAD = '/b/';
-const MINYANIM = '/minyanim-har-homa/';
+const MINYANIM = '/har-homa/minyanim/';
 
 export const ICON = {
   clock: 'M12 4a8 8 0 1 0 0 16a8 8 0 1 0 0-16zM12 8v4l3 2',
@@ -600,7 +600,7 @@ tabs.forEach(function(t,i){t.addEventListener('click',function(){sel(t);});
 export const HIDDEN_NAV = new Set(['happenings']);
 
 export function navChips(home, current = '') {
-  const M = '/minyanim-har-homa/';
+  const M = '/har-homa/minyanim/';
   const items = [
     ['home', 'דף השכונה', home], ['minyanim', 'מניינים ושיעורים', M],
     ['biz', 'עסקים', `${home}biz/`], ['pros', 'בעלי מקצוע', `${home}pros/`],
