@@ -4,6 +4,8 @@
  */
 export const MAP_CSS = `
 .map-btn{height:48px;padding:0 18px;border-radius:14px;border:0;background:rgba(255,255,255,.12);color:#fff;font:inherit;font-size:16px;font-weight:800;display:inline-flex;align-items:center;gap:8px;cursor:pointer}
+.dir-tools .map-btn{margin-inline-start:auto}
+@media (max-width:620px){.dir-tools .map-btn{order:2;height:44px}.dir-tools .dir-q{order:3;flex-basis:100%}}
 .map-btn[aria-pressed=true]{background:var(--sky);color:var(--navy)}
 .dmap{position:relative;height:440px;border-radius:20px;overflow:hidden;margin-bottom:18px;box-shadow:0 2px 12px rgba(0,0,0,.08);z-index:0}.dmap[hidden]{display:none}
 @media (max-width:620px){.dmap{height:60vh}}
