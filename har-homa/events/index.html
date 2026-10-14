@@ -306,11 +306,13 @@ background:linear-gradient(to top,var(--t2),transparent)}
 .crumb{font-size:14px;color:#A9BAD4}.crumb a{color:#C9D6EA}
 .dir-hero h1{margin:0;font-size:clamp(30px,5vw,46px);font-weight:800;line-height:1.1}
 .dir-tools{display:flex;flex-wrap:wrap;gap:12px;align-items:center}
+
 .map-btn{height:48px;padding:0 18px;border-radius:14px;border:0;background:rgba(255,255,255,.12);color:#fff;font:inherit;font-size:16px;font-weight:800;display:inline-flex;align-items:center;gap:8px;cursor:pointer}
 .map-btn[aria-pressed=true]{background:var(--sky);color:var(--navy)}
 .dmap{position:relative;height:440px;border-radius:20px;overflow:hidden;margin-bottom:18px;box-shadow:0 2px 12px rgba(0,0,0,.08);z-index:0}.dmap[hidden]{display:none}
 @media (max-width:620px){.dmap{height:60vh}}
 .leaflet-popup-content{font-family:inherit;direction:rtl;text-align:right;font-size:15px}.leaflet-popup-content a,.leaflet-popup-content b{font-weight:800}.mp-f{color:#566173;font-size:13px}
+
 .dir-tabs{display:flex;gap:4px;background:rgba(255,255,255,.1);padding:4px;border-radius:14px}
 .dir-tabs a{height:40px;padding:0 18px;border-radius:10px;display:flex;align-items:center;color:#fff;font-weight:600;text-decoration:none;font-size:16px}
 .dir-tabs a[aria-current]{background:#fff;color:var(--navy);font-weight:800}
@@ -450,7 +452,7 @@ background:linear-gradient(to top,var(--t2),transparent)}
 </div>
 </div>
 <nav class="chips" aria-label="תחומים"><button type="button" class="cnav prev" aria-label="תחומים קודמים">→</button><button type="button" class="cnav next" aria-label="תחומים נוספים">←</button><div class="wrap">
-<a href="/har-homa/">דף השכונה</a><a href="/minyanim-har-homa/">מניינים ושיעורים</a><a href="/har-homa/biz/">עסקים</a><a href="/har-homa/pros/">בעלי מקצוע</a><a href="/har-homa/promos/">מבצעים</a><a href="/har-homa/promos/#קופונים">קופונים</a><a href="/har-homa/board/#gmach">גמ״חים</a><a href="/har-homa/board/#jobs">דרושים</a><a href="/har-homa/board/#second">יד שנייה</a><a href="/har-homa/realestate/">נדל״ן</a><a href="/har-homa/board/#vol">התנדבות</a><a href="/har-homa/board/#lost">אבידות ומציאות</a><a href="/har-homa/halls/">אולמות ואירוח</a><a href="/har-homa/events/" aria-current="page" class="on">הכל לאירוע</a><a href="/har-homa/education/">מוסדות חינוך</a><a href="/har-homa/parks/">גנים ופארקים</a><a href="/har-homa/services/">שירותי קהילה</a><a href="/har-homa/health/">בריאות</a>
+<a href="/har-homa/">דף השכונה</a><a href="/har-homa/minyanim/">מניינים ושיעורים</a><a href="/har-homa/biz/">עסקים</a><a href="/har-homa/pros/">בעלי מקצוע</a><a href="/har-homa/promos/">מבצעים</a><a href="/har-homa/promos/#קופונים">קופונים</a><a href="/har-homa/board/#gmach">גמ״חים</a><a href="/har-homa/board/#jobs">דרושים</a><a href="/har-homa/board/#second">יד שנייה</a><a href="/har-homa/realestate/">נדל״ן</a><a href="/har-homa/board/#vol">התנדבות</a><a href="/har-homa/board/#lost">אבידות ומציאות</a><a href="/har-homa/halls/">אולמות ואירוח</a><a href="/har-homa/events/" aria-current="page" class="on">הכל לאירוע</a><a href="/har-homa/education/">מוסדות חינוך</a><a href="/har-homa/parks/">גנים ופארקים</a><a href="/har-homa/services/">שירותי קהילה</a><a href="/har-homa/health/">בריאות</a>
 </div></nav></header>
 
 
@@ -610,7 +612,7 @@ var q=document.getElementById('dir-q'),cards=[].slice.call(document.querySelecto
     chips=[].slice.call(document.querySelectorAll('.fchips button')),empty=document.getElementById('dir-empty'),g='';
 function run(){var t=(q.value||'').trim(),n=0;
   cards.forEach(function(c){var ok=(!g||c.getAttribute('data-group')===g)&&(!t||c.getAttribute('data-text').indexOf(t)>=0);c.hidden=!ok;if(ok)n++;});
-  empty.hidden=n>0;if(typeof marks==='function')marks();}
+  empty.hidden=n>0;if(window.__mapRefresh)window.__mapRefresh();}
 chips.forEach(function(b){b.addEventListener('click',function(){g=b.getAttribute('data-g');
   chips.forEach(function(x){x.setAttribute('aria-pressed',x===b);});run();});});
 q.addEventListener('input',function(){run();});
@@ -645,15 +647,18 @@ document.addEventListener('click',function(e){
     setTimeout(function(){d.textContent=num;},1500);},function(){});}
 });
 
-/* מפה: נטענת רק בלחיצה הראשונה (Leaflet + OpenStreetMap), מציגה את הכרטיסים המסוננים */
-var mb=document.getElementById('map-btn'),mbox=document.getElementById('dmap'),map=null,layer=null;
+})();</script>
+<script>(function(){
+var mb=document.getElementById('map-btn'),mbox=document.getElementById('dmap'),map=null,layer=null;if(!mb||!mbox)return;
+var cards=[].slice.call(document.querySelectorAll('.dcard'));
 function marks(){if(!map)return;layer.clearLayers();var pts=[];
   cards.forEach(function(c){var ll=c.getAttribute('data-ll');if(!ll||c.hidden)return;var p=ll.split(',').map(Number);pts.push(p);
-    var a=c.querySelector('.stretch, h3 a'),box=document.createElement('div'),b=document.createElement(a?'a':'b');
+    var a=c.tagName==='A'?c:c.querySelector('.stretch, h3 a'),box=document.createElement('div'),b=document.createElement(a?'a':'b');
     b.textContent=(c.querySelector('h3')||{}).textContent||'';if(a){b.href=a.getAttribute('href');}box.appendChild(b);
     var f=c.querySelector('.dbody .f');if(f){var s=document.createElement('div');s.textContent=f.textContent;s.className='mp-f';box.appendChild(s);}
     L.circleMarker(p,{radius:9,color:'#fff',weight:2,fillColor:'#244782',fillOpacity:1}).bindPopup(box).addTo(layer);});
   if(pts.length)map.fitBounds(pts,{padding:[30,30],maxZoom:16});}
+window.__mapRefresh=marks;
 function openMap(){mbox.hidden=false;mb.setAttribute('aria-pressed','true');
   if(map){map.invalidateSize();marks();return;}
   var css=document.createElement('link');css.rel='stylesheet';css.href='https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css';document.head.appendChild(css);
@@ -661,7 +666,7 @@ function openMap(){mbox.hidden=false;mb.setAttribute('aria-pressed','true');
   sc.onload=function(){map=L.map(mbox,{scrollWheelZoom:false});
     L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,attribution:'&copy; OpenStreetMap'}).addTo(map);
     layer=L.layerGroup().addTo(map);marks();};document.head.appendChild(sc);}
-if(mb)mb.addEventListener('click',function(){if(mbox.hidden)openMap();else{mbox.hidden=true;mb.setAttribute('aria-pressed','false');}});
+mb.addEventListener('click',function(){if(mbox.hidden)openMap();else{mbox.hidden=true;mb.setAttribute('aria-pressed','false');}});
 })();</script>
 <script>(function(){
 /* תחום נוכחי בשורת התחומים — לגלול אליו שיהיה גלוי */
