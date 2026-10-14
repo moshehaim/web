@@ -176,17 +176,19 @@
         sub: pi ? (pi.status === 'cancelled' ? 'תסתיים ב-' + fmtDate(pi.next_charge_date) : 'מתחדש ב-' + fmtDate(pi.next_charge_date)) : 'הבלטת העסק ברשימות',
         badge: pi ? (pi.status === 'cancelled' ? 'ממתין לביטול' : '✓ פעיל') : null }));
     }
-    var qs = ctx.promo ? '<h2 style="margin-top:10px">סטטוס מהיר</h2><div class="mb-qs">' + (ctx.promo.image_url ? '<img src="' + esc(ctx.promo.image_url) + '" alt="">' : '') +
-      '<span><b>' + esc(ctx.promo.title || 'מבצע פעיל') + '</b><small>עד ' + fmtDate(ctx.promo.end_date) + '</small></span></div>' : '';
+    // סטטוס מהיר — אריח מבצע פעיל
+    var qs = ctx.promo ? '<div class="mb-item qs"><i style="background:' + C.promo + '1A">' +
+      (ctx.promo.image_url ? '<img src="' + esc(ctx.promo.image_url) + '" alt="">' : svg(IC.tag, C.promo)) + '</i>' +
+      '<span class="tx"><b>' + esc(ctx.promo.title || 'מבצע פעיל') + '</b><span class="s">מבצע פעיל · עד ' + fmtDate(ctx.promo.end_date) + '</span></span></div>' : '';
 
     $('#mb-app').innerHTML =
-      '<div class="mb-hero"><div class="wrap">' +
-      '<div class="mb-top"><div class="mb-img">' + (img ? '<img src="' + esc(img) + '" alt="">' : svg(IC.store, '#fff')) +
+      '<div class="mb-hero"><div class="wrap"><div class="mb-top">' +
+      '<div class="mb-img">' + (img ? '<img src="' + esc(img) + '" alt="">' : svg(IC.store, '#fff')) +
       (pend ? '<span class="pend' + (pend.status === 'pending' ? '' : ' no') + '">' + (pend.status === 'pending' ? 'בבדיקה' : 'לא אושרה') + '</span>' : '') + '</div>' +
-      '<div class="mb-name"><h1>' + esc(biz.name) + '</h1><small>' + esc(ctx.typeName || 'עסק') + '</small></div>' + pick + '</div>' +
-      '<div class="mb-chips">' + chips + '</div></div></div>' +
-      '<div class="wrap mb-grid"><div class="mb-col"><h2>ניהול העסק</h2>' + left + '</div>' +
-      '<div class="mb-col">' + (svc.length ? '<h2>שירותים</h2>' + svc.join('') : '') + qs + '</div></div>';
+      '<div class="mb-name"><h1>' + esc(biz.name) + '</h1><small>' + esc(ctx.typeName || 'עסק') + '</small></div>' +
+      '<div class="mb-chips">' + chips + '</div>' + pick + '</div></div></div>' +
+      '<div class="wrap mb-grid"><h2 class="mb-sep">ניהול העסק</h2>' + left +
+      (svc.length || qs ? '<h2 class="mb-sep">שירותים</h2>' + svc.join('') + qs : '') + '</div>';
     $('#mb-state').hidden = true; $('#mb-app').hidden = false;
 
     var p = $('#mb-pick'); if (p) p.addEventListener('change', function () {
