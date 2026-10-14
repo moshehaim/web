@@ -345,7 +345,7 @@ const arrows = (id) =>
 const img = (src, alt) => `<img src="${esc(src)}" alt="${esc(alt)}" loading="lazy" decoding="async">`;
 
 function promoCard(p) {
-  return `<a href="${APP}" class="card promo lift${p.coupon ? ' coupon' : ''}">
+  return `<a href="${esc(p.href || APP)}" class="card promo lift${p.coupon ? ' coupon' : ''}">
 <div class="media">${img(p.img, p.title)}<span class="tag">${esc(p.kind)}</span></div>
 <div class="body"><b class="clamp2">${esc(p.title)}</b>${p.provider ? `<span class="sub">${esc(p.provider)}</span>` : ''}<span class="fine">${esc(p.until)}${p.coupon ? ' · הקוד באפליקציה' : ''}</span></div>
 </a>`;
@@ -369,7 +369,7 @@ function prosSection(pros) {
   return `<section id="pros" aria-label="בעלי מקצוע" class="wrap sec">
 <div class="sec-head">${head2('לבית, למשפחה ולאירועים', 'בעלי מקצוע', 'בשכונה')}<div class="ctrls">${arrows('pros')}<a class="more" href="pros/">לכל בעלי המקצוע ←</a></div></div>
 <div class="car car-pro" data-car="pros" data-auto="4000"><div class="track">
-${pros.map((p) => `<div class="slide"><a href="pros/" class="card pro lift">
+${pros.map((p) => `<div class="slide"><a href="${esc(p.href || 'pros/')}" class="card pro lift">
 <div class="media">${img(p.img, p.name)}${p.rec ? `<span class="rec" role="img" aria-label="${p.rec === 1 ? 'המלצה אחת' : `${p.rec} המלצות`}"><span class="rp">${svg(ICON.heart, 14, 'currentColor', 2)}${p.rec === 1 ? 'המלצה אחת' : `${p.rec} המלצות`}</span><span class="rh" aria-hidden="true"><svg viewBox="0 0 24 24" width="36" height="36"><path d="M12 21.3s-8.3-5.3-8.3-11.6A4.8 4.8 0 0 1 12 6.4a4.8 4.8 0 0 1 8.3 3.3c0 6.3-8.3 11.6-8.3 11.6z" fill="#E24B4A" stroke="#fff" stroke-width="1.8" stroke-linejoin="round"></path></svg><b>${p.rec}</b></span></span>` : ''}</div>
 <div class="body"><b style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(p.name)}</b><span class="field">${esc(p.field)}</span></div>
 </a></div>`).join('\n')}
@@ -379,7 +379,7 @@ ${pros.map((p) => `<div class="slide"><a href="pros/" class="card pro lift">
 
 function bizSection(biz) {
   if (!biz.length) return '';
-  const pill = (b) => `<a href="biz/" class="biz lift">${img(b.img, '')}<span><b>${esc(b.name)}</b><span>${esc(b.type)}</span></span></a>`;
+  const pill = (b) => `<a href="${esc(b.href || 'biz/')}" class="biz lift">${img(b.img, '')}<span><b>${esc(b.name)}</b><span>${esc(b.type)}</span></span></a>`;
   const half = Math.ceil(biz.length / 2);
   const row = (list, cls) => `<div class="mq${cls}">${list.map(pill).join('')}<span style="display:contents" aria-hidden="true">${list.map(pill).join('')}</span></div>`;
   return `<section id="biz" aria-label="עסקים בשכונה" class="sec" style="padding-bottom:16px">
@@ -396,7 +396,7 @@ function realEstateSection(list) {
 ${kinds.length > 2 ? `<div class="seg" role="group" aria-label="סוג עסקה">${kinds.map((k, i) => `<button type="button" data-re="${esc(k)}" aria-pressed="${i === 0}">${esc(k)}</button>`).join('')}</div>` : ''}
 ${arrows('re')}<a class="more" href="realestate/">לכל הדירות ←</a></div></div>
 <div class="car" data-car="re" data-auto="5000"><div class="track">
-${list.map((r) => `<div class="slide" data-kind="${esc(r.kind)}"><a href="${APP}" class="card lift">
+${list.map((r) => `<div class="slide" data-kind="${esc(r.kind)}"><a href="${esc(r.href || APP)}" class="card lift">
 <div class="media">${img(r.img, r.title)}<span class="tag">${esc(r.kind)}</span><span class="price mono">${esc(r.price)}</span></div>
 <div class="body"><b>${esc(r.title)}</b><span class="sub">${esc(r.meta)}</span><span class="fine">${esc(r.street)}</span></div>
 </a></div>`).join('\n')}
@@ -423,7 +423,7 @@ function promosStrip(promos) {
   if (!promos.length) return '';
   return `<section id="promos" aria-label="מבצעים וקופונים" class="wrap pstrip">
 <div class="ps-head"><h2>מבצעים <span class="em">בשכונה</span></h2><a class="more" href="promos/">הכל ←</a></div>
-<div class="ps-row">${promos.map((p) => `<a class="ps-item lift" href="${APP}">${p.img ? `<i>${img(p.img, '')}</i>` : `<i class="ps-ic">${svg(ICON.tag, 22, 'currentColor', 2)}</i>`}<span><em>${esc(p.kind)}</em><b class="clamp2">${esc(p.title)}</b><small>${esc([p.provider, p.until].filter(Boolean).join(' · '))}</small></span></a>`).join('')}
+<div class="ps-row">${promos.map((p) => `<a class="ps-item lift" href="${esc(p.href || APP)}">${p.img ? `<i>${img(p.img, '')}</i>` : `<i class="ps-ic">${svg(ICON.tag, 22, 'currentColor', 2)}</i>`}<span><em>${esc(p.kind)}</em><b class="clamp2">${esc(p.title)}</b><small>${esc([p.provider, p.until].filter(Boolean).join(' · '))}</small></span></a>`).join('')}
 <a class="ps-item ps-cta" href="${APP}"><span><b>יש לכם עסק בשכונה?</b><small>פרסום מבצע עם התראה לשכונה ←</small></span></a></div>
 </section>`;
 }

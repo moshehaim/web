@@ -22,7 +22,8 @@ import { fetchHome, shapeHome, shapePrayers, fetchDirectory, shapeDirectory, fet
 import { homePage, HIDDEN_NAV, navChips } from './lib/home-template.js';
 import { entityPage, detailPage } from './lib/entity-template.js';
 import { fetchDetails, shapeDetails, shabbatTimes, nextShabbat } from './lib/details.js';
-import { listPage, promosPage, realEstatePage, boardPage, lessonsPage, hallsPage, hostingPage, eduPage, parksPage, servicesPage, healthPage, eventsPage, happeningsPage } from './lib/list-template.js';
+import { isIsraeliDST } from './lib/season.js';
+import { compactHours, listPage, promosPage, realEstatePage, boardPage, lessonsPage, hallsPage, hostingPage, eduPage, parksPage, servicesPage, healthPage, eventsPage, happeningsPage } from './lib/list-template.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -85,7 +86,7 @@ const SEARCH = [];
 const addSearch = (n, t, s, h, o) => { if (n && h) SEARCH.push({ n: String(n).trim(), t, s: (s || '').trim() || undefined, h, o }); };
 const writeSearch = () => {
   const seen = new Set();
-  const out = SEARCH.filter((x) => !seen.has(x.h) && seen.add(x.h));
+  const out = SEARCH.filter((x) => !seen.has(x.h + '|' + x.n) && seen.add(x.h + '|' + x.n));
   write(path.join(HOME, 'search.json'), JSON.stringify(out));
   console.log(`  ${HOME}/search.json · ${out.length} פריטים`);
 };
@@ -155,6 +156,12 @@ const writeHome = (raw, dirRaw, lsRaw, moreRaw, synSlugs, detRaw) => {
     for (const e of dir[kind].items) {
       e.slug = store.get(e.id, e.name); keep.add(e.slug);
       e.href = hrefById[e.id] = `${home}${kind}/${encodeURIComponent(e.slug)}/`;
+    }
+    // "עוד באותו תחום": 4 מאותה קבוצה (עם תמונה קודם), בלי הדף עצמו
+    for (const e of dir[kind].items) {
+      e.related = dir[kind].items.filter((o) => o !== e && o.group === e.group)
+        .sort((a, b) => (!!b.img - !!a.img) || (a.i - b.i)).slice(0, 4)
+        .map((o) => ({ name: o.name, field: o.field, img: o.img, href: o.href, rec: o.rec }));
       write(path.join(HOME, kind, e.slug, 'index.html'), entityPage(vm, e, { base: BASE, home, kind, api: API, st }));
       EXTRA_URLS.push({ loc: `${BASE}${e.href}`, freq: 'weekly', pri: '0.6' });
       addSearch(e.name, kind === 'pros' ? 'בעל מקצוע' : 'עסק',
@@ -192,7 +199,9 @@ const writeHome = (raw, dirRaw, lsRaw, moreRaw, synSlugs, detRaw) => {
   const link = (items) => { for (const x of items) if (!x.href && hrefById[x.id]) x.href = hrefById[x.id]; };
 
   // לוח השכונה בעמוד הבית: כל מודעה לעמוד המלא שלה
-  for (const t of vm.board || []) for (const x of t.items) if (!x.href && hrefById[x.id]) x.href = hrefById[x.id];
+  // כל כרטיס בעמוד הבית — לעמוד המלא שלו
+  for (const t of vm.board || []) link(t.items);
+  [vm.professionals, vm.businesses, vm.promos, vm.realEstate].forEach((a) => a && link(a));
   // תחומים שאוחדו בשורת התחומים — עדיין נמצאים בחיפוש
   addSearch('שיעורי תורה', 'תחום', '', `${home}lessons/`, 1); addSearch('אירוח', 'תחום', '', `${home}halls/`, 1);
   // 0. עמוד הבית — אחרי שלכל ישות יש קישור (בשביל "חדש בשכונה")
@@ -212,12 +221,16 @@ const writeHome = (raw, dirRaw, lsRaw, moreRaw, synSlugs, detRaw) => {
     console.log(`  promos · ${ls.promos.items.length}   realestate · ${ls.realEstate.items.length}   board · ${ls.board.items.length}`);
   }
   if (!dir) return vm;
+  // שעות לתג "פתוח עכשיו" ברשימות
+  for (const x of [...dir.pros.items, ...dir.biz.items]) x.hoursJ = compactHours(x.detail?.schedule, st, isIsraeliDST());
   for (const kind of ['pros', 'biz']) {
     write(path.join(HOME, kind, 'index.html'), listPage(vm, dir, kind, { base: BASE, home, api: API }));
   }
   console.log(`  ${HOME}/pros/ · ${dir.pros.items.length}   ${HOME}/biz/ · ${dir.biz.items.length}`);
   if (moreRaw) {
     const m = shapeMore(moreRaw, dir, synSlugs || {});
+    // שיעורים בחיפוש — לפי נושא, רב ובית כנסת
+    for (const l of m.lessons.items) addSearch(l.t, 'שיעור', [l.group, l.sub].filter(Boolean).join(' · '), l.href || `${home}lessons/`, 3);
     [m.halls, m.hosting, m.edu, m.parks, m.services, m.health, m.events].forEach((x) => link(x.items));
     const o = { base: BASE, home, api: API };
     const pages = { lessons: lessonsPage, halls: hallsPage, hosting: hostingPage, education: eduPage,
