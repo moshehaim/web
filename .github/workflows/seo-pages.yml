@@ -34,7 +34,7 @@ jobs:
         run: |
           git config user.name  "shchuna-bot"
           git config user.email "bot@users.noreply.github.com"
-          git add minyanim-har-homa har-homa sitemap.xml robots.txt
+          git add minyanim-har-homa har-homa my-business sitemap.xml robots.txt
           if git diff --staged --quiet; then
             echo "אין שינויים"
           else

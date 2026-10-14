@@ -205,8 +205,9 @@
     });
   }
 
+  function emitAuth(user) { try { document.dispatchEvent(new CustomEvent('shchuna:auth', { detail: { user: user || null } })); } catch (e) {} }
   function loggedIn(user) {
-    renderAcct(user);
+    renderAcct(user); emitAuth(user);
     var fn = onDone; onDone = null;
     if (fn) fn(user); else close();
   }
@@ -445,7 +446,7 @@
     menu.querySelector('[data-out]').addEventListener('click', function () {
       client().then(function (sb) { return sb.auth.signOut({ scope: 'local' }); }).catch(function () {}).then(function () {
         ls(function (st) { st.removeItem(SK); st.removeItem('flutter.' + SK); });
-        verifiedCache = null; renderAcct(null); paintRec(false);
+        verifiedCache = null; renderAcct(null); paintRec(false); emitAuth(null);
       });
     });
     client().then(function (sb) {
@@ -461,7 +462,7 @@
       ]).then(function (r) {
         var own = menu.querySelector('[data-own]'); if (!own) return;
         var h = '';
-        if (r[0].count) h += '<a role="menuitem" href="' + APP + '">ניהול העסק שלי</a>';
+        if (r[0].count) h += '<a role="menuitem" href="/my-business/">ניהול העסק שלי</a>';
         if (r[1].count) h += '<a role="menuitem" href="' + APP + '">ניהול כרטיס בעל המקצוע</a>';
         own.innerHTML = h;
       }).catch(function () {});
@@ -507,7 +508,7 @@
         return sb.auth.getSession().then(function (r) {
           if (oauthBack) history.replaceState(null, '', cleanHref());
           var u = r.data.session && r.data.session.user;
-          renderAcct(u);
+          renderAcct(u); if (oauthBack) emitAuth(u);
           if (!u) return;
           var p = null; try { p = JSON.parse(sessionStorage.getItem(PENDING) || 'null'); } catch (e) {}
           if (p && p.p === location.pathname) { clearPending(); resume(p); }
@@ -518,5 +519,9 @@
   }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init); else init();
 
-  window.ShchunaAuth = { login: function () { loginView(); }, client: client };
+  window.ShchunaAuth = {
+    login: function (why) { loginView(why ? { why: why } : undefined); },
+    client: client, getUser: getUser, session: readSession,
+    toast: toast, notice: notice, open: open, close: close
+  };
 })();
