@@ -342,46 +342,152 @@
     }).catch(function () { btn.disabled = false; btn.textContent = biz.image_url ? 'החלפת תמונה' : 'הוספת תמונה'; msg(d, 'העלאת התמונה נכשלה. נסו שוב'); });
   }
 
-  /* ── שעות פתיחה ── */
+  /* ── שעות פתיחה ──
+   * כמו WeeklyScheduleEditor + ShabbatTimePicker באפליקציה. ערכים אפשריים בשדה (TimeRange):
+   *  "HH:MM" קבוע · "חורף|קיץ" עונתי · "candle_lighting-60" יחסי לכניסת שבת · "havdalah+30" יחסי לצאת שבת · end ריק = טקסט חופשי
+   * שישי-סגירה, מוצ"ש-פתיחה ומוצ"ש-סגירה נערכים בבורר שבת (יחסי / שעה אחידה / לפי עונה) עם אותן מגבלות. */
+  var SH = { friWinMax: '15:30', friSumMax: '17:00', satWinMin: '18:30', satSumMin: '20:30' };
+  var REL = [[30, 'חצי שעה'], [60, 'שעה'], [90, 'שעה וחצי'], [120, 'שעתיים']];
+  function isPlain(v) { return /^\d{1,2}:\d{2}$/.test(v || ''); }
+  function relLabel(n) { var r = REL.filter(function (x) { return x[0] === n; })[0]; return r ? r[1] : n + ' דק׳'; }
+  function timeText(v) {
+    if (!v) return '—';
+    var m;
+    if ((m = /^candle_lighting(?:-(\d+))?$/.exec(v))) return m[1] ? relLabel(+m[1]) + ' לפני כניסת שבת' : 'כניסת שבת';
+    if ((m = /^havdalah(?:\+(\d+))?$/.exec(v))) return m[1] ? relLabel(+m[1]) + ' אחרי צאת שבת' : 'צאת שבת';
+    if (v.indexOf('|') > 0) { var p = v.split('|'); return 'חורף ' + p[0] + ' · קיץ ' + p[1]; }
+    return v;
+  }
+  // איזה בורר שבת לשדה (null = שדה שעה רגיל)
+  function shabbatType(k, f) {
+    if (k === 'friday' && f === 'end') return 'friClose';
+    if (k === 'saturday' && f === 'start') return 'satOpen';
+    if (k === 'saturday' && f === 'end') return 'satClose';
+    return null;
+  }
+
   function hoursView() {
     var sch = JSON.parse(JSON.stringify(biz.weekly_schedule || {}));
+    var ed = null; // שדה בעריכה בבורר השבת: {k,i,f}
+
+    function field(k, i, f, v, label) {
+      var t = shabbatType(k, f);
+      if (!t && isPlain(v)) return '<input type="time" data-k="' + k + '" data-i="' + i + '" data-f="' + f + '" value="' + esc(v) + '" aria-label="' + label + '">';
+      return '<button type="button" class="hr-tok' + (ed && ed.k === k && ed.i === i && ed.f === f ? ' on' : '') + '" data-tok="' + k + ':' + i + ':' + f + '">' + esc(timeText(v)) + '</button>';
+    }
+    function picker() {
+      var t = shabbatType(ed.k, ed.f), v = sch[ed.k][ed.i][ed.f] || '', m;
+      var mode = /candle_lighting|havdalah/.test(v) ? 'rel' : v.indexOf('|') > 0 ? 'sea' : 'fix';
+      if (t === 'satClose' && mode === 'rel') mode = 'fix';
+      var relN = (m = /[-+](\d+)$/.exec(v)) ? +m[1] : 60;
+      var sea = v.indexOf('|') > 0 ? v.split('|') : (t === 'friClose' ? ['14:00', '16:00'] : t === 'satOpen' ? ['19:00', '21:00'] : ['22:00', '23:30']);
+      var fix = isPlain(v) ? v : (t === 'friClose' ? '14:00' : t === 'satOpen' ? '21:00' : '23:00');
+      var title = t === 'friClose' ? 'שעת סגירה ביום שישי' : t === 'satOpen' ? 'שעת פתיחה במוצאי שבת' : 'שעת סגירה במוצאי שבת';
+      var relWord = t === 'friClose' ? 'לפני כניסת שבת' : 'אחרי צאת שבת';
+      var opt = function (id, label, sub, body) {
+        return '<label class="sp-opt' + (mode === id ? ' on' : '') + '"><input type="radio" name="sp-m" value="' + id + '"' + (mode === id ? ' checked' : '') + '><span><b>' + label + '</b><small>' + sub + '</small></span></label>' +
+          '<div class="sp-body" data-for="' + id + '"' + (mode === id ? '' : ' hidden') + '>' + body + '</div>';
+      };
+      return '<div class="sp"><b class="sp-t">' + title + '</b>' +
+        (t !== 'satClose' ? opt('rel', 'זמן יחסי ' + relWord, 'משתנה אוטומטית לפי זמני השבת',
+          '<div class="sp-chips">' + REL.map(function (x) { return '<button type="button" class="sp-chip' + (x[0] === relN ? ' on' : '') + '" data-rel="' + x[0] + '">' + x[1] + '</button>'; }).join('') + '</div>') : '') +
+        opt('fix', 'שעה קבועה אחידה', t === 'friClose' ? 'עד ' + SH.friWinMax + ' (מוגבל לשעון חורף)' : 'אותה שעה כל השנה',
+          '<input type="time" id="sp-fix" value="' + esc(fix) + '">') +
+        opt('sea', 'שעה קבועה לפי עונה', t === 'friClose' ? 'חורף עד ' + SH.friWinMax + ', קיץ עד ' + SH.friSumMax : t === 'satOpen' ? 'חורף מ-' + SH.satWinMin + ', קיץ מ-' + SH.satSumMin : 'שעה שונה לחורף וקיץ',
+          '<div class="sp-sea"><label>חורף <input type="time" id="sp-w" value="' + esc(sea[0]) + '"></label><label>קיץ <input type="time" id="sp-s" value="' + esc(sea[1]) + '"></label></div>') +
+        '<p class="sp-err" hidden></p><div class="sp-acts"><button type="button" class="hr-lnk" id="sp-ok">אישור</button><button type="button" class="hr-lnk" id="sp-no" style="color:#6B7689">ביטול</button></div></div>';
+    }
     function rowHtml(k, label) {
       var r = sch[k];
       var body = r && r.length
         ? '<div class="hr-rngs">' + r.map(function (x, i) {
-          return '<div class="hr-r"><input type="time" data-k="' + k + '" data-i="' + i + '" data-f="start" value="' + esc(x.start || '') + '" aria-label="פתיחה ' + label + '">' +
-            '–<input type="time" data-k="' + k + '" data-i="' + i + '" data-f="end" value="' + esc(x.end || '') + '" aria-label="סגירה ' + label + '">' +
-            '<button class="hr-x" type="button" data-del="' + k + ':' + i + '" aria-label="הסרת טווח">×</button></div>'; }).join('') +
+          if (x.end === '' && x.start) // טקסט חופשי (TimeRange.customText) — נשמר כמו שהוא
+            return '<div class="hr-r"><span class="hr-txt">' + esc(x.start) + '</span><button class="hr-x" type="button" data-del="' + k + ':' + i + '" aria-label="הסרה">×</button></div>';
+          return '<div class="hr-r">' + field(k, i, 'start', x.start, 'פתיחה ' + label) + '–' + field(k, i, 'end', x.end, 'סגירה ' + label) +
+            '<button class="hr-x" type="button" data-del="' + k + ':' + i + '" aria-label="הסרת טווח">×</button></div>' +
+            (ed && ed.k === k && ed.i === i ? picker() : ''); }).join('') +
           '<div class="hr-acts"><button class="hr-lnk" type="button" data-add="' + k + '">+ טווח נוסף</button>' +
-          '<button class="hr-lnk" type="button" data-copy="' + k + '">העתקה לכל הימים</button></div></div>'
+          (k !== 'friday' && k !== 'saturday' ? '<button class="hr-lnk" type="button" data-copy="' + k + '">העתקה לימים א׳–ה׳</button>' : '') + '</div></div>'
         : '<div class="hr-rngs"><span class="hr-closed">סגור</span><div class="hr-acts"><button class="hr-lnk" type="button" data-add="' + k + '">+ הוספת שעות</button></div></div>';
       return '<div class="hr-day"><b>' + label + '</b>' + body + '</div>';
     }
     function draw() {
-      var d = dlg('<h2 id="sa-h">שעות פתיחה</h2><div>' + DAYS.map(function (x) { return rowHtml(x[0], x[1]); }).join('') + '</div>' +
+      var d = dlg('<h2 id="sa-h">' + E().hours + '</h2><div>' + DAYS.map(function (x) { return rowHtml(x[0], x[1]); }).join('') + '</div>' +
+        '<p class="mb-note">ביום שישי ובמוצאי שבת אפשר לבחור שעה יחסית לכניסת/צאת שבת, שעה אחידה או שעה לפי עונה.</p>' +
         '<p class="sa-msg" hidden></p><button class="sa-b pri" type="button" id="hr-save">שמירה</button>', true);
-      d.querySelectorAll('input[type=time]').forEach(function (inp) {
+      d.querySelectorAll('input[type=time][data-k]').forEach(function (inp) {
         inp.addEventListener('change', function () { sch[inp.dataset.k][+inp.dataset.i][inp.dataset.f] = inp.value; });
       });
+      d.querySelectorAll('[data-tok]').forEach(function (b) { b.addEventListener('click', function () {
+        var p = b.dataset.tok.split(':');
+        if (shabbatType(p[0], p[2])) { ed = { k: p[0], i: +p[1], f: p[2] }; }
+        else { sch[p[0]][+p[1]][p[2]] = ''; } // ערך לא רגיל ביום חול — איפוס לשדה שעה
+        draw();
+      }); });
       d.querySelectorAll('[data-add]').forEach(function (b) { b.addEventListener('click', function () {
         var k = b.dataset.add, r = sch[k] || [], last = r[r.length - 1];
-        r.push(last ? { start: last.end || '16:00', end: '20:00' } : { start: '08:00', end: '20:00' }); sch[k] = r; draw(); }); });
+        // ברירות מחדל כמו ShabbatTimeConstraints
+        var nr = k === 'friday' ? { start: '08:00', end: '14:00|16:00' } : k === 'saturday' ? { start: 'havdalah+30', end: '22:00|23:30' }
+          : last && isPlain(last.end) ? { start: last.end, end: '20:00' } : { start: '08:00', end: '20:00' };
+        r.push(nr); sch[k] = r; draw(); }); });
       d.querySelectorAll('[data-del]').forEach(function (b) { b.addEventListener('click', function () {
-        var p = b.dataset.del.split(':'), r = sch[p[0]]; r.splice(+p[1], 1); sch[p[0]] = r.length ? r : null; draw(); }); });
+        var p = b.dataset.del.split(':'), r = sch[p[0]]; r.splice(+p[1], 1); sch[p[0]] = r.length ? r : null; ed = null; draw(); }); });
       d.querySelectorAll('[data-copy]').forEach(function (b) { b.addEventListener('click', function () {
         var src = sch[b.dataset.copy];
-        // שישי ומוצ״ש לא נדרסים — שעות שונות כמעט תמיד
+        // שישי ומוצ״ש לא נדרסים — יש להם כללים משלהם
         DAYS.forEach(function (x) { if (['friday', 'saturday'].indexOf(x[0]) < 0) sch[x[0]] = JSON.parse(JSON.stringify(src)); }); draw(); }); });
+
+      // בורר שבת
+      var sp = d.querySelector('.sp');
+      if (sp) {
+        var t = shabbatType(ed.k, ed.f), relN = null;
+        try { sp.scrollIntoView({ block: 'nearest', behavior: 'smooth' }); } catch (e) {}
+        sp.querySelectorAll('input[name=sp-m]').forEach(function (r) { r.addEventListener('change', function () {
+          sp.querySelectorAll('.sp-opt').forEach(function (o) { o.classList.toggle('on', o.querySelector('input').checked); });
+          sp.querySelectorAll('.sp-body').forEach(function (b) { b.hidden = b.dataset.for !== r.value; });
+        }); });
+        sp.querySelectorAll('[data-rel]').forEach(function (c) { c.addEventListener('click', function () {
+          relN = +c.dataset.rel; sp.querySelectorAll('[data-rel]').forEach(function (x) { x.classList.toggle('on', x === c); }); }); });
+        var on = sp.querySelector('.sp-chip.on'); if (on) relN = +on.dataset.rel;
+        sp.querySelector('#sp-no').addEventListener('click', function () { ed = null; draw(); });
+        sp.querySelector('#sp-ok').addEventListener('click', function () {
+          var mode = sp.querySelector('input[name=sp-m]:checked').value, val, err = null;
+          var w = sp.querySelector('#sp-w').value, s = sp.querySelector('#sp-s').value, fx = sp.querySelector('#sp-fix').value;
+          if (mode === 'rel') {
+            if (!relN) err = 'נא לבחור זמן';
+            val = t === 'friClose' ? 'candle_lighting-' + relN : 'havdalah+' + relN;
+          } else if (mode === 'fix') {
+            if (!fx) err = 'נא לבחור שעה';
+            else if (t === 'friClose' && fx > SH.friWinMax) err = 'שעה אחידה חייבת להיות מוקדמת מ-' + SH.friWinMax + ' (שעון חורף)';
+            val = fx;
+          } else {
+            if (!w || !s) err = 'נא למלא שעת חורף ושעת קיץ';
+            else if (t === 'friClose' && w > SH.friWinMax) err = 'בחורף לא ניתן לסגור אחרי ' + SH.friWinMax;
+            else if (t === 'friClose' && s > SH.friSumMax) err = 'בקיץ לא ניתן לסגור אחרי ' + SH.friSumMax;
+            else if (t === 'satOpen' && w < SH.satWinMin) err = 'בחורף לא ניתן לפתוח לפני ' + SH.satWinMin;
+            else if (t === 'satOpen' && s < SH.satSumMin) err = 'בקיץ לא ניתן לפתוח לפני ' + SH.satSumMin;
+            val = w + '|' + s;
+          }
+          if (err) { var e = sp.querySelector('.sp-err'); e.textContent = err; e.hidden = false; return; }
+          sch[ed.k][ed.i][ed.f] = val; ed = null; draw();
+        });
+      }
+
       d.querySelector('#hr-save').addEventListener('click', function () {
         var out = {}, bad = null;
         DAYS.forEach(function (x) {
           var r = (sch[x[0]] || []).filter(function (t) { return t.start || t.end; });
-          r.forEach(function (t) { if (!t.start || !t.end || t.start >= t.end) bad = bad || x[1]; });
+          r.forEach(function (t) {
+            if (t.end === '' && t.start) return; // טקסט חופשי
+            if (!t.start || !t.end) bad = bad || x[1];
+            // סגירה אחרי חצות (00:00, 01:00) — לא שגיאה
+            else if (isPlain(t.start) && isPlain(t.end) && t.start >= t.end && t.end >= '05:00') bad = bad || x[1];
+          });
           out[x[0]] = r.length ? r.map(function (t) { return { start: t.start, end: t.end }; }) : null;
         });
         if (bad) return msg(d, 'ביום ' + bad + ' יש טווח שעות לא תקין');
         var btn = d.querySelector('#hr-save'); btn.disabled = true; btn.textContent = 'שומרים…';
-        save({ weekly_schedule: out }).then(function () { A.close(); A.toast('שעות הפתיחה עודכנו ✓'); render(); })
+        save({ weekly_schedule: out }).then(function () { A.close(); A.toast(E().hours + ' עודכנו ✓'); render(); })
           .catch(function () { btn.disabled = false; btn.textContent = 'שמירה'; msg(d, 'השמירה נכשלה. נסו שוב'); });
       });
     }

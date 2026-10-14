@@ -54,6 +54,22 @@ const CSS = `
 .hr-acts{display:flex;gap:8px;flex-wrap:wrap}
 .hr-lnk{background:none;border:0;padding:4px 0;font:inherit;font-size:14px;font-weight:700;color:#2A6FB8;cursor:pointer}
 .hr-closed{color:#8A94A6;font-weight:700;padding:8px 0}
+.hr-tok{height:40px;padding:0 12px;border-radius:10px;border:1.5px dashed #A7B4CC;background:#F5F8FF;color:#244782;font:inherit;font-size:14px;font-weight:700;cursor:pointer}
+.hr-tok.on{border-style:solid;border-color:#244782}
+.hr-txt{padding:8px 0;font-weight:700;color:#2A3342}
+.sp{margin:6px 0 4px;padding:12px;border:1.5px solid #DCE5F5;border-radius:14px;background:#FAFCFF;display:flex;flex-direction:column;gap:8px}
+.sp-t{color:var(--navy)}
+.sp-opt{display:flex;gap:10px;align-items:flex-start;padding:8px 10px;border-radius:10px;cursor:pointer;border:1px solid transparent}
+.sp-opt.on{background:#EEF2FF;border-color:#C7D2FE}.sp-opt input{margin-top:4px;accent-color:#244782}
+.sp-opt b{display:block;font-size:15px}.sp-opt small{display:block;color:#6B7689;font-size:13px}
+.sp-body{padding:0 10px 4px}
+.sp-chips{display:flex;gap:6px;flex-wrap:wrap}
+.sp-chip{height:34px;padding:0 12px;border-radius:999px;border:1.5px solid #DCE2EC;background:#fff;font:inherit;font-size:14px;font-weight:700;cursor:pointer}
+.sp-chip.on{background:#244782;border-color:#244782;color:#fff}
+.sp-sea{display:flex;gap:12px;flex-wrap:wrap}.sp-sea label{display:flex;align-items:center;gap:6px;font-weight:700}
+.sp input[type=time]{height:38px;border:1.5px solid #DCE2EC;border-radius:10px;padding:0 8px;font:inherit;font-size:15px;direction:ltr}
+.sp-err{margin:0;color:#C0362F;font-weight:700;font-size:14px}
+.sp-acts{display:flex;gap:16px}
 .sa-dlg.wide{width:min(560px,calc(100vw - 32px))}
 .mb-field{display:flex;flex-direction:column;gap:6px;text-align:right}
 .mb-field label{font-weight:800;color:var(--navy);font-size:15px}
@@ -79,7 +95,7 @@ ${siteHeader(vm, home, navChips(home, ''))}
 
 ${siteFooter()}
 <script>${HOOD_JS}</script>
-<script src="/js/manage.js?v=4" defer></script>
+<script src="/js/manage.js?v=5" defer></script>
 </body>
 </html>`;
 }
