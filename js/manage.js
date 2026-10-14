@@ -3,7 +3,8 @@
  *  - שעות: weekly_schedule = { sunday..saturday: null (סגור) | [{start:"HH:MM", end:"HH:MM"}] }
  *  - תמונה: bucket images, businesses/profiles/{id}.jpg (JPEG), URL עם ?v=, ואז image_url. מודרציה — טריגר בשרת.
  *  - שירותי אירועים: event_services_description — רק לסוגי העסק שבאפליקציה (_isEligibleForEventServices)
- * רענון באפליקציה: trg_businesses_modified מעדכן את table_last_modified.
+ *  - בעל מקצוע (ProfessionalFormScreen): description, experience_years, price_range, provides_warranty; תמונה ב-professionals/profiles
+ * רענון באפליקציה: trg_businesses_modified / trg_professionals_modified מעדכן את table_last_modified.
  * "העסקים שלי" = כמו getBusinessesByOwner: user_id שלי + is_locked (בעלות מאומתת) + is_active. מי שרק הוסיף עסק — לא בעלים.
  */
 (function () {
@@ -19,6 +20,15 @@
   var EVENT_TYPES = ['catering', 'pastry', 'bakery', 'restaurant', 'candy_shop', 'flowers', 'jewelry', 'gifts', 'beauty_salon', 'hair_salon', 'bridal_salon', 'nails', 'photo_lab', 'printing'];
   // AppointmentEligibleBusinessCategories
   var APPT_CATS = ['personal_care'], APPT_TYPES = ['hair_salon', 'barber', 'beauty_salon', 'laser', 'nails', 'bridal_salon'];
+  var PRO_COLS = 'id,name,address,phone,image_url,weekly_schedule,main_category,sub_categories,view_count,recommend_count,description,experience_years,price_range,provides_warranty,community_id,appointment_system_status,is_active,created_at';
+  // סוג ישות: טבלה, עמודות, נתיב תמונה (SupabaseStorageService.EntityType), תיקייה באתר, נתיב באפליקציה
+  var ENT = {
+    business: { table: 'businesses', cols: COLS, label: 'עסק', img: 'businesses/profiles', seg: 'biz', app: 'business', hours: 'שעות פתיחה', details: 'פרטי העסק' },
+    professional: { table: 'professionals', cols: PRO_COLS, label: 'בעל מקצוע', img: 'professionals/profiles', seg: 'pros', app: 'professional', hours: 'שעות פעילות', details: 'פרטי הכרטיס' }
+  };
+  // AppointmentEligibleProfessionalCategories
+  var PRO_APPT = ['beauty', 'counseling', 'education'];
+  function E() { return ENT[biz._k]; }
   var C = { navy: '#244782', hours: '#10B981', rec: '#E91E63', promo: '#7C3AED', coupons: '#F59E0B', appt: '#3B82F6', prom: '#EC4899', site: '#2A6FB8' };
 
   function svg(d, color) { return '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="' + color + '" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="' + d + '"/></svg>'; }
@@ -37,16 +47,16 @@
   /* ── מצבים ── */
   function state(html) { var s = $('#mb-state'); s.innerHTML = html; s.hidden = false; $('#mb-app').hidden = true; }
   function showLogin() {
-    state('<h1>ניהול העסק</h1><p>התחברו עם החשבון שאיתו רשמתם את העסק באפליקציה. אותו חשבון, אותם נתונים.</p>' +
+    state('<h1>ניהול העסק</h1><p>לבעלי עסקים ובעלי מקצוע: התחברו עם החשבון שאיתו נרשמתם באפליקציה. אותו חשבון, אותם נתונים.</p>' +
       '<button class="mb-btn" type="button" id="mb-login">התחברות</button>');
     $('#mb-login').addEventListener('click', function () { A.login('כניסה לניהול העסק — אותו חשבון כמו באפליקציה.'); });
   }
   function showNone() {
-    state('<h1>לא מצאנו עסק בבעלותכם</h1><p>כאן מנהלים עסק שאישרתם שהוא שלכם. אם רשמתם את העסק עם חשבון אחר — התנתקו והתחברו איתו. רישום עסק או אישור בעלות — כרגע באפליקציה.</p>' +
+    state('<h1>לא מצאנו עסק או כרטיס בעל מקצוע בבעלותכם</h1><p>כאן מנהלים עסק שאישרתם שהוא שלכם, או כרטיס בעל מקצוע שלכם. אם נרשמתם עם חשבון אחר — התנתקו והתחברו איתו. רישום חדש או אישור בעלות — כרגע באפליקציה.</p>' +
       '<a class="mb-btn" href="/app/">לאפליקציה</a>');
   }
   function showError() {
-    state('<h1>משהו השתבש</h1><p>לא הצלחנו לטעון את פרטי העסק.</p><button class="mb-btn" type="button" id="mb-retry">נסו שוב</button>');
+    state('<h1>משהו השתבש</h1><p>לא הצלחנו לטעון את הפרטים.</p><button class="mb-btn" type="button" id="mb-retry">נסו שוב</button>');
     $('#mb-retry').addEventListener('click', start);
   }
 
@@ -56,9 +66,16 @@
     A.getUser().then(function (x) {
       sb = x.sb; user = x.user;
       if (!user) return showLogin();
-      return sb.from('businesses').select(COLS).eq('user_id', user.id).eq('is_locked', true).eq('is_active', true).order('created_at', { ascending: true }).then(function (r) {
-        if (r.error) throw r.error;
-        list = r.data || [];
+      return Promise.all([
+        // getBusinessesByOwner: בעלות מאומתת בלבד
+        sb.from('businesses').select(COLS).eq('user_id', user.id).eq('is_locked', true).eq('is_active', true).order('created_at', { ascending: true }),
+        // ProfessionalService.getByUserId: בעל מקצוע תמיד רושם את עצמו
+        sb.from('professionals').select(PRO_COLS).eq('user_id', user.id).eq('is_active', true).order('created_at', { ascending: true })
+      ]).then(function (rs) {
+        if (rs[0].error) throw rs[0].error;
+        if (rs[1].error) throw rs[1].error;
+        var tag = function (k) { return function (r) { r._k = k; return r; }; };
+        list = (rs[0].data || []).map(tag('business')).concat((rs[1].data || []).map(tag('professional')));
         if (!list.length) return showNone();
         var want = new URLSearchParams(location.search).get('id'), last = null;
         try { last = localStorage.getItem('shchuna.mb'); } catch (e) {}
@@ -72,16 +89,16 @@
     try { localStorage.setItem('shchuna.mb', biz.id); } catch (e) {}
     var today = new Date().toISOString().slice(0, 10), now = new Date().toISOString();
     var subQ = function (t) {
-      return sb.from('subscriptions').select('id,status,next_charge_date').eq('entity_id', biz.id).eq('entity_type', 'business')
+      return sb.from('subscriptions').select('id,status,next_charge_date').eq('entity_id', biz.id).eq('entity_type', biz._k)
         .eq('payment_type', t).or('status.eq.active,status.eq.trial,status.eq.cancelled').gte('next_charge_date', today).maybeSingle();
     };
     var slugP = biz.community_id === HOME_COMMUNITY
-      ? fetch('/har-homa/biz/slugs.json').then(function (r) { return r.ok ? r.json() : {}; }).catch(function () { return {}; })
+      ? fetch('/har-homa/' + E().seg + '/slugs.json').then(function (r) { return r.ok ? r.json() : {}; }).catch(function () { return {}; })
       : Promise.resolve({});
     return Promise.all([
       sb.from('app_config').select('key,value').in('key', ['features_monetization', 'monetization_excluded_business_types']),
-      biz.business_type ? sb.from('business_types').select('name_he').eq('id', biz.business_type).maybeSingle() : Promise.resolve({ data: null }),
-      sb.from('pending_entity_images').select('status,image_url').eq('entity_type', 'business').eq('entity_id', biz.id).maybeSingle(),
+      biz._k === 'business' && biz.business_type ? sb.from('business_types').select('name_he').eq('id', biz.business_type).maybeSingle() : Promise.resolve({ data: null }),
+      sb.from('pending_entity_images').select('status,image_url').eq('entity_type', biz._k).eq('entity_id', biz.id).maybeSingle(),
       sb.from('promotions').select('id,title,image_url,start_date,end_date').eq('provider_id', biz.id).eq('is_active', true).gte('end_date', now).order('start_date', { ascending: true }),
       subQ('promotions_subscription'),
       sb.from('promotion_packages').select('total_promotions_bought,total_promotions_used,expires_at').eq('provider_id', biz.id),
@@ -94,8 +111,9 @@
       var promos = r[3].data || [];
       ctx = {
         features: cfg.features_monetization || {},
-        excluded: (cfg.monetization_excluded_business_types || []).indexOf(biz.business_type) >= 0,
-        typeName: r[1].data && r[1].data.name_he,
+        excluded: biz._k === 'business' && (cfg.monetization_excluded_business_types || []).indexOf(biz.business_type) >= 0,
+        // בעל מקצוע: sub_categories שומר את השם העברי (כלל הטקסונומיה)
+        typeName: biz._k === 'business' ? (r[1].data && r[1].data.name_he) : (biz.sub_categories || biz.main_category),
         pending: r[2].data,
         promo: promos.filter(function (p) { return !p.start_date || new Date(p.start_date) <= nowD; })[0] || null,
         promoSub: r[4].data,
@@ -123,39 +141,43 @@
       '<span class="tx"><b>' + esc(o.title) + '</b><span class="s">' + esc(o.sub) + '</span></span>' +
       (o.badge ? '<em style="background:' + (o.badgeColor || o.color) + '1A;color:' + (o.badgeColor || o.color) + '">' + esc(o.badge) + '</em>' : '') + '</button>';
   }
-  function bizUrl() { return ctx.slug ? '/har-homa/biz/' + encodeURIComponent(ctx.slug) + '/' : null; }
+  function bizUrl() { return ctx.slug ? '/har-homa/' + E().seg + '/' + encodeURIComponent(ctx.slug) + '/' : null; }
 
   function render() {
     var hasSchedule = biz.weekly_schedule && DAYS.some(function (d) { return (biz.weekly_schedule[d[0]] || []).length; });
     var pend = ctx.pending && ctx.pending.image_url ? ctx.pending : null;
     var img = pend ? pend.image_url : biz.image_url;
     var started = ctx.coupons.filter(function (c) { return c.status === 'active' && (!c.start_date || new Date(c.start_date) <= new Date()); });
-    var apptOk = (APPT_CATS.indexOf(biz.business_category) >= 0 || APPT_TYPES.indexOf(biz.business_type) >= 0);
+    var apptOk = biz._k === 'business'
+      ? (APPT_CATS.indexOf(biz.business_category) >= 0 || APPT_TYPES.indexOf(biz.business_type) >= 0)
+      : PRO_APPT.indexOf(biz.main_category) >= 0;
 
     var chips = '<span class="mb-chip">' + svg(IC.eye, '#fff').replace(/24/g, '16') + (biz.view_count || 0) + ' צפיות</span>' +
       (ctx.promo ? '<span class="mb-chip">' + svg(IC.tag, '#fff').replace(/24/g, '16') + 'מבצע פעיל</span>' : '') +
       (ctx.coupons.length ? '<span class="mb-chip">' + svg(IC.ticket, '#fff').replace(/24/g, '16') + ctx.coupons.length + ' חבילות קופונים</span>' : '') +
       (apptOk && biz.appointment_system_status === 2 ? '<span class="mb-chip">' + svg(IC.cal, '#fff').replace(/24/g, '16') + 'תורים פעיל</span>' : '');
 
+    var mixed = list.some(function (b) { return b._k !== list[0]._k; });
     var pick = list.length > 1 ? '<select class="mb-pick" id="mb-pick" aria-label="בחירת עסק">' + list.map(function (b) {
-      return '<option value="' + esc(b.id) + '"' + (b.id === biz.id ? ' selected' : '') + '>' + esc(b.name) + '</option>'; }).join('') + '</select>' : '';
+      return '<option value="' + esc(b.id) + '"' + (b.id === biz.id ? ' selected' : '') + '>' + esc(b.name) + (mixed ? ' · ' + ENT[b._k].label : '') + '</option>'; }).join('') + '</select>' : '';
 
     var left = [
-      item({ act: 'details', icon: IC.store, color: C.navy, title: 'פרטי העסק', sub: biz.address || 'צפייה ועריכה' }),
-      item({ act: 'hours', icon: IC.clock, color: C.hours, title: 'שעות פתיחה', sub: hasSchedule ? 'הוגדרו שעות פתיחה' : 'עוד לא הוגדרו — להגדרה', badge: hasSchedule ? null : 'חסר', badgeColor: '#F59E0B' }),
+      item({ act: 'details', icon: IC.store, color: C.navy, title: E().details, sub: biz.address || 'צפייה ועריכה' }),
+      item({ act: 'hours', icon: IC.clock, color: C.hours, title: E().hours, sub: hasSchedule ? 'הוגדרו ' + E().hours : 'עוד לא הוגדרו — להגדרה', badge: hasSchedule ? null : 'חסר', badgeColor: '#F59E0B' }),
       item({ act: 'rec', icon: IC.heart, color: C.rec, title: 'בקש המלצות מלקוחות', sub: biz.recommend_count > 0 ? '❤ ' + biz.recommend_count + ' ממליצים' : 'עוד אין המלצות' }),
-      bizUrl() ? item({ act: 'page', icon: IC.link, color: C.site, title: 'העמוד שלכם באתר', sub: 'כך השכנים רואים את העסק' }) : ''
+      bizUrl() ? item({ act: 'page', icon: IC.link, color: C.site, title: 'העמוד שלכם באתר', sub: biz._k === 'business' ? 'כך השכנים רואים את העסק' : 'כך השכנים רואים את הכרטיס' }) : ''
     ].join('');
 
     // שירותים — כמו EntityServicesSection: מוחרג ממונטיזציה (מספרות) רואה רק תורים
     var f = ctx.features, svc = [];
-    if (!ctx.excluded && f.promotions !== false) {
+    var on = function (k, active) { return active || f[k] !== false; };
+    if (!ctx.excluded && on('promotions', !!(ctx.promoSub || ctx.pkg || ctx.promo))) {
       var si = subInfo(ctx.promoSub), pk = ctx.pkg;
       svc.push(item({ act: 'svc:promotions', icon: IC.tag, color: C.promo, title: 'מבצעים',
         sub: si ? si.s : pk ? 'נותרו ' + ((pk.total_promotions_bought || 0) - (pk.total_promotions_used || 0)) + ' מבצעים' : 'ניהול מבצעים',
         badge: si ? si.b : pk ? 'חבילה' : null }));
     }
-    if (!ctx.excluded && f.coupons !== false) {
+    if (!ctx.excluded && on('coupons', ctx.coupons.length > 0) && (biz._k === 'business' || ctx.coupons.length > 0)) {
       var act = started.length, fut = ctx.coupons.filter(function (c) { return c.status === 'active' && c.start_date && new Date(c.start_date) > new Date(); }).length,
           drf = ctx.coupons.filter(function (c) { return c.status === 'draft'; }).length, parts = [];
       if (act) parts.push(act + ' פעילות'); if (fut) parts.push(fut + ' ישווקו בעתיד'); if (drf) parts.push(drf + ' חבילות להשלמה');
@@ -164,20 +186,21 @@
         sub: ctx.coupons.length ? (parts.join(', ') || ctx.coupons.length + ' חבילות') : 'יצירה וניהול קופונים',
         badge: ctx.coupons.length ? ctx.coupons.length + ' חבילות · ' + tot + ' קופונים' : 'אין קופונים' }));
     }
-    if (f.appointments === true && apptOk) {
+    if (apptOk && (f.appointments === true || biz.appointment_system_status >= 2)) {
       var st = biz.appointment_system_status;
       svc.push(item({ act: 'svc:appointments', icon: IC.cal, color: C.appt, title: 'מערכת תורים',
         sub: st === 3 ? 'מערכת פעילה' : st === 2 ? 'נדרש חידוש מנוי' : st === 1 ? 'המשך הגדרה' : 'הפעל מערכת תורים',
         badge: st === 2 ? 'פג תוקף' : st === 1 ? 'בהגדרה' : null, badgeColor: '#F59E0B' }));
     }
-    if (!ctx.excluded && f.prominence !== false) {
+    if (!ctx.excluded && on('prominence', !!ctx.promSub)) {
       var pi = ctx.promSub;
       svc.push(item({ act: 'svc:prominence', icon: IC.star, color: C.prom, title: 'הבלטה',
-        sub: pi ? (pi.status === 'cancelled' ? 'תסתיים ב-' + fmtDate(pi.next_charge_date) : 'מתחדש ב-' + fmtDate(pi.next_charge_date)) : 'הבלטת העסק ברשימות',
+        sub: pi ? (pi.status === 'cancelled' ? 'תסתיים ב-' + fmtDate(pi.next_charge_date) : 'מתחדש ב-' + fmtDate(pi.next_charge_date)) : (biz._k === 'business' ? 'הבלטת העסק ברשימות' : 'הבלטת הכרטיס ברשימות'),
         badge: pi ? (pi.status === 'cancelled' ? 'ממתין לביטול' : '✓ פעיל') : null }));
     }
     // סטטוס מהיר — אריח מבצע פעיל
-    var qs = ctx.promo ? '<div class="mb-item qs"><i style="background:' + C.promo + '1A">' +
+    // מוחרג ממונטיזציה (מספרה) — בלי סטטוס מבצעים, כמו באפליקציה (A-19)
+    var qs = ctx.promo && !ctx.excluded ? '<div class="mb-item qs"><i style="background:' + C.promo + '1A">' +
       (ctx.promo.image_url ? '<img src="' + esc(ctx.promo.image_url) + '" alt="">' : svg(IC.tag, C.promo)) + '</i>' +
       '<span class="tx"><b>' + esc(ctx.promo.title || 'מבצע פעיל') + '</b><span class="s">מבצע פעיל · עד ' + fmtDate(ctx.promo.end_date) + '</span></span></div>' : '';
 
@@ -185,9 +208,9 @@
       '<div class="mb-hero"><div class="wrap"><div class="mb-top">' +
       '<div class="mb-img">' + (img ? '<img src="' + esc(img) + '" alt="">' : svg(IC.store, '#fff')) +
       (pend ? '<span class="pend' + (pend.status === 'pending' ? '' : ' no') + '">' + (pend.status === 'pending' ? 'בבדיקה' : 'לא אושרה') + '</span>' : '') + '</div>' +
-      '<div class="mb-name"><h1>' + esc(biz.name) + '</h1><small>' + esc(ctx.typeName || 'עסק') + '</small></div>' +
+      '<div class="mb-name"><h1>' + esc(biz.name) + '</h1><small>' + esc(ctx.typeName || E().label) + '</small></div>' +
       '<div class="mb-chips">' + chips + '</div>' + pick + '</div></div></div>' +
-      '<div class="wrap mb-grid"><h2 class="mb-sep">ניהול העסק</h2>' + left +
+      '<div class="wrap mb-grid"><h2 class="mb-sep">' + (biz._k === 'business' ? 'ניהול העסק' : 'ניהול הכרטיס') + '</h2>' + left +
       (svc.length || qs ? '<h2 class="mb-sep">שירותים</h2>' + svc.join('') + qs : '') + '</div>';
     $('#mb-state').hidden = true; $('#mb-app').hidden = false;
 
@@ -207,7 +230,7 @@
 
   /* ── שמירה (update חלקי) ── */
   function save(patch) {
-    return sb.from('businesses').update(patch).eq('id', biz.id).select(COLS).single().then(function (r) {
+    return sb.from(E().table).update(patch).eq('id', biz.id).select(E().cols).single().then(function (r) {
       if (r.error) throw r.error;
       for (var k in r.data) biz[k] = r.data[k];
       list = list.map(function (b) { return b.id === biz.id ? biz : b; });
@@ -219,17 +242,27 @@
 
   /* ── פרטי העסק: תמונה, טלפון, שירותי אירועים ── */
   function detailsView() {
-    var ev = EVENT_TYPES.indexOf(biz.business_type) >= 0, hasEv = !!(biz.event_services_description || '').trim();
-    var d = dlg('<h2 id="sa-h">פרטי העסק</h2>' +
-      '<div class="mb-field"><label>תמונת העסק</label><div class="mb-imgedit"><span class="pv" id="mb-pv">' + (biz.image_url ? '<img src="' + esc(biz.image_url) + '" alt="">' : 'אין תמונה') + '</span>' +
+    var isPro = biz._k === 'professional';
+    // עסק: שירותי אירועים רק לסוגים של _isEligibleForEventServices
+    var ev = !isPro && EVENT_TYPES.indexOf(biz.business_type) >= 0, hasEv = !!(biz.event_services_description || '').trim();
+    // בעל מקצוע: כמו ProfessionalFormScreen; "יהדות ומסורת" נערך ב-AddReligiousFigureScreen — בלי "מספק אחריות"
+    var religion = isPro && biz.main_category === 'יהדות ומסורת';
+    var proFields = isPro ?
+      '<div class="mb-field"><label for="mb-ds">תיאור</label><textarea id="mb-ds" maxlength="1000">' + esc(biz.description || '') + '</textarea></div>' +
+      '<div class="mb-field"><label for="mb-xp">שנות ניסיון</label><input id="mb-xp" type="number" min="0" max="80" inputmode="numeric" dir="ltr" value="' + esc(biz.experience_years == null ? '' : biz.experience_years) + '"></div>' +
+      '<div class="mb-field"><label for="mb-pr">טווח מחירים</label><input id="mb-pr" maxlength="60" value="' + esc(biz.price_range || '') + '" placeholder="לדוגמה: 200-500 ₪"></div>' +
+      (religion ? '' : '<label class="mb-chk"><input type="checkbox" id="mb-wr"' + (biz.provides_warranty ? ' checked' : '') + '> מספק אחריות</label>') : '';
+    var d = dlg('<h2 id="sa-h">' + E().details + '</h2>' +
+      '<div class="mb-field"><label>תמונה</label><div class="mb-imgedit"><span class="pv" id="mb-pv">' + (biz.image_url ? '<img src="' + esc(biz.image_url) + '" alt="">' : 'אין תמונה') + '</span>' +
       '<span><input type="file" id="mb-file" accept="image/*" hidden><button class="mb-btn ghost" type="button" id="mb-pickimg">' + (biz.image_url ? 'החלפת תמונה' : 'הוספת תמונה') + '</button>' +
-      '<p class="mb-note">תמונה של חזית העסק. בחלק מהתחומים התמונה עוברת בדיקה לפני שהיא מוצגת.</p></span></div></div>' +
+      '<p class="mb-note">' + (isPro ? 'תמונה או לוגו.' : 'תמונה של חזית העסק.') + ' בחלק מהתחומים התמונה עוברת בדיקה לפני שהיא מוצגת.</p></span></div></div>' +
       '<form class="sa-f" novalidate id="mb-df">' +
-      '<div class="mb-field"><label for="mb-ph">טלפון העסק</label><input id="mb-ph" name="phone" type="tel" dir="ltr" inputmode="tel" value="' + esc(biz.phone || '') + '" placeholder="02-0000000"></div>' +
+      '<div class="mb-field"><label for="mb-ph">טלפון</label><input id="mb-ph" name="phone" type="tel" dir="ltr" inputmode="tel" value="' + esc(biz.phone || '') + '" placeholder="05X-XXXXXXX"></div>' +
+      proFields +
       (ev ? '<label class="mb-chk"><input type="checkbox" id="mb-ev"' + (hasEv ? ' checked' : '') + '> מספק שירותים לאירועים</label>' +
         '<div class="mb-field" id="mb-evw"' + (hasEv ? '' : ' hidden') + '><label for="mb-evd">תיאור השירותים</label><textarea id="mb-evd" maxlength="500">' + esc(biz.event_services_description || '') + '</textarea>' +
         '<p class="mb-note">העסק יוצג ברשימת ספקי האירועים.</p></div>' : '') +
-      '<p class="mb-note">שם, כתובת וסוג העסק — משנים כרגע באפליקציה.</p>' +
+      '<p class="mb-note">' + (isPro ? 'שם, כתובת ותחום העיסוק' : 'שם, כתובת וסוג העסק') + ' — משנים כרגע באפליקציה.</p>' +
       '<p class="sa-msg" hidden></p><button class="sa-b pri" type="submit">שמירה</button></form>', true);
 
     var file = d.querySelector('#mb-file');
@@ -240,6 +273,7 @@
     d.querySelector('#mb-df').addEventListener('submit', function (e) {
       e.preventDefault();
       var ph = d.querySelector('#mb-ph').value.trim(), digits = ph.replace(/\D/g, '');
+      if (isPro && !ph) return msg(d, 'נא למלא טלפון');
       if (ph && !/^0\d{8,9}$/.test(digits)) return msg(d, 'מספר טלפון לא תקין');
       var patch = { phone: ph || null };
       if (evc) {
@@ -247,9 +281,23 @@
         if (evc.checked && !t) return msg(d, 'נא לתאר את השירותים לאירועים');
         patch.event_services_description = evc.checked ? t : null;
       }
+      if (isPro) {
+        var xp = d.querySelector('#mb-xp').value.trim();
+        if (xp && !/^\d+$/.test(xp)) return msg(d, 'שנות ניסיון — מספר שלם');
+        patch.description = d.querySelector('#mb-ds').value.trim() || null;
+        patch.experience_years = xp ? parseInt(xp, 10) : null;
+        patch.price_range = d.querySelector('#mb-pr').value.trim() || null;
+        var wr = d.querySelector('#mb-wr'); if (wr) patch.provides_warranty = wr.checked;
+      }
       var btn = d.querySelector('[type=submit]'); btn.disabled = true; btn.textContent = 'שומרים…'; msg(d, '');
-      save(patch).then(function () { A.close(); A.toast('הפרטים עודכנו ✓'); render(); })
-        .catch(function () { btn.disabled = false; btn.textContent = 'שמירה'; msg(d, 'השמירה נכשלה. נסו שוב'); });
+      // בעל מקצוע: בדיקת כפילות שם+טלפון כמו ProfessionalService.checkDuplicate (רק כשהטלפון השתנה)
+      var dup = isPro && ph !== (biz.phone || '')
+        ? sb.from('professionals').select('id').eq('name', biz.name).eq('phone', ph).neq('id', biz.id).limit(1).then(function (r) { return !!(r.data && r.data.length); }, function () { return false; })
+        : Promise.resolve(false);
+      dup.then(function (isDup) {
+        if (isDup) { btn.disabled = false; btn.textContent = 'שמירה'; return msg(d, 'קיים כבר איש מקצוע עם שם וטלפון זהים'); }
+        return save(patch).then(function () { A.close(); A.toast('הפרטים עודכנו ✓'); render(); });
+      }).catch(function () { btn.disabled = false; btn.textContent = 'שמירה'; msg(d, 'השמירה נכשלה. נסו שוב'); });
     });
   }
 
@@ -271,7 +319,7 @@
   function uploadImage(d, f) {
     if (!/^image\//.test(f.type)) return msg(d, 'נא לבחור קובץ תמונה');
     var btn = d.querySelector('#mb-pickimg'); btn.disabled = true; btn.textContent = 'מעלים…'; msg(d, '');
-    var bucket = sb.storage.from('images'), base = 'businesses/profiles/' + biz.id;
+    var bucket = sb.storage.from('images'), base = E().img + '/' + biz.id;
     toJpeg(f).then(function (blob) {
       // הנתיב של האפליקציה; אם אין הרשאה לדרוס קובץ קיים — שם חדש
       return bucket.upload(base + '.jpg', blob, { contentType: 'image/jpeg', upsert: true }).then(function (r) {
@@ -282,7 +330,7 @@
     }).then(function (path) {
       var url = bucket.getPublicUrl(path).data.publicUrl + '?v=' + Date.now();
       return save({ image_url: url }).then(function () {
-        return sb.from('pending_entity_images').select('status,image_url').eq('entity_type', 'business').eq('entity_id', biz.id).maybeSingle();
+        return sb.from('pending_entity_images').select('status,image_url').eq('entity_type', biz._k).eq('entity_id', biz.id).maybeSingle();
       });
     }).then(function (r) {
       ctx.pending = r && r.data;
@@ -342,7 +390,7 @@
 
   /* ── בקשת המלצות ── */
   function recView() {
-    var url = bizUrl() ? location.origin + bizUrl() : location.origin + '/app/business/' + biz.id + '?recommend=1';
+    var url = bizUrl() ? location.origin + bizUrl() : location.origin + '/app/' + E().app + '/' + biz.id + '?recommend=1';
     var text = 'היי, אם נהניתם מהשירות שלנו, נשמח שתמליצו עלינו בשכונה 🙏 ' + url;
     var d = dlg('<h2 id="sa-h">בקשו המלצות מלקוחות</h2>' +
       '<p>שלחו ללקוחות מרוצים את הקישור. שם הם לוחצים "אני ממליץ" — אחרי התחברות ואימות טלפון, כדי שכל המלצה תהיה של אדם אמיתי.</p>' +

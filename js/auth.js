@@ -463,7 +463,7 @@
         var own = menu.querySelector('[data-own]'); if (!own) return;
         var h = '';
         if (r[0].count) h += '<a role="menuitem" href="/my-business/">ניהול העסק שלי</a>';
-        if (r[1].count) h += '<a role="menuitem" href="' + APP + '">ניהול כרטיס בעל המקצוע</a>';
+        if (r[1].count) h += '<a role="menuitem" href="/my-business/">ניהול כרטיס בעל המקצוע</a>';
         own.innerHTML = h;
       }).catch(function () {});
     }).catch(function () {});

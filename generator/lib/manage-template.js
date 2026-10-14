@@ -40,7 +40,6 @@ const CSS = `
 .mb-item span.s{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;font-size:13px;color:#6B7689;margin-top:3px;line-height:1.35}
 .mb-item em{position:absolute;top:12px;left:12px;font-style:normal;font-size:11px;font-weight:800;padding:3px 8px;border-radius:8px;white-space:nowrap;max-width:calc(100% - 70px);overflow:hidden;text-overflow:ellipsis}
 .mb-item.qs{cursor:default}.mb-item.qs img{width:40px;height:40px;border-radius:10px;object-fit:cover}
-@media(max-width:700px){nav.chips{display:none}}
 @media(max-width:560px){.mb-grid{gap:8px;padding-top:12px}.mb-sep{font-size:14px;margin:2px 0 -2px}
 .mb-item{flex-direction:row;align-items:center;gap:10px;min-height:0;padding:11px 10px}.mb-item i{width:36px;height:36px}
 .mb-item b{font-size:14.5px}.mb-item span.s{-webkit-line-clamp:1;font-size:12px}.mb-item em{display:none}
@@ -80,7 +79,7 @@ ${siteHeader(vm, home, navChips(home, ''))}
 
 ${siteFooter()}
 <script>${HOOD_JS}</script>
-<script src="/js/manage.js?v=3" defer></script>
+<script src="/js/manage.js?v=4" defer></script>
 </body>
 </html>`;
 }
