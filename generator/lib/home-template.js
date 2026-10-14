@@ -11,7 +11,9 @@ export const esc = (s) => String(s ?? '')
   .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
 
 export const APP = '/app/';
-const LOGIN = '/login.html';
+// התחברות = האפליקציה (מי שלא מחובר נוחת שם על מסך הכניסה). login.html הוא פורטל המנויים לבעלי עסקים
+const LOGIN = '/app/';
+const BIZ_PORTAL = '/login.html';
 const DOWNLOAD = '/b/';
 const MINYANIM = '/har-homa/minyanim/';
 
@@ -477,6 +479,13 @@ function ticker(vm) {
 /* ── סקריפט לקוח ───────────────────────────────────────────────── */
 
 export const HOOD_JS = `(function(){
+/* מחובר לאפליקציה באותו דפדפן? (אותה כתובת — אותו localStorage) מציגים את השם במקום "התחברות" */
+(function(){var a=document.getElementById('acct');if(!a)return;var raw=null,k='sb-mebomrqnfnbqijiuawdh-auth-token';
+  try{raw=localStorage.getItem(k)||localStorage.getItem('flutter.'+k);}catch(e){}
+  if(!raw)return;var s=null;try{s=JSON.parse(raw);if(typeof s==='string')s=JSON.parse(s);}catch(e){return;}
+  var u=s&&(s.user||(s.currentSession&&s.currentSession.user));if(!u||!s.refresh_token&&!(s.currentSession&&s.currentSession.refresh_token))return;
+  var m=u.user_metadata||{},n=(m.full_name||m.name||'').trim().split(' ')[0];
+  a.querySelector('.lbl').textContent=n?'שלום, '+n:'החשבון שלי';a.setAttribute('aria-label',n?'החשבון של '+n:'החשבון שלי');a.classList.add('in');})();
 /* תחום נוכחי בשורת התחומים — לגלול אליו שיהיה גלוי */
 var on=document.querySelector('.chips a.on');if(on&&on.scrollIntoView){try{on.scrollIntoView({block:'nearest',inline:'center'});}catch(_){}}
 /* חיצים לשורת התחומים */
@@ -680,7 +689,7 @@ ${vm.hoods.map((h) => {
 </div>
 <div class="hdr-actions">
 <button type="button" class="pill btn-ghost gs-open" aria-label="חיפוש">${svg('M11 4a7 7 0 1 0 0 14a7 7 0 1 0 0-14zM20 20l-4-4', 20, 'currentColor', 2)}</button>
-<a class="pill btn-ghost" href="${LOGIN}">${svg('M12 4a4 4 0 1 0 0 8a4 4 0 1 0 0-8zM4 21a8 8 0 0 1 16 0', 20, 'currentColor', 2)}<span class="lbl">התחברות</span></a>
+<a class="pill btn-ghost acct" id="acct" href="${LOGIN}" aria-label="התחברות">${svg('M12 4a4 4 0 1 0 0 8a4 4 0 1 0 0-8zM4 21a8 8 0 0 1 16 0', 20, 'currentColor', 2)}<span class="lbl">התחברות</span></a>
 <a class="pill btn-line" href="${APP}">${svg('M12 5v14M5 12h14', 18, 'currentColor', 2.4)}פרסם</a>
 <a class="pill btn-dark" href="${DOWNLOAD}">להורדת האפליקציה</a>
 </div>
@@ -693,7 +702,7 @@ export function siteFooter() {
   return `<footer><div class="wrap">
 <img src="/app_icon.png" alt="שכונה" width="48" height="48" loading="lazy">
 <span>שכונה · <a href="mailto:info@shchuna.co.il">info@shchuna.co.il</a></span>
-<nav aria-label="קישורים"><a href="/">כל השכונות</a><a href="/terms.html">תנאי שימוש</a><a href="/privacy.html">פרטיות</a></nav>
+<nav aria-label="קישורים"><a href="/">כל השכונות</a><a href="${BIZ_PORTAL}">ניהול מנוי לבעלי עסקים</a><a href="/terms.html">תנאי שימוש</a><a href="/privacy.html">פרטיות</a></nav>
 <span class="c">© שכונה, כל הזכויות שמורות</span>
 </div></footer>`;
 }
@@ -780,6 +789,7 @@ ${ZONES.filter((z) => !HIDDEN_NAV.has(z[4])).map(([n, d, c, href]) => `<a class=
 <h2>השכנים כבר <span class="emd">מחפשים אותך.</span></h2>
 <p>פרופיל עסק, מבצעים וקופונים והמלצות מלקוחות — במקום אחד.</p>
 <div style="display:flex;gap:12px;flex-wrap:wrap"><a class="pill btn-sky" href="${APP}">להרשמת עסק</a><a class="pill btn-out" href="${DOWNLOAD}">להורדת האפליקציה</a></div>
+<a href="${BIZ_PORTAL}" style="color:var(--sky);font-weight:800;font-size:15px">כבר יש לכם מנוי? לניהול המנוי והתשלומים ←</a>
 </div>
 <div class="feat">
 <div><b>פרופיל עסק</b><span>שעות, טלפון, WhatsApp ו-Waze</span></div>
