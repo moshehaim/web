@@ -43,7 +43,7 @@ export const svg = (d, size = 24, stroke = 'currentColor', w = 1.9) =>
 const ZONES = [
   ['מניינים ושיעורים', ICON.clock, 'blue', MINYANIM],
   ['עסקים', ICON.store, 'sky', 'biz/'], ['בעלי מקצוע', ICON.wrench, 'sky', 'pros/'],
-  ['מבצעים', ICON.tag, 'sky', 'promos/'], ['קופונים', ICON.ticket, 'sky', 'promos/#קופונים'],
+  ['מבצעים וקופונים', ICON.tag, 'sky', 'promos/'],
   ['שירותי קהילה', ICON.civic, 'teal', 'services/'], ['גמ״חים', ICON.heart, 'green', 'board/#gmach'], ['אירועים', ICON.star, 'green', 'happenings/', 'happenings'],
   ['דרושים', ICON.brief, 'violet', 'board/#jobs'], ['יד שנייה', ICON.bag, 'violet', 'board/#second'], ['אבידות ומציאות', ICON.lost, 'violet', 'board/#lost'], ['נדל״ן', ICON.key, 'violet', 'realestate/'], ['התנדבות', ICON.hand, 'green', 'board/#vol'],
   ['אולמות ואירוח', ICON.hall, 'amber', 'halls/'], ['הכל לאירוע', ICON.party, 'amber', 'events/'],
@@ -295,7 +295,7 @@ a.hood-item:hover{background:#F5F8FF}
 .phone .n{font-size:18px;color:var(--brand)}.phone .n.hot{color:var(--red)}
 
 .zones{display:grid;grid-template-columns:repeat(auto-fit,minmax(118px,1fr));gap:10px}
-@media (min-width:1000px){.zones{grid-template-columns:repeat(9,minmax(0,1fr))}.zones .zone{padding-inline:6px;font-size:14.5px;line-height:1.3}}
+@media (min-width:1000px){.zones{grid-template-columns:repeat(8,minmax(0,1fr))}.zones .zone{padding-inline:6px;font-size:14.5px;line-height:1.3}}
 .zone{background:#fff;border-radius:18px;padding:16px 10px;text-decoration:none;color:var(--ink);display:flex;flex-direction:column;align-items:center;gap:10px;text-align:center;box-shadow:0 2px 10px rgba(0,0,0,.04);font-size:15px;font-weight:800}
 .zone:hover{color:var(--ink)}
 .zone i{width:48px;height:48px;border-radius:15px;display:flex;align-items:center;justify-content:center}
@@ -604,7 +604,7 @@ export function navChips(home, current = '') {
   const items = [
     ['home', 'דף השכונה', home], ['minyanim', 'מניינים ושיעורים', M],
     ['biz', 'עסקים', `${home}biz/`], ['pros', 'בעלי מקצוע', `${home}pros/`],
-    ['promos', 'מבצעים', `${home}promos/`], ['coupons', 'קופונים', `${home}promos/#קופונים`],
+    ['promos', 'מבצעים וקופונים', `${home}promos/`],
     ['gmach', 'גמ״חים', `${home}board/#gmach`], ['jobs', 'דרושים', `${home}board/#jobs`],
     ['second', 'יד שנייה', `${home}board/#second`], ['realestate', 'נדל״ן', `${home}realestate/`],
     ['vol', 'התנדבות', `${home}board/#vol`], ['lost', 'אבידות ומציאות', `${home}board/#lost`],

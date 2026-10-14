@@ -204,7 +204,7 @@ const writeHome = (raw, dirRaw, lsRaw, moreRaw, synSlugs, detRaw) => {
   for (const t of vm.board || []) link(t.items);
   [vm.professionals, vm.businesses, vm.promos, vm.realEstate].forEach((a) => a && link(a));
   // תחומים שאוחדו בשורת התחומים — עדיין נמצאים בחיפוש
-  addSearch('שיעורי תורה', 'תחום', '', `${home}lessons/`, 1); addSearch('אירוח', 'תחום', '', `${home}halls/`, 1);
+  addSearch('שיעורי תורה', 'תחום', '', `${home}lessons/`, 1); addSearch('אירוח', 'תחום', '', `${home}halls/`, 1); addSearch('קופונים', 'תחום', '', `${home}promos/#coupons`, 1);
   // 0. עמוד הבית — אחרי שלכל ישות יש קישור (בשביל "חדש בשכונה")
   const shabbat = raw.community.latitude ? nextShabbat(raw.community.latitude, raw.community.longitude) : null;
   write(path.join(HOME, 'index.html'), homePage(vm, { base: BASE, path: home, shabbat, fresh: dir ? freshItems(dir, allDetails, detRaw, hrefById) : [], discover: discoverItems(allDetails) }));

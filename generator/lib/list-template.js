@@ -110,6 +110,7 @@ ${MAP_CSS}
 .a-app{background:#F1F4F8;color:var(--navy)}
 .dact [data-tip]{position:relative}
 .dempty[hidden]{display:none}
+.grow-h{grid-column:1/-1;margin:8px 0 -4px;font-size:24px;font-weight:800;color:var(--navy)}.grow-h:first-child{margin-top:0}
 .dempty{background:#fff;border-radius:20px;padding:36px 24px;text-align:center;display:flex;flex-direction:column;gap:8px;align-items:center}
 .dempty b{font-size:20px}.dempty span{font-size:16px;color:#566173}
 .dgrid .dcard:hover{transform:none}
@@ -274,8 +275,8 @@ ${siteHeader(vm, o.home, nav)}
 <nav class="crumb" aria-label="פירורי לחם"><a href="${o.home}">${esc(vm.name)}</a> · ${esc(o.label)}</nav>
 <h1>${esc(o.label)} <span class="emd">ב${esc(vm.name)}</span></h1>
 <div class="dir-tools">
-${o.tabs || ''}${o.cards.includes('data-ll=') ? `<button type="button" class="map-btn" id="map-btn" aria-pressed="false" aria-controls="dmap">${svg(MAP_ICON, 19, 'currentColor', 2)}מפה</button>` : ''}
-<label class="dir-q">${svg('M11 4a7 7 0 1 0 0 14a7 7 0 1 0 0-14zM20 20l-4-4', 19, 'currentColor', 2)}<span class="sr">חיפוש</span><input id="dir-q" type="search" autocomplete="off" placeholder="${esc(o.placeholder)}"></label>
+${o.tabs || ''}
+<label class="dir-q">${svg('M11 4a7 7 0 1 0 0 14a7 7 0 1 0 0-14zM20 20l-4-4', 19, 'currentColor', 2)}<span class="sr">חיפוש</span><input id="dir-q" type="search" autocomplete="off" placeholder="${esc(o.placeholder)}"></label>${o.cards.includes('data-ll=') ? `<button type="button" class="map-btn" id="map-btn" aria-pressed="false" aria-controls="dmap">${svg(MAP_ICON, 19, 'currentColor', 2)}מפה</button>` : ''}
 </div>
 </div></section>
 
@@ -343,17 +344,23 @@ function mediaCard(x, { tag, price, lines, cta }) {
 </article>`;
 }
 
+/** מבצעים וקופונים — עמוד אחד, שתי שורות עם כותרת. שורה ריקה לא מוצגת. */
 export function promosPage(vm, ls, { base, home }) {
   const d = ls.promos;
+  const row = (label, id, items) => items.length
+    ? `<h2 class="grow-h" id="${id}">${label}</h2>\n` + items.map((p) => mediaCard({ ...p }, { tag: p.kind,
+        lines: [p.provider, p.until + (p.coupon ? ' · הקוד באפליקציה' : '')], cta: p.coupon ? 'לקוד הקופון באפליקציה' : 'לפרטים באפליקציה' })).join('\n')
+    : '';
+  const promos = d.items.filter((p) => !p.coupon), coupons = d.items.filter((p) => p.coupon);
   return collectionPage(vm, {
-    base, home, slug: 'promos', label: 'מבצעים וקופונים', groups: d.groups,
+    base, home, slug: 'promos', label: 'מבצעים וקופונים', groups: [],
     title: `מבצעים וקופונים ב${where(vm)} — שכונה`,
     desc: `מבצעים וקופונים מעסקי ${where(vm)}, ${vm.city}.`,
     placeholder: 'שם עסק או מבצע…',
-    cards: d.items.map((p) => mediaCard({ ...p }, { tag: p.kind, lines: [p.provider, p.until + (p.coupon ? ' · הקוד באפליקציה' : '')], cta: p.coupon ? 'לקוד הקופון באפליקציה' : 'לפרטים באפליקציה' })).join('\n'),
-    emptyText: 'אין כרגע מבצעים פעילים',
-    join: '<b>יש לך עסק בשכונה? <span class="em">פרסם מבצע.</span></b><span>מבצע או קופון מגיעים לשכנים עם התראה באפליקציה.</span>',
-    joinCta: 'לפרסום מבצע',
+    cards: row('מבצעים', 'promos-row', promos) + (promos.length && coupons.length ? '\n' : '') + row('קופונים', 'coupons', coupons),
+    emptyText: 'אין כרגע מבצעים או קופונים פעילים',
+    join: '<b>יש לך עסק בשכונה? <span class="em">פרסם מבצע או קופון.</span></b><span>הם מגיעים לשכנים עם התראה באפליקציה.</span>',
+    joinCta: 'לפרסום',
   });
 }
 
