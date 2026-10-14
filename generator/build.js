@@ -23,6 +23,7 @@ import { homePage, HIDDEN_NAV, navChips } from './lib/home-template.js';
 import { entityPage, detailPage } from './lib/entity-template.js';
 import { fetchDetails, shapeDetails, shabbatTimes, nextShabbat } from './lib/details.js';
 import { isIsraeliDST } from './lib/season.js';
+import { managePage } from './lib/manage-template.js';
 import { compactHours, listPage, promosPage, realEstatePage, boardPage, lessonsPage, hallsPage, hostingPage, eduPage, parksPage, servicesPage, healthPage, eventsPage, happeningsPage } from './lib/list-template.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -211,6 +212,8 @@ const writeHome = (raw, dirRaw, lsRaw, moreRaw, synSlugs, detRaw) => {
   // 0. עמוד הבית — אחרי שלכל ישות יש קישור (בשביל "חדש בשכונה")
   const shabbat = raw.community.latitude ? nextShabbat(raw.community.latitude, raw.community.longitude) : null;
   write(path.join(HOME, 'index.html'), homePage(vm, { base: BASE, path: home, shabbat, fresh: dir ? freshItems(dir, allDetails, detRaw, hrefById) : [], discover: discoverItems(allDetails) }));
+  // ניהול העסק (שלד; הלוגיקה ב-/js/manage.js) — noindex, לא ב-sitemap
+  write(path.join('my-business', 'index.html'), managePage(vm, { base: BASE, home }));
   console.log(`  ${HOME}/  · ${vm.promos.length} מבצעים · ${vm.professionals.length} בעלי מקצוע · ` +
     `${vm.businesses.length} עסקים · ${vm.realEstate.length} נכסים · ${vm.prayers.length} מניינים היום`);
 

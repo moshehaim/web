@@ -13,8 +13,8 @@ export const esc = (s) => String(s ?? '')
 export const APP = '/app/';
 // התחברות = האפליקציה (מי שלא מחובר נוחת שם על מסך הכניסה).
 const LOGIN = '/app/';
-// בעלי עסקים — למסך ניהול העסק באפליקציה (כשה-route /my-business יהיה באפליקציה — להחליף ל-/app/#/my-business)
-const BIZ_PORTAL = '/app/';
+// בעלי עסקים — לעמוד ניהול העסק באתר (/my-business/, js/manage.js)
+const BIZ_PORTAL = '/my-business/';
 const DOWNLOAD = '/b/';
 const MINYANIM = '/har-homa/minyanim/';
 
@@ -700,7 +700,7 @@ export function siteFooter() {
 <nav aria-label="קישורים"><a href="/">כל השכונות</a><a href="${BIZ_PORTAL}">כניסה לבעלי עסקים</a><a href="/terms.html">תנאי שימוש</a><a href="/privacy.html">פרטיות</a></nav>
 <span class="c">© שכונה, כל הזכויות שמורות</span>
 </div></footer>
-<script src="/js/auth.js?v=2" defer></script>`;
+<script src="/js/auth.js?v=3" defer></script>`;
 }
 
 function shabbatCard(sh) {
