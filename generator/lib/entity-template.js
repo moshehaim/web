@@ -151,9 +151,9 @@ export function detailPage(vm, e, { base, home, kind, listLabel, ldType, listHre
   if (e.providerHref) acts.push(`<a class="e-map" href="${esc(e.providerHref)}">לעמוד העסק</a>`);
   if (d.booking) acts.push(`<a class="e-book" href="${APP}">${svg(ICON.cal, 19, 'currentColor', 2)}קביעת תור</a>`);
   const noContact = !acts.length;
-  // המלצה: נשלח לאפליקציה — הראוטר פותח את המסך עם פעולת ההמלצה מודגשת (?recommend=1)
+  // המלצה: באתר עצמו (/js/auth.js — התחברות + אימות טלפון + set_recommendation). בלי JS: לאפליקציה (?recommend=1)
   const recPath = e.table === 'professionals' ? 'professional' : e.table === 'businesses' ? 'business' : null;
-  if (recPath && e.id) acts.push(`<a class="e-rec" href="${APP}${recPath}/${encodeURIComponent(e.id)}?recommend=1">${svg(ICON.heart, 19, 'currentColor', 2.2)}${e.rec > 0 ? 'אני ממליץ' : 'היה הראשון להמליץ'}</a>`);
+  if (recPath && e.id) acts.push(`<a class="e-rec" href="${APP}${recPath}/${encodeURIComponent(e.id)}?recommend=1" data-rec="${recPath}" data-id="${esc(e.id)}" data-has="${e.rec > 0 ? 1 : 0}" aria-pressed="false">${svg(ICON.heart, 19, 'currentColor', 2.2)}${e.rec > 0 ? 'אני ממליץ' : 'היה הראשון להמליץ'}</a>`);
   if (noContact) acts.push(`<a class="e-map" href="${APP}">${e.appOnly ? 'ליצירת קשר באפליקציה' : 'לפרטים באפליקציה'}</a>`);
 
   const JS = `(function(){

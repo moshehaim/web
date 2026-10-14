@@ -480,13 +480,7 @@ function ticker(vm) {
 /* ── סקריפט לקוח ───────────────────────────────────────────────── */
 
 export const HOOD_JS = `(function(){
-/* מחובר לאפליקציה באותו דפדפן? (אותה כתובת — אותו localStorage) מציגים את השם במקום "התחברות" */
-(function(){var a=document.getElementById('acct');if(!a)return;var raw=null,k='sb-mebomrqnfnbqijiuawdh-auth-token';
-  try{raw=localStorage.getItem(k)||localStorage.getItem('flutter.'+k);}catch(e){}
-  if(!raw)return;var s=null;try{s=JSON.parse(raw);if(typeof s==='string')s=JSON.parse(s);}catch(e){return;}
-  var u=s&&(s.user||(s.currentSession&&s.currentSession.user));if(!u||!s.refresh_token&&!(s.currentSession&&s.currentSession.refresh_token))return;
-  var m=u.user_metadata||{},n=(m.full_name||m.name||'').trim().split(' ')[0];
-  a.querySelector('.lbl').textContent=n?'שלום, '+n:'החשבון שלי';a.setAttribute('aria-label',n?'החשבון של '+n:'החשבון שלי');a.classList.add('in');})();
+/* התחברות / החשבון שלי — ב-/js/auth.js */
 /* תחום נוכחי בשורת התחומים — לגלול אליו שיהיה גלוי */
 var on=document.querySelector('.chips a.on');if(on&&on.scrollIntoView){try{on.scrollIntoView({block:'nearest',inline:'center'});}catch(_){}}
 /* חיצים לשורת התחומים */
@@ -705,7 +699,8 @@ export function siteFooter() {
 <span>שכונה · <a href="mailto:info@shchuna.co.il">info@shchuna.co.il</a></span>
 <nav aria-label="קישורים"><a href="/">כל השכונות</a><a href="${BIZ_PORTAL}">כניסה לבעלי עסקים</a><a href="/terms.html">תנאי שימוש</a><a href="/privacy.html">פרטיות</a></nav>
 <span class="c">© שכונה, כל הזכויות שמורות</span>
-</div></footer>`;
+</div></footer>
+<script src="/js/auth.js?v=1" defer></script>`;
 }
 
 function shabbatCard(sh) {
