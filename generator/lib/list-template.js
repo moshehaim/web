@@ -58,6 +58,11 @@ background:linear-gradient(to top,var(--t2),transparent)}
 .crumb{font-size:14px;color:#A9BAD4}.crumb a{color:#C9D6EA}
 .dir-hero h1{margin:0;font-size:clamp(30px,5vw,46px);font-weight:800;line-height:1.1}
 .dir-tools{display:flex;flex-wrap:wrap;gap:12px;align-items:center}
+.map-btn{height:48px;padding:0 18px;border-radius:14px;border:0;background:rgba(255,255,255,.12);color:#fff;font:inherit;font-size:16px;font-weight:800;display:inline-flex;align-items:center;gap:8px;cursor:pointer}
+.map-btn[aria-pressed=true]{background:var(--sky);color:var(--navy)}
+.dmap{position:relative;height:440px;border-radius:20px;overflow:hidden;margin-bottom:18px;box-shadow:0 2px 12px rgba(0,0,0,.08);z-index:0}.dmap[hidden]{display:none}
+@media (max-width:620px){.dmap{height:60vh}}
+.leaflet-popup-content{font-family:inherit;direction:rtl;text-align:right;font-size:15px}.leaflet-popup-content a,.leaflet-popup-content b{font-weight:800}.mp-f{color:#566173;font-size:13px}
 .dir-tabs{display:flex;gap:4px;background:rgba(255,255,255,.1);padding:4px;border-radius:14px}
 .dir-tabs a{height:40px;padding:0 18px;border-radius:10px;display:flex;align-items:center;color:#fff;font-weight:600;text-decoration:none;font-size:16px}
 .dir-tabs a[aria-current]{background:#fff;color:var(--navy);font-weight:800}
@@ -145,6 +150,14 @@ background:linear-gradient(to top,var(--t2),transparent)}
 
 /* ── "פתוח עכשיו": שעות הפעילות בדקות לכל יום (0=ראשון) — הדפדפן מחשב לפי השעה בירושלים ── */
 const DAY_KEYS = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
+/** קואורדינטות לכרטיס: lat/lng ישירים, מתוך detail, או מקישור ה-Waze */
+function llOf(p) {
+  const lat = p.lat ?? p.detail?.lat, lng = p.lng ?? p.detail?.lng;
+  if (lat && lng) return `${(+lat).toFixed(5)},${(+lng).toFixed(5)}`;
+  const m = /ll=([\d.]+),([\d.]+)/.exec(p.waze || '');
+  return m ? `${(+m[1]).toFixed(5)},${(+m[2]).toFixed(5)}` : '';
+}
+
 export function compactHours(schedule, st, dst) {
   if (!schedule || typeof schedule !== 'object') return null;
   const jm = (d) => { const p = d.toLocaleTimeString('en-GB', { timeZone: 'Asia/Jerusalem', hour: '2-digit', minute: '2-digit' }).split(':'); return +p[0] * 60 + +p[1]; };
@@ -182,7 +195,7 @@ var q=document.getElementById('dir-q'),cards=[].slice.call(document.querySelecto
     chips=[].slice.call(document.querySelectorAll('.fchips button')),empty=document.getElementById('dir-empty'),g='';
 function run(){var t=(q.value||'').trim(),n=0;
   cards.forEach(function(c){var ok=(!g||c.getAttribute('data-group')===g)&&(!t||c.getAttribute('data-text').indexOf(t)>=0);c.hidden=!ok;if(ok)n++;});
-  empty.hidden=n>0;}
+  empty.hidden=n>0;if(typeof marks==='function')marks();}
 chips.forEach(function(b){b.addEventListener('click',function(){g=b.getAttribute('data-g');
   chips.forEach(function(x){x.setAttribute('aria-pressed',x===b);});run();});});
 q.addEventListener('input',function(){run();});
@@ -216,6 +229,24 @@ document.addEventListener('click',function(e){
   if(navigator.clipboard){navigator.clipboard.writeText(num).then(function(){d.textContent='הועתק ✓';
     setTimeout(function(){d.textContent=num;},1500);},function(){});}
 });
+
+/* מפה: נטענת רק בלחיצה הראשונה (Leaflet + OpenStreetMap), מציגה את הכרטיסים המסוננים */
+var mb=document.getElementById('map-btn'),mbox=document.getElementById('dmap'),map=null,layer=null;
+function marks(){if(!map)return;layer.clearLayers();var pts=[];
+  cards.forEach(function(c){var ll=c.getAttribute('data-ll');if(!ll||c.hidden)return;var p=ll.split(',').map(Number);pts.push(p);
+    var a=c.querySelector('.stretch, h3 a'),box=document.createElement('div'),b=document.createElement(a?'a':'b');
+    b.textContent=(c.querySelector('h3')||{}).textContent||'';if(a){b.href=a.getAttribute('href');}box.appendChild(b);
+    var f=c.querySelector('.dbody .f');if(f){var s=document.createElement('div');s.textContent=f.textContent;s.className='mp-f';box.appendChild(s);}
+    L.circleMarker(p,{radius:9,color:'#fff',weight:2,fillColor:'#244782',fillOpacity:1}).bindPopup(box).addTo(layer);});
+  if(pts.length)map.fitBounds(pts,{padding:[30,30],maxZoom:16});}
+function openMap(){mbox.hidden=false;mb.setAttribute('aria-pressed','true');
+  if(map){map.invalidateSize();marks();return;}
+  var css=document.createElement('link');css.rel='stylesheet';css.href='https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css';document.head.appendChild(css);
+  var sc=document.createElement('script');sc.src='https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js';
+  sc.onload=function(){map=L.map(mbox,{scrollWheelZoom:false});
+    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,attribution:'&copy; OpenStreetMap'}).addTo(map);
+    layer=L.layerGroup().addTo(map);marks();};document.head.appendChild(sc);}
+if(mb)mb.addEventListener('click',function(){if(mbox.hidden)openMap();else{mbox.hidden=true;mb.setAttribute('aria-pressed','false');}});
 })();`;
 
 function card(p, kind) {
@@ -232,7 +263,7 @@ function card(p, kind) {
   if (p.phone?.wa) acts.push(`<a class="a-wa" href="${esc(p.phone.wa)}" target="_blank" rel="noopener" aria-label="WhatsApp ל${esc(p.name)}" title="WhatsApp">${svg(ICON_WA, 20, 'currentColor', 2)}</a>`);
   if (p.waze) acts.push(`<a class="a-waze" href="${esc(p.waze)}" target="_blank" rel="noopener" aria-label="ניווט ל${esc(p.name)} ב-Waze" title="ניווט ב-Waze"><img src="/img/waze.png" alt="" width="44" height="44"></a>`);
   if (!acts.length) acts.push(`<a class="a-app" href="${APP}">לפרטים באפליקציה</a>`);
-  return `<article class="dcard lift" data-group="${esc(p.group)}" data-text="${esc(text)}" data-id="${esc(p.id)}" data-t="${esc(p.table)}">
+  return `<article class="dcard lift" data-group="${esc(p.group)}" data-text="${esc(text)}" data-id="${esc(p.id)}" data-t="${esc(p.table)}"${llOf(p) ? ` data-ll="${llOf(p)}"` : ''}>
 <div class="dmedia${tone}">${media}${rec}</div>
 <div class="dbody"><h3>${p.href ? `<a class="stretch" href="${esc(p.href)}">${esc(p.name)}</a>` : esc(p.name)}</h3>${p.field ? `<span class="f">${esc(p.field)}</span>` : ''}${p.where ? `<span class="w">${esc(p.where)}</span>` : ''}${p.hoursJ ? `<span class="oh" data-h="${esc(p.hoursJ)}" hidden></span>` : ''}</div>
 <div class="dact">${acts.join('')}</div>
@@ -263,13 +294,14 @@ ${siteHeader(vm, o.home, nav)}
 <nav class="crumb" aria-label="פירורי לחם"><a href="${o.home}">${esc(vm.name)}</a> · ${esc(o.label)}</nav>
 <h1>${esc(o.label)} <span class="emd">ב${esc(vm.name)}</span></h1>
 <div class="dir-tools">
-${o.tabs || ''}
+${o.tabs || ''}${o.cards.includes('data-ll=') ? `<button type="button" class="map-btn" id="map-btn" aria-pressed="false" aria-controls="dmap">${svg('M9 4L3 6v14l6-2 6 2 6-2V4l-6 2zM9 4v14M15 6v14', 19, 'currentColor', 2)}מפה</button>` : ''}
 <label class="dir-q">${svg('M11 4a7 7 0 1 0 0 14a7 7 0 1 0 0-14zM20 20l-4-4', 19, 'currentColor', 2)}<span class="sr">חיפוש</span><input id="dir-q" type="search" autocomplete="off" placeholder="${esc(o.placeholder)}"></label>
 </div>
 </div></section>
 
 ${chips ? `<div class="fbar">${chips}</div>` : ''}
 <section id="list" class="wrap dir-list${chips ? ' has-bar' : ''}" aria-label="${esc(o.label)}">
+${o.cards.includes('data-ll=') ? '<div id="dmap" class="dmap" hidden></div>' : ''}
 <div class="dgrid${o.gridClass ? ' ' + o.gridClass : ''}">
 ${o.cards}
 </div>
