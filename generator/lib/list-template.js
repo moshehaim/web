@@ -331,16 +331,16 @@ export function listPage(vm, dir, kind, { base, home, api }) {
 }
 
 /* כרטיס תמונה כללי (מבצע, נכס) */
-function mediaCard(x, { tag, price, lines, cta }) {
+function mediaCard(x, { tag, price, lines, cta, action, anchor }) {
   const tone = (CAT_ICON[x.cat] || CAT_ICON.other);
   const media = x.img
     ? `<img src="${esc(x.img)}" alt="${esc(x.title)}" loading="lazy" decoding="async">`
     : svg(tone[0], 64, 'currentColor', 1.6);
   const text = [x.title, ...lines, x.group].join(' ');
-  return `<article class="dcard lift" data-group="${esc(x.group)}" data-text="${esc(text)}">
+  return `<article class="dcard lift"${anchor ? ` id="${esc(anchor)}"` : ''} data-group="${esc(x.group)}" data-text="${esc(text)}">
 <div class="dmedia${x.img ? '' : ` noimg t-${tone[1]}`}">${media}${tag ? `<span class="dtag">${esc(tag)}</span>` : ''}${price ? `<span class="dprice">${esc(price)}</span>` : ''}</div>
 <div class="dbody"><h3>${x.href ? `<a class="stretch" href="${esc(x.href)}">${esc(x.title)}</a>` : esc(x.title)}</h3>${price ? `<span class="pr">${esc(price)}</span>` : ''}${lines.filter(Boolean).map((l, i) => `<span class="${i ? 'w' : 'f'}">${esc(l)}</span>`).join('')}</div>
-<div class="dact"><a class="a-app" href="${esc(x.href || APP)}">${esc(x.href ? 'לפרטים' : cta)}</a></div>
+<div class="dact">${action || `<a class="a-app" href="${esc(x.href || APP)}">${esc(x.href ? 'לפרטים' : cta)}</a>`}</div>
 </article>`;
 }
 
@@ -348,8 +348,11 @@ function mediaCard(x, { tag, price, lines, cta }) {
 export function promosPage(vm, ls, { base, home }) {
   const d = ls.promos;
   const row = (label, id, items) => items.length
-    ? `<h2 class="grow-h" id="${id}">${label}</h2>\n` + items.map((p) => mediaCard({ ...p }, { tag: p.kind,
-        lines: [p.provider, p.until + (p.coupon ? ' · הקוד באפליקציה' : '')], cta: p.coupon ? 'לקוד הקופון באפליקציה' : 'לפרטים באפליקציה' })).join('\n')
+    ? `<h2 class="grow-h" id="${id}">${label}</h2>\n` + items.map((p) => p.coupon
+        // קופון: לוקחים כאן (רק משתמש מחובר ומאומת — /js/auth.js); המימוש בעסק רק באפליקציה, וזה נאמר אחרי הלקיחה
+        ? mediaCard({ ...p, href: null }, { tag: p.kind, lines: [p.provider, p.until], anchor: `c-${p.id}`,
+            action: `<a class="a-app a-coupon" href="${APP}" data-coupon="${esc(p.id)}">לקיחת הקופון</a>` })
+        : mediaCard({ ...p }, { tag: p.kind, lines: [p.provider, p.until], cta: 'לפרטים באפליקציה' })).join('\n')
     : '';
   const promos = d.items.filter((p) => !p.coupon), coupons = d.items.filter((p) => p.coupon);
   return collectionPage(vm, {

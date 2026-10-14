@@ -24,6 +24,9 @@ import { isPrayerInSeason } from './season.js';
 
 // בעמוד הבית הכרטיסים בנויים על תמונה, אז תמונה לנשים בלבד = הפריט לא בקרוסלה
 const SHOW = (r) => !r.image_women_only;
+// קופונים: בלי code. אזל (נלקחו כולם) — לא מוצג
+const COUPON_COLS = 'id,image_url,text_content,expires_at,image_women_only,content_audience,provider_name,quantity,current_redemptions';
+const AVAIL = (c) => !(c.quantity > 0) || (c.current_redemptions || 0) < c.quantity;
 
 export async function fetchHome(db, communityId) {
   const nowIso = new Date().toISOString();
@@ -56,9 +59,10 @@ export async function fetchHome(db, communityId) {
     q(byCommunity('promotions', 'id,title,image_url,provider_name,end_date,image_women_only,content_audience')
       .eq('is_active', true).or(`end_date.is.null,end_date.gte."${nowIso}"`)
       .order('created_at', { ascending: false }).limit(12)),
-    // בלי code — הקוד לא יוצא לאתר הסטטי
-    q(byCommunity('coupons', 'id,image_url,text_content,expires_at,image_women_only,content_audience')
-      .eq('status', 'active').order('priority', { ascending: false, nullsFirst: false }).limit(12)),
+    // בלי code — הקוד לא יוצא לאתר הסטטי. ה-view עוקף RLS, לכן מסננים כאן פעיל/התחיל/בתוקף
+    q(byCommunity('coupons_with_provider', COUPON_COLS)
+      .eq('status', 'active').lte('start_date', nowIso).gt('expires_at', nowIso)
+      .order('priority', { ascending: false, nullsFirst: false }).limit(12)),
     q(byCommunity('approve_property', 'id,full_address,asking_price,num_rooms,area_in_sqm,floor,property_type,image_urls')
       .order('created_at', { ascending: false }).limit(20)),
     q(byCommunity('approved_rental_properties', 'id,full_address,monthly_rent,num_rooms,area_in_sqm,floor,property_type,image_urls')
@@ -178,8 +182,8 @@ export function shapeHome(raw, { now = new Date(), base = '' } = {}) {
     ...raw.promotions.filter(SHOW).map((p) => ({
       id: p.id, kind: 'מבצע', title: p.title, provider: p.provider_name || '', img: p.image_url, until: until(p.end_date),
     })),
-    ...(raw.coupons || []).filter(SHOW).map((c) => ({
-      kind: 'קופון', title: c.text_content, provider: '', img: c.image_url, until: until(c.expires_at), coupon: true,
+    ...(raw.coupons || []).filter(SHOW).filter(AVAIL).map((c) => ({
+      id: c.id, kind: 'קופון', title: c.text_content || 'קופון', provider: c.provider_name || '', img: c.image_url, until: until(c.expires_at), coupon: true,
     })),
   ];
 
@@ -346,8 +350,9 @@ export async function fetchListings(db, communityId) {
   const [promotions, coupons, sale, rent, jobs, secondHand, gmachim, volunteering, lostFound] = await Promise.all([
     q(by('promotions', 'id,title,image_url,provider_name,end_date,image_women_only')
       .eq('is_active', true).or(`end_date.is.null,end_date.gte."${nowIso}"`).order('created_at', { ascending: false })),
-    q(by('coupons', 'id,image_url,text_content,expires_at,image_women_only')
-      .eq('status', 'active').order('priority', { ascending: false, nullsFirst: false })),
+    q(by('coupons_with_provider', COUPON_COLS)
+      .eq('status', 'active').lte('start_date', nowIso).gt('expires_at', nowIso)
+      .order('priority', { ascending: false, nullsFirst: false })),
     q(by('approve_property', 'id,full_address,asking_price,num_rooms,area_in_sqm,floor,property_type,image_urls,created_at')
       .order('created_at', { ascending: false })),
     q(by('approved_rental_properties', 'id,full_address,monthly_rent,num_rooms,area_in_sqm,floor,property_type,image_urls,created_at')
@@ -367,7 +372,7 @@ export function shapeListings(raw, community, now = new Date()) {
   const promos = [
     ...raw.promotions.map((p) => ({ id: p.id, group: 'מבצעים', kind: 'מבצע', title: p.title, provider: p.provider_name || '',
       img: p.image_women_only ? null : p.image_url, until: until(p.end_date), cat: 'retail' })),
-    ...raw.coupons.map((c) => ({ group: 'קופונים', kind: 'קופון', title: c.text_content || 'קופון', provider: '',
+    ...raw.coupons.filter(AVAIL).map((c) => ({ id: c.id, group: 'קופונים', kind: 'קופון', title: c.text_content || 'קופון', provider: c.provider_name || '',
       img: c.image_women_only ? null : c.image_url, until: until(c.expires_at), coupon: true, cat: 'retail' })),
   ];
 

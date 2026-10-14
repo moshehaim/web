@@ -95,7 +95,10 @@
     '.sa-menu .v{font-size:13px;font-weight:700;padding:0 10px 6px;color:#1E7A4C}.sa-menu .v.no{color:#B26A00}' +
     '.acct-wrap{position:relative;display:inline-flex}' +
     '.e-rec.on{background:#E24B4A!important;color:#fff!important}.e-rec.on svg{color:#fff!important}' +
-    '.e-rec[aria-busy=true]{opacity:.65;pointer-events:none}';
+    '.e-rec[aria-busy=true],[data-coupon][aria-busy=true]{opacity:.65;pointer-events:none}' +
+    '[data-coupon].taken{background:#E8F5EE!important;color:#1E7A4C!important}' +
+    '.sa-note{background:#FFF6E0;border:1px solid #F3D27A;border-radius:14px;padding:10px 12px;color:#5C4400!important;font-size:15px!important}' +
+    '.sa-qr{display:flex;align-items:center;gap:14px;padding:10px;border:1px solid #E6E9EF;border-radius:16px}.sa-qr img{flex:none;display:block}.sa-qr span{font-weight:700;color:#172F57}';
 
   function injectCss() { if (document.getElementById('sa-css')) return; var s = document.createElement('style'); s.id = 'sa-css'; s.textContent = CSS; document.head.appendChild(s); }
   function esc(s) { return String(s == null ? '' : s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
@@ -291,6 +294,27 @@
       t.innerHTML = heartSvg().replace(/width="\d+"/, 'width="14"').replace(/height="\d+"/, 'height="14"') + (count === 1 ? 'המלצה אחת' : count + ' המלצות');
     }
   }
+  /* שער משותף לפעולות שדורשות משתמש מחובר עם טלפון מאומת (המלצה, לקיחת קופון).
+   * pending נשמר ב-sessionStorage כדי שהפעולה תמשיך אחרי חזרה מ-Google/Apple. */
+  function gate(pending, why, run) {
+    return getUser().then(function (x) {
+      if (!x.user) {
+        try { pending.p = location.pathname; sessionStorage.setItem(PENDING, JSON.stringify(pending)); } catch (e) {}
+        onDone = function () { close(); clearPending(); resume(pending); };
+        loginView({ why: why });
+        return false;
+      }
+      return isVerified(x.sb, x.user.id).then(function (ok) {
+        if (!ok) { phoneView(x.sb, function () { close(); resume(pending); }); return false; }
+        return run(x.sb, x.user);
+      });
+    });
+  }
+  function resume(p) {
+    if (p.a === 'rec') doRecommend(p.t, p.id, true);
+    else if (p.a === 'coupon') doCoupon(p.id);
+  }
+
   function doRecommend(type, id, value) {
     var b = recBtn(); if (b) b.setAttribute('aria-busy', 'true');
     return getUser().then(function (x) {
@@ -315,9 +339,50 @@
     }).catch(function () { if (b) b.removeAttribute('aria-busy'); notice('אין חיבור. נסו שוב'); });
   }
   function askLogin(type, id) {
-    try { sessionStorage.setItem(PENDING, JSON.stringify({ a: 'rec', t: type, id: id, p: location.pathname })); } catch (e) {}
-    onDone = function () { close(); clearPending(); doRecommend(type, id, true); };
-    loginView({ why: 'כדי להמליץ צריך להתחבר. ההמלצה תישמר מיד אחרי ההתחברות.' });
+    gate({ a: 'rec', t: type, id: id }, 'כדי להמליץ צריך להתחבר. ההמלצה תישמר מיד אחרי ההתחברות.', function () { doRecommend(type, id, true); });
+  }
+
+  /* ── קופון: לוקחים באתר, מממשים רק באפליקציה ── */
+  var DOWNLOAD = '/b/';
+  function couponBtn(id) { return document.querySelector('[data-coupon="' + id + '"]'); }
+  function paintCoupon(id) {
+    var b = couponBtn(id); if (!b) return;
+    b.classList.add('taken'); b.textContent = 'הקופון שמור לך ✓'; b.setAttribute('data-taken', '1');
+  }
+  function appOnlyView(title, lead) {
+    var desk = window.matchMedia && matchMedia('(hover: hover) and (pointer: fine)').matches;
+    open('<h2 id="sa-h">' + esc(title) + '</h2>' +
+      '<p>' + esc(lead) + '</p>' +
+      '<p class="sa-note"><b>שימו לב:</b> ניתן לממש את הקופון רק באפליקציה שכונה. בעסק פותחים את הקופון באפליקציה ומציגים אותו בקופה.</p>' +
+      (desk
+        ? '<div class="sa-qr"><img src="/img/qr-app.svg" alt="קוד QR להורדת האפליקציה" width="148" height="148"><span>סרקו עם הטלפון להורדת האפליקציה</span></div>'
+        : '<a class="sa-b pri" href="' + DOWNLOAD + '">להורדת האפליקציה</a>') +
+      '<p class="sa-small">כבר יש לכם את האפליקציה? הקופון מחכה ב"הקופונים שלי".</p>' +
+      '<button class="sa-b" type="button" data-c>סגירה</button>');
+    dlg.querySelector('[data-c]').addEventListener('click', close);
+  }
+  function doCoupon(id) {
+    var b = couponBtn(id);
+    if (b && b.getAttribute('data-taken') === '1') return appOnlyView('הקופון שמור לך', 'לקחת כבר את הקופון הזה.');
+    if (b) b.setAttribute('aria-busy', 'true');
+    return gate({ a: 'coupon', id: id }, 'כדי לקחת קופון צריך להתחבר. הקופון יישמר מיד אחרי ההתחברות.', function (sb, user) {
+      return sb.rpc('redeem_coupon_safe', { p_user_id: user.id, p_coupon_id: id }).then(function (r) {
+        if (r.error) return notice('לא הצלחנו לשמור את הקופון. נסו שוב');
+        var d = r.data || {};
+        if (d.success) { paintCoupon(id); return appOnlyView('הקופון נשמר!', 'הקופון שמור על שמכם.'); }
+        if (d.error_code === 'ALREADY_TAKEN') { paintCoupon(id); return appOnlyView('הקופון שמור לך', 'לקחת כבר את הקופון הזה.'); }
+        return notice(d.message || 'לא הצלחנו לשמור את הקופון. נסו שוב');
+      });
+    }).catch(function () { notice('אין חיבור. נסו שוב'); }).then(function () { if (b) b.removeAttribute('aria-busy'); });
+  }
+  function loadMyCoupons() {
+    var bs = document.querySelectorAll('[data-coupon]'); if (!bs.length) return;
+    var ids = [].map.call(bs, function (b) { return b.getAttribute('data-coupon'); });
+    getUser().then(function (x) {
+      if (!x.user) return;
+      return x.sb.from('user_coupon_redemptions').select('coupon_id').eq('user_id', x.user.id).in('coupon_id', ids)
+        .then(function (r) { (r.data || []).forEach(function (row) { paintCoupon(row.coupon_id); }); });
+    }).catch(function () {});
   }
   function clearPending() { try { sessionStorage.removeItem(PENDING); } catch (e) {} }
   function notice(msg) {
@@ -424,13 +489,19 @@
       doRecommend(b.getAttribute('data-rec'), b.getAttribute('data-id'), !on);
     });
 
+    document.addEventListener('click', function (e) {
+      var c = e.target.closest && e.target.closest('[data-coupon]'); if (!c) return;
+      e.preventDefault(); doCoupon(c.getAttribute('data-coupon'));
+    });
+    var hasCoupons = !!document.querySelector('[data-coupon]');
+
     var q = new URLSearchParams(location.search);
     var oauthBack = q.has('code');
     if (q.has('error_description')) {
       history.replaceState(null, '', cleanHref());
       notice('ההתחברות לא הושלמה. נסו שוב.');
     }
-    if (oauthBack || (s && b)) {
+    if (oauthBack || (s && (b || hasCoupons))) {
       client().then(function (sb) {
         // detectSessionInUrl מחליף את ה-code בסשן בזמן האתחול
         return sb.auth.getSession().then(function (r) {
@@ -439,8 +510,8 @@
           renderAcct(u);
           if (!u) return;
           var p = null; try { p = JSON.parse(sessionStorage.getItem(PENDING) || 'null'); } catch (e) {}
-          if (p && p.a === 'rec' && p.p === location.pathname) { clearPending(); doRecommend(p.t, p.id, true); }
-          else loadMyRec();
+          if (p && p.p === location.pathname) { clearPending(); resume(p); }
+          loadMyRec(); loadMyCoupons();
         });
       }).catch(function () {});
     }

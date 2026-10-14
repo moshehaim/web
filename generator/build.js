@@ -197,7 +197,10 @@ const writeHome = (raw, dirRaw, lsRaw, moreRaw, synSlugs, detRaw) => {
     }
     console.log(`  עמודים מלאים · ${all.length}`);
   }
-  const link = (items) => { for (const x of items) if (!x.href && hrefById[x.id]) x.href = hrefById[x.id]; };
+  const link = (items) => { for (const x of items) {
+    if (x.coupon && x.id) { x.href = `${home}promos/#c-${x.id}`; continue; }  // קופון: לכרטיס שלו בעמוד המבצעים (שם לוקחים)
+    if (!x.href && hrefById[x.id]) x.href = hrefById[x.id];
+  } };
 
   // לוח השכונה בעמוד הבית: כל מודעה לעמוד המלא שלה
   // כל כרטיס בעמוד הבית — לעמוד המלא שלו
