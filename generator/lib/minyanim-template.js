@@ -4,15 +4,19 @@
  */
 
 import { pageHead, siteHeader, siteFooter, HOOD_JS, esc, svg, navChips, APP } from './home-template.js';
+import { MAP_CSS, MAP_ICON, mapScript } from './map.js';
 import { sortPrayers, formatPrayerTime, formatSelectedDays, NUSACH } from './prayers.js';
 
-const SECTION = '/minyanim-har-homa/';
+const SECTION = '/har-homa/minyanim/';
 const enc = (s) => encodeURIComponent(s);
 const TYPES = ['שחרית', 'מנחה', 'ערבית'];
 const typeOf = (t = '') => TYPES.find((x) => t.includes(x)) || t;
 const nusachOf = (s) => (s.prayer_nusach ? NUSACH[s.prayer_nusach] || NUSACH.other : '');
 
-const CSS = `
+const CSS = `${MAP_CSS}
+.syn-head{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}.syn-head h2{margin:0}
+.mn-sec .map-btn{background:#EFF4FF;color:var(--navy)}.mn-sec .map-btn[aria-pressed=true]{background:var(--brand);color:#fff}
+
 .mn-hero{background:var(--navy);color:#fff}
 .mn-hero .wrap{padding-block:28px 30px;display:flex;flex-direction:column;gap:14px}
 .crumb{font-size:14px;color:#A9BAD4}.crumb a{color:#C9D6EA}
@@ -100,7 +104,7 @@ export function minyanimIndexPage({ vm, home, synagogues, today, base }) {
 
   const cards = synagogues.map((s) => {
     const n = nusachOf(s);
-    return `<a class="scard lift" href="${SECTION}${enc(s.slug)}/" data-n="${esc(n)}" data-text="${esc([s.name, s.address, n].filter(Boolean).join(' '))}">
+    return `<a class="scard lift" href="${SECTION}${enc(s.slug)}/"${s.latitude && s.longitude ? ` data-ll="${(+s.latitude).toFixed(5)},${(+s.longitude).toFixed(5)}"` : ''} data-n="${esc(n)}" data-text="${esc([s.name, s.address, n].filter(Boolean).join(' '))}">
 ${n ? `<span class="nchip">${esc(n)}</span>` : ''}<h3>${esc(s.name)}</h3>${s.address ? `<span class="a">${esc(s.address)}</span>` : ''}
 ${s.first.length ? `<span class="tm">${s.first.map((f) => `<span>${esc(f.type)} <b>${esc(f.time)}</b></span>`).join('')}</span>` : '<span class="a">טרם נמסרו זמנים</span>'}
 </a>`;
@@ -135,7 +139,7 @@ more.addEventListener('click',function(){all=true;draw();});
 var h=now().getHours();pick(h<12?'שחרית':h<17?'מנחה':h<23?'ערבית':'שחרית');
 setInterval(function(){var n=now();clk.textContent=pad(n.getHours())+':'+pad(n.getMinutes());if(n.getMinutes()!==lastMin){lastMin=n.getMinutes();draw();}},1000);
 var q=document.getElementById('mn-q'),cards=[].slice.call(document.querySelectorAll('.scard')),chips=[].slice.call(document.querySelectorAll('.fchips button')),g='',empty=document.getElementById('syn-empty');
-function run(){var t=(q.value||'').trim(),k=0;cards.forEach(function(c){var ok=(!g||c.getAttribute('data-n')===g)&&(!t||c.getAttribute('data-text').indexOf(t)>=0);c.hidden=!ok;if(ok)k++;});empty.hidden=k>0;}
+function run(){var t=(q.value||'').trim(),k=0;cards.forEach(function(c){var ok=(!g||c.getAttribute('data-n')===g)&&(!t||c.getAttribute('data-text').indexOf(t)>=0);c.hidden=!ok;if(ok)k++;});empty.hidden=k>0;if(window.__mapRefresh)window.__mapRefresh();}
 chips.forEach(function(b){b.addEventListener('click',function(){g=b.getAttribute('data-g');chips.forEach(function(x){x.setAttribute('aria-pressed',x===b);});run();});});
 q.addEventListener('input',run);
 })();`;
@@ -160,8 +164,9 @@ ${siteHeader(vm, home, nav(home))}
 </section>
 
 <section id="syns" class="wrap mn-sec" aria-label="בתי כנסת">
-<h2>בתי <span class="em">הכנסת</span></h2>
+<div class="syn-head"><h2>בתי <span class="em">הכנסת</span></h2>${synagogues.some((s) => s.latitude) ? `<button type="button" class="map-btn" id="map-btn" aria-pressed="false" aria-controls="dmap">${svg(MAP_ICON, 19, 'currentColor', 2)}מפה</button>` : ''}</div>
 ${nusachim.length > 1 ? `<div class="fchips" role="group" aria-label="סינון לפי נוסח"><button type="button" data-g="" aria-pressed="true">כל הנוסחים</button>${nusachim.map((n) => `<button type="button" data-g="${esc(n)}" aria-pressed="false">${esc(n)}</button>`).join('')}</div>` : ''}
+<div id="dmap" class="dmap" hidden></div>
 <div class="sgrid">
 ${cards}
 </div>
@@ -177,6 +182,7 @@ ${siteFooter()}
 <script type="application/json" id="today-data">${JSON.stringify(today).replace(/</g, '\\u003c')}</script>
 <script type="application/json" id="slug-data">${JSON.stringify(slugByName).replace(/</g, '\\u003c')}</script>
 <script>${JS}</script>
+<script>${mapScript('.scard', '.a')}</script>
 <script>${HOOD_JS}</script>
 </body>
 </html>
