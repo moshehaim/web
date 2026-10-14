@@ -76,7 +76,7 @@ ${siteHeader(vm, home, navChips(home, ''))}
 
 ${siteFooter()}
 <script>${HOOD_JS}</script>
-<script src="/js/manage.js?v=1" defer></script>
+<script src="/js/manage.js?v=2" defer></script>
 </body>
 </html>`;
 }
