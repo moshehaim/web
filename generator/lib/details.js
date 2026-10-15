@@ -11,6 +11,8 @@ import { Location, Zmanim, HebrewCalendar } from '@hebcal/core';
 import { phoneLinks } from './home-data.js';
 
 const q = (p) => p.then(({ data, error }) => { if (error) throw error; return data || []; });
+// עכשיו בשעון ישראל (start_date/end_date של מבצעים הם timestamp without time zone)
+const nowIL = () => new Date().toLocaleString('sv-SE', { timeZone: 'Asia/Jerusalem' }).replace(' ', 'T');
 const ils = (n) => '₪' + Math.round(n).toLocaleString('en-US');
 const first = (a) => (Array.isArray(a) ? a.filter(Boolean) : []);
 const waze = (lat, lng) => (lat && lng ? `https://waze.com/ul?ll=${lat},${lng}&navigate=yes` : null);
@@ -30,7 +32,7 @@ export async function fetchDetails(db, communityId) {
     q(by('approve_property', 'id,created_at,full_address,asking_price,area_in_sqm,num_rooms,floor,total_floors,description,property_type,property_condition,available_date,has_elevator,has_parking,parking_spots,has_storage,has_balcony,balcony_area_in_sqm,has_sukkah_balcony,has_safe_room,has_rental_units,image_urls,latitude,longitude,is_broker')),
     q(by('approved_rental_properties', 'id,created_at,full_address,monthly_rent,area_in_sqm,num_rooms,floor,total_floors,description,property_type,property_condition,available_date,has_elevator,has_parking,has_storage,has_balcony,has_sukkah_balcony,has_safe_room,includes_furniture,municipal_tax,maintenance_fees,image_urls,latitude,longitude,is_broker')),
     q(by('promotions', 'id,created_at,title,description,content,image_url,end_date,terms_and_conditions,provider_id,provider_name,image_women_only')
-      .eq('is_active', true).or(`end_date.is.null,end_date.gte."${nowIso}"`)),
+      .eq('is_active', true).lte('start_date', nowIL()).or(`end_date.is.null,end_date.gte."${nowIL()}"`)),
     q(by('jobs', 'id,title,description,job_type,category,employment_type,salary_info,requirements,experience_required,education_required,location_name,location_address,remote_option,company_name,company_description,created_at')
       .not('is_active', 'is', false).or(`expires_at.is.null,expires_at.gt."${nowIso}"`)),
     q(by('second_hand_items', 'id,name,description,price,is_free,category,condition,address,image_urls,created_at')),
