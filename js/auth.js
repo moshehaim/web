@@ -77,6 +77,11 @@
     '.sa-b{display:flex;align-items:center;justify-content:center;gap:8px;height:50px;border-radius:999px;border:1.5px solid #DCE2EC;background:#fff;color:#172F57;font:inherit;font-size:17px;font-weight:800;cursor:pointer;text-decoration:none;width:100%}' +
     '.sa-b:hover{background:#F5F8FF}.sa-b[disabled]{opacity:.6;cursor:default}' +
     '.sa-b.pri{background:#172F57;border-color:#172F57;color:#fff}.sa-b.pri:hover{background:#0F1F3B}' +
+    /* Google / Apple — מלאים ובולטים (בלי לוגואים); כפתור האימייל משני */
+    '.sa-b.sp-g,.sa-b.sp-a{height:56px;font-size:18px;color:#fff;box-shadow:0 6px 16px rgba(20,40,80,.18)}' +
+    '.sa-b.sp-g{background:#1A73E8;border-color:#1A73E8}.sa-b.sp-g:hover{background:#1559B8;border-color:#1559B8}' +
+    '.sa-b.sp-a{background:#000;border-color:#000}.sa-b.sp-a:hover{background:#262626;border-color:#262626}' +
+    '.sa-b.em{background:#fff;color:#172F57;border-color:#172F57}.sa-b.em:hover{background:#F5F8FF}' +
     '.sa-b.rec{background:#E24B4A;border-color:#E24B4A;color:#fff}.sa-b.rec:hover{background:#C0362F}' +
     '.sa-or{display:flex;align-items:center;gap:10px;color:#8A94A6;font-size:14px;font-weight:700}.sa-or:before,.sa-or:after{content:"";flex:1;height:1px;background:#E6E9EF}' +
     '.sa-f{display:flex;flex-direction:column;gap:10px}' +
@@ -119,7 +124,8 @@
     d.innerHTML = '<button class="sa-x" type="button" aria-label="סגירה">×</button><div class="sa-in">' + html + '</div>';
     d.querySelector('.sa-x').addEventListener('click', close);
     if (!d.open) { if (d.showModal) d.showModal(); else d.setAttribute('open', ''); }
-    var f = d.querySelector('input'); if (f) setTimeout(function () { f.focus(); }, 30);
+    // בחלון ההתחברות לא ממקדים את האימייל — המקלדת בטלפון מסתירה את Google/Apple
+    var f = d.querySelector('input'); if (f && !d.querySelector('[data-p]')) setTimeout(function () { f.focus(); }, 30);
     return d;
   }
   function close() { onDone = null; if (dlg && dlg.open) { if (dlg.close) dlg.close(); else dlg.removeAttribute('open'); } }
@@ -158,15 +164,15 @@
     var d = open(
       '<h2 id="sa-h">' + (signup ? 'הרשמה לשכונה' : 'התחברות לשכונה') + '</h2>' +
       '<p>' + esc(opts.why || 'אותו חשבון כמו באפליקציה — מתחברים פעם אחת.') + '</p>' +
-      '<button class="sa-b" type="button" data-p="google">המשך עם Google</button>' +
-      '<button class="sa-b" type="button" data-p="apple">המשך עם Apple</button>' +
+      '<button class="sa-b sp-g" type="button" data-p="google">המשך עם Google</button>' +
+      '<button class="sa-b sp-a" type="button" data-p="apple">המשך עם Apple</button>' +
       '<div class="sa-or">או עם אימייל</div>' +
       '<form class="sa-f" novalidate>' +
       (signup ? '<input name="name" autocomplete="name" placeholder="שם מלא" required>' : '') +
       '<input name="email" type="email" dir="ltr" autocomplete="email" placeholder="אימייל" required>' +
       '<input name="pw" type="password" dir="ltr" autocomplete="' + (signup ? 'new-password' : 'current-password') + '" placeholder="סיסמה" required minlength="6">' +
       '<p class="sa-msg" hidden></p>' +
-      '<button class="sa-b pri" type="submit">' + (signup ? 'יצירת חשבון' : 'התחברות') + '</button>' +
+      '<button class="sa-b em" type="submit">' + (signup ? 'יצירת חשבון' : 'התחברות עם אימייל') + '</button>' +
       '</form>' +
       '<button class="sa-lnk" type="button" data-sw>' + (signup ? 'כבר יש לי חשבון — להתחברות' : 'אין לכם חשבון? להרשמה') + '</button>' +
       (signup ? '' : '<a class="sa-small" href="' + APP + '">שכחתם סיסמה? אפשר לאפס באפליקציה</a>')
