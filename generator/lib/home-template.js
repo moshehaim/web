@@ -267,7 +267,7 @@ a.hood-item:hover{background:#F5F8FF}
 .ps-cta{background:var(--soft);box-shadow:none;border:1.5px dashed #C9D6EA;padding-inline:20px}
 @media (max-width:620px){.ps-item i{width:96px;height:96px}.ps-item{min-height:0}}
 /* מבצע = פלאייר שהעסק עיצב: מוצג שלם, לאורך, לא חתוך */
-.card.promo .media{aspect-ratio:4/5;background:#EEF2F8}.card.promo .media img{object-fit:contain}.ps-cta b{color:var(--navy)}
+.card.promo .media{aspect-ratio:4/5;background:#EEF2F8}.media .ph{display:flex;align-items:center;justify-content:center;width:100%;height:100%;color:#7C3AED;background:#F3EEFF}.card.promo .media img{object-fit:contain}.ps-cta b{color:var(--navy)}
 .span2{grid-column:span 2}
 @media (max-width:1100px){.board-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.span2{grid-column:1/-1;order:3}}
 @media (max-width:700px){.board-grid{grid-template-columns:minmax(0,1fr)}}
@@ -349,8 +349,8 @@ const img = (src, alt) => `<img src="${esc(src)}" alt="${esc(alt)}" loading="laz
 
 function promoCard(p) {
   return `<a href="${esc(p.href || APP)}" class="card promo lift${p.coupon ? ' coupon' : ''}">
-<div class="media">${img(p.img, p.title)}<span class="tag">${esc(p.kind)}</span></div>
-<div class="body"><b class="clamp2">${esc(p.title)}</b>${p.provider ? `<span class="sub">${esc(p.provider)}</span>` : ''}<span class="fine">${esc(p.until)}${p.coupon ? ' · הקוד באפליקציה' : ''}</span></div>
+<div class="media">${p.img ? img(p.img, p.title) : `<span class="ph">${svg(p.coupon ? ICON.ticket || ICON.tag : ICON.tag, 56, 'currentColor', 1.6)}</span>`}<span class="tag">${esc(p.kind)}</span></div>
+<div class="body"><b class="clamp2">${esc(p.title)}</b>${p.provider ? `<span class="sub">${esc(p.provider)}</span>` : ''}<span class="fine">${esc(p.until)}</span></div>
 </a>`;
 }
 

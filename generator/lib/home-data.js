@@ -24,6 +24,8 @@ import { isPrayerInSeason } from './season.js';
 
 // בעמוד הבית הכרטיסים בנויים על תמונה, אז תמונה לנשים בלבד = הפריט לא בקרוסלה
 const SHOW = (r) => !r.image_women_only;
+// עכשיו בשעון ישראל, בפורמט של timestamp without time zone (start_date/end_date של מבצעים)
+const nowIL = () => new Date().toLocaleString('sv-SE', { timeZone: 'Asia/Jerusalem' }).replace(' ', 'T');
 // קופונים: בלי code. אזל (נלקחו כולם) — לא מוצג
 const COUPON_COLS = 'id,image_url,text_content,expires_at,image_women_only,content_audience,provider_name,quantity,current_redemptions';
 const AVAIL = (c) => !(c.quantity > 0) || (c.current_redemptions || 0) < c.quantity;
@@ -57,7 +59,7 @@ export async function fetchHome(db, communityId) {
       .order('recommend_count', { ascending: false, nullsFirst: false })
       .order('updated_at', { ascending: false }).limit(30)),
     q(byCommunity('promotions', 'id,title,image_url,provider_name,end_date,image_women_only,content_audience')
-      .eq('is_active', true).or(`end_date.is.null,end_date.gte."${nowIso}"`)
+      .eq('is_active', true).lte('start_date', nowIL()).or(`end_date.is.null,end_date.gte."${nowIL()}"`)
       .order('created_at', { ascending: false }).limit(12)),
     // בלי code — הקוד לא יוצא לאתר הסטטי. ה-view עוקף RLS, לכן מסננים כאן פעיל/התחיל/בתוקף
     q(byCommunity('coupons_with_provider', COUPON_COLS)
@@ -179,11 +181,12 @@ export function shapeHome(raw, { now = new Date(), base = '' } = {}) {
     .map((p) => ({ id: p.id, name: p.name, field: pc[p.main_category] || '', img: p.image_url, rec: p.recommend_count || 0 }));
 
   const promos = [
-    ...raw.promotions.filter(SHOW).map((p) => ({
-      id: p.id, kind: 'מבצע', title: p.title, provider: p.provider_name || '', img: p.image_url, until: until(p.end_date),
+    // image_women_only מסתיר רק את התמונה — לא את המבצע עצמו
+    ...raw.promotions.map((p) => ({
+      id: p.id, kind: 'מבצע', title: p.title, provider: p.provider_name || '', img: SHOW(p) ? p.image_url : null, until: until(p.end_date),
     })),
-    ...(raw.coupons || []).filter(SHOW).filter(AVAIL).map((c) => ({
-      id: c.id, kind: 'קופון', title: c.text_content || 'קופון', provider: c.provider_name || '', img: c.image_url, until: until(c.expires_at), coupon: true,
+    ...(raw.coupons || []).filter(AVAIL).map((c) => ({
+      id: c.id, kind: 'קופון', title: c.text_content || 'קופון', provider: c.provider_name || '', img: SHOW(c) ? c.image_url : null, until: until(c.expires_at), coupon: true,
     })),
   ];
 
@@ -263,7 +266,7 @@ export async function fetchDirectory(db, communityId) {
     q(db.from('business_categories').select('id,name_he,display_order')),
     q(db.from('professional_categories').select('id,name_he,display_order')),
     q(db.from('promotions').select('id,title,image_url,end_date,provider_id,provider_name,image_women_only,created_at')
-      .eq('community_id', communityId).eq('is_active', true).or(`end_date.is.null,end_date.gte."${nowIso}"`)),
+      .eq('community_id', communityId).eq('is_active', true).lte('start_date', nowIL()).or(`end_date.is.null,end_date.gte."${nowIL()}"`)),
   ]);
   return { businesses, professionals, businessTypes, businessCategories, profCategories, promos };
 }
@@ -349,7 +352,7 @@ export async function fetchListings(db, communityId) {
   const by = (t, cols) => db.from(t).select(cols).eq('community_id', communityId);
   const [promotions, coupons, sale, rent, jobs, secondHand, gmachim, volunteering, lostFound] = await Promise.all([
     q(by('promotions', 'id,title,image_url,provider_name,end_date,image_women_only')
-      .eq('is_active', true).or(`end_date.is.null,end_date.gte."${nowIso}"`).order('created_at', { ascending: false })),
+      .eq('is_active', true).lte('start_date', nowIL()).or(`end_date.is.null,end_date.gte."${nowIL()}"`).order('created_at', { ascending: false })),
     q(by('coupons_with_provider', COUPON_COLS)
       .eq('status', 'active').lte('start_date', nowIso).gt('expires_at', nowIso)
       .order('priority', { ascending: false, nullsFirst: false })),
