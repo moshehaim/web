@@ -355,6 +355,12 @@ footer .c{font-size:13px;color:#8A94A6}
 .sp input[type=time]{height:38px;border:1.5px solid #DCE2EC;border-radius:10px;padding:0 8px;font:inherit;font-size:15px;direction:ltr}
 .sp-err{margin:0;color:#C0362F;font-weight:700;font-size:14px}
 .sp-acts{display:flex;gap:16px}
+.ac{position:relative}
+.ac-list{position:absolute;top:100%;right:0;left:0;z-index:5;margin-top:4px;background:#fff;border:1px solid #DCE2EC;border-radius:12px;box-shadow:0 10px 24px rgba(20,40,80,.14);max-height:260px;overflow:auto;padding:4px}
+.ac-list button{display:flex;justify-content:space-between;align-items:center;gap:10px;width:100%;padding:9px 10px;border:0;background:none;border-radius:8px;font:inherit;text-align:right;cursor:pointer}
+.ac-list button:hover{background:#F5F8FF}.ac-list b{font-size:15px;color:#2A3342}.ac-list small{font-size:12px;color:#6B7689;white-space:nowrap}
+.ac-list p{margin:0;padding:10px;color:#6B7689;font-size:14px}
+.sa-note{background:#FFF6E0;border:1px solid #F3D27A;border-radius:12px;padding:8px 12px;color:#5C4400;font-weight:700;font-size:14px;margin:0}
 .sa-dlg.wide{width:min(560px,calc(100vw - 32px))}
 .mb-field{display:flex;flex-direction:column;gap:6px;text-align:right}
 .mb-field label{font-weight:800;color:var(--navy);font-size:15px}
@@ -476,6 +482,6 @@ if(gf){var hdr=document.querySelector('.hdr'),gopen=document.querySelector('.gs-
     else if(e.key==='Escape'){gr.hidden=true;}});
   document.addEventListener('click',function(e){if(!gf.contains(e.target))gr.hidden=true;});}
 })();</script>
-<script src="/js/manage.js?v=5" defer></script>
+<script src="/js/manage.js?v=6" defer></script>
 </body>
 </html>
