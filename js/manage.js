@@ -262,13 +262,14 @@
       (ev ? '<label class="mb-chk"><input type="checkbox" id="mb-ev"' + (hasEv ? ' checked' : '') + '> מספק שירותים לאירועים</label>' +
         '<div class="mb-field" id="mb-evw"' + (hasEv ? '' : ' hidden') + '><label for="mb-evd">תיאור השירותים</label><textarea id="mb-evd" maxlength="500">' + esc(biz.event_services_description || '') + '</textarea>' +
         '<p class="mb-note">העסק יוצג ברשימת ספקי האירועים.</p></div>' : '') +
-      '<p class="mb-note">' + (isPro ? 'שם, כתובת ותחום העיסוק' : 'שם, כתובת וסוג העסק') + ' — משנים כרגע באפליקציה.</p>' +
+      (isPro ? '<p class="mb-note">שם, כתובת ותחום העיסוק — משנים כרגע באפליקציה.</p>' : '<button class="hr-lnk" type="button" id="mb-ident">שינוי שם, כתובת או סוג העסק ←</button>') +
       '<p class="sa-msg" hidden></p><button class="sa-b pri" type="submit">שמירה</button></form>', true);
 
     var file = d.querySelector('#mb-file');
     d.querySelector('#mb-pickimg').addEventListener('click', function () { file.click(); });
     file.addEventListener('change', function () { if (file.files[0]) uploadImage(d, file.files[0]); });
     var evc = d.querySelector('#mb-ev'); if (evc) evc.addEventListener('change', function () { d.querySelector('#mb-evw').hidden = !evc.checked; });
+    var idb = d.querySelector('#mb-ident'); if (idb) idb.addEventListener('click', identityView);
 
     d.querySelector('#mb-df').addEventListener('submit', function (e) {
       e.preventDefault();
@@ -298,6 +299,143 @@
         if (isDup) { btn.disabled = false; btn.textContent = 'שמירה'; return msg(d, 'קיים כבר איש מקצוע עם שם וטלפון זהים'); }
         return save(patch).then(function () { A.close(); A.toast('הפרטים עודכנו ✓'); render(); });
       }).catch(function () { btn.disabled = false; btn.textContent = 'שמירה'; msg(d, 'השמירה נכשלה. נסו שוב'); });
+    });
+  }
+
+  /* ── שם, כתובת וסוג עסק (BusinessAddScreen במצב עריכה) ──
+   *  - כפילות: עסק אחר עם אותו שם ואותה כתובת (BusinessService.checkDuplicate)
+   *  - סוג: business_types (בלי "שונות" — באפליקציה הולך לאישור מנהל); pricing_plan_id לא משתנה בעריכה
+   *  - כתובת: search_streets (P-23) — רחוב בשכונה אחרת מעביר את העסק לשכונה ההיא (resolveFinalCommunityId)
+   *  - מיקום: Nominatim כמו LocationHelper (כתובת, שכונה, עיר, ישראל). בלי קואורדינטות השרת משאיר את המיקום הישן! */
+  var TYPES = null, COMM = {};
+  function loadTypes() {
+    if (TYPES) return Promise.resolve(TYPES);
+    return Promise.all([
+      sb.from('business_types').select('id,category_id,name_he,synonyms,display_order').neq('category_id', 'other').order('display_order', { ascending: true }),
+      sb.from('business_categories').select('id,name_he')
+    ]).then(function (r) {
+      var cats = {}; (r[1].data || []).forEach(function (c) { cats[c.id] = c.name_he; });
+      TYPES = (r[0].data || []).filter(function (t) { return t.id !== 'other'; }).map(function (t) {
+        var syn = Array.isArray(t.synonyms) ? t.synonyms.join(' ') : (t.synonyms || '');
+        return { id: t.id, cat: t.category_id, name: t.name_he, catName: cats[t.category_id] || '', key: norm(t.name_he + ' ' + syn + ' ' + (cats[t.category_id] || '')) };
+      });
+      return TYPES;
+    });
+  }
+  function community(id) {
+    if (COMM[id]) return Promise.resolve(COMM[id]);
+    return sb.from('community').select('id,city,neighborhood').eq('id', id).maybeSingle().then(function (r) { COMM[id] = r.data || {}; return COMM[id]; });
+  }
+  function norm(s) { return String(s || '').toLowerCase().replace(/["'׳״]/g, '').replace(/\s+/g, ' ').trim(); }
+  function splitAddr(a) {
+    a = String(a || '').split(',')[0].trim();
+    var m = /^(.*?)\s+(\d+[א-ת]?)$/.exec(a);
+    return m ? { street: m[1], num: m[2] } : { street: a, num: '' };
+  }
+  function geocode(address, neighborhood, city) {
+    var parts = [address]; if (neighborhood) parts.push(neighborhood); if (city) parts.push(city);
+    var q = parts.join(', '); if (q.indexOf('ישראל') < 0) q += ', ישראל';
+    var u = 'https://nominatim.openstreetmap.org/search?format=json&limit=1&countrycodes=il&addressdetails=1&accept-language=he&q=' + encodeURIComponent(q);
+    return fetch(u).then(function (r) { return r.ok ? r.json() : []; }).then(function (j) {
+      return j && j[0] ? { lat: parseFloat(j[0].lat), lng: parseFloat(j[0].lon) } : null;
+    }).catch(function () { return null; });
+  }
+
+  function identityView() {
+    var cur = splitAddr(biz.address), picked = null; // picked: {street, communityId, communityName}
+    var type = { id: biz.business_type, cat: biz.business_category, name: ctx.typeName || '' };
+    var d = dlg('<h2 id="sa-h">שם, כתובת וסוג העסק</h2>' +
+      '<form class="sa-f" novalidate id="id-f" autocomplete="off">' +
+      '<div class="mb-field"><label for="id-name">שם העסק</label><input id="id-name" maxlength="80" value="' + esc(biz.name) + '"></div>' +
+      '<div class="mb-field ac"><label for="id-type">סוג העסק</label><input id="id-type" value="' + esc(type.name) + '" placeholder="חיפוש סוג עסק"><div class="ac-list" id="id-tl" hidden></div>' +
+      '<p class="mb-note">סוג שלא ברשימה — דרך האפליקציה (עובר לאישור).</p></div>' +
+      '<div class="mb-field ac"><label for="id-st">רחוב</label><input id="id-st" value="' + esc(cur.street) + '" placeholder="התחילו להקליד שם רחוב…"><div class="ac-list" id="id-sl" hidden></div></div>' +
+      '<div class="mb-field"><label for="id-num">מספר בית</label><input id="id-num" dir="ltr" inputmode="numeric" maxlength="6" value="' + esc(cur.num) + '" style="max-width:140px"></div>' +
+      '<p class="mb-note" id="id-nb"></p>' +
+      '<p class="sa-msg" hidden></p><button class="sa-b pri" type="submit">שמירה</button></form>', true);
+
+    var nbNote = d.querySelector('#id-nb');
+    function showNb() {
+      if (picked && picked.communityId && picked.communityId !== biz.community_id) {
+        nbNote.className = 'sa-note'; nbNote.textContent = 'העסק יעבור לשכונה ' + picked.communityName;
+      } else { nbNote.className = 'mb-note'; nbNote.textContent = ''; }
+    }
+
+    // סוג עסק — חיפוש ברשימה
+    var ti = d.querySelector('#id-type'), tl = d.querySelector('#id-tl');
+    loadTypes().catch(function () {});
+    ti.addEventListener('input', function () {
+      type = { id: null, cat: null, name: ti.value };
+      var q = norm(ti.value); if (!q || !TYPES) { tl.hidden = true; return; }
+      var res = TYPES.filter(function (t) { return t.key.indexOf(q) >= 0; }).slice(0, 8);
+      tl.innerHTML = res.length ? res.map(function (t, i) { return '<button type="button" data-i="' + TYPES.indexOf(t) + '"><b>' + esc(t.name) + '</b><small>' + esc(t.catName) + '</small></button>'; }).join('') : '<p>לא נמצא סוג מתאים</p>';
+      tl.hidden = false;
+      tl.querySelectorAll('[data-i]').forEach(function (b) { b.addEventListener('click', function () {
+        var t = TYPES[+b.dataset.i]; type = { id: t.id, cat: t.cat, name: t.name }; ti.value = t.name; tl.hidden = true; }); });
+    });
+
+    // רחוב — search_streets בעיר של העסק, מעדיף את השכונה שלו
+    var si = d.querySelector('#id-st'), sl = d.querySelector('#id-sl'), tmr = null;
+    community(biz.community_id).then(function (c) {
+      si.addEventListener('input', function () {
+        picked = null; showNb(); clearTimeout(tmr);
+        var q = si.value.trim(); if (q.length < 2) { sl.hidden = true; return; }
+        tmr = setTimeout(function () {
+          sb.rpc('search_streets', { p_city: c.city || 'ירושלים', p_query: q, p_prefer_community: biz.community_id, p_limit: 8 }).then(function (r) {
+            var rows = r.data || [];
+            if (!rows.length) { sl.hidden = true; return; }
+            sl.innerHTML = rows.map(function (x, i) { return '<button type="button" data-i="' + i + '"><b>' + esc(x.street_name) + '</b><small>' + esc(x.community_name) + '</small></button>'; }).join('');
+            sl.hidden = false;
+            sl.querySelectorAll('[data-i]').forEach(function (b) { b.addEventListener('click', function () {
+              var x = rows[+b.dataset.i]; si.value = x.street_name; sl.hidden = true;
+              picked = { street: x.street_name, communityId: x.community_id, communityName: x.community_name }; showNb();
+              d.querySelector('#id-num').focus(); }); });
+          });
+        }, 300);
+      });
+    });
+    d.addEventListener('click', function (e) { if (!e.target.closest('.ac')) { tl.hidden = true; sl.hidden = true; } });
+
+    d.querySelector('#id-f').addEventListener('submit', function (e) {
+      e.preventDefault();
+      var name = d.querySelector('#id-name').value.trim(), street = si.value.trim(), num = d.querySelector('#id-num').value.trim();
+      if (!name) return msg(d, 'נא להזין שם עסק');
+      if (!type.id) {
+        var exact = TYPES && TYPES.filter(function (t) { return norm(t.name) === norm(ti.value); })[0];
+        if (exact) type = { id: exact.id, cat: exact.cat, name: exact.name };
+        else if (ti.value.trim() === (ctx.typeName || '') && biz.business_type) type = { id: biz.business_type, cat: biz.business_category, name: ctx.typeName };
+        else return msg(d, 'נא לבחור סוג עסק מהרשימה');
+      }
+      if (!street) return msg(d, 'נא להזין כתובת עסק');
+      if (num && !/^\d+[א-ת]?$/.test(num)) return msg(d, 'מספר בית לא תקין');
+      var address = street + (num ? ' ' + num : '');
+      var addrChanged = address !== splitAddr(biz.address).street + (splitAddr(biz.address).num ? ' ' + splitAddr(biz.address).num : '');
+      var newComm = picked && picked.communityId && picked.communityId !== biz.community_id ? picked : null;
+      var btn = d.querySelector('[type=submit]'); btn.disabled = true; btn.textContent = 'בודקים…'; msg(d, '');
+      var fail = function (t) { btn.disabled = false; btn.textContent = 'שמירה'; msg(d, t); };
+
+      // שמירת הכתובת המקורית אם לא השתנתה (כולל ", ירושלים" אם היה)
+      var finalAddress = addrChanged ? address : biz.address;
+      var dupP = (name !== biz.name || addrChanged)
+        ? sb.from('businesses').select('id').eq('name', name).eq('address', finalAddress).neq('id', biz.id).limit(1).then(function (r) { return !!(r.data && r.data.length); }, function () { return false; })
+        : Promise.resolve(false);
+      dupP.then(function (dup) {
+        if (dup) return fail('קיים כבר עסק עם שם וכתובת זהים');
+        var commP = community(newComm ? newComm.communityId : biz.community_id);
+        return commP.then(function (c) {
+          return addrChanged ? geocode(address, newComm ? newComm.communityName : c.neighborhood, c.city) : null;
+        }).then(function (geo) {
+          var patch = { name: name, business_type: type.id, business_category: type.cat, address: finalAddress };
+          if (geo) { patch.latitude = geo.lat; patch.longitude = geo.lng; }
+          if (newComm) patch.community_id = newComm.communityId;
+          btn.textContent = 'שומרים…';
+          return save(patch).then(function () {
+            ctx.typeName = type.name;
+            A.close(); render();
+            A.toast(addrChanged && !geo ? 'נשמר ✓ — המיקום במפה לא עודכן' : newComm ? 'נשמר ✓ — העסק עבר ל' + newComm.communityName : 'הפרטים עודכנו ✓');
+          });
+        });
+      }).catch(function () { fail('השמירה נכשלה. נסו שוב'); });
     });
   }
 
