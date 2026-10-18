@@ -20,6 +20,18 @@
 <link href="https://fonts.googleapis.com/css2?family=Assistant:wght@400;600;700;800&family=Frank+Ruhl+Libre:wght@900&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
 <link rel="preconnect" href="https://mebomrqnfnbqijiuawdh.supabase.co">
 <style>
+.t-blue{--t1:#EFF4FF;--t2:#DCE6FB;--tf:#244782}.t-sky{--t1:#E9F4FC;--t2:#D3E8F7;--tf:#1F78B4}
+.t-green{--t1:#EAF7EE;--t2:#D4EEDC;--tf:#15803D}.t-violet{--t1:#F3EFFC;--t2:#E4DCF7;--tf:#6D4BB8}
+.t-teal{--t1:#E6F6F4;--t2:#CDEBE7;--tf:#0F766E}.t-amber{--t1:#FCF5E6;--t2:#F4E5C2;--tf:#8A5A00}
+.t-rose{--t1:#FCEFF2;--t2:#F5D9E0;--tf:#9F2D4B}
+/* תמונת ברירת מחדל: רקע בגוון הקטגוריה + דוגמה (נקודות / פסים / קו רקיע) + אייקון על משטח לבן */
+.art{position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,var(--t1),var(--t2))!important;color:var(--tf)}
+.art::before{content:'';position:absolute;inset:0;pointer-events:none}
+.art.v0::before{background:radial-gradient(color-mix(in srgb,var(--tf) 16%,transparent) 1.5px,transparent 1.8px) 0 0/16px 16px}
+.art.v1::before{background:repeating-linear-gradient(35deg,color-mix(in srgb,var(--tf) 8%,transparent) 0 9px,transparent 9px 22px)}
+.art.v2::before{background:color-mix(in srgb,var(--tf) 13%,transparent);-webkit-mask:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20400%20300%22%20preserveAspectRatio%3D%22none%22%3E%3Crect%20x%3D%220%22%20y%3D%22230%22%20width%3D%2246%22%20height%3D%2270%22%20rx%3D%223%22%2F%3E%3Crect%20x%3D%2250%22%20y%3D%22190%22%20width%3D%2234%22%20height%3D%22110%22%20rx%3D%223%22%2F%3E%3Crect%20x%3D%2288%22%20y%3D%22215%22%20width%3D%2252%22%20height%3D%2285%22%20rx%3D%223%22%2F%3E%3Crect%20x%3D%22144%22%20y%3D%22170%22%20width%3D%2230%22%20height%3D%22130%22%20rx%3D%223%22%2F%3E%3Crect%20x%3D%22178%22%20y%3D%22205%22%20width%3D%2258%22%20height%3D%2295%22%20rx%3D%223%22%2F%3E%3Crect%20x%3D%22240%22%20y%3D%22180%22%20width%3D%2240%22%20height%3D%22120%22%20rx%3D%223%22%2F%3E%3Crect%20x%3D%22284%22%20y%3D%22225%22%20width%3D%2250%22%20height%3D%2275%22%20rx%3D%223%22%2F%3E%3Crect%20x%3D%22338%22%20y%3D%22195%22%20width%3D%2230%22%20height%3D%22105%22%20rx%3D%223%22%2F%3E%3Crect%20x%3D%22372%22%20y%3D%22220%22%20width%3D%2240%22%20height%3D%2280%22%20rx%3D%223%22%2F%3E%3Ccircle%20cx%3D%22330%22%20cy%3D%2270%22%20r%3D%2226%22%2F%3E%3C%2Fsvg%3E") 0 0/100% 100% no-repeat;mask:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20400%20300%22%20preserveAspectRatio%3D%22none%22%3E%3Crect%20x%3D%220%22%20y%3D%22230%22%20width%3D%2246%22%20height%3D%2270%22%20rx%3D%223%22%2F%3E%3Crect%20x%3D%2250%22%20y%3D%22190%22%20width%3D%2234%22%20height%3D%22110%22%20rx%3D%223%22%2F%3E%3Crect%20x%3D%2288%22%20y%3D%22215%22%20width%3D%2252%22%20height%3D%2285%22%20rx%3D%223%22%2F%3E%3Crect%20x%3D%22144%22%20y%3D%22170%22%20width%3D%2230%22%20height%3D%22130%22%20rx%3D%223%22%2F%3E%3Crect%20x%3D%22178%22%20y%3D%22205%22%20width%3D%2258%22%20height%3D%2295%22%20rx%3D%223%22%2F%3E%3Crect%20x%3D%22240%22%20y%3D%22180%22%20width%3D%2240%22%20height%3D%22120%22%20rx%3D%223%22%2F%3E%3Crect%20x%3D%22284%22%20y%3D%22225%22%20width%3D%2250%22%20height%3D%2275%22%20rx%3D%223%22%2F%3E%3Crect%20x%3D%22338%22%20y%3D%22195%22%20width%3D%2230%22%20height%3D%22105%22%20rx%3D%223%22%2F%3E%3Crect%20x%3D%22372%22%20y%3D%22220%22%20width%3D%2240%22%20height%3D%2280%22%20rx%3D%223%22%2F%3E%3Ccircle%20cx%3D%22330%22%20cy%3D%2270%22%20r%3D%2226%22%2F%3E%3C%2Fsvg%3E") 0 0/100% 100% no-repeat}
+.art-ic{position:relative;z-index:1;display:flex;align-items:center;justify-content:center;width:84px;height:84px;border-radius:24px;background:rgba(255,255,255,.86);box-shadow:0 6px 18px rgba(20,40,80,.10);color:var(--tf)}
+.art-ic svg{width:44px;height:44px}
 *,*::before,*::after{box-sizing:border-box}
 :root{--navy:#172F57;--navy2:#213E6E;--brand:#244782;--sky:#8CCBF2;--accent:#2A6FB8;--ink:#1C2B45;
 --muted:#6B7689;--line:#E6E9EF;--bg:#F6F7F9;--soft:#EAF1FA;--ok:#5CD49A;--red:#B4233C}
@@ -293,14 +305,10 @@ footer .c{font-size:13px;color:#8A94A6}
 
 @media (prefers-reduced-motion:reduce){.mq,.mq.rev,.tick,.dot{animation:none}.track{transition:none}.lift:hover{transform:none}}
 
-.t-blue{--t1:#EFF4FF;--t2:#DCE6FB;--tf:#244782}.t-sky{--t1:#E9F4FC;--t2:#D3E8F7;--tf:#1F78B4}
-.t-green{--t1:#EAF7EE;--t2:#D4EEDC;--tf:#15803D}.t-violet{--t1:#F3EFFC;--t2:#E4DCF7;--tf:#6D4BB8}
-.t-teal{--t1:#E6F6F4;--t2:#CDEBE7;--tf:#0F766E}.t-amber{--t1:#FCF5E6;--t2:#F4E5C2;--tf:#8A5A00}
-.t-rose{--t1:#FCEFF2;--t2:#F5D9E0;--tf:#9F2D4B}
 .dcard.compact .dmedia{display:none}
 .dcard.compact .dbody{padding-top:18px}
 .dmedia.noimg{background:radial-gradient(120% 90% at 85% 0%,var(--t1) 0%,var(--t2) 100%)}
-.dmedia.noimg svg{width:64px;height:64px;color:var(--tf);opacity:.9}
+.dmedia.noimg.art::after{display:none}
 .dmedia.noimg::after{content:'';position:absolute;inset:auto 0 0 0;height:36%;opacity:.35;
 background:linear-gradient(to top,var(--t2),transparent)}
 .dir-hero{background:var(--navy);color:#fff}
@@ -376,7 +384,7 @@ background:linear-gradient(to top,var(--t2),transparent)}
 .dcard{display:grid;grid-template-columns:minmax(0,1fr) 96px;grid-template-areas:"b m" "a a"}
 .dmedia{grid-area:m;aspect-ratio:1/1;margin:14px 0 0 14px;border-radius:14px;width:82px;overflow:visible}
 .dmedia img{border-radius:14px}
-.dmedia.noimg svg{width:36px;height:36px}
+.dmedia.noimg .art-ic{width:52px;height:52px;border-radius:15px;box-shadow:0 3px 10px rgba(20,40,80,.10)}.dmedia.noimg .art-ic svg{width:28px;height:28px}
 .drec{top:-8px;right:auto;left:-8px}
 .dbody{grid-area:b;padding:14px 16px 0 12px}
 .dbody h3{font-size:17px}
@@ -476,157 +484,157 @@ background:linear-gradient(to top,var(--t2),transparent)}
 <div id="dmap" class="dmap" hidden></div>
 <div class="dgrid">
 <article class="dcard lift" data-group="גן משחקים" data-text="גן אביטל  גן משחקים הרב בלוי" data-id="665b6d21-e182-410f-9507-0eed97fba90a" data-t="parks" data-ll="31.79820,35.21990">
-<div class="dmedia noimg t-green"><svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l6 9H6zM12 8l7 9H5zM12 17v4"/></svg></div>
+<div class="dmedia noimg art v0 t-green"><span class="art-ic"><svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l6 9H6zM12 8l7 9H5zM12 17v4"/></svg></span></div>
 <div class="dbody"><h3><a class="stretch" href="/romema-sanhedria/parks/%D7%92%D7%9F-%D7%90%D7%91%D7%99%D7%98%D7%9C/">גן אביטל</a></h3><span class="w">הרב בלוי</span></div>
 <div class="dact"><a class="a-waze" href="https://waze.com/ul?ll=31.7982,35.2199&amp;navigate=yes" target="_blank" rel="noopener" aria-label="ניווט לגן אביטל ב-Waze" title="ניווט ב-Waze"><img src="/img/waze.png" alt="" width="44" height="44"></a></div>
 </article>
 <article class="dcard lift" data-group="גן משחקים" data-text="גן בן ציון יאדלר  גן משחקים מעגלי הרים לוין 59" data-id="9de1f1f9-6bc3-4fe3-b93b-ad40399ada93" data-t="parks" data-ll="31.80120,35.21970">
-<div class="dmedia noimg t-green"><svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l6 9H6zM12 8l7 9H5zM12 17v4"/></svg></div>
+<div class="dmedia noimg art v1 t-green"><span class="art-ic"><svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l6 9H6zM12 8l7 9H5zM12 17v4"/></svg></span></div>
 <div class="dbody"><h3><a class="stretch" href="/romema-sanhedria/parks/%D7%92%D7%9F-%D7%91%D7%9F-%D7%A6%D7%99%D7%95%D7%9F-%D7%99%D7%90%D7%93%D7%9C%D7%A8/">גן בן ציון יאדלר</a></h3><span class="w">מעגלי הרים לוין 59</span></div>
 <div class="dact"><a class="a-waze" href="https://waze.com/ul?ll=31.8012,35.2197&amp;navigate=yes" target="_blank" rel="noopener" aria-label="ניווט לגן בן ציון יאדלר ב-Waze" title="ניווט ב-Waze"><img src="/img/waze.png" alt="" width="44" height="44"></a></div>
 </article>
 <article class="dcard lift" data-group="גן משחקים" data-text="גן גבעת משה  גן משחקים תורת חסד פינת דברי חיים" data-id="8a6c139a-dda1-4482-94e8-c736673a36c4" data-t="parks" data-ll="31.79690,35.20960">
-<div class="dmedia noimg t-green"><svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l6 9H6zM12 8l7 9H5zM12 17v4"/></svg></div>
+<div class="dmedia noimg art v0 t-green"><span class="art-ic"><svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l6 9H6zM12 8l7 9H5zM12 17v4"/></svg></span></div>
 <div class="dbody"><h3><a class="stretch" href="/romema-sanhedria/parks/%D7%92%D7%9F-%D7%92%D7%91%D7%A2%D7%AA-%D7%9E%D7%A9%D7%94/">גן גבעת משה</a></h3><span class="w">תורת חסד פינת דברי חיים</span></div>
 <div class="dact"><a class="a-waze" href="https://waze.com/ul?ll=31.7969,35.2096&amp;navigate=yes" target="_blank" rel="noopener" aria-label="ניווט לגן גבעת משה ב-Waze" title="ניווט ב-Waze"><img src="/img/waze.png" alt="" width="44" height="44"></a></div>
 </article>
 <article class="dcard lift" data-group="גן משחקים" data-text="גן הורים  גן משחקים ראש פינה" data-id="5d6b0e56-d9ea-4e6e-989b-227c1ac1c0ae" data-t="parks" data-ll="31.79480,35.20050">
-<div class="dmedia noimg t-green"><svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l6 9H6zM12 8l7 9H5zM12 17v4"/></svg></div>
+<div class="dmedia noimg art v1 t-green"><span class="art-ic"><svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l6 9H6zM12 8l7 9H5zM12 17v4"/></svg></span></div>
 <div class="dbody"><h3><a class="stretch" href="/romema-sanhedria/parks/%D7%92%D7%9F-%D7%94%D7%95%D7%A8%D7%99%D7%9D/">גן הורים</a></h3><span class="w">ראש פינה</span></div>
 <div class="dact"><a class="a-waze" href="https://waze.com/ul?ll=31.7948,35.2005&amp;navigate=yes" target="_blank" rel="noopener" aria-label="ניווט לגן הורים ב-Waze" title="ניווט ב-Waze"><img src="/img/waze.png" alt="" width="44" height="44"></a></div>
 </article>
 <article class="dcard lift" data-group="גן משחקים" data-text="גן ורון  גן משחקים מעגלי הרי״ם לוין 38" data-id="2389c2e5-33b3-44d5-8dd6-6ce45ce6c5f3" data-t="parks" data-ll="31.80130,35.21920">
-<div class="dmedia noimg t-green"><svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l6 9H6zM12 8l7 9H5zM12 17v4"/></svg></div>
+<div class="dmedia noimg art v0 t-green"><span class="art-ic"><svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l6 9H6zM12 8l7 9H5zM12 17v4"/></svg></span></div>
 <div class="dbody"><h3><a class="stretch" href="/romema-sanhedria/parks/%D7%92%D7%9F-%D7%95%D7%A8%D7%95%D7%9F/">גן ורון</a></h3><span class="w">מעגלי הרי״ם לוין 38</span></div>
 <div class="dact"><a class="a-waze" href="https://waze.com/ul?ll=31.8013,35.2192&amp;navigate=yes" target="_blank" rel="noopener" aria-label="ניווט לגן ורון ב-Waze" title="ניווט ב-Waze"><img src="/img/waze.png" alt="" width="44" height="44"></a></div>
 </article>
 <article class="dcard lift" data-group="גן משחקים" data-text="גן זיסמן הגדול  גן משחקים עזרת תורה 8" data-id="dff47d80-2967-4cda-923f-575747c16264" data-t="parks" data-ll="31.79540,35.21250">
-<div class="dmedia noimg t-green"><svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l6 9H6zM12 8l7 9H5zM12 17v4"/></svg></div>
+<div class="dmedia noimg art v1 t-green"><span class="art-ic"><svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l6 9H6zM12 8l7 9H5zM12 17v4"/></svg></span></div>
 <div class="dbody"><h3><a class="stretch" href="/romema-sanhedria/parks/%D7%92%D7%9F-%D7%96%D7%99%D7%A1%D7%9E%D7%9F-%D7%94%D7%92%D7%93%D7%95%D7%9C/">גן זיסמן הגדול</a></h3><span class="w">עזרת תורה 8</span></div>
 <div class="dact"><a class="a-waze" href="https://waze.com/ul?ll=31.7954,35.2125&amp;navigate=yes" target="_blank" rel="noopener" aria-label="ניווט לגן זיסמן הגדול ב-Waze" title="ניווט ב-Waze"><img src="/img/waze.png" alt="" width="44" height="44"></a></div>
 </article>
 <article class="dcard lift" data-group="גן משחקים" data-text="גן חנה ברזיות מים גן משחקים עזרת תורה" data-id="8395dc71-8390-4ef2-b9c5-97148ec9900e" data-t="parks" data-ll="31.79430,35.21270">
-<div class="dmedia noimg t-green"><svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l6 9H6zM12 8l7 9H5zM12 17v4"/></svg></div>
+<div class="dmedia noimg art v0 t-green"><span class="art-ic"><svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l6 9H6zM12 8l7 9H5zM12 17v4"/></svg></span></div>
 <div class="dbody"><h3><a class="stretch" href="/romema-sanhedria/parks/%D7%92%D7%9F-%D7%97%D7%A0%D7%94/">גן חנה</a></h3><span class="f">ברזיות מים</span><span class="w">עזרת תורה</span></div>
 <div class="dact"><a class="a-waze" href="https://waze.com/ul?ll=31.7943,35.2127&amp;navigate=yes" target="_blank" rel="noopener" aria-label="ניווט לגן חנה ב-Waze" title="ניווט ב-Waze"><img src="/img/waze.png" alt="" width="44" height="44"></a></div>
 </article>
 <article class="dcard lift" data-group="גן משחקים" data-text="גן ליפשיץ עליון  גן משחקים שמגר צמוד לקניון רב שפע" data-id="f2f6227e-07f0-40aa-95ad-69680922ab04" data-t="parks" data-ll="31.79330,35.20840">
-<div class="dmedia noimg t-green"><svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l6 9H6zM12 8l7 9H5zM12 17v4"/></svg></div>
+<div class="dmedia noimg art v1 t-green"><span class="art-ic"><svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l6 9H6zM12 8l7 9H5zM12 17v4"/></svg></span></div>
 <div class="dbody"><h3><a class="stretch" href="/romema-sanhedria/parks/%D7%92%D7%9F-%D7%9C%D7%99%D7%A4%D7%A9%D7%99%D7%A5-%D7%A2%D7%9C%D7%99%D7%95%D7%9F/">גן ליפשיץ עליון</a></h3><span class="w">שמגר צמוד לקניון רב שפע</span></div>
 <div class="dact"><a class="a-waze" href="https://waze.com/ul?ll=31.7933,35.2084&amp;navigate=yes" target="_blank" rel="noopener" aria-label="ניווט לגן ליפשיץ עליון ב-Waze" title="ניווט ב-Waze"><img src="/img/waze.png" alt="" width="44" height="44"></a></div>
 </article>
 <article class="dcard lift" data-group="גן משחקים" data-text="גן מיכל 11 הצללה גן משחקים מיכל 11" data-id="85f90af7-985e-430f-b811-1c502e8e31bc" data-t="parks" data-ll="31.79810,35.22150">
-<div class="dmedia noimg t-green"><svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l6 9H6zM12 8l7 9H5zM12 17v4"/></svg></div>
+<div class="dmedia noimg art v1 t-green"><span class="art-ic"><svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l6 9H6zM12 8l7 9H5zM12 17v4"/></svg></span></div>
 <div class="dbody"><h3><a class="stretch" href="/romema-sanhedria/parks/%D7%92%D7%9F-%D7%9E%D7%99%D7%9B%D7%9C-11/">גן מיכל 11</a></h3><span class="f">הצללה</span><span class="w">מיכל 11</span></div>
 <div class="dact"><a class="a-waze" href="https://waze.com/ul?ll=31.7981,35.2215&amp;navigate=yes" target="_blank" rel="noopener" aria-label="ניווט לגן מיכל 11 ב-Waze" title="ניווט ב-Waze"><img src="/img/waze.png" alt="" width="44" height="44"></a></div>
 </article>
 <article class="dcard lift" data-group="גן משחקים" data-text="גן מיכל 6  גן משחקים מיכל 6" data-id="b7efdf81-2274-448d-8a66-34385ab9ff52" data-t="parks" data-ll="31.79800,35.22100">
-<div class="dmedia noimg t-green"><svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l6 9H6zM12 8l7 9H5zM12 17v4"/></svg></div>
+<div class="dmedia noimg art v1 t-green"><span class="art-ic"><svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l6 9H6zM12 8l7 9H5zM12 17v4"/></svg></span></div>
 <div class="dbody"><h3><a class="stretch" href="/romema-sanhedria/parks/%D7%92%D7%9F-%D7%9E%D7%99%D7%9B%D7%9C-6/">גן מיכל 6</a></h3><span class="w">מיכל 6</span></div>
 <div class="dact"><a class="a-waze" href="https://waze.com/ul?ll=31.798,35.221&amp;navigate=yes" target="_blank" rel="noopener" aria-label="ניווט לגן מיכל 6 ב-Waze" title="ניווט ב-Waze"><img src="/img/waze.png" alt="" width="44" height="44"></a></div>
 </article>
 <article class="dcard lift" data-group="גן משחקים" data-text="גן מנחם משיב הצללה גן משחקים מנחם משיב 8" data-id="c5c04d04-62cb-4c9c-8683-575849e669fe" data-t="parks" data-ll="31.79980,35.20550">
-<div class="dmedia noimg t-green"><svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l6 9H6zM12 8l7 9H5zM12 17v4"/></svg></div>
+<div class="dmedia noimg art v1 t-green"><span class="art-ic"><svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l6 9H6zM12 8l7 9H5zM12 17v4"/></svg></span></div>
 <div class="dbody"><h3><a class="stretch" href="/romema-sanhedria/parks/%D7%92%D7%9F-%D7%9E%D7%A0%D7%97%D7%9D-%D7%9E%D7%A9%D7%99%D7%91/">גן מנחם משיב</a></h3><span class="f">הצללה</span><span class="w">מנחם משיב 8</span></div>
 <div class="dact"><a class="a-waze" href="https://waze.com/ul?ll=31.7998,35.2055&amp;navigate=yes" target="_blank" rel="noopener" aria-label="ניווט לגן מנחם משיב ב-Waze" title="ניווט ב-Waze"><img src="/img/waze.png" alt="" width="44" height="44"></a></div>
 </article>
 <article class="dcard lift" data-group="גן משחקים" data-text="גן מעגלי הרים לוין  גן משחקים ליד מעגלי הרי״ם לוין" data-id="134520c4-e955-412d-9988-8b7e7619e4cf" data-t="parks" data-ll="31.80120,35.21690">
-<div class="dmedia noimg t-green"><svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l6 9H6zM12 8l7 9H5zM12 17v4"/></svg></div>
+<div class="dmedia noimg art v1 t-green"><span class="art-ic"><svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l6 9H6zM12 8l7 9H5zM12 17v4"/></svg></span></div>
 <div class="dbody"><h3><a class="stretch" href="/romema-sanhedria/parks/%D7%92%D7%9F-%D7%9E%D7%A2%D7%92%D7%9C%D7%99-%D7%94%D7%A8%D7%99%D7%9D-%D7%9C%D7%95%D7%99%D7%9F/">גן מעגלי הרים לוין</a></h3><span class="w">ליד מעגלי הרי״ם לוין</span></div>
 <div class="dact"><a class="a-waze" href="https://waze.com/ul?ll=31.8012,35.2169&amp;navigate=yes" target="_blank" rel="noopener" aria-label="ניווט לגן מעגלי הרים לוין ב-Waze" title="ניווט ב-Waze"><img src="/img/waze.png" alt="" width="44" height="44"></a></div>
 </article>
 <article class="dcard lift" data-group="גן משחקים" data-text="גן משחקים - אלנקווה ברזיות מים גן משחקים אלנקווה 10" data-id="6a59224c-d6fe-4c08-8a22-f27a83ad03e9" data-t="parks" data-ll="31.79370,35.21330">
-<div class="dmedia noimg t-green"><svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l6 9H6zM12 8l7 9H5zM12 17v4"/></svg></div>
+<div class="dmedia noimg art v0 t-green"><span class="art-ic"><svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l6 9H6zM12 8l7 9H5zM12 17v4"/></svg></span></div>
 <div class="dbody"><h3><a class="stretch" href="/romema-sanhedria/parks/%D7%92%D7%9F-%D7%9E%D7%A9%D7%97%D7%A7%D7%99%D7%9D-%D7%90%D7%9C%D7%A0%D7%A7%D7%95%D7%95%D7%94/">גן משחקים - אלנקווה</a></h3><span class="f">ברזיות מים</span><span class="w">אלנקווה 10</span></div>
 <div class="dact"><a class="a-waze" href="https://waze.com/ul?ll=31.7937,35.2133&amp;navigate=yes" target="_blank" rel="noopener" aria-label="ניווט לגן משחקים - אלנקווה ב-Waze" title="ניווט ב-Waze"><img src="/img/waze.png" alt="" width="44" height="44"></a></div>
 </article>
 <article class="dcard lift" data-group="גן משחקים" data-text="גן משחקים - דברי חיים 30  גן משחקים דברי חיים 30" data-id="4f33b019-99fb-4047-87b0-83f88e76a9e8" data-t="parks" data-ll="31.79850,35.20770">
-<div class="dmedia noimg t-green"><svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l6 9H6zM12 8l7 9H5zM12 17v4"/></svg></div>
+<div class="dmedia noimg art v1 t-green"><span class="art-ic"><svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l6 9H6zM12 8l7 9H5zM12 17v4"/></svg></span></div>
 <div class="dbody"><h3><a class="stretch" href="/romema-sanhedria/parks/%D7%92%D7%9F-%D7%9E%D7%A9%D7%97%D7%A7%D7%99%D7%9D-%D7%93%D7%91%D7%A8%D7%99-%D7%97%D7%99%D7%99%D7%9D-30/">גן משחקים - דברי חיים 30</a></h3><span class="w">דברי חיים 30</span></div>
 <div class="dact"><a class="a-waze" href="https://waze.com/ul?ll=31.7985,35.2077&amp;navigate=yes" target="_blank" rel="noopener" aria-label="ניווט לגן משחקים - דברי חיים 30 ב-Waze" title="ניווט ב-Waze"><img src="/img/waze.png" alt="" width="44" height="44"></a></div>
 </article>
 <article class="dcard lift" data-group="גן משחקים" data-text="גן משחקים - האחוזה הצללה גן משחקים פתח תקווה 6" data-id="0dfd8f9e-886b-4c34-af3f-eb02aca8d8a4" data-t="parks" data-ll="31.79430,35.20420">
-<div class="dmedia noimg t-green"><svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l6 9H6zM12 8l7 9H5zM12 17v4"/></svg></div>
+<div class="dmedia noimg art v0 t-green"><span class="art-ic"><svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l6 9H6zM12 8l7 9H5zM12 17v4"/></svg></span></div>
 <div class="dbody"><h3><a class="stretch" href="/romema-sanhedria/parks/%D7%92%D7%9F-%D7%9E%D7%A9%D7%97%D7%A7%D7%99%D7%9D-%D7%94%D7%90%D7%97%D7%95%D7%96%D7%94/">גן משחקים - האחוזה</a></h3><span class="f">הצללה</span><span class="w">פתח תקווה 6</span></div>
 <div class="dact"><a class="a-waze" href="https://waze.com/ul?ll=31.7943,35.2042&amp;navigate=yes" target="_blank" rel="noopener" aria-label="ניווט לגן משחקים - האחוזה ב-Waze" title="ניווט ב-Waze"><img src="/img/waze.png" alt="" width="44" height="44"></a></div>
 </article>
 <article class="dcard lift" data-group="גן משחקים" data-text="גן משחקים - הבית אור אלחנן ברזיות מים · הצללה גן משחקים אהליאב 22" data-id="fc29338e-894c-4267-a4c4-64a9c67ffce7" data-t="parks" data-ll="31.79260,35.20280">
-<div class="dmedia noimg t-green"><svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l6 9H6zM12 8l7 9H5zM12 17v4"/></svg></div>
+<div class="dmedia noimg art v0 t-green"><span class="art-ic"><svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l6 9H6zM12 8l7 9H5zM12 17v4"/></svg></span></div>
 <div class="dbody"><h3><a class="stretch" href="/romema-sanhedria/parks/%D7%92%D7%9F-%D7%9E%D7%A9%D7%97%D7%A7%D7%99%D7%9D-%D7%94%D7%91%D7%99%D7%AA-%D7%90%D7%95%D7%A8-%D7%90%D7%9C%D7%97%D7%A0%D7%9F/">גן משחקים - הבית אור אלחנן</a></h3><span class="f">ברזיות מים · הצללה</span><span class="w">אהליאב 22</span></div>
 <div class="dact"><a class="a-waze" href="https://waze.com/ul?ll=31.7926,35.2028&amp;navigate=yes" target="_blank" rel="noopener" aria-label="ניווט לגן משחקים - הבית אור אלחנן ב-Waze" title="ניווט ב-Waze"><img src="/img/waze.png" alt="" width="44" height="44"></a></div>
 </article>
 <article class="dcard lift" data-group="גן משחקים" data-text="גן משחקים - וורן מקס הצללה גן משחקים מעגלי הרים לוין 117" data-id="7e4256f5-59b6-4288-92e2-e45d5b1752fb" data-t="parks" data-ll="31.80160,35.21860">
-<div class="dmedia noimg t-green"><svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l6 9H6zM12 8l7 9H5zM12 17v4"/></svg></div>
+<div class="dmedia noimg art v1 t-green"><span class="art-ic"><svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l6 9H6zM12 8l7 9H5zM12 17v4"/></svg></span></div>
 <div class="dbody"><h3><a class="stretch" href="/romema-sanhedria/parks/%D7%92%D7%9F-%D7%9E%D7%A9%D7%97%D7%A7%D7%99%D7%9D-%D7%95%D7%95%D7%A8%D7%9F-%D7%9E%D7%A7%D7%A1/">גן משחקים - וורן מקס</a></h3><span class="f">הצללה</span><span class="w">מעגלי הרים לוין 117</span></div>
 <div class="dact"><a class="a-waze" href="https://waze.com/ul?ll=31.8016,35.2186&amp;navigate=yes" target="_blank" rel="noopener" aria-label="ניווט לגן משחקים - וורן מקס ב-Waze" title="ניווט ב-Waze"><img src="/img/waze.png" alt="" width="44" height="44"></a></div>
 </article>
 <article class="dcard lift" data-group="גן משחקים" data-text="גן משחקים - חנה עליון  גן משחקים אבן האזל 3" data-id="927aabb4-abb0-442a-ade4-35f2b8365f3c" data-t="parks" data-ll="31.79460,35.21210">
-<div class="dmedia noimg t-green"><svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l6 9H6zM12 8l7 9H5zM12 17v4"/></svg></div>
+<div class="dmedia noimg art v1 t-green"><span class="art-ic"><svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l6 9H6zM12 8l7 9H5zM12 17v4"/></svg></span></div>
 <div class="dbody"><h3><a class="stretch" href="/romema-sanhedria/parks/%D7%92%D7%9F-%D7%9E%D7%A9%D7%97%D7%A7%D7%99%D7%9D-%D7%97%D7%A0%D7%94-%D7%A2%D7%9C%D7%99%D7%95%D7%9F/">גן משחקים - חנה עליון</a></h3><span class="w">אבן האזל 3</span></div>
 <div class="dact"><a class="a-waze" href="https://waze.com/ul?ll=31.7946,35.2121&amp;navigate=yes" target="_blank" rel="noopener" aria-label="ניווט לגן משחקים - חנה עליון ב-Waze" title="ניווט ב-Waze"><img src="/img/waze.png" alt="" width="44" height="44"></a></div>
 </article>
 <article class="dcard lift" data-group="גן משחקים" data-text="גן משחקים - כדורי הצללה גן משחקים שמגר 6" data-id="d7d10018-9419-457b-863b-f68e626f79c6" data-t="parks" data-ll="31.79170,35.20850">
-<div class="dmedia noimg t-green"><svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l6 9H6zM12 8l7 9H5zM12 17v4"/></svg></div>
+<div class="dmedia noimg art v2 t-green"><span class="art-ic"><svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l6 9H6zM12 8l7 9H5zM12 17v4"/></svg></span></div>
 <div class="dbody"><h3><a class="stretch" href="/romema-sanhedria/parks/%D7%92%D7%9F-%D7%9E%D7%A9%D7%97%D7%A7%D7%99%D7%9D-%D7%9B%D7%93%D7%95%D7%A8%D7%99/">גן משחקים - כדורי</a></h3><span class="f">הצללה</span><span class="w">שמגר 6</span></div>
 <div class="dact"><a class="a-waze" href="https://waze.com/ul?ll=31.7917,35.2085&amp;navigate=yes" target="_blank" rel="noopener" aria-label="ניווט לגן משחקים - כדורי ב-Waze" title="ניווט ב-Waze"><img src="/img/waze.png" alt="" width="44" height="44"></a></div>
 </article>
 <article class="dcard lift" data-group="גן משחקים" data-text="גן משחקים - מצפה נוף ברזיות מים · הצללה גן משחקים אהליאב 15" data-id="b5921455-4fa5-4da6-b48a-abc1660dc46b" data-t="parks" data-ll="31.79270,35.20080">
-<div class="dmedia noimg t-green"><svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l6 9H6zM12 8l7 9H5zM12 17v4"/></svg></div>
+<div class="dmedia noimg art v0 t-green"><span class="art-ic"><svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l6 9H6zM12 8l7 9H5zM12 17v4"/></svg></span></div>
 <div class="dbody"><h3><a class="stretch" href="/romema-sanhedria/parks/%D7%92%D7%9F-%D7%9E%D7%A9%D7%97%D7%A7%D7%99%D7%9D-%D7%9E%D7%A6%D7%A4%D7%94-%D7%A0%D7%95%D7%A3/">גן משחקים - מצפה נוף</a></h3><span class="f">ברזיות מים · הצללה</span><span class="w">אהליאב 15</span></div>
 <div class="dact"><a class="a-waze" href="https://waze.com/ul?ll=31.7927,35.2008&amp;navigate=yes" target="_blank" rel="noopener" aria-label="ניווט לגן משחקים - מצפה נוף ב-Waze" title="ניווט ב-Waze"><img src="/img/waze.png" alt="" width="44" height="44"></a></div>
 </article>
 <article class="dcard lift" data-group="גן משחקים" data-text="גן משחקים - סאטמר  גן משחקים עזרת תורה 24" data-id="8cf3cf77-34ab-4e29-9c29-7a8768b79612" data-t="parks" data-ll="31.79810,35.21390">
-<div class="dmedia noimg t-green"><svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l6 9H6zM12 8l7 9H5zM12 17v4"/></svg></div>
+<div class="dmedia noimg art v2 t-green"><span class="art-ic"><svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l6 9H6zM12 8l7 9H5zM12 17v4"/></svg></span></div>
 <div class="dbody"><h3><a class="stretch" href="/romema-sanhedria/parks/%D7%92%D7%9F-%D7%9E%D7%A9%D7%97%D7%A7%D7%99%D7%9D-%D7%A1%D7%90%D7%98%D7%9E%D7%A8/">גן משחקים - סאטמר</a></h3><span class="w">עזרת תורה 24</span></div>
 <div class="dact"><a class="a-waze" href="https://waze.com/ul?ll=31.7981,35.2139&amp;navigate=yes" target="_blank" rel="noopener" aria-label="ניווט לגן משחקים - סאטמר ב-Waze" title="ניווט ב-Waze"><img src="/img/waze.png" alt="" width="44" height="44"></a></div>
 </article>
 <article class="dcard lift" data-group="גן משחקים" data-text="גן משחקים - סאטמר גבעת משה הצללה גן משחקים עזרת תורה 28" data-id="fa1a3cbe-0a26-4d4a-9fc8-dc2db4849232" data-t="parks" data-ll="31.79850,35.21390">
-<div class="dmedia noimg t-green"><svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l6 9H6zM12 8l7 9H5zM12 17v4"/></svg></div>
+<div class="dmedia noimg art v2 t-green"><span class="art-ic"><svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l6 9H6zM12 8l7 9H5zM12 17v4"/></svg></span></div>
 <div class="dbody"><h3><a class="stretch" href="/romema-sanhedria/parks/%D7%92%D7%9F-%D7%9E%D7%A9%D7%97%D7%A7%D7%99%D7%9D-%D7%A1%D7%90%D7%98%D7%9E%D7%A8-%D7%92%D7%91%D7%A2%D7%AA-%D7%9E%D7%A9%D7%94/">גן משחקים - סאטמר גבעת משה</a></h3><span class="f">הצללה</span><span class="w">עזרת תורה 28</span></div>
 <div class="dact"><a class="a-waze" href="https://waze.com/ul?ll=31.7985,35.2139&amp;navigate=yes" target="_blank" rel="noopener" aria-label="ניווט לגן משחקים - סאטמר גבעת משה ב-Waze" title="ניווט ב-Waze"><img src="/img/waze.png" alt="" width="44" height="44"></a></div>
 </article>
 <article class="dcard lift" data-group="גן משחקים" data-text="גן משחקים - סורוצקין 9 ברזיות מים · הצללה גן משחקים סורוצקין 9" data-id="7370a817-fbe1-4032-b7c6-0d490e675920" data-t="parks" data-ll="31.79530,35.20510">
-<div class="dmedia noimg t-green"><svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l6 9H6zM12 8l7 9H5zM12 17v4"/></svg></div>
+<div class="dmedia noimg art v0 t-green"><span class="art-ic"><svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l6 9H6zM12 8l7 9H5zM12 17v4"/></svg></span></div>
 <div class="dbody"><h3><a class="stretch" href="/romema-sanhedria/parks/%D7%92%D7%9F-%D7%9E%D7%A9%D7%97%D7%A7%D7%99%D7%9D-%D7%A1%D7%95%D7%A8%D7%95%D7%A6%D7%A7%D7%99%D7%9F-9/">גן משחקים - סורוצקין 9</a></h3><span class="f">ברזיות מים · הצללה</span><span class="w">סורוצקין 9</span></div>
 <div class="dact"><a class="a-waze" href="https://waze.com/ul?ll=31.7953,35.2051&amp;navigate=yes" target="_blank" rel="noopener" aria-label="ניווט לגן משחקים - סורוצקין 9 ב-Waze" title="ניווט ב-Waze"><img src="/img/waze.png" alt="" width="44" height="44"></a></div>
 </article>
 <article class="dcard lift" data-group="גן משחקים" data-text="גן משחקים - פורים  גן משחקים פתח תקווה 1" data-id="03c64e38-0a8a-47ac-826d-7ec3dd02f2b4" data-t="parks" data-ll="31.79440,35.20330">
-<div class="dmedia noimg t-green"><svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l6 9H6zM12 8l7 9H5zM12 17v4"/></svg></div>
+<div class="dmedia noimg art v0 t-green"><span class="art-ic"><svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l6 9H6zM12 8l7 9H5zM12 17v4"/></svg></span></div>
 <div class="dbody"><h3><a class="stretch" href="/romema-sanhedria/parks/%D7%92%D7%9F-%D7%9E%D7%A9%D7%97%D7%A7%D7%99%D7%9D-%D7%A4%D7%95%D7%A8%D7%99%D7%9D/">גן משחקים - פורים</a></h3><span class="w">פתח תקווה 1</span></div>
 <div class="dact"><a class="a-waze" href="https://waze.com/ul?ll=31.7944,35.2033&amp;navigate=yes" target="_blank" rel="noopener" aria-label="ניווט לגן משחקים - פורים ב-Waze" title="ניווט ב-Waze"><img src="/img/waze.png" alt="" width="44" height="44"></a></div>
 </article>
 <article class="dcard lift" data-group="גן משחקים" data-text="גן משחקים - פנים מאירות 1 הצללה גן משחקים פנים מאירות 1" data-id="9388bad5-8e57-413e-9ecc-90c2e47c102b" data-t="parks" data-ll="31.79750,35.20020">
-<div class="dmedia noimg t-green"><svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l6 9H6zM12 8l7 9H5zM12 17v4"/></svg></div>
+<div class="dmedia noimg art v1 t-green"><span class="art-ic"><svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l6 9H6zM12 8l7 9H5zM12 17v4"/></svg></span></div>
 <div class="dbody"><h3><a class="stretch" href="/romema-sanhedria/parks/%D7%92%D7%9F-%D7%9E%D7%A9%D7%97%D7%A7%D7%99%D7%9D-%D7%A4%D7%A0%D7%99%D7%9D-%D7%9E%D7%90%D7%99%D7%A8%D7%95%D7%AA-1/">גן משחקים - פנים מאירות 1</a></h3><span class="f">הצללה</span><span class="w">פנים מאירות 1</span></div>
 <div class="dact"><a class="a-waze" href="https://waze.com/ul?ll=31.7975,35.2002&amp;navigate=yes" target="_blank" rel="noopener" aria-label="ניווט לגן משחקים - פנים מאירות 1 ב-Waze" title="ניווט ב-Waze"><img src="/img/waze.png" alt="" width="44" height="44"></a></div>
 </article>
 <article class="dcard lift" data-group="גן משחקים" data-text="גן משחקים - פנים מאירות 17  גן משחקים פנים מאירות 17" data-id="e15e7e91-2876-49fc-b957-e25cef4c8fbd" data-t="parks" data-ll="31.79540,35.20290">
-<div class="dmedia noimg t-green"><svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l6 9H6zM12 8l7 9H5zM12 17v4"/></svg></div>
+<div class="dmedia noimg art v0 t-green"><span class="art-ic"><svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l6 9H6zM12 8l7 9H5zM12 17v4"/></svg></span></div>
 <div class="dbody"><h3><a class="stretch" href="/romema-sanhedria/parks/%D7%92%D7%9F-%D7%9E%D7%A9%D7%97%D7%A7%D7%99%D7%9D-%D7%A4%D7%A0%D7%99%D7%9D-%D7%9E%D7%90%D7%99%D7%A8%D7%95%D7%AA-17/">גן משחקים - פנים מאירות 17</a></h3><span class="w">פנים מאירות 17</span></div>
 <div class="dact"><a class="a-waze" href="https://waze.com/ul?ll=31.7954,35.2029&amp;navigate=yes" target="_blank" rel="noopener" aria-label="ניווט לגן משחקים - פנים מאירות 17 ב-Waze" title="ניווט ב-Waze"><img src="/img/waze.png" alt="" width="44" height="44"></a></div>
 </article>
 <article class="dcard lift" data-group="גן משחקים" data-text="גן משחקים - שמגר 14 הצללה גן משחקים שמגר 14" data-id="3608d337-adfd-45fd-a489-5aa1edd83f07" data-t="parks" data-ll="31.79360,35.20820">
-<div class="dmedia noimg t-green"><svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l6 9H6zM12 8l7 9H5zM12 17v4"/></svg></div>
+<div class="dmedia noimg art v0 t-green"><span class="art-ic"><svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l6 9H6zM12 8l7 9H5zM12 17v4"/></svg></span></div>
 <div class="dbody"><h3><a class="stretch" href="/romema-sanhedria/parks/%D7%92%D7%9F-%D7%9E%D7%A9%D7%97%D7%A7%D7%99%D7%9D-%D7%A9%D7%9E%D7%92%D7%A8-14/">גן משחקים - שמגר 14</a></h3><span class="f">הצללה</span><span class="w">שמגר 14</span></div>
 <div class="dact"><a class="a-waze" href="https://waze.com/ul?ll=31.7936,35.2082&amp;navigate=yes" target="_blank" rel="noopener" aria-label="ניווט לגן משחקים - שמגר 14 ב-Waze" title="ניווט ב-Waze"><img src="/img/waze.png" alt="" width="44" height="44"></a></div>
 </article>
 <article class="dcard lift" data-group="גן משחקים" data-text="גן משחקים - תכלת מרדכי הצללה גן משחקים פתח תקווה 27" data-id="3eec6c0f-4b4b-4353-afd0-5e24fed20dd4" data-t="parks" data-ll="31.79450,35.20600">
-<div class="dmedia noimg t-green"><svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l6 9H6zM12 8l7 9H5zM12 17v4"/></svg></div>
+<div class="dmedia noimg art v1 t-green"><span class="art-ic"><svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l6 9H6zM12 8l7 9H5zM12 17v4"/></svg></span></div>
 <div class="dbody"><h3><a class="stretch" href="/romema-sanhedria/parks/%D7%92%D7%9F-%D7%9E%D7%A9%D7%97%D7%A7%D7%99%D7%9D-%D7%AA%D7%9B%D7%9C%D7%AA-%D7%9E%D7%A8%D7%93%D7%9B%D7%99/">גן משחקים - תכלת מרדכי</a></h3><span class="f">הצללה</span><span class="w">פתח תקווה 27</span></div>
 <div class="dact"><a class="a-waze" href="https://waze.com/ul?ll=31.7945,35.206&amp;navigate=yes" target="_blank" rel="noopener" aria-label="ניווט לגן משחקים - תכלת מרדכי ב-Waze" title="ניווט ב-Waze"><img src="/img/waze.png" alt="" width="44" height="44"></a></div>
 </article>
 <article class="dcard lift" data-group="גן משחקים" data-text="גן פייגה  גן משחקים סורוצקין 1" data-id="78643f32-c9d3-4b97-8030-e2682c058389" data-t="parks" data-ll="31.79670,35.20590">
-<div class="dmedia noimg t-green"><svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l6 9H6zM12 8l7 9H5zM12 17v4"/></svg></div>
+<div class="dmedia noimg art v0 t-green"><span class="art-ic"><svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l6 9H6zM12 8l7 9H5zM12 17v4"/></svg></span></div>
 <div class="dbody"><h3><a class="stretch" href="/romema-sanhedria/parks/%D7%92%D7%9F-%D7%A4%D7%99%D7%99%D7%92%D7%94/">גן פייגה</a></h3><span class="w">סורוצקין 1</span></div>
 <div class="dact"><a class="a-waze" href="https://waze.com/ul?ll=31.7967,35.2059&amp;navigate=yes" target="_blank" rel="noopener" aria-label="ניווט לגן פייגה ב-Waze" title="ניווט ב-Waze"><img src="/img/waze.png" alt="" width="44" height="44"></a></div>
 </article>
 <article class="dcard lift" data-group="גן משחקים" data-text="גן קומונה  גן משחקים מנחת יצחק" data-id="6adf4e66-ab73-45b1-bcfe-60f546cb670a" data-t="parks" data-ll="31.79410,35.21000">
-<div class="dmedia noimg t-green"><svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l6 9H6zM12 8l7 9H5zM12 17v4"/></svg></div>
+<div class="dmedia noimg art v1 t-green"><span class="art-ic"><svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l6 9H6zM12 8l7 9H5zM12 17v4"/></svg></span></div>
 <div class="dbody"><h3><a class="stretch" href="/romema-sanhedria/parks/%D7%92%D7%9F-%D7%A7%D7%95%D7%9E%D7%95%D7%A0%D7%94/">גן קומונה</a></h3><span class="w">מנחת יצחק</span></div>
 <div class="dact"><a class="a-waze" href="https://waze.com/ul?ll=31.7941,35.21&amp;navigate=yes" target="_blank" rel="noopener" aria-label="ניווט לגן קומונה ב-Waze" title="ניווט ב-Waze"><img src="/img/waze.png" alt="" width="44" height="44"></a></div>
 </article>
 <article class="dcard lift" data-group="גן משחקים" data-text="גן רוממה  גן משחקים דברי חיים 1" data-id="4b1085aa-c046-4b51-8b67-c667b3ac9553" data-t="parks" data-ll="31.79600,35.21020">
-<div class="dmedia noimg t-green"><svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l6 9H6zM12 8l7 9H5zM12 17v4"/></svg></div>
+<div class="dmedia noimg art v1 t-green"><span class="art-ic"><svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l6 9H6zM12 8l7 9H5zM12 17v4"/></svg></span></div>
 <div class="dbody"><h3><a class="stretch" href="/romema-sanhedria/parks/%D7%92%D7%9F-%D7%A8%D7%95%D7%9E%D7%9E%D7%94/">גן רוממה</a></h3><span class="w">דברי חיים 1</span></div>
 <div class="dact"><a class="a-waze" href="https://waze.com/ul?ll=31.796,35.2102&amp;navigate=yes" target="_blank" rel="noopener" aria-label="ניווט לגן רוממה ב-Waze" title="ניווט ב-Waze"><img src="/img/waze.png" alt="" width="44" height="44"></a></div>
 </article>

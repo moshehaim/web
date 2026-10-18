@@ -20,6 +20,18 @@
 <link href="https://fonts.googleapis.com/css2?family=Assistant:wght@400;600;700;800&family=Frank+Ruhl+Libre:wght@900&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
 <link rel="preconnect" href="https://mebomrqnfnbqijiuawdh.supabase.co">
 <style>
+.t-blue{--t1:#EFF4FF;--t2:#DCE6FB;--tf:#244782}.t-sky{--t1:#E9F4FC;--t2:#D3E8F7;--tf:#1F78B4}
+.t-green{--t1:#EAF7EE;--t2:#D4EEDC;--tf:#15803D}.t-violet{--t1:#F3EFFC;--t2:#E4DCF7;--tf:#6D4BB8}
+.t-teal{--t1:#E6F6F4;--t2:#CDEBE7;--tf:#0F766E}.t-amber{--t1:#FCF5E6;--t2:#F4E5C2;--tf:#8A5A00}
+.t-rose{--t1:#FCEFF2;--t2:#F5D9E0;--tf:#9F2D4B}
+/* תמונת ברירת מחדל: רקע בגוון הקטגוריה + דוגמה (נקודות / פסים / קו רקיע) + אייקון על משטח לבן */
+.art{position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,var(--t1),var(--t2))!important;color:var(--tf)}
+.art::before{content:'';position:absolute;inset:0;pointer-events:none}
+.art.v0::before{background:radial-gradient(color-mix(in srgb,var(--tf) 16%,transparent) 1.5px,transparent 1.8px) 0 0/16px 16px}
+.art.v1::before{background:repeating-linear-gradient(35deg,color-mix(in srgb,var(--tf) 8%,transparent) 0 9px,transparent 9px 22px)}
+.art.v2::before{background:color-mix(in srgb,var(--tf) 13%,transparent);-webkit-mask:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20400%20300%22%20preserveAspectRatio%3D%22none%22%3E%3Crect%20x%3D%220%22%20y%3D%22230%22%20width%3D%2246%22%20height%3D%2270%22%20rx%3D%223%22%2F%3E%3Crect%20x%3D%2250%22%20y%3D%22190%22%20width%3D%2234%22%20height%3D%22110%22%20rx%3D%223%22%2F%3E%3Crect%20x%3D%2288%22%20y%3D%22215%22%20width%3D%2252%22%20height%3D%2285%22%20rx%3D%223%22%2F%3E%3Crect%20x%3D%22144%22%20y%3D%22170%22%20width%3D%2230%22%20height%3D%22130%22%20rx%3D%223%22%2F%3E%3Crect%20x%3D%22178%22%20y%3D%22205%22%20width%3D%2258%22%20height%3D%2295%22%20rx%3D%223%22%2F%3E%3Crect%20x%3D%22240%22%20y%3D%22180%22%20width%3D%2240%22%20height%3D%22120%22%20rx%3D%223%22%2F%3E%3Crect%20x%3D%22284%22%20y%3D%22225%22%20width%3D%2250%22%20height%3D%2275%22%20rx%3D%223%22%2F%3E%3Crect%20x%3D%22338%22%20y%3D%22195%22%20width%3D%2230%22%20height%3D%22105%22%20rx%3D%223%22%2F%3E%3Crect%20x%3D%22372%22%20y%3D%22220%22%20width%3D%2240%22%20height%3D%2280%22%20rx%3D%223%22%2F%3E%3Ccircle%20cx%3D%22330%22%20cy%3D%2270%22%20r%3D%2226%22%2F%3E%3C%2Fsvg%3E") 0 0/100% 100% no-repeat;mask:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20400%20300%22%20preserveAspectRatio%3D%22none%22%3E%3Crect%20x%3D%220%22%20y%3D%22230%22%20width%3D%2246%22%20height%3D%2270%22%20rx%3D%223%22%2F%3E%3Crect%20x%3D%2250%22%20y%3D%22190%22%20width%3D%2234%22%20height%3D%22110%22%20rx%3D%223%22%2F%3E%3Crect%20x%3D%2288%22%20y%3D%22215%22%20width%3D%2252%22%20height%3D%2285%22%20rx%3D%223%22%2F%3E%3Crect%20x%3D%22144%22%20y%3D%22170%22%20width%3D%2230%22%20height%3D%22130%22%20rx%3D%223%22%2F%3E%3Crect%20x%3D%22178%22%20y%3D%22205%22%20width%3D%2258%22%20height%3D%2295%22%20rx%3D%223%22%2F%3E%3Crect%20x%3D%22240%22%20y%3D%22180%22%20width%3D%2240%22%20height%3D%22120%22%20rx%3D%223%22%2F%3E%3Crect%20x%3D%22284%22%20y%3D%22225%22%20width%3D%2250%22%20height%3D%2275%22%20rx%3D%223%22%2F%3E%3Crect%20x%3D%22338%22%20y%3D%22195%22%20width%3D%2230%22%20height%3D%22105%22%20rx%3D%223%22%2F%3E%3Crect%20x%3D%22372%22%20y%3D%22220%22%20width%3D%2240%22%20height%3D%2280%22%20rx%3D%223%22%2F%3E%3Ccircle%20cx%3D%22330%22%20cy%3D%2270%22%20r%3D%2226%22%2F%3E%3C%2Fsvg%3E") 0 0/100% 100% no-repeat}
+.art-ic{position:relative;z-index:1;display:flex;align-items:center;justify-content:center;width:84px;height:84px;border-radius:24px;background:rgba(255,255,255,.86);box-shadow:0 6px 18px rgba(20,40,80,.10);color:var(--tf)}
+.art-ic svg{width:44px;height:44px}
 *,*::before,*::after{box-sizing:border-box}
 :root{--navy:#172F57;--navy2:#213E6E;--brand:#244782;--sky:#8CCBF2;--accent:#2A6FB8;--ink:#1C2B45;
 --muted:#6B7689;--line:#E6E9EF;--bg:#F6F7F9;--soft:#EAF1FA;--ok:#5CD49A;--red:#B4233C}
@@ -293,14 +305,10 @@ footer .c{font-size:13px;color:#8A94A6}
 
 @media (prefers-reduced-motion:reduce){.mq,.mq.rev,.tick,.dot{animation:none}.track{transition:none}.lift:hover{transform:none}}
 
-.t-blue{--t1:#EFF4FF;--t2:#DCE6FB;--tf:#244782}.t-sky{--t1:#E9F4FC;--t2:#D3E8F7;--tf:#1F78B4}
-.t-green{--t1:#EAF7EE;--t2:#D4EEDC;--tf:#15803D}.t-violet{--t1:#F3EFFC;--t2:#E4DCF7;--tf:#6D4BB8}
-.t-teal{--t1:#E6F6F4;--t2:#CDEBE7;--tf:#0F766E}.t-amber{--t1:#FCF5E6;--t2:#F4E5C2;--tf:#8A5A00}
-.t-rose{--t1:#FCEFF2;--t2:#F5D9E0;--tf:#9F2D4B}
 .dcard.compact .dmedia{display:none}
 .dcard.compact .dbody{padding-top:18px}
 .dmedia.noimg{background:radial-gradient(120% 90% at 85% 0%,var(--t1) 0%,var(--t2) 100%)}
-.dmedia.noimg svg{width:64px;height:64px;color:var(--tf);opacity:.9}
+.dmedia.noimg.art::after{display:none}
 .dmedia.noimg::after{content:'';position:absolute;inset:auto 0 0 0;height:36%;opacity:.35;
 background:linear-gradient(to top,var(--t2),transparent)}
 .dir-hero{background:var(--navy);color:#fff}
@@ -376,7 +384,7 @@ background:linear-gradient(to top,var(--t2),transparent)}
 .dcard{display:grid;grid-template-columns:minmax(0,1fr) 96px;grid-template-areas:"b m" "a a"}
 .dmedia{grid-area:m;aspect-ratio:1/1;margin:14px 0 0 14px;border-radius:14px;width:82px;overflow:visible}
 .dmedia img{border-radius:14px}
-.dmedia.noimg svg{width:36px;height:36px}
+.dmedia.noimg .art-ic{width:52px;height:52px;border-radius:15px;box-shadow:0 3px 10px rgba(20,40,80,.10)}.dmedia.noimg .art-ic svg{width:28px;height:28px}
 .drec{top:-8px;right:auto;left:-8px}
 .dbody{grid-area:b;padding:14px 16px 0 12px}
 .dbody h3{font-size:17px}
@@ -476,142 +484,142 @@ background:linear-gradient(to top,var(--t2),transparent)}
 <div id="dmap" class="dmap" hidden></div>
 <div class="dgrid">
 <article class="dcard lift" data-group="גן משחקים" data-text="גן אדם ברזיות מים · הצללה גן משחקים אדם, אייזק רמבה 602" data-id="f2ada06a-3322-41b1-9212-3ae37d5fa688" data-t="parks" data-ll="31.75090,35.22890">
-<div class="dmedia noimg t-green"><svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l6 9H6zM12 8l7 9H5zM12 17v4"/></svg></div>
+<div class="dmedia noimg art v1 t-green"><span class="art-ic"><svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l6 9H6zM12 8l7 9H5zM12 17v4"/></svg></span></div>
 <div class="dbody"><h3><a class="stretch" href="/armon-hanatziv/parks/%D7%92%D7%9F-%D7%90%D7%93%D7%9D/">גן אדם</a></h3><span class="f">ברזיות מים · הצללה</span><span class="w">אדם, אייזק רמבה 602</span></div>
 <div class="dact"><a class="a-waze" href="https://waze.com/ul?ll=31.7509,35.2289&amp;navigate=yes" target="_blank" rel="noopener" aria-label="ניווט לגן אדם ב-Waze" title="ניווט ב-Waze"><img src="/img/waze.png" alt="" width="44" height="44"></a></div>
 </article>
 <article class="dcard lift" data-group="גן משחקים" data-text="גן אליהו חכים ברזיות מים · הצללה גן משחקים אליהו חכים אבנר גרשון" data-id="34fef092-a047-4f76-bd08-09e606337c4f" data-t="parks" data-ll="31.74620,35.22990">
-<div class="dmedia noimg t-green"><svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l6 9H6zM12 8l7 9H5zM12 17v4"/></svg></div>
+<div class="dmedia noimg art v2 t-green"><span class="art-ic"><svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l6 9H6zM12 8l7 9H5zM12 17v4"/></svg></span></div>
 <div class="dbody"><h3><a class="stretch" href="/armon-hanatziv/parks/%D7%92%D7%9F-%D7%90%D7%9C%D7%99%D7%94%D7%95-%D7%97%D7%9B%D7%99%D7%9D/">גן אליהו חכים</a></h3><span class="f">ברזיות מים · הצללה</span><span class="w">אליהו חכים אבנר גרשון</span></div>
 <div class="dact"><a class="a-waze" href="https://waze.com/ul?ll=31.7462,35.2299&amp;navigate=yes" target="_blank" rel="noopener" aria-label="ניווט לגן אליהו חכים ב-Waze" title="ניווט ב-Waze"><img src="/img/waze.png" alt="" width="44" height="44"></a></div>
 </article>
 <article class="dcard lift" data-group="גן משחקים" data-text="גן אלכסנדר רובוביץ  גן משחקים אלכסנדר רובוביץ 322" data-id="24720cd6-e477-4438-af95-f97c0a4a8dc6" data-t="parks" data-ll="31.74440,35.23660">
-<div class="dmedia noimg t-green"><svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l6 9H6zM12 8l7 9H5zM12 17v4"/></svg></div>
+<div class="dmedia noimg art v1 t-green"><span class="art-ic"><svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l6 9H6zM12 8l7 9H5zM12 17v4"/></svg></span></div>
 <div class="dbody"><h3><a class="stretch" href="/armon-hanatziv/parks/%D7%92%D7%9F-%D7%90%D7%9C%D7%9B%D7%A1%D7%A0%D7%93%D7%A8-%D7%A8%D7%95%D7%91%D7%95%D7%91%D7%99%D7%A5/">גן אלכסנדר רובוביץ</a></h3><span class="w">אלכסנדר רובוביץ 322</span></div>
 <div class="dact"><a class="a-waze" href="https://waze.com/ul?ll=31.7444,35.2366&amp;navigate=yes" target="_blank" rel="noopener" aria-label="ניווט לגן אלכסנדר רובוביץ ב-Waze" title="ניווט ב-Waze"><img src="/img/waze.png" alt="" width="44" height="44"></a></div>
 </article>
 <article class="dcard lift" data-group="גן משחקים" data-text="גן בית צורי המשודרג ברזיות מים גן משחקים בית צורי 1" data-id="99419170-bcd9-4289-9f73-95e4435653bc" data-t="parks" data-ll="31.74540,35.23310">
-<div class="dmedia noimg t-green"><svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l6 9H6zM12 8l7 9H5zM12 17v4"/></svg></div>
+<div class="dmedia noimg art v1 t-green"><span class="art-ic"><svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l6 9H6zM12 8l7 9H5zM12 17v4"/></svg></span></div>
 <div class="dbody"><h3><a class="stretch" href="/armon-hanatziv/parks/%D7%92%D7%9F-%D7%91%D7%99%D7%AA-%D7%A6%D7%95%D7%A8%D7%99-%D7%94%D7%9E%D7%A9%D7%95%D7%93%D7%A8%D7%92/">גן בית צורי המשודרג</a></h3><span class="f">ברזיות מים</span><span class="w">בית צורי 1</span></div>
 <div class="dact"><a class="a-waze" href="https://waze.com/ul?ll=31.7454,35.2331&amp;navigate=yes" target="_blank" rel="noopener" aria-label="ניווט לגן בית צורי המשודרג ב-Waze" title="ניווט ב-Waze"><img src="/img/waze.png" alt="" width="44" height="44"></a></div>
 </article>
 <article class="dcard lift" data-group="גן משחקים" data-text="גן דוד רזיאל  גן משחקים דוד רזיאל פינת אלקחי" data-id="6fc116c8-4a87-44d7-905f-68c91a7bbb4f" data-t="parks" data-ll="31.74960,35.23260">
-<div class="dmedia noimg t-green"><svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l6 9H6zM12 8l7 9H5zM12 17v4"/></svg></div>
+<div class="dmedia noimg art v2 t-green"><span class="art-ic"><svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l6 9H6zM12 8l7 9H5zM12 17v4"/></svg></span></div>
 <div class="dbody"><h3><a class="stretch" href="/armon-hanatziv/parks/%D7%92%D7%9F-%D7%93%D7%95%D7%93-%D7%A8%D7%96%D7%99%D7%90%D7%9C/">גן דוד רזיאל</a></h3><span class="w">דוד רזיאל פינת אלקחי</span></div>
 <div class="dact"><a class="a-waze" href="https://waze.com/ul?ll=31.7496,35.2326&amp;navigate=yes" target="_blank" rel="noopener" aria-label="ניווט לגן דוד רזיאל ב-Waze" title="ניווט ב-Waze"><img src="/img/waze.png" alt="" width="44" height="44"></a></div>
 </article>
 <article class="dcard lift" data-group="גן משחקים" data-text="גן האבן ברזיות מים · הצללה גן משחקים אבשלום חביב 109" data-id="94bf71b0-98e8-43f8-a593-b8bc9e198c69" data-t="parks" data-ll="31.75120,35.24130">
-<div class="dmedia noimg t-green"><svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l6 9H6zM12 8l7 9H5zM12 17v4"/></svg></div>
+<div class="dmedia noimg art v1 t-green"><span class="art-ic"><svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l6 9H6zM12 8l7 9H5zM12 17v4"/></svg></span></div>
 <div class="dbody"><h3><a class="stretch" href="/armon-hanatziv/parks/%D7%92%D7%9F-%D7%94%D7%90%D7%91%D7%9F/">גן האבן</a></h3><span class="f">ברזיות מים · הצללה</span><span class="w">אבשלום חביב 109</span></div>
 <div class="dact"><a class="a-waze" href="https://waze.com/ul?ll=31.7512,35.2413&amp;navigate=yes" target="_blank" rel="noopener" aria-label="ניווט לגן האבן ב-Waze" title="ניווט ב-Waze"><img src="/img/waze.png" alt="" width="44" height="44"></a></div>
 </article>
 <article class="dcard lift" data-group="גן משחקים" data-text="גן החורשה בקשאני ברזיות מים גן משחקים אליעזר קשאני 424" data-id="6772a8cf-1223-4571-bede-b441b4495f9f" data-t="parks" data-ll="31.74740,35.23350">
-<div class="dmedia noimg t-green"><svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l6 9H6zM12 8l7 9H5zM12 17v4"/></svg></div>
+<div class="dmedia noimg art v1 t-green"><span class="art-ic"><svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l6 9H6zM12 8l7 9H5zM12 17v4"/></svg></span></div>
 <div class="dbody"><h3><a class="stretch" href="/armon-hanatziv/parks/%D7%92%D7%9F-%D7%94%D7%97%D7%95%D7%A8%D7%A9%D7%94-%D7%91%D7%A7%D7%A9%D7%90%D7%A0%D7%99/">גן החורשה בקשאני</a></h3><span class="f">ברזיות מים</span><span class="w">אליעזר קשאני 424</span></div>
 <div class="dact"><a class="a-waze" href="https://waze.com/ul?ll=31.7474,35.2335&amp;navigate=yes" target="_blank" rel="noopener" aria-label="ניווט לגן החורשה בקשאני ב-Waze" title="ניווט ב-Waze"><img src="/img/waze.png" alt="" width="44" height="44"></a></div>
 </article>
 <article class="dcard lift" data-group="גן משחקים" data-text="גן הילד הירושלמי ברזיות מים גן משחקים קדושי בבל" data-id="52aaaab7-f423-43d0-a729-8b9235e4d008" data-t="parks" data-ll="31.74910,35.23800">
-<div class="dmedia noimg t-green"><svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l6 9H6zM12 8l7 9H5zM12 17v4"/></svg></div>
+<div class="dmedia noimg art v0 t-green"><span class="art-ic"><svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l6 9H6zM12 8l7 9H5zM12 17v4"/></svg></span></div>
 <div class="dbody"><h3><a class="stretch" href="/armon-hanatziv/parks/%D7%92%D7%9F-%D7%94%D7%99%D7%9C%D7%93-%D7%94%D7%99%D7%A8%D7%95%D7%A9%D7%9C%D7%9E%D7%99/">גן הילד הירושלמי</a></h3><span class="f">ברזיות מים</span><span class="w">קדושי בבל</span></div>
 <div class="dact"><a class="a-waze" href="https://waze.com/ul?ll=31.7491,35.238&amp;navigate=yes" target="_blank" rel="noopener" aria-label="ניווט לגן הילד הירושלמי ב-Waze" title="ניווט ב-Waze"><img src="/img/waze.png" alt="" width="44" height="44"></a></div>
 </article>
 <article class="dcard lift" data-group="גן משחקים" data-text="גן המשחקים אמת המים ברזיות מים · הצללה גן משחקים דב גרונר 230" data-id="92ff0603-b7c0-4e1e-bdca-25ebe9e43f37" data-t="parks" data-ll="31.75090,35.23590">
-<div class="dmedia noimg t-green"><svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l6 9H6zM12 8l7 9H5zM12 17v4"/></svg></div>
+<div class="dmedia noimg art v1 t-green"><span class="art-ic"><svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l6 9H6zM12 8l7 9H5zM12 17v4"/></svg></span></div>
 <div class="dbody"><h3><a class="stretch" href="/armon-hanatziv/parks/%D7%92%D7%9F-%D7%94%D7%9E%D7%A9%D7%97%D7%A7%D7%99%D7%9D-%D7%90%D7%9E%D7%AA-%D7%94%D7%9E%D7%99%D7%9D/">גן המשחקים אמת המים</a></h3><span class="f">ברזיות מים · הצללה</span><span class="w">דב גרונר 230</span></div>
 <div class="dact"><a class="a-waze" href="https://waze.com/ul?ll=31.7509,35.2359&amp;navigate=yes" target="_blank" rel="noopener" aria-label="ניווט לגן המשחקים אמת המים ב-Waze" title="ניווט ב-Waze"><img src="/img/waze.png" alt="" width="44" height="44"></a></div>
 </article>
 <article class="dcard lift" data-group="גן משחקים" data-text="גן המתנ״ס  גן משחקים עולי הגרדום 13" data-id="feb133e6-5c23-41b4-a9a7-9cca1da3646f" data-t="parks" data-ll="31.75220,35.23680">
-<div class="dmedia noimg t-green"><svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l6 9H6zM12 8l7 9H5zM12 17v4"/></svg></div>
+<div class="dmedia noimg art v2 t-green"><span class="art-ic"><svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l6 9H6zM12 8l7 9H5zM12 17v4"/></svg></span></div>
 <div class="dbody"><h3><a class="stretch" href="/armon-hanatziv/parks/%D7%92%D7%9F-%D7%94%D7%9E%D7%AA%D7%A0%D7%A1/">גן המתנ״ס</a></h3><span class="w">עולי הגרדום 13</span></div>
 <div class="dact"><a class="a-waze" href="https://waze.com/ul?ll=31.7522,35.2368&amp;navigate=yes" target="_blank" rel="noopener" aria-label="ניווט לגן המתנ״ס ב-Waze" title="ניווט ב-Waze"><img src="/img/waze.png" alt="" width="44" height="44"></a></div>
 </article>
 <article class="dcard lift" data-group="גן משחקים" data-text="גן הנחש ברזיות מים גן משחקים מרדכי אלקחי 21" data-id="73480fc7-27e9-49d9-8e0d-a26ca2b38852" data-t="parks" data-ll="31.75180,35.23270">
-<div class="dmedia noimg t-green"><svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l6 9H6zM12 8l7 9H5zM12 17v4"/></svg></div>
+<div class="dmedia noimg art v2 t-green"><span class="art-ic"><svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l6 9H6zM12 8l7 9H5zM12 17v4"/></svg></span></div>
 <div class="dbody"><h3><a class="stretch" href="/armon-hanatziv/parks/%D7%92%D7%9F-%D7%94%D7%A0%D7%97%D7%A9/">גן הנחש</a></h3><span class="f">ברזיות מים</span><span class="w">מרדכי אלקחי 21</span></div>
 <div class="dact"><a class="a-waze" href="https://waze.com/ul?ll=31.7518,35.2327&amp;navigate=yes" target="_blank" rel="noopener" aria-label="ניווט לגן הנחש ב-Waze" title="ניווט ב-Waze"><img src="/img/waze.png" alt="" width="44" height="44"></a></div>
 </article>
 <article class="dcard lift" data-group="גן משחקים" data-text="גן חורשת המחתרות ברזיות מים גן משחקים מחתרות 206" data-id="2fb16539-2972-4876-a1ef-206a7bc80d56" data-t="parks" data-ll="31.74570,35.23780">
-<div class="dmedia noimg t-green"><svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l6 9H6zM12 8l7 9H5zM12 17v4"/></svg></div>
+<div class="dmedia noimg art v0 t-green"><span class="art-ic"><svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l6 9H6zM12 8l7 9H5zM12 17v4"/></svg></span></div>
 <div class="dbody"><h3><a class="stretch" href="/armon-hanatziv/parks/%D7%92%D7%9F-%D7%97%D7%95%D7%A8%D7%A9%D7%AA-%D7%94%D7%9E%D7%97%D7%AA%D7%A8%D7%95%D7%AA/">גן חורשת המחתרות</a></h3><span class="f">ברזיות מים</span><span class="w">מחתרות 206</span></div>
 <div class="dact"><a class="a-waze" href="https://waze.com/ul?ll=31.7457,35.2378&amp;navigate=yes" target="_blank" rel="noopener" aria-label="ניווט לגן חורשת המחתרות ב-Waze" title="ניווט ב-Waze"><img src="/img/waze.png" alt="" width="44" height="44"></a></div>
 </article>
 <article class="dcard lift" data-group="גן משחקים" data-text="גן משחקים - אבו רביע הצללה גן משחקים אבו רביע 28" data-id="fa36fcec-3abf-4f3f-a27b-88a8c4dfc59e" data-t="parks" data-ll="31.74640,35.23990">
-<div class="dmedia noimg t-green"><svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l6 9H6zM12 8l7 9H5zM12 17v4"/></svg></div>
+<div class="dmedia noimg art v0 t-green"><span class="art-ic"><svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l6 9H6zM12 8l7 9H5zM12 17v4"/></svg></span></div>
 <div class="dbody"><h3><a class="stretch" href="/armon-hanatziv/parks/%D7%92%D7%9F-%D7%9E%D7%A9%D7%97%D7%A7%D7%99%D7%9D-%D7%90%D7%91%D7%95-%D7%A8%D7%91%D7%99%D7%A2/">גן משחקים - אבו רביע</a></h3><span class="f">הצללה</span><span class="w">אבו רביע 28</span></div>
 <div class="dact"><a class="a-waze" href="https://waze.com/ul?ll=31.7464,35.2399&amp;navigate=yes" target="_blank" rel="noopener" aria-label="ניווט לגן משחקים - אבו רביע ב-Waze" title="ניווט ב-Waze"><img src="/img/waze.png" alt="" width="44" height="44"></a></div>
 </article>
 <article class="dcard lift" data-group="גן משחקים" data-text="גן משחקים - אדם 11  גן משחקים אדם 11" data-id="2b6b8688-5b51-4c99-b04a-21edb118b016" data-t="parks" data-ll="31.75020,35.23030">
-<div class="dmedia noimg t-green"><svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l6 9H6zM12 8l7 9H5zM12 17v4"/></svg></div>
+<div class="dmedia noimg art v0 t-green"><span class="art-ic"><svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l6 9H6zM12 8l7 9H5zM12 17v4"/></svg></span></div>
 <div class="dbody"><h3><a class="stretch" href="/armon-hanatziv/parks/%D7%92%D7%9F-%D7%9E%D7%A9%D7%97%D7%A7%D7%99%D7%9D-%D7%90%D7%93%D7%9D-11/">גן משחקים - אדם 11</a></h3><span class="w">אדם 11</span></div>
 <div class="dact"><a class="a-waze" href="https://waze.com/ul?ll=31.7502,35.2303&amp;navigate=yes" target="_blank" rel="noopener" aria-label="ניווט לגן משחקים - אדם 11 ב-Waze" title="ניווט ב-Waze"><img src="/img/waze.png" alt="" width="44" height="44"></a></div>
 </article>
 <article class="dcard lift" data-group="גן משחקים" data-text="גן משחקים - אדם 25 ברזיות מים · הצללה גן משחקים אדם 25" data-id="ac6a84b3-4bdd-4f73-b32a-5844cd88cf88" data-t="parks" data-ll="31.74830,35.23090">
-<div class="dmedia noimg t-green"><svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l6 9H6zM12 8l7 9H5zM12 17v4"/></svg></div>
+<div class="dmedia noimg art v2 t-green"><span class="art-ic"><svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l6 9H6zM12 8l7 9H5zM12 17v4"/></svg></span></div>
 <div class="dbody"><h3><a class="stretch" href="/armon-hanatziv/parks/%D7%92%D7%9F-%D7%9E%D7%A9%D7%97%D7%A7%D7%99%D7%9D-%D7%90%D7%93%D7%9D-25/">גן משחקים - אדם 25</a></h3><span class="f">ברזיות מים · הצללה</span><span class="w">אדם 25</span></div>
 <div class="dact"><a class="a-waze" href="https://waze.com/ul?ll=31.7483,35.2309&amp;navigate=yes" target="_blank" rel="noopener" aria-label="ניווט לגן משחקים - אדם 25 ב-Waze" title="ניווט ב-Waze"><img src="/img/waze.png" alt="" width="44" height="44"></a></div>
 </article>
 <article class="dcard lift" data-group="גן משחקים" data-text="גן משחקים - אדם 617 ברזיות מים · הצללה גן משחקים אדם 617" data-id="f47c1eef-0160-461d-86cc-51d12e830acd" data-t="parks" data-ll="31.74840,35.23050">
-<div class="dmedia noimg t-green"><svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l6 9H6zM12 8l7 9H5zM12 17v4"/></svg></div>
+<div class="dmedia noimg art v0 t-green"><span class="art-ic"><svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l6 9H6zM12 8l7 9H5zM12 17v4"/></svg></span></div>
 <div class="dbody"><h3><a class="stretch" href="/armon-hanatziv/parks/%D7%92%D7%9F-%D7%9E%D7%A9%D7%97%D7%A7%D7%99%D7%9D-%D7%90%D7%93%D7%9D-617/">גן משחקים - אדם 617</a></h3><span class="f">ברזיות מים · הצללה</span><span class="w">אדם 617</span></div>
 <div class="dact"><a class="a-waze" href="https://waze.com/ul?ll=31.7484,35.2305&amp;navigate=yes" target="_blank" rel="noopener" aria-label="ניווט לגן משחקים - אדם 617 ב-Waze" title="ניווט ב-Waze"><img src="/img/waze.png" alt="" width="44" height="44"></a></div>
 </article>
 <article class="dcard lift" data-group="גן משחקים" data-text="גן משחקים - דב גרונר 210 ברזיות מים גן משחקים דב גרונר 210" data-id="2c5fe2e2-93d8-4710-8fe3-01c04225ca3c" data-t="parks" data-ll="31.74860,35.23700">
-<div class="dmedia noimg t-green"><svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l6 9H6zM12 8l7 9H5zM12 17v4"/></svg></div>
+<div class="dmedia noimg art v2 t-green"><span class="art-ic"><svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l6 9H6zM12 8l7 9H5zM12 17v4"/></svg></span></div>
 <div class="dbody"><h3><a class="stretch" href="/armon-hanatziv/parks/%D7%92%D7%9F-%D7%9E%D7%A9%D7%97%D7%A7%D7%99%D7%9D-%D7%93%D7%91-%D7%92%D7%A8%D7%95%D7%A0%D7%A8-210/">גן משחקים - דב גרונר 210</a></h3><span class="f">ברזיות מים</span><span class="w">דב גרונר 210</span></div>
 <div class="dact"><a class="a-waze" href="https://waze.com/ul?ll=31.7486,35.237&amp;navigate=yes" target="_blank" rel="noopener" aria-label="ניווט לגן משחקים - דב גרונר 210 ב-Waze" title="ניווט ב-Waze"><img src="/img/waze.png" alt="" width="44" height="44"></a></div>
 </article>
 <article class="dcard lift" data-group="גן משחקים" data-text="גן משחקים - פארק רמת רחל הצללה גן משחקים רב החובל 18" data-id="46d6245f-3ce0-4097-947b-bf614edb45e8" data-t="parks" data-ll="31.74870,35.22930">
-<div class="dmedia noimg t-green"><svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l6 9H6zM12 8l7 9H5zM12 17v4"/></svg></div>
+<div class="dmedia noimg art v2 t-green"><span class="art-ic"><svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l6 9H6zM12 8l7 9H5zM12 17v4"/></svg></span></div>
 <div class="dbody"><h3><a class="stretch" href="/armon-hanatziv/parks/%D7%92%D7%9F-%D7%9E%D7%A9%D7%97%D7%A7%D7%99%D7%9D-%D7%A4%D7%90%D7%A8%D7%A7-%D7%A8%D7%9E%D7%AA-%D7%A8%D7%97%D7%9C/">גן משחקים - פארק רמת רחל</a></h3><span class="f">הצללה</span><span class="w">רב החובל 18</span></div>
 <div class="dact"><a class="a-waze" href="https://waze.com/ul?ll=31.7487,35.2293&amp;navigate=yes" target="_blank" rel="noopener" aria-label="ניווט לגן משחקים - פארק רמת רחל ב-Waze" title="ניווט ב-Waze"><img src="/img/waze.png" alt="" width="44" height="44"></a></div>
 </article>
 <article class="dcard lift" data-group="גן משחקים" data-text="גן מתנ״ס ארמון הנציב ברזיות מים · הצללה גן משחקים עולי הגרדום 28" data-id="3047d061-03b5-4f6a-9650-2833bfe674ca" data-t="parks" data-ll="31.75060,35.23720">
-<div class="dmedia noimg t-green"><svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l6 9H6zM12 8l7 9H5zM12 17v4"/></svg></div>
+<div class="dmedia noimg art v2 t-green"><span class="art-ic"><svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l6 9H6zM12 8l7 9H5zM12 17v4"/></svg></span></div>
 <div class="dbody"><h3><a class="stretch" href="/armon-hanatziv/parks/%D7%92%D7%9F-%D7%9E%D7%AA%D7%A0%D7%A1-%D7%90%D7%A8%D7%9E%D7%95%D7%9F-%D7%94%D7%A0%D7%A6%D7%99%D7%91/">גן מתנ״ס ארמון הנציב</a></h3><span class="f">ברזיות מים · הצללה</span><span class="w">עולי הגרדום 28</span></div>
 <div class="dact"><a class="a-waze" href="https://waze.com/ul?ll=31.7506,35.2372&amp;navigate=yes" target="_blank" rel="noopener" aria-label="ניווט לגן מתנ״ס ארמון הנציב ב-Waze" title="ניווט ב-Waze"><img src="/img/waze.png" alt="" width="44" height="44"></a></div>
 </article>
 <article class="dcard lift" data-group="גן משחקים" data-text="גן פיינשטיין ברזיות מים גן משחקים מאיר פיינשטיין 266" data-id="e7424649-6883-4589-a8c4-3090e4b31bf1" data-t="parks" data-ll="31.74800,35.23560">
-<div class="dmedia noimg t-green"><svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l6 9H6zM12 8l7 9H5zM12 17v4"/></svg></div>
+<div class="dmedia noimg art v2 t-green"><span class="art-ic"><svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l6 9H6zM12 8l7 9H5zM12 17v4"/></svg></span></div>
 <div class="dbody"><h3><a class="stretch" href="/armon-hanatziv/parks/%D7%92%D7%9F-%D7%A4%D7%99%D7%99%D7%A0%D7%A9%D7%98%D7%99%D7%99%D7%9F/">גן פיינשטיין</a></h3><span class="f">ברזיות מים</span><span class="w">מאיר פיינשטיין 266</span></div>
 <div class="dact"><a class="a-waze" href="https://waze.com/ul?ll=31.748,35.2356&amp;navigate=yes" target="_blank" rel="noopener" aria-label="ניווט לגן פיינשטיין ב-Waze" title="ניווט ב-Waze"><img src="/img/waze.png" alt="" width="44" height="44"></a></div>
 </article>
 <article class="dcard lift" data-group="גן משחקים" data-text="גן ק ברזיות מים · הצללה גן משחקים דוד רזיאל 1" data-id="a07da2f8-ae7e-4bb2-a07d-6bc9d8062ec9" data-t="parks" data-ll="31.75000,35.23300">
-<div class="dmedia noimg t-green"><svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l6 9H6zM12 8l7 9H5zM12 17v4"/></svg></div>
+<div class="dmedia noimg art v2 t-green"><span class="art-ic"><svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l6 9H6zM12 8l7 9H5zM12 17v4"/></svg></span></div>
 <div class="dbody"><h3><a class="stretch" href="/armon-hanatziv/parks/%D7%92%D7%9F-%D7%A7/">גן ק</a></h3><span class="f">ברזיות מים · הצללה</span><span class="w">דוד רזיאל 1</span></div>
 <div class="dact"><a class="a-waze" href="https://waze.com/ul?ll=31.75,35.233&amp;navigate=yes" target="_blank" rel="noopener" aria-label="ניווט לגן ק ב-Waze" title="ניווט ב-Waze"><img src="/img/waze.png" alt="" width="44" height="44"></a></div>
 </article>
 <article class="dcard lift" data-group="גן משחקים" data-text="גן קדושי בבל ברזיות מים · הצללה גן משחקים קדושי בבל" data-id="246ffe46-10bf-47ee-a188-c69d615fdae7" data-t="parks" data-ll="31.74910,35.23800">
-<div class="dmedia noimg t-green"><svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l6 9H6zM12 8l7 9H5zM12 17v4"/></svg></div>
+<div class="dmedia noimg art v0 t-green"><span class="art-ic"><svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l6 9H6zM12 8l7 9H5zM12 17v4"/></svg></span></div>
 <div class="dbody"><h3><a class="stretch" href="/armon-hanatziv/parks/%D7%92%D7%9F-%D7%A7%D7%93%D7%95%D7%A9%D7%99-%D7%91%D7%91%D7%9C/">גן קדושי בבל</a></h3><span class="f">ברזיות מים · הצללה</span><span class="w">קדושי בבל</span></div>
 <div class="dact"><a class="a-waze" href="https://waze.com/ul?ll=31.7491,35.238&amp;navigate=yes" target="_blank" rel="noopener" aria-label="ניווט לגן קדושי בבל ב-Waze" title="ניווט ב-Waze"><img src="/img/waze.png" alt="" width="44" height="44"></a></div>
 </article>
 <article class="dcard lift" data-group="גן משחקים" data-text="גן רות ברעם ברזיות מים · הצללה גן משחקים ישראל אלדד 5" data-id="e4ffbf0d-8f64-4a67-8f5a-1ee816351afa" data-t="parks" data-ll="31.75340,35.22500">
-<div class="dmedia noimg t-green"><svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l6 9H6zM12 8l7 9H5zM12 17v4"/></svg></div>
+<div class="dmedia noimg art v1 t-green"><span class="art-ic"><svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l6 9H6zM12 8l7 9H5zM12 17v4"/></svg></span></div>
 <div class="dbody"><h3><a class="stretch" href="/armon-hanatziv/parks/%D7%92%D7%9F-%D7%A8%D7%95%D7%AA-%D7%91%D7%A8%D7%A2%D7%9D/">גן רות ברעם</a></h3><span class="f">ברזיות מים · הצללה</span><span class="w">ישראל אלדד 5</span></div>
 <div class="dact"><a class="a-waze" href="https://waze.com/ul?ll=31.7534,35.225&amp;navigate=yes" target="_blank" rel="noopener" aria-label="ניווט לגן רות ברעם ב-Waze" title="ניווט ב-Waze"><img src="/img/waze.png" alt="" width="44" height="44"></a></div>
 </article>
 <article class="dcard lift" data-group="גן משחקים" data-text="גן רפי  גן משחקים עולי הגרדום" data-id="01e59406-3220-4bb5-ae9a-c105e9cebf9d" data-t="parks" data-ll="31.75020,35.23700">
-<div class="dmedia noimg t-green"><svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l6 9H6zM12 8l7 9H5zM12 17v4"/></svg></div>
+<div class="dmedia noimg art v2 t-green"><span class="art-ic"><svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l6 9H6zM12 8l7 9H5zM12 17v4"/></svg></span></div>
 <div class="dbody"><h3><a class="stretch" href="/armon-hanatziv/parks/%D7%92%D7%9F-%D7%A8%D7%A4%D7%99/">גן רפי</a></h3><span class="w">עולי הגרדום</span></div>
 <div class="dact"><a class="a-waze" href="https://waze.com/ul?ll=31.7502,35.237&amp;navigate=yes" target="_blank" rel="noopener" aria-label="ניווט לגן רפי ב-Waze" title="ניווט ב-Waze"><img src="/img/waze.png" alt="" width="44" height="44"></a></div>
 </article>
 <article class="dcard lift" data-group="גן משחקים" data-text="גן רפי ויצמן ברזיות מים · הצללה גן משחקים עולי הגרדום/דב גרונר" data-id="36358b85-1825-4817-ab28-2052a6fd0266" data-t="parks" data-ll="31.75300,35.23450">
-<div class="dmedia noimg t-green"><svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l6 9H6zM12 8l7 9H5zM12 17v4"/></svg></div>
+<div class="dmedia noimg art v1 t-green"><span class="art-ic"><svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l6 9H6zM12 8l7 9H5zM12 17v4"/></svg></span></div>
 <div class="dbody"><h3><a class="stretch" href="/armon-hanatziv/parks/%D7%92%D7%9F-%D7%A8%D7%A4%D7%99-%D7%95%D7%99%D7%A6%D7%9E%D7%9F/">גן רפי ויצמן</a></h3><span class="f">ברזיות מים · הצללה</span><span class="w">עולי הגרדום/דב גרונר</span></div>
 <div class="dact"><a class="a-waze" href="https://waze.com/ul?ll=31.753,35.2345&amp;navigate=yes" target="_blank" rel="noopener" aria-label="ניווט לגן רפי ויצמן ב-Waze" title="ניווט ב-Waze"><img src="/img/waze.png" alt="" width="44" height="44"></a></div>
 </article>
 <article class="dcard lift" data-group="גן משחקים" data-text="גן שלמה ארגוב ברזיות מים · הצללה גן משחקים רב חובל 18" data-id="7e8ade4b-0e25-4ecd-a180-c14f495d99c3" data-t="parks" data-ll="31.74820,35.22940">
-<div class="dmedia noimg t-green"><svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l6 9H6zM12 8l7 9H5zM12 17v4"/></svg></div>
+<div class="dmedia noimg art v1 t-green"><span class="art-ic"><svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l6 9H6zM12 8l7 9H5zM12 17v4"/></svg></span></div>
 <div class="dbody"><h3><a class="stretch" href="/armon-hanatziv/parks/%D7%92%D7%9F-%D7%A9%D7%9C%D7%9E%D7%94-%D7%90%D7%A8%D7%92%D7%95%D7%91/">גן שלמה ארגוב</a></h3><span class="f">ברזיות מים · הצללה</span><span class="w">רב חובל 18</span></div>
 <div class="dact"><a class="a-waze" href="https://waze.com/ul?ll=31.7482,35.2294&amp;navigate=yes" target="_blank" rel="noopener" aria-label="ניווט לגן שלמה ארגוב ב-Waze" title="ניווט ב-Waze"><img src="/img/waze.png" alt="" width="44" height="44"></a></div>
 </article>
 <article class="dcard lift" data-group="גן משחקים" data-text="טיילת רותי ברעם הצללה גן משחקים ישראל אלדד 9-5" data-id="8fa6cbfe-7eb3-41b9-852e-20f8d637e7a9" data-t="parks" data-ll="31.75350,35.22540">
-<div class="dmedia noimg t-green"><svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l6 9H6zM12 8l7 9H5zM12 17v4"/></svg></div>
+<div class="dmedia noimg art v0 t-green"><span class="art-ic"><svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l6 9H6zM12 8l7 9H5zM12 17v4"/></svg></span></div>
 <div class="dbody"><h3><a class="stretch" href="/armon-hanatziv/parks/%D7%98%D7%99%D7%99%D7%9C%D7%AA-%D7%A8%D7%95%D7%AA%D7%99-%D7%91%D7%A8%D7%A2%D7%9D/">טיילת רותי ברעם</a></h3><span class="f">הצללה</span><span class="w">ישראל אלדד 9-5</span></div>
 <div class="dact"><a class="a-waze" href="https://waze.com/ul?ll=31.7535,35.2254&amp;navigate=yes" target="_blank" rel="noopener" aria-label="ניווט לטיילת רותי ברעם ב-Waze" title="ניווט ב-Waze"><img src="/img/waze.png" alt="" width="44" height="44"></a></div>
 </article>
 <article class="dcard lift" data-group="גן משחקים" data-text="פארק קשאני ברזיות מים · הצללה גן משחקים אליעזר קשאני 2" data-id="0f08311e-7609-4eac-bc4e-deb8a8548293" data-t="parks" data-ll="31.74790,35.23360">
-<div class="dmedia noimg t-green"><svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l6 9H6zM12 8l7 9H5zM12 17v4"/></svg></div>
+<div class="dmedia noimg art v1 t-green"><span class="art-ic"><svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l6 9H6zM12 8l7 9H5zM12 17v4"/></svg></span></div>
 <div class="dbody"><h3><a class="stretch" href="/armon-hanatziv/parks/%D7%A4%D7%90%D7%A8%D7%A7-%D7%A7%D7%A9%D7%90%D7%A0%D7%99/">פארק קשאני</a></h3><span class="f">ברזיות מים · הצללה</span><span class="w">אליעזר קשאני 2</span></div>
 <div class="dact"><a class="a-waze" href="https://waze.com/ul?ll=31.7479,35.2336&amp;navigate=yes" target="_blank" rel="noopener" aria-label="ניווט לפארק קשאני ב-Waze" title="ניווט ב-Waze"><img src="/img/waze.png" alt="" width="44" height="44"></a></div>
 </article>

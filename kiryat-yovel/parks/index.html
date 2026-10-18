@@ -20,6 +20,18 @@
 <link href="https://fonts.googleapis.com/css2?family=Assistant:wght@400;600;700;800&family=Frank+Ruhl+Libre:wght@900&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
 <link rel="preconnect" href="https://mebomrqnfnbqijiuawdh.supabase.co">
 <style>
+.t-blue{--t1:#EFF4FF;--t2:#DCE6FB;--tf:#244782}.t-sky{--t1:#E9F4FC;--t2:#D3E8F7;--tf:#1F78B4}
+.t-green{--t1:#EAF7EE;--t2:#D4EEDC;--tf:#15803D}.t-violet{--t1:#F3EFFC;--t2:#E4DCF7;--tf:#6D4BB8}
+.t-teal{--t1:#E6F6F4;--t2:#CDEBE7;--tf:#0F766E}.t-amber{--t1:#FCF5E6;--t2:#F4E5C2;--tf:#8A5A00}
+.t-rose{--t1:#FCEFF2;--t2:#F5D9E0;--tf:#9F2D4B}
+/* תמונת ברירת מחדל: רקע בגוון הקטגוריה + דוגמה (נקודות / פסים / קו רקיע) + אייקון על משטח לבן */
+.art{position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,var(--t1),var(--t2))!important;color:var(--tf)}
+.art::before{content:'';position:absolute;inset:0;pointer-events:none}
+.art.v0::before{background:radial-gradient(color-mix(in srgb,var(--tf) 16%,transparent) 1.5px,transparent 1.8px) 0 0/16px 16px}
+.art.v1::before{background:repeating-linear-gradient(35deg,color-mix(in srgb,var(--tf) 8%,transparent) 0 9px,transparent 9px 22px)}
+.art.v2::before{background:color-mix(in srgb,var(--tf) 13%,transparent);-webkit-mask:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20400%20300%22%20preserveAspectRatio%3D%22none%22%3E%3Crect%20x%3D%220%22%20y%3D%22230%22%20width%3D%2246%22%20height%3D%2270%22%20rx%3D%223%22%2F%3E%3Crect%20x%3D%2250%22%20y%3D%22190%22%20width%3D%2234%22%20height%3D%22110%22%20rx%3D%223%22%2F%3E%3Crect%20x%3D%2288%22%20y%3D%22215%22%20width%3D%2252%22%20height%3D%2285%22%20rx%3D%223%22%2F%3E%3Crect%20x%3D%22144%22%20y%3D%22170%22%20width%3D%2230%22%20height%3D%22130%22%20rx%3D%223%22%2F%3E%3Crect%20x%3D%22178%22%20y%3D%22205%22%20width%3D%2258%22%20height%3D%2295%22%20rx%3D%223%22%2F%3E%3Crect%20x%3D%22240%22%20y%3D%22180%22%20width%3D%2240%22%20height%3D%22120%22%20rx%3D%223%22%2F%3E%3Crect%20x%3D%22284%22%20y%3D%22225%22%20width%3D%2250%22%20height%3D%2275%22%20rx%3D%223%22%2F%3E%3Crect%20x%3D%22338%22%20y%3D%22195%22%20width%3D%2230%22%20height%3D%22105%22%20rx%3D%223%22%2F%3E%3Crect%20x%3D%22372%22%20y%3D%22220%22%20width%3D%2240%22%20height%3D%2280%22%20rx%3D%223%22%2F%3E%3Ccircle%20cx%3D%22330%22%20cy%3D%2270%22%20r%3D%2226%22%2F%3E%3C%2Fsvg%3E") 0 0/100% 100% no-repeat;mask:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20400%20300%22%20preserveAspectRatio%3D%22none%22%3E%3Crect%20x%3D%220%22%20y%3D%22230%22%20width%3D%2246%22%20height%3D%2270%22%20rx%3D%223%22%2F%3E%3Crect%20x%3D%2250%22%20y%3D%22190%22%20width%3D%2234%22%20height%3D%22110%22%20rx%3D%223%22%2F%3E%3Crect%20x%3D%2288%22%20y%3D%22215%22%20width%3D%2252%22%20height%3D%2285%22%20rx%3D%223%22%2F%3E%3Crect%20x%3D%22144%22%20y%3D%22170%22%20width%3D%2230%22%20height%3D%22130%22%20rx%3D%223%22%2F%3E%3Crect%20x%3D%22178%22%20y%3D%22205%22%20width%3D%2258%22%20height%3D%2295%22%20rx%3D%223%22%2F%3E%3Crect%20x%3D%22240%22%20y%3D%22180%22%20width%3D%2240%22%20height%3D%22120%22%20rx%3D%223%22%2F%3E%3Crect%20x%3D%22284%22%20y%3D%22225%22%20width%3D%2250%22%20height%3D%2275%22%20rx%3D%223%22%2F%3E%3Crect%20x%3D%22338%22%20y%3D%22195%22%20width%3D%2230%22%20height%3D%22105%22%20rx%3D%223%22%2F%3E%3Crect%20x%3D%22372%22%20y%3D%22220%22%20width%3D%2240%22%20height%3D%2280%22%20rx%3D%223%22%2F%3E%3Ccircle%20cx%3D%22330%22%20cy%3D%2270%22%20r%3D%2226%22%2F%3E%3C%2Fsvg%3E") 0 0/100% 100% no-repeat}
+.art-ic{position:relative;z-index:1;display:flex;align-items:center;justify-content:center;width:84px;height:84px;border-radius:24px;background:rgba(255,255,255,.86);box-shadow:0 6px 18px rgba(20,40,80,.10);color:var(--tf)}
+.art-ic svg{width:44px;height:44px}
 *,*::before,*::after{box-sizing:border-box}
 :root{--navy:#172F57;--navy2:#213E6E;--brand:#244782;--sky:#8CCBF2;--accent:#2A6FB8;--ink:#1C2B45;
 --muted:#6B7689;--line:#E6E9EF;--bg:#F6F7F9;--soft:#EAF1FA;--ok:#5CD49A;--red:#B4233C}
@@ -293,14 +305,10 @@ footer .c{font-size:13px;color:#8A94A6}
 
 @media (prefers-reduced-motion:reduce){.mq,.mq.rev,.tick,.dot{animation:none}.track{transition:none}.lift:hover{transform:none}}
 
-.t-blue{--t1:#EFF4FF;--t2:#DCE6FB;--tf:#244782}.t-sky{--t1:#E9F4FC;--t2:#D3E8F7;--tf:#1F78B4}
-.t-green{--t1:#EAF7EE;--t2:#D4EEDC;--tf:#15803D}.t-violet{--t1:#F3EFFC;--t2:#E4DCF7;--tf:#6D4BB8}
-.t-teal{--t1:#E6F6F4;--t2:#CDEBE7;--tf:#0F766E}.t-amber{--t1:#FCF5E6;--t2:#F4E5C2;--tf:#8A5A00}
-.t-rose{--t1:#FCEFF2;--t2:#F5D9E0;--tf:#9F2D4B}
 .dcard.compact .dmedia{display:none}
 .dcard.compact .dbody{padding-top:18px}
 .dmedia.noimg{background:radial-gradient(120% 90% at 85% 0%,var(--t1) 0%,var(--t2) 100%)}
-.dmedia.noimg svg{width:64px;height:64px;color:var(--tf);opacity:.9}
+.dmedia.noimg.art::after{display:none}
 .dmedia.noimg::after{content:'';position:absolute;inset:auto 0 0 0;height:36%;opacity:.35;
 background:linear-gradient(to top,var(--t2),transparent)}
 .dir-hero{background:var(--navy);color:#fff}
@@ -376,7 +384,7 @@ background:linear-gradient(to top,var(--t2),transparent)}
 .dcard{display:grid;grid-template-columns:minmax(0,1fr) 96px;grid-template-areas:"b m" "a a"}
 .dmedia{grid-area:m;aspect-ratio:1/1;margin:14px 0 0 14px;border-radius:14px;width:82px;overflow:visible}
 .dmedia img{border-radius:14px}
-.dmedia.noimg svg{width:36px;height:36px}
+.dmedia.noimg .art-ic{width:52px;height:52px;border-radius:15px;box-shadow:0 3px 10px rgba(20,40,80,.10)}.dmedia.noimg .art-ic svg{width:28px;height:28px}
 .drec{top:-8px;right:auto;left:-8px}
 .dbody{grid-area:b;padding:14px 16px 0 12px}
 .dbody h3{font-size:17px}
@@ -476,267 +484,267 @@ background:linear-gradient(to top,var(--t2),transparent)}
 <div id="dmap" class="dmap" hidden></div>
 <div class="dgrid">
 <article class="dcard lift" data-group="גן משחקים" data-text="גינת איסלנד 22  גן משחקים איסלנד 22" data-id="f9a5546b-5999-46e5-a479-34bbc7c46dce" data-t="parks" data-ll="31.75830,35.16220">
-<div class="dmedia noimg t-green"><svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l6 9H6zM12 8l7 9H5zM12 17v4"/></svg></div>
+<div class="dmedia noimg art v1 t-green"><span class="art-ic"><svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l6 9H6zM12 8l7 9H5zM12 17v4"/></svg></span></div>
 <div class="dbody"><h3><a class="stretch" href="/kiryat-yovel/parks/%D7%92%D7%99%D7%A0%D7%AA-%D7%90%D7%99%D7%A1%D7%9C%D7%A0%D7%93-22/">גינת איסלנד 22</a></h3><span class="w">איסלנד 22</span></div>
 <div class="dact"><a class="a-waze" href="https://waze.com/ul?ll=31.7583,35.1622&amp;navigate=yes" target="_blank" rel="noopener" aria-label="ניווט לגינת איסלנד 22 ב-Waze" title="ניווט ב-Waze"><img src="/img/waze.png" alt="" width="44" height="44"></a></div>
 </article>
 <article class="dcard lift" data-group="גן משחקים" data-text="גן אולסוונגר ברזיות מים · הצללה גן משחקים גן אולסוונגר, מאחורי 112" data-id="b4067a7b-30c8-4a1a-8523-4a6796e9a90c" data-t="parks" data-ll="31.76560,35.17140">
-<div class="dmedia noimg t-green"><svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l6 9H6zM12 8l7 9H5zM12 17v4"/></svg></div>
+<div class="dmedia noimg art v1 t-green"><span class="art-ic"><svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l6 9H6zM12 8l7 9H5zM12 17v4"/></svg></span></div>
 <div class="dbody"><h3><a class="stretch" href="/kiryat-yovel/parks/%D7%92%D7%9F-%D7%90%D7%95%D7%9C%D7%A1%D7%95%D7%95%D7%A0%D7%92%D7%A8/">גן אולסוונגר</a></h3><span class="f">ברזיות מים · הצללה</span><span class="w">גן אולסוונגר, מאחורי 112</span></div>
 <div class="dact"><a class="a-waze" href="https://waze.com/ul?ll=31.7656,35.1714&amp;navigate=yes" target="_blank" rel="noopener" aria-label="ניווט לגן אולסוונגר ב-Waze" title="ניווט ב-Waze"><img src="/img/waze.png" alt="" width="44" height="44"></a></div>
 </article>
 <article class="dcard lift" data-group="גן משחקים" data-text="גן אייל המחודש  גן משחקים האייל 81" data-id="60e06e9d-e529-465b-a215-7a7d9caf244c" data-t="parks" data-ll="31.74910,35.18010">
-<div class="dmedia noimg t-green"><svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l6 9H6zM12 8l7 9H5zM12 17v4"/></svg></div>
+<div class="dmedia noimg art v0 t-green"><span class="art-ic"><svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l6 9H6zM12 8l7 9H5zM12 17v4"/></svg></span></div>
 <div class="dbody"><h3><a class="stretch" href="/kiryat-yovel/parks/%D7%92%D7%9F-%D7%90%D7%99%D7%99%D7%9C-%D7%94%D7%9E%D7%97%D7%95%D7%93%D7%A9/">גן אייל המחודש</a></h3><span class="w">האייל 81</span></div>
 <div class="dact"><a class="a-waze" href="https://waze.com/ul?ll=31.7491,35.1801&amp;navigate=yes" target="_blank" rel="noopener" aria-label="ניווט לגן אייל המחודש ב-Waze" title="ניווט ב-Waze"><img src="/img/waze.png" alt="" width="44" height="44"></a></div>
 </article>
 <article class="dcard lift" data-group="גן משחקים" data-text="גן בורכוב  גן משחקים א.ד גורדון 10" data-id="1aa44a4e-7029-4942-a028-9e587ba09aed" data-t="parks" data-ll="31.76650,35.17680">
-<div class="dmedia noimg t-green"><svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l6 9H6zM12 8l7 9H5zM12 17v4"/></svg></div>
+<div class="dmedia noimg art v0 t-green"><span class="art-ic"><svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l6 9H6zM12 8l7 9H5zM12 17v4"/></svg></span></div>
 <div class="dbody"><h3><a class="stretch" href="/kiryat-yovel/parks/%D7%92%D7%9F-%D7%91%D7%95%D7%A8%D7%9B%D7%95%D7%91/">גן בורכוב</a></h3><span class="w">א.ד גורדון 10</span></div>
 <div class="dact"><a class="a-waze" href="https://waze.com/ul?ll=31.7665,35.1768&amp;navigate=yes" target="_blank" rel="noopener" aria-label="ניווט לגן בורכוב ב-Waze" title="ניווט ב-Waze"><img src="/img/waze.png" alt="" width="44" height="44"></a></div>
 </article>
 <article class="dcard lift" data-group="גן משחקים" data-text="גן גאוטמלה 6 ברזיות מים גן משחקים גאוטמלה 6" data-id="f037ead7-8add-460c-9058-0372e19d0a26" data-t="parks" data-ll="31.75970,35.17790">
-<div class="dmedia noimg t-green"><svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l6 9H6zM12 8l7 9H5zM12 17v4"/></svg></div>
+<div class="dmedia noimg art v1 t-green"><span class="art-ic"><svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l6 9H6zM12 8l7 9H5zM12 17v4"/></svg></span></div>
 <div class="dbody"><h3><a class="stretch" href="/kiryat-yovel/parks/%D7%92%D7%9F-%D7%92%D7%90%D7%95%D7%98%D7%9E%D7%9C%D7%94-6/">גן גאוטמלה 6</a></h3><span class="f">ברזיות מים</span><span class="w">גאוטמלה 6</span></div>
 <div class="dact"><a class="a-waze" href="https://waze.com/ul?ll=31.7597,35.1779&amp;navigate=yes" target="_blank" rel="noopener" aria-label="ניווט לגן גאוטמלה 6 ב-Waze" title="ניווט ב-Waze"><img src="/img/waze.png" alt="" width="44" height="44"></a></div>
 </article>
 <article class="dcard lift" data-group="גן משחקים" data-text="גן גואטמלה 20 ברזיות מים · הצללה גן משחקים גואטמלה 20" data-id="13a7e480-65df-4354-b89d-eac24078e12c" data-t="parks" data-ll="31.75590,35.17840">
-<div class="dmedia noimg t-green"><svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l6 9H6zM12 8l7 9H5zM12 17v4"/></svg></div>
+<div class="dmedia noimg art v1 t-green"><span class="art-ic"><svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l6 9H6zM12 8l7 9H5zM12 17v4"/></svg></span></div>
 <div class="dbody"><h3><a class="stretch" href="/kiryat-yovel/parks/%D7%92%D7%9F-%D7%92%D7%95%D7%90%D7%98%D7%9E%D7%9C%D7%94-20/">גן גואטמלה 20</a></h3><span class="f">ברזיות מים · הצללה</span><span class="w">גואטמלה 20</span></div>
 <div class="dact"><a class="a-waze" href="https://waze.com/ul?ll=31.7559,35.1784&amp;navigate=yes" target="_blank" rel="noopener" aria-label="ניווט לגן גואטמלה 20 ב-Waze" title="ניווט ב-Waze"><img src="/img/waze.png" alt="" width="44" height="44"></a></div>
 </article>
 <article class="dcard lift" data-group="גן משחקים" data-text="גן דולצ&#39;ין  גן משחקים אריה דולצ&#39;ין 55" data-id="e0f36274-3e52-49b8-a058-e82955012db7" data-t="parks" data-ll="31.74860,35.16800">
-<div class="dmedia noimg t-green"><svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l6 9H6zM12 8l7 9H5zM12 17v4"/></svg></div>
+<div class="dmedia noimg art v1 t-green"><span class="art-ic"><svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l6 9H6zM12 8l7 9H5zM12 17v4"/></svg></span></div>
 <div class="dbody"><h3><a class="stretch" href="/kiryat-yovel/parks/%D7%92%D7%9F-%D7%93%D7%95%D7%9C%D7%A6%D7%99%D7%9F/">גן דולצ&#39;ין</a></h3><span class="w">אריה דולצ&#39;ין 55</span></div>
 <div class="dact"><a class="a-waze" href="https://waze.com/ul?ll=31.7486,35.168&amp;navigate=yes" target="_blank" rel="noopener" aria-label="ניווט לגן דולצ&#39;ין ב-Waze" title="ניווט ב-Waze"><img src="/img/waze.png" alt="" width="44" height="44"></a></div>
 </article>
 <article class="dcard lift" data-group="גן משחקים" data-text="גן דפנה ברזיות מים · הצללה גן משחקים הדפנה 2" data-id="b6d9008f-b5ba-448e-8b63-ae6b933fffae" data-t="parks" data-ll="31.76750,35.16250">
-<div class="dmedia noimg t-green"><svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l6 9H6zM12 8l7 9H5zM12 17v4"/></svg></div>
+<div class="dmedia noimg art v0 t-green"><span class="art-ic"><svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l6 9H6zM12 8l7 9H5zM12 17v4"/></svg></span></div>
 <div class="dbody"><h3><a class="stretch" href="/kiryat-yovel/parks/%D7%92%D7%9F-%D7%93%D7%A4%D7%A0%D7%94/">גן דפנה</a></h3><span class="f">ברזיות מים · הצללה</span><span class="w">הדפנה 2</span></div>
 <div class="dact"><a class="a-waze" href="https://waze.com/ul?ll=31.7675,35.1625&amp;navigate=yes" target="_blank" rel="noopener" aria-label="ניווט לגן דפנה ב-Waze" title="ניווט ב-Waze"><img src="/img/waze.png" alt="" width="44" height="44"></a></div>
 </article>
 <article class="dcard lift" data-group="גן משחקים" data-text="גן האום ברזיות מים גן משחקים בוליביה 5" data-id="0613367d-b2ba-45f4-b96a-a24b12c954bb" data-t="parks" data-ll="31.75630,35.17940">
-<div class="dmedia noimg t-green"><svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l6 9H6zM12 8l7 9H5zM12 17v4"/></svg></div>
+<div class="dmedia noimg art v0 t-green"><span class="art-ic"><svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l6 9H6zM12 8l7 9H5zM12 17v4"/></svg></span></div>
 <div class="dbody"><h3><a class="stretch" href="/kiryat-yovel/parks/%D7%92%D7%9F-%D7%94%D7%90%D7%95%D7%9D/">גן האום</a></h3><span class="f">ברזיות מים</span><span class="w">בוליביה 5</span></div>
 <div class="dact"><a class="a-waze" href="https://waze.com/ul?ll=31.7563,35.1794&amp;navigate=yes" target="_blank" rel="noopener" aria-label="ניווט לגן האום ב-Waze" title="ניווט ב-Waze"><img src="/img/waze.png" alt="" width="44" height="44"></a></div>
 </article>
 <article class="dcard lift" data-group="גן משחקים" data-text="גן הדישון  גן משחקים פטריה פינת הדישון" data-id="2031dc2e-cda9-412a-b370-48dec29667bb" data-t="parks" data-ll="31.75500,35.18300">
-<div class="dmedia noimg t-green"><svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l6 9H6zM12 8l7 9H5zM12 17v4"/></svg></div>
+<div class="dmedia noimg art v1 t-green"><span class="art-ic"><svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l6 9H6zM12 8l7 9H5zM12 17v4"/></svg></span></div>
 <div class="dbody"><h3><a class="stretch" href="/kiryat-yovel/parks/%D7%92%D7%9F-%D7%94%D7%93%D7%99%D7%A9%D7%95%D7%9F/">גן הדישון</a></h3><span class="w">פטריה פינת הדישון</span></div>
 <div class="dact"><a class="a-waze" href="https://waze.com/ul?ll=31.755,35.183&amp;navigate=yes" target="_blank" rel="noopener" aria-label="ניווט לגן הדישון ב-Waze" title="ניווט ב-Waze"><img src="/img/waze.png" alt="" width="44" height="44"></a></div>
 </article>
 <article class="dcard lift" data-group="גן משחקים" data-text="גן החיות  גן משחקים בורוכוב 44" data-id="cfedbcd5-8524-49ab-999b-a9500db1024b" data-t="parks" data-ll="31.76590,35.17500">
-<div class="dmedia noimg t-green"><svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l6 9H6zM12 8l7 9H5zM12 17v4"/></svg></div>
+<div class="dmedia noimg art v2 t-green"><span class="art-ic"><svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l6 9H6zM12 8l7 9H5zM12 17v4"/></svg></span></div>
 <div class="dbody"><h3><a class="stretch" href="/kiryat-yovel/parks/%D7%92%D7%9F-%D7%94%D7%97%D7%99%D7%95%D7%AA/">גן החיות</a></h3><span class="w">בורוכוב 44</span></div>
 <div class="dact"><a class="a-waze" href="https://waze.com/ul?ll=31.7659,35.175&amp;navigate=yes" target="_blank" rel="noopener" aria-label="ניווט לגן החיות ב-Waze" title="ניווט ב-Waze"><img src="/img/waze.png" alt="" width="44" height="44"></a></div>
 </article>
 <article class="dcard lift" data-group="גן משחקים" data-text="גן המפלצת ברזיות מים גן משחקים טהון 6" data-id="e1953a7e-3732-4bcc-a24b-e7dc1ca58c14" data-t="parks" data-ll="31.76150,35.17300">
-<div class="dmedia noimg t-green"><svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l6 9H6zM12 8l7 9H5zM12 17v4"/></svg></div>
+<div class="dmedia noimg art v2 t-green"><span class="art-ic"><svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l6 9H6zM12 8l7 9H5zM12 17v4"/></svg></span></div>
 <div class="dbody"><h3><a class="stretch" href="/kiryat-yovel/parks/%D7%92%D7%9F-%D7%94%D7%9E%D7%A4%D7%9C%D7%A6%D7%AA/">גן המפלצת</a></h3><span class="f">ברזיות מים</span><span class="w">טהון 6</span></div>
 <div class="dact"><a class="a-waze" href="https://waze.com/ul?ll=31.7615,35.173&amp;navigate=yes" target="_blank" rel="noopener" aria-label="ניווט לגן המפלצת ב-Waze" title="ניווט ב-Waze"><img src="/img/waze.png" alt="" width="44" height="44"></a></div>
 </article>
 <article class="dcard lift" data-group="גן משחקים" data-text="גן המשחקים יהושוע ביצור הצללה גן משחקים יהושוע ביצור 3" data-id="81710bd2-ef2c-41d5-95b2-195532aaa761" data-t="parks" data-ll="31.75140,35.16690">
-<div class="dmedia noimg t-green"><svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l6 9H6zM12 8l7 9H5zM12 17v4"/></svg></div>
+<div class="dmedia noimg art v2 t-green"><span class="art-ic"><svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l6 9H6zM12 8l7 9H5zM12 17v4"/></svg></span></div>
 <div class="dbody"><h3><a class="stretch" href="/kiryat-yovel/parks/%D7%92%D7%9F-%D7%94%D7%9E%D7%A9%D7%97%D7%A7%D7%99%D7%9D-%D7%99%D7%94%D7%95%D7%A9%D7%95%D7%A2-%D7%91%D7%99%D7%A6%D7%95%D7%A8/">גן המשחקים יהושוע ביצור</a></h3><span class="f">הצללה</span><span class="w">יהושוע ביצור 3</span></div>
 <div class="dact"><a class="a-waze" href="https://waze.com/ul?ll=31.7514,35.1669&amp;navigate=yes" target="_blank" rel="noopener" aria-label="ניווט לגן המשחקים יהושוע ביצור ב-Waze" title="ניווט ב-Waze"><img src="/img/waze.png" alt="" width="44" height="44"></a></div>
 </article>
 <article class="dcard lift" data-group="גן משחקים" data-text="גן הנורית הצללה גן משחקים הנורית 1" data-id="f572cc26-bc4a-449f-a90f-95bbcdeba966" data-t="parks" data-ll="31.75380,35.17090">
-<div class="dmedia noimg t-green"><svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l6 9H6zM12 8l7 9H5zM12 17v4"/></svg></div>
+<div class="dmedia noimg art v2 t-green"><span class="art-ic"><svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l6 9H6zM12 8l7 9H5zM12 17v4"/></svg></span></div>
 <div class="dbody"><h3><a class="stretch" href="/kiryat-yovel/parks/%D7%92%D7%9F-%D7%94%D7%A0%D7%95%D7%A8%D7%99%D7%AA/">גן הנורית</a></h3><span class="f">הצללה</span><span class="w">הנורית 1</span></div>
 <div class="dact"><a class="a-waze" href="https://waze.com/ul?ll=31.7538,35.1709&amp;navigate=yes" target="_blank" rel="noopener" aria-label="ניווט לגן הנורית ב-Waze" title="ניווט ב-Waze"><img src="/img/waze.png" alt="" width="44" height="44"></a></div>
 </article>
 <article class="dcard lift" data-group="גן משחקים" data-text="גן הנמר  גן משחקים הנמר" data-id="ce48f991-55b0-417c-ac01-4eae4e39c267" data-t="parks" data-ll="31.75160,35.18060">
-<div class="dmedia noimg t-green"><svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l6 9H6zM12 8l7 9H5zM12 17v4"/></svg></div>
+<div class="dmedia noimg art v1 t-green"><span class="art-ic"><svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l6 9H6zM12 8l7 9H5zM12 17v4"/></svg></span></div>
 <div class="dbody"><h3><a class="stretch" href="/kiryat-yovel/parks/%D7%92%D7%9F-%D7%94%D7%A0%D7%9E%D7%A8/">גן הנמר</a></h3><span class="w">הנמר</span></div>
 <div class="dact"><a class="a-waze" href="https://waze.com/ul?ll=31.7516,35.1806&amp;navigate=yes" target="_blank" rel="noopener" aria-label="ניווט לגן הנמר ב-Waze" title="ניווט ב-Waze"><img src="/img/waze.png" alt="" width="44" height="44"></a></div>
 </article>
 <article class="dcard lift" data-group="גן משחקים" data-text="גן הצוקים ברזיות מים · הצללה גן משחקים הצוקים 1" data-id="3d5f12cb-c2d1-4830-bd8d-3c874e9d7bde" data-t="parks" data-ll="31.76860,35.16370">
-<div class="dmedia noimg t-green"><svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l6 9H6zM12 8l7 9H5zM12 17v4"/></svg></div>
+<div class="dmedia noimg art v2 t-green"><span class="art-ic"><svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l6 9H6zM12 8l7 9H5zM12 17v4"/></svg></span></div>
 <div class="dbody"><h3><a class="stretch" href="/kiryat-yovel/parks/%D7%92%D7%9F-%D7%94%D7%A6%D7%95%D7%A7%D7%99%D7%9D/">גן הצוקים</a></h3><span class="f">ברזיות מים · הצללה</span><span class="w">הצוקים 1</span></div>
 <div class="dact"><a class="a-waze" href="https://waze.com/ul?ll=31.7686,35.1637&amp;navigate=yes" target="_blank" rel="noopener" aria-label="ניווט לגן הצוקים ב-Waze" title="ניווט ב-Waze"><img src="/img/waze.png" alt="" width="44" height="44"></a></div>
 </article>
 <article class="dcard lift" data-group="גן משחקים" data-text="גן הרצוג  גן משחקים החלמית פינת קוסטה ריקה" data-id="9ee8329a-5c50-403b-bc03-dc84f7798615" data-t="parks" data-ll="31.75540,35.16880">
-<div class="dmedia noimg t-green"><svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l6 9H6zM12 8l7 9H5zM12 17v4"/></svg></div>
+<div class="dmedia noimg art v1 t-green"><span class="art-ic"><svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l6 9H6zM12 8l7 9H5zM12 17v4"/></svg></span></div>
 <div class="dbody"><h3><a class="stretch" href="/kiryat-yovel/parks/%D7%92%D7%9F-%D7%94%D7%A8%D7%A6%D7%95%D7%92/">גן הרצוג</a></h3><span class="w">החלמית פינת קוסטה ריקה</span></div>
 <div class="dact"><a class="a-waze" href="https://waze.com/ul?ll=31.7554,35.1688&amp;navigate=yes" target="_blank" rel="noopener" aria-label="ניווט לגן הרצוג ב-Waze" title="ניווט ב-Waze"><img src="/img/waze.png" alt="" width="44" height="44"></a></div>
 </article>
 <article class="dcard lift" data-group="גן משחקים" data-text="גן יובב  גן משחקים יובב 3" data-id="2e08f70e-2cf5-47a3-97a2-6b6dab5a05cd" data-t="parks" data-ll="31.75390,35.18620">
-<div class="dmedia noimg t-green"><svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l6 9H6zM12 8l7 9H5zM12 17v4"/></svg></div>
+<div class="dmedia noimg art v0 t-green"><span class="art-ic"><svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l6 9H6zM12 8l7 9H5zM12 17v4"/></svg></span></div>
 <div class="dbody"><h3><a class="stretch" href="/kiryat-yovel/parks/%D7%92%D7%9F-%D7%99%D7%95%D7%91%D7%91/">גן יובב</a></h3><span class="w">יובב 3</span></div>
 <div class="dact"><a class="a-waze" href="https://waze.com/ul?ll=31.7539,35.1862&amp;navigate=yes" target="_blank" rel="noopener" aria-label="ניווט לגן יובב ב-Waze" title="ניווט ב-Waze"><img src="/img/waze.png" alt="" width="44" height="44"></a></div>
 </article>
 <article class="dcard lift" data-group="גן משחקים" data-text="גן יצחק שלו  גן משחקים יצחק שלו 2" data-id="5b446df6-1e7e-4245-ab76-b2a087568645" data-t="parks" data-ll="31.75040,35.16540">
-<div class="dmedia noimg t-green"><svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l6 9H6zM12 8l7 9H5zM12 17v4"/></svg></div>
+<div class="dmedia noimg art v2 t-green"><span class="art-ic"><svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l6 9H6zM12 8l7 9H5zM12 17v4"/></svg></span></div>
 <div class="dbody"><h3><a class="stretch" href="/kiryat-yovel/parks/%D7%92%D7%9F-%D7%99%D7%A6%D7%97%D7%A7-%D7%A9%D7%9C%D7%95/">גן יצחק שלו</a></h3><span class="w">יצחק שלו 2</span></div>
 <div class="dact"><a class="a-waze" href="https://waze.com/ul?ll=31.7504,35.1654&amp;navigate=yes" target="_blank" rel="noopener" aria-label="ניווט לגן יצחק שלו ב-Waze" title="ניווט ב-Waze"><img src="/img/waze.png" alt="" width="44" height="44"></a></div>
 </article>
 <article class="dcard lift" data-group="גן משחקים" data-text="גן כרמית ברזיות מים · הצללה גן משחקים כרמית 5" data-id="7bcbc883-92ae-414c-8417-04ad375169d3" data-t="parks" data-ll="31.76200,35.16860">
-<div class="dmedia noimg t-green"><svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l6 9H6zM12 8l7 9H5zM12 17v4"/></svg></div>
+<div class="dmedia noimg art v1 t-green"><span class="art-ic"><svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l6 9H6zM12 8l7 9H5zM12 17v4"/></svg></span></div>
 <div class="dbody"><h3><a class="stretch" href="/kiryat-yovel/parks/%D7%92%D7%9F-%D7%9B%D7%A8%D7%9E%D7%99%D7%AA/">גן כרמית</a></h3><span class="f">ברזיות מים · הצללה</span><span class="w">כרמית 5</span></div>
 <div class="dact"><a class="a-waze" href="https://waze.com/ul?ll=31.762,35.1686&amp;navigate=yes" target="_blank" rel="noopener" aria-label="ניווט לגן כרמית ב-Waze" title="ניווט ב-Waze"><img src="/img/waze.png" alt="" width="44" height="44"></a></div>
 </article>
 <article class="dcard lift" data-group="גן משחקים" data-text="גן מיס לנדאו הצללה גן משחקים מיס לנדאו 1" data-id="8a751fa9-0f91-435d-b224-0653e4b7dd98" data-t="parks" data-ll="31.74810,35.17270">
-<div class="dmedia noimg t-green"><svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l6 9H6zM12 8l7 9H5zM12 17v4"/></svg></div>
+<div class="dmedia noimg art v1 t-green"><span class="art-ic"><svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l6 9H6zM12 8l7 9H5zM12 17v4"/></svg></span></div>
 <div class="dbody"><h3><a class="stretch" href="/kiryat-yovel/parks/%D7%92%D7%9F-%D7%9E%D7%99%D7%A1-%D7%9C%D7%A0%D7%93%D7%90%D7%95/">גן מיס לנדאו</a></h3><span class="f">הצללה</span><span class="w">מיס לנדאו 1</span></div>
 <div class="dact"><a class="a-waze" href="https://waze.com/ul?ll=31.7481,35.1727&amp;navigate=yes" target="_blank" rel="noopener" aria-label="ניווט לגן מיס לנדאו ב-Waze" title="ניווט ב-Waze"><img src="/img/waze.png" alt="" width="44" height="44"></a></div>
 </article>
 <article class="dcard lift" data-group="גן משחקים" data-text="גן מסעדה הלבנונית ברזיות מים גן משחקים עין כרם" data-id="a71ef442-f462-43ed-ad30-53f56c416857" data-t="parks" data-ll="31.76710,35.16240">
-<div class="dmedia noimg t-green"><svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l6 9H6zM12 8l7 9H5zM12 17v4"/></svg></div>
+<div class="dmedia noimg art v0 t-green"><span class="art-ic"><svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l6 9H6zM12 8l7 9H5zM12 17v4"/></svg></span></div>
 <div class="dbody"><h3><a class="stretch" href="/kiryat-yovel/parks/%D7%92%D7%9F-%D7%9E%D7%A1%D7%A2%D7%93%D7%94-%D7%94%D7%9C%D7%91%D7%A0%D7%95%D7%A0%D7%99%D7%AA/">גן מסעדה הלבנונית</a></h3><span class="f">ברזיות מים</span><span class="w">עין כרם</span></div>
 <div class="dact"><a class="a-waze" href="https://waze.com/ul?ll=31.7671,35.1624&amp;navigate=yes" target="_blank" rel="noopener" aria-label="ניווט לגן מסעדה הלבנונית ב-Waze" title="ניווט ב-Waze"><img src="/img/waze.png" alt="" width="44" height="44"></a></div>
 </article>
 <article class="dcard lift" data-group="גן משחקים" data-text="גן מקסיקו ברזיות מים · הצללה גן משחקים מקסיקו" data-id="b4b0ff79-7e29-403f-b8db-f7b651519b32" data-t="parks" data-ll="31.75860,35.16930">
-<div class="dmedia noimg t-green"><svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l6 9H6zM12 8l7 9H5zM12 17v4"/></svg></div>
+<div class="dmedia noimg art v1 t-green"><span class="art-ic"><svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l6 9H6zM12 8l7 9H5zM12 17v4"/></svg></span></div>
 <div class="dbody"><h3><a class="stretch" href="/kiryat-yovel/parks/%D7%92%D7%9F-%D7%9E%D7%A7%D7%A1%D7%99%D7%A7%D7%95/">גן מקסיקו</a></h3><span class="f">ברזיות מים · הצללה</span><span class="w">מקסיקו</span></div>
 <div class="dact"><a class="a-waze" href="https://waze.com/ul?ll=31.7586,35.1693&amp;navigate=yes" target="_blank" rel="noopener" aria-label="ניווט לגן מקסיקו ב-Waze" title="ניווט ב-Waze"><img src="/img/waze.png" alt="" width="44" height="44"></a></div>
 </article>
 <article class="dcard lift" data-group="גן משחקים" data-text="גן מרגלית סביון  גן משחקים הסביון 5" data-id="a533ef7c-d5b2-471a-bb94-4736b7fd172f" data-t="parks" data-ll="31.75450,35.16670">
-<div class="dmedia noimg t-green"><svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l6 9H6zM12 8l7 9H5zM12 17v4"/></svg></div>
+<div class="dmedia noimg art v1 t-green"><span class="art-ic"><svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l6 9H6zM12 8l7 9H5zM12 17v4"/></svg></span></div>
 <div class="dbody"><h3><a class="stretch" href="/kiryat-yovel/parks/%D7%92%D7%9F-%D7%9E%D7%A8%D7%92%D7%9C%D7%99%D7%AA-%D7%A1%D7%91%D7%99%D7%95%D7%9F/">גן מרגלית סביון</a></h3><span class="w">הסביון 5</span></div>
 <div class="dact"><a class="a-waze" href="https://waze.com/ul?ll=31.7545,35.1667&amp;navigate=yes" target="_blank" rel="noopener" aria-label="ניווט לגן מרגלית סביון ב-Waze" title="ניווט ב-Waze"><img src="/img/waze.png" alt="" width="44" height="44"></a></div>
 </article>
 <article class="dcard lift" data-group="גן משחקים" data-text="גן משחקים - אביבית מילסון פרוינד  גן משחקים האביבית 11-7" data-id="39099213-701f-4b85-9ba1-63984c833bf5" data-t="parks" data-ll="31.75300,35.16680">
-<div class="dmedia noimg t-green"><svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l6 9H6zM12 8l7 9H5zM12 17v4"/></svg></div>
+<div class="dmedia noimg art v2 t-green"><span class="art-ic"><svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l6 9H6zM12 8l7 9H5zM12 17v4"/></svg></span></div>
 <div class="dbody"><h3><a class="stretch" href="/kiryat-yovel/parks/%D7%92%D7%9F-%D7%9E%D7%A9%D7%97%D7%A7%D7%99%D7%9D-%D7%90%D7%91%D7%99%D7%91%D7%99%D7%AA-%D7%9E%D7%99%D7%9C%D7%A1%D7%95%D7%9F-%D7%A4%D7%A8%D7%95%D7%99%D7%A0%D7%93/">גן משחקים - אביבית מילסון פרוינד</a></h3><span class="w">האביבית 11-7</span></div>
 <div class="dact"><a class="a-waze" href="https://waze.com/ul?ll=31.753,35.1668&amp;navigate=yes" target="_blank" rel="noopener" aria-label="ניווט לגן משחקים - אביבית מילסון פרוינד ב-Waze" title="ניווט ב-Waze"><img src="/img/waze.png" alt="" width="44" height="44"></a></div>
 </article>
 <article class="dcard lift" data-group="גן משחקים" data-text="גן משחקים - אילן הצללה גן משחקים דהומיי 8" data-id="b5acdae1-be78-419b-9900-c52893c46f9c" data-t="parks" data-ll="31.75650,35.16500">
-<div class="dmedia noimg t-green"><svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l6 9H6zM12 8l7 9H5zM12 17v4"/></svg></div>
+<div class="dmedia noimg art v1 t-green"><span class="art-ic"><svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l6 9H6zM12 8l7 9H5zM12 17v4"/></svg></span></div>
 <div class="dbody"><h3><a class="stretch" href="/kiryat-yovel/parks/%D7%92%D7%9F-%D7%9E%D7%A9%D7%97%D7%A7%D7%99%D7%9D-%D7%90%D7%99%D7%9C%D7%9F/">גן משחקים - אילן</a></h3><span class="f">הצללה</span><span class="w">דהומיי 8</span></div>
 <div class="dact"><a class="a-waze" href="https://waze.com/ul?ll=31.7565,35.165&amp;navigate=yes" target="_blank" rel="noopener" aria-label="ניווט לגן משחקים - אילן ב-Waze" title="ניווט ב-Waze"><img src="/img/waze.png" alt="" width="44" height="44"></a></div>
 </article>
 <article class="dcard lift" data-group="גן משחקים" data-text="גן משחקים - גבעת האנטנה בוגרים ברזיות מים · הצללה גן משחקים אליעזר ברגמן 24" data-id="019d50c9-0840-49ce-8904-01e330fa2e5c" data-t="parks" data-ll="31.76830,35.18140">
-<div class="dmedia noimg t-green"><svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l6 9H6zM12 8l7 9H5zM12 17v4"/></svg></div>
+<div class="dmedia noimg art v2 t-green"><span class="art-ic"><svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l6 9H6zM12 8l7 9H5zM12 17v4"/></svg></span></div>
 <div class="dbody"><h3><a class="stretch" href="/kiryat-yovel/parks/%D7%92%D7%9F-%D7%9E%D7%A9%D7%97%D7%A7%D7%99%D7%9D-%D7%92%D7%91%D7%A2%D7%AA-%D7%94%D7%90%D7%A0%D7%98%D7%A0%D7%94-%D7%91%D7%95%D7%92%D7%A8%D7%99%D7%9D/">גן משחקים - גבעת האנטנה בוגרים</a></h3><span class="f">ברזיות מים · הצללה</span><span class="w">אליעזר ברגמן 24</span></div>
 <div class="dact"><a class="a-waze" href="https://waze.com/ul?ll=31.7683,35.1814&amp;navigate=yes" target="_blank" rel="noopener" aria-label="ניווט לגן משחקים - גבעת האנטנה בוגרים ב-Waze" title="ניווט ב-Waze"><img src="/img/waze.png" alt="" width="44" height="44"></a></div>
 </article>
 <article class="dcard lift" data-group="גן משחקים" data-text="גן משחקים - גואטמלה הצללה גן משחקים גואטמלה 18" data-id="faac3fb8-6f37-4e60-9e23-d07f31b254a4" data-t="parks" data-ll="31.75650,35.17830">
-<div class="dmedia noimg t-green"><svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l6 9H6zM12 8l7 9H5zM12 17v4"/></svg></div>
+<div class="dmedia noimg art v0 t-green"><span class="art-ic"><svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l6 9H6zM12 8l7 9H5zM12 17v4"/></svg></span></div>
 <div class="dbody"><h3><a class="stretch" href="/kiryat-yovel/parks/%D7%92%D7%9F-%D7%9E%D7%A9%D7%97%D7%A7%D7%99%D7%9D-%D7%92%D7%95%D7%90%D7%98%D7%9E%D7%9C%D7%94/">גן משחקים - גואטמלה</a></h3><span class="f">הצללה</span><span class="w">גואטמלה 18</span></div>
 <div class="dact"><a class="a-waze" href="https://waze.com/ul?ll=31.7565,35.1783&amp;navigate=yes" target="_blank" rel="noopener" aria-label="ניווט לגן משחקים - גואטמלה ב-Waze" title="ניווט ב-Waze"><img src="/img/waze.png" alt="" width="44" height="44"></a></div>
 </article>
 <article class="dcard lift" data-group="גן משחקים" data-text="גן משחקים - דולצ&#39;ין הצללה גן משחקים דולצ&#39;ין 26" data-id="0dc398b5-caf5-411d-afec-ad1cb96db4b2" data-t="parks" data-ll="31.75030,35.16970">
-<div class="dmedia noimg t-green"><svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l6 9H6zM12 8l7 9H5zM12 17v4"/></svg></div>
+<div class="dmedia noimg art v2 t-green"><span class="art-ic"><svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l6 9H6zM12 8l7 9H5zM12 17v4"/></svg></span></div>
 <div class="dbody"><h3><a class="stretch" href="/kiryat-yovel/parks/%D7%92%D7%9F-%D7%9E%D7%A9%D7%97%D7%A7%D7%99%D7%9D-%D7%93%D7%95%D7%9C%D7%A6%D7%99%D7%9F/">גן משחקים - דולצ&#39;ין</a></h3><span class="f">הצללה</span><span class="w">דולצ&#39;ין 26</span></div>
 <div class="dact"><a class="a-waze" href="https://waze.com/ul?ll=31.7503,35.1697&amp;navigate=yes" target="_blank" rel="noopener" aria-label="ניווט לגן משחקים - דולצ&#39;ין ב-Waze" title="ניווט ב-Waze"><img src="/img/waze.png" alt="" width="44" height="44"></a></div>
 </article>
 <article class="dcard lift" data-group="גן משחקים" data-text="גן משחקים - דרך כרמית 3 הצללה גן משחקים דרך כרמית 3" data-id="6d2802a9-44a2-4a59-84a5-58e7becc8da5" data-t="parks" data-ll="31.76070,35.16800">
-<div class="dmedia noimg t-green"><svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l6 9H6zM12 8l7 9H5zM12 17v4"/></svg></div>
+<div class="dmedia noimg art v0 t-green"><span class="art-ic"><svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l6 9H6zM12 8l7 9H5zM12 17v4"/></svg></span></div>
 <div class="dbody"><h3><a class="stretch" href="/kiryat-yovel/parks/%D7%92%D7%9F-%D7%9E%D7%A9%D7%97%D7%A7%D7%99%D7%9D-%D7%93%D7%A8%D7%9A-%D7%9B%D7%A8%D7%9E%D7%99%D7%AA-3/">גן משחקים - דרך כרמית 3</a></h3><span class="f">הצללה</span><span class="w">דרך כרמית 3</span></div>
 <div class="dact"><a class="a-waze" href="https://waze.com/ul?ll=31.7607,35.168&amp;navigate=yes" target="_blank" rel="noopener" aria-label="ניווט לגן משחקים - דרך כרמית 3 ב-Waze" title="ניווט ב-Waze"><img src="/img/waze.png" alt="" width="44" height="44"></a></div>
 </article>
 <article class="dcard lift" data-group="גן משחקים" data-text="גן משחקים - דרך כרמית 4 הצללה גן משחקים דרך כרמית 4" data-id="f703f7dc-013c-4357-bf27-0fb5329e69e3" data-t="parks" data-ll="31.76190,35.16840">
-<div class="dmedia noimg t-green"><svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l6 9H6zM12 8l7 9H5zM12 17v4"/></svg></div>
+<div class="dmedia noimg art v1 t-green"><span class="art-ic"><svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l6 9H6zM12 8l7 9H5zM12 17v4"/></svg></span></div>
 <div class="dbody"><h3><a class="stretch" href="/kiryat-yovel/parks/%D7%92%D7%9F-%D7%9E%D7%A9%D7%97%D7%A7%D7%99%D7%9D-%D7%93%D7%A8%D7%9A-%D7%9B%D7%A8%D7%9E%D7%99%D7%AA-4/">גן משחקים - דרך כרמית 4</a></h3><span class="f">הצללה</span><span class="w">דרך כרמית 4</span></div>
 <div class="dact"><a class="a-waze" href="https://waze.com/ul?ll=31.7619,35.1684&amp;navigate=yes" target="_blank" rel="noopener" aria-label="ניווט לגן משחקים - דרך כרמית 4 ב-Waze" title="ניווט ב-Waze"><img src="/img/waze.png" alt="" width="44" height="44"></a></div>
 </article>
 <article class="dcard lift" data-group="גן משחקים" data-text="גן משחקים - הנורית 14 הצללה גן משחקים הנורית 14" data-id="d799386d-97d3-4775-8a1b-ba1da7834d36" data-t="parks" data-ll="31.75260,35.17160">
-<div class="dmedia noimg t-green"><svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l6 9H6zM12 8l7 9H5zM12 17v4"/></svg></div>
+<div class="dmedia noimg art v2 t-green"><span class="art-ic"><svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l6 9H6zM12 8l7 9H5zM12 17v4"/></svg></span></div>
 <div class="dbody"><h3><a class="stretch" href="/kiryat-yovel/parks/%D7%92%D7%9F-%D7%9E%D7%A9%D7%97%D7%A7%D7%99%D7%9D-%D7%94%D7%A0%D7%95%D7%A8%D7%99%D7%AA-14/">גן משחקים - הנורית 14</a></h3><span class="f">הצללה</span><span class="w">הנורית 14</span></div>
 <div class="dact"><a class="a-waze" href="https://waze.com/ul?ll=31.7526,35.1716&amp;navigate=yes" target="_blank" rel="noopener" aria-label="ניווט לגן משחקים - הנורית 14 ב-Waze" title="ניווט ב-Waze"><img src="/img/waze.png" alt="" width="44" height="44"></a></div>
 </article>
 <article class="dcard lift" data-group="גן משחקים" data-text="גן משחקים - הסוכריה הצללה גן משחקים הנרייטה סולד 30" data-id="66f52eff-2ce4-4c7a-a4dd-2c51a63b1524" data-t="parks" data-ll="31.76030,35.16670">
-<div class="dmedia noimg t-green"><svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l6 9H6zM12 8l7 9H5zM12 17v4"/></svg></div>
+<div class="dmedia noimg art v2 t-green"><span class="art-ic"><svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l6 9H6zM12 8l7 9H5zM12 17v4"/></svg></span></div>
 <div class="dbody"><h3><a class="stretch" href="/kiryat-yovel/parks/%D7%92%D7%9F-%D7%9E%D7%A9%D7%97%D7%A7%D7%99%D7%9D-%D7%94%D7%A1%D7%95%D7%9B%D7%A8%D7%99%D7%94/">גן משחקים - הסוכריה</a></h3><span class="f">הצללה</span><span class="w">הנרייטה סולד 30</span></div>
 <div class="dact"><a class="a-waze" href="https://waze.com/ul?ll=31.7603,35.1667&amp;navigate=yes" target="_blank" rel="noopener" aria-label="ניווט לגן משחקים - הסוכריה ב-Waze" title="ניווט ב-Waze"><img src="/img/waze.png" alt="" width="44" height="44"></a></div>
 </article>
 <article class="dcard lift" data-group="גן משחקים" data-text="גן משחקים - הסוכריה שטח א הצללה גן משחקים הנרייטה סולד 52" data-id="f051912f-c3b5-4830-bd70-86e0cf06dc11" data-t="parks" data-ll="31.76020,35.16670">
-<div class="dmedia noimg t-green"><svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l6 9H6zM12 8l7 9H5zM12 17v4"/></svg></div>
+<div class="dmedia noimg art v2 t-green"><span class="art-ic"><svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l6 9H6zM12 8l7 9H5zM12 17v4"/></svg></span></div>
 <div class="dbody"><h3><a class="stretch" href="/kiryat-yovel/parks/%D7%92%D7%9F-%D7%9E%D7%A9%D7%97%D7%A7%D7%99%D7%9D-%D7%94%D7%A1%D7%95%D7%9B%D7%A8%D7%99%D7%94-%D7%A9%D7%98%D7%97-%D7%90/">גן משחקים - הסוכריה שטח א</a></h3><span class="f">הצללה</span><span class="w">הנרייטה סולד 52</span></div>
 <div class="dact"><a class="a-waze" href="https://waze.com/ul?ll=31.7602,35.1667&amp;navigate=yes" target="_blank" rel="noopener" aria-label="ניווט לגן משחקים - הסוכריה שטח א ב-Waze" title="ניווט ב-Waze"><img src="/img/waze.png" alt="" width="44" height="44"></a></div>
 </article>
 <article class="dcard lift" data-group="גן משחקים" data-text="גן משחקים - יהודה ברזיות מים · הצללה גן משחקים בורוכוב 1" data-id="71b51350-c602-4480-981e-b3b050da2c56" data-t="parks" data-ll="31.76800,35.17720">
-<div class="dmedia noimg t-green"><svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l6 9H6zM12 8l7 9H5zM12 17v4"/></svg></div>
+<div class="dmedia noimg art v1 t-green"><span class="art-ic"><svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l6 9H6zM12 8l7 9H5zM12 17v4"/></svg></span></div>
 <div class="dbody"><h3><a class="stretch" href="/kiryat-yovel/parks/%D7%92%D7%9F-%D7%9E%D7%A9%D7%97%D7%A7%D7%99%D7%9D-%D7%99%D7%94%D7%95%D7%93%D7%94/">גן משחקים - יהודה</a></h3><span class="f">ברזיות מים · הצללה</span><span class="w">בורוכוב 1</span></div>
 <div class="dact"><a class="a-waze" href="https://waze.com/ul?ll=31.768,35.1772&amp;navigate=yes" target="_blank" rel="noopener" aria-label="ניווט לגן משחקים - יהודה ב-Waze" title="ניווט ב-Waze"><img src="/img/waze.png" alt="" width="44" height="44"></a></div>
 </article>
 <article class="dcard lift" data-group="גן משחקים" data-text="גן משחקים - יצחק מפלס א ברזיות מים · הצללה גן משחקים גורדון 13" data-id="2176a614-5282-444f-b9d6-07bbcb33bc0f" data-t="parks" data-ll="31.76670,35.17720">
-<div class="dmedia noimg t-green"><svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l6 9H6zM12 8l7 9H5zM12 17v4"/></svg></div>
+<div class="dmedia noimg art v2 t-green"><span class="art-ic"><svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l6 9H6zM12 8l7 9H5zM12 17v4"/></svg></span></div>
 <div class="dbody"><h3><a class="stretch" href="/kiryat-yovel/parks/%D7%92%D7%9F-%D7%9E%D7%A9%D7%97%D7%A7%D7%99%D7%9D-%D7%99%D7%A6%D7%97%D7%A7-%D7%9E%D7%A4%D7%9C%D7%A1-%D7%90/">גן משחקים - יצחק מפלס א</a></h3><span class="f">ברזיות מים · הצללה</span><span class="w">גורדון 13</span></div>
 <div class="dact"><a class="a-waze" href="https://waze.com/ul?ll=31.7667,35.1772&amp;navigate=yes" target="_blank" rel="noopener" aria-label="ניווט לגן משחקים - יצחק מפלס א ב-Waze" title="ניווט ב-Waze"><img src="/img/waze.png" alt="" width="44" height="44"></a></div>
 </article>
 <article class="dcard lift" data-group="גן משחקים" data-text="גן משחקים - פלאט  גן משחקים בורוכוב 57" data-id="44d65810-0730-4498-ac87-07ed5fa90b5f" data-t="parks" data-ll="31.76310,35.17360">
-<div class="dmedia noimg t-green"><svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l6 9H6zM12 8l7 9H5zM12 17v4"/></svg></div>
+<div class="dmedia noimg art v0 t-green"><span class="art-ic"><svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l6 9H6zM12 8l7 9H5zM12 17v4"/></svg></span></div>
 <div class="dbody"><h3><a class="stretch" href="/kiryat-yovel/parks/%D7%92%D7%9F-%D7%9E%D7%A9%D7%97%D7%A7%D7%99%D7%9D-%D7%A4%D7%9C%D7%90%D7%98/">גן משחקים - פלאט</a></h3><span class="w">בורוכוב 57</span></div>
 <div class="dact"><a class="a-waze" href="https://waze.com/ul?ll=31.7631,35.1736&amp;navigate=yes" target="_blank" rel="noopener" aria-label="ניווט לגן משחקים - פלאט ב-Waze" title="ניווט ב-Waze"><img src="/img/waze.png" alt="" width="44" height="44"></a></div>
 </article>
 <article class="dcard lift" data-group="גן משחקים" data-text="גן משחקים - קולומביה  גן משחקים קולומביה 16" data-id="e8b29dd0-50a3-4ebe-8e5f-33390ae2846b" data-t="parks" data-ll="31.75870,35.16590">
-<div class="dmedia noimg t-green"><svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l6 9H6zM12 8l7 9H5zM12 17v4"/></svg></div>
+<div class="dmedia noimg art v0 t-green"><span class="art-ic"><svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l6 9H6zM12 8l7 9H5zM12 17v4"/></svg></span></div>
 <div class="dbody"><h3><a class="stretch" href="/kiryat-yovel/parks/%D7%92%D7%9F-%D7%9E%D7%A9%D7%97%D7%A7%D7%99%D7%9D-%D7%A7%D7%95%D7%9C%D7%95%D7%9E%D7%91%D7%99%D7%94/">גן משחקים - קולומביה</a></h3><span class="w">קולומביה 16</span></div>
 <div class="dact"><a class="a-waze" href="https://waze.com/ul?ll=31.7587,35.1659&amp;navigate=yes" target="_blank" rel="noopener" aria-label="ניווט לגן משחקים - קולומביה ב-Waze" title="ניווט ב-Waze"><img src="/img/waze.png" alt="" width="44" height="44"></a></div>
 </article>
 <article class="dcard lift" data-group="גן משחקים" data-text="גן משחקים - קוסטה ריקה 24 הצללה גן משחקים קוסטה ריקה 24" data-id="4c14365e-922f-4b0d-b15f-170fbc538f3f" data-t="parks" data-ll="31.75350,35.17260">
-<div class="dmedia noimg t-green"><svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l6 9H6zM12 8l7 9H5zM12 17v4"/></svg></div>
+<div class="dmedia noimg art v1 t-green"><span class="art-ic"><svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l6 9H6zM12 8l7 9H5zM12 17v4"/></svg></span></div>
 <div class="dbody"><h3><a class="stretch" href="/kiryat-yovel/parks/%D7%92%D7%9F-%D7%9E%D7%A9%D7%97%D7%A7%D7%99%D7%9D-%D7%A7%D7%95%D7%A1%D7%98%D7%94-%D7%A8%D7%99%D7%A7%D7%94-24/">גן משחקים - קוסטה ריקה 24</a></h3><span class="f">הצללה</span><span class="w">קוסטה ריקה 24</span></div>
 <div class="dact"><a class="a-waze" href="https://waze.com/ul?ll=31.7535,35.1726&amp;navigate=yes" target="_blank" rel="noopener" aria-label="ניווט לגן משחקים - קוסטה ריקה 24 ב-Waze" title="ניווט ב-Waze"><img src="/img/waze.png" alt="" width="44" height="44"></a></div>
 </article>
 <article class="dcard lift" data-group="גן משחקים" data-text="גן משחקים - קוסטה ריקה 73 הצללה גן משחקים קוסטה ריקה 73" data-id="78cb0858-a00b-4044-be86-3e877a3c738b" data-t="parks" data-ll="31.75200,35.17080">
-<div class="dmedia noimg t-green"><svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l6 9H6zM12 8l7 9H5zM12 17v4"/></svg></div>
+<div class="dmedia noimg art v2 t-green"><span class="art-ic"><svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l6 9H6zM12 8l7 9H5zM12 17v4"/></svg></span></div>
 <div class="dbody"><h3><a class="stretch" href="/kiryat-yovel/parks/%D7%92%D7%9F-%D7%9E%D7%A9%D7%97%D7%A7%D7%99%D7%9D-%D7%A7%D7%95%D7%A1%D7%98%D7%94-%D7%A8%D7%99%D7%A7%D7%94-73/">גן משחקים - קוסטה ריקה 73</a></h3><span class="f">הצללה</span><span class="w">קוסטה ריקה 73</span></div>
 <div class="dact"><a class="a-waze" href="https://waze.com/ul?ll=31.752,35.1708&amp;navigate=yes" target="_blank" rel="noopener" aria-label="ניווט לגן משחקים - קוסטה ריקה 73 ב-Waze" title="ניווט ב-Waze"><img src="/img/waze.png" alt="" width="44" height="44"></a></div>
 </article>
 <article class="dcard lift" data-group="גן משחקים" data-text="גן משחקים - קוסטה ריקה 87 הצללה גן משחקים קוסטה ריקה 87" data-id="764354d6-113d-4e63-869f-ca5cd2bf8ab0" data-t="parks" data-ll="31.75240,35.16980">
-<div class="dmedia noimg t-green"><svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l6 9H6zM12 8l7 9H5zM12 17v4"/></svg></div>
+<div class="dmedia noimg art v2 t-green"><span class="art-ic"><svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l6 9H6zM12 8l7 9H5zM12 17v4"/></svg></span></div>
 <div class="dbody"><h3><a class="stretch" href="/kiryat-yovel/parks/%D7%92%D7%9F-%D7%9E%D7%A9%D7%97%D7%A7%D7%99%D7%9D-%D7%A7%D7%95%D7%A1%D7%98%D7%94-%D7%A8%D7%99%D7%A7%D7%94-87/">גן משחקים - קוסטה ריקה 87</a></h3><span class="f">הצללה</span><span class="w">קוסטה ריקה 87</span></div>
 <div class="dact"><a class="a-waze" href="https://waze.com/ul?ll=31.7524,35.1698&amp;navigate=yes" target="_blank" rel="noopener" aria-label="ניווט לגן משחקים - קוסטה ריקה 87 ב-Waze" title="ניווט ב-Waze"><img src="/img/waze.png" alt="" width="44" height="44"></a></div>
 </article>
 <article class="dcard lift" data-group="גן משחקים" data-text="גן משחקים - קרן  גן משחקים זנגוויל 5" data-id="af5d12b7-d9bc-4d3e-9b19-24e7fe1d9c94" data-t="parks" data-ll="31.76740,35.17820">
-<div class="dmedia noimg t-green"><svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l6 9H6zM12 8l7 9H5zM12 17v4"/></svg></div>
+<div class="dmedia noimg art v2 t-green"><span class="art-ic"><svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l6 9H6zM12 8l7 9H5zM12 17v4"/></svg></span></div>
 <div class="dbody"><h3><a class="stretch" href="/kiryat-yovel/parks/%D7%92%D7%9F-%D7%9E%D7%A9%D7%97%D7%A7%D7%99%D7%9D-%D7%A7%D7%A8%D7%9F/">גן משחקים - קרן</a></h3><span class="w">זנגוויל 5</span></div>
 <div class="dact"><a class="a-waze" href="https://waze.com/ul?ll=31.7674,35.1782&amp;navigate=yes" target="_blank" rel="noopener" aria-label="ניווט לגן משחקים - קרן ב-Waze" title="ניווט ב-Waze"><img src="/img/waze.png" alt="" width="44" height="44"></a></div>
 </article>
 <article class="dcard lift" data-group="גן משחקים" data-text="גן משחקים - שחר הצללה גן משחקים אברהם ניסן 25" data-id="934423bb-e742-4476-b533-8c7da95b29a5" data-t="parks" data-ll="31.75850,35.17600">
-<div class="dmedia noimg t-green"><svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l6 9H6zM12 8l7 9H5zM12 17v4"/></svg></div>
+<div class="dmedia noimg art v1 t-green"><span class="art-ic"><svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l6 9H6zM12 8l7 9H5zM12 17v4"/></svg></span></div>
 <div class="dbody"><h3><a class="stretch" href="/kiryat-yovel/parks/%D7%92%D7%9F-%D7%9E%D7%A9%D7%97%D7%A7%D7%99%D7%9D-%D7%A9%D7%97%D7%A8/">גן משחקים - שחר</a></h3><span class="f">הצללה</span><span class="w">אברהם ניסן 25</span></div>
 <div class="dact"><a class="a-waze" href="https://waze.com/ul?ll=31.7585,35.176&amp;navigate=yes" target="_blank" rel="noopener" aria-label="ניווט לגן משחקים - שחר ב-Waze" title="ניווט ב-Waze"><img src="/img/waze.png" alt="" width="44" height="44"></a></div>
 </article>
 <article class="dcard lift" data-group="גן משחקים" data-text="גן עמידר ברזיות מים גן משחקים אנילביץ 72" data-id="bf6cd72b-3f58-4cb8-bf33-7a2f8f8c8ce1" data-t="parks" data-ll="31.76310,35.17320">
-<div class="dmedia noimg t-green"><svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l6 9H6zM12 8l7 9H5zM12 17v4"/></svg></div>
+<div class="dmedia noimg art v1 t-green"><span class="art-ic"><svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l6 9H6zM12 8l7 9H5zM12 17v4"/></svg></span></div>
 <div class="dbody"><h3><a class="stretch" href="/kiryat-yovel/parks/%D7%92%D7%9F-%D7%A2%D7%9E%D7%99%D7%93%D7%A8/">גן עמידר</a></h3><span class="f">ברזיות מים</span><span class="w">אנילביץ 72</span></div>
 <div class="dact"><a class="a-waze" href="https://waze.com/ul?ll=31.7631,35.1732&amp;navigate=yes" target="_blank" rel="noopener" aria-label="ניווט לגן עמידר ב-Waze" title="ניווט ב-Waze"><img src="/img/waze.png" alt="" width="44" height="44"></a></div>
 </article>
 <article class="dcard lift" data-group="גן משחקים" data-text="גן פרק שטרן ברזיות מים · הצללה גן משחקים יעקב גאוני 1" data-id="79bee557-11fe-4339-9a80-9024bf2d2382" data-t="parks" data-ll="31.75460,35.18020">
-<div class="dmedia noimg t-green"><svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l6 9H6zM12 8l7 9H5zM12 17v4"/></svg></div>
+<div class="dmedia noimg art v1 t-green"><span class="art-ic"><svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l6 9H6zM12 8l7 9H5zM12 17v4"/></svg></span></div>
 <div class="dbody"><h3><a class="stretch" href="/kiryat-yovel/parks/%D7%92%D7%9F-%D7%A4%D7%A8%D7%A7-%D7%A9%D7%98%D7%A8%D7%9F/">גן פרק שטרן</a></h3><span class="f">ברזיות מים · הצללה</span><span class="w">יעקב גאוני 1</span></div>
 <div class="dact"><a class="a-waze" href="https://waze.com/ul?ll=31.7546,35.1802&amp;navigate=yes" target="_blank" rel="noopener" aria-label="ניווט לגן פרק שטרן ב-Waze" title="ניווט ב-Waze"><img src="/img/waze.png" alt="" width="44" height="44"></a></div>
 </article>
 <article class="dcard lift" data-group="גן משחקים" data-text="גן קוסטה ריקה  גן משחקים קוסטה ריקה 24" data-id="f8474d56-8105-4c29-895a-15ac6165125a" data-t="parks" data-ll="31.75330,35.17270">
-<div class="dmedia noimg t-green"><svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l6 9H6zM12 8l7 9H5zM12 17v4"/></svg></div>
+<div class="dmedia noimg art v1 t-green"><span class="art-ic"><svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l6 9H6zM12 8l7 9H5zM12 17v4"/></svg></span></div>
 <div class="dbody"><h3><a class="stretch" href="/kiryat-yovel/parks/%D7%92%D7%9F-%D7%A7%D7%95%D7%A1%D7%98%D7%94-%D7%A8%D7%99%D7%A7%D7%94/">גן קוסטה ריקה</a></h3><span class="w">קוסטה ריקה 24</span></div>
 <div class="dact"><a class="a-waze" href="https://waze.com/ul?ll=31.7533,35.1727&amp;navigate=yes" target="_blank" rel="noopener" aria-label="ניווט לגן קוסטה ריקה ב-Waze" title="ניווט ב-Waze"><img src="/img/waze.png" alt="" width="44" height="44"></a></div>
 </article>
 <article class="dcard lift" data-group="גן משחקים" data-text="גן קלעי  גן משחקים קלעי פינת הדישון" data-id="521aea9a-0f8c-4664-b8e5-9745b341169f" data-t="parks" data-ll="31.75390,35.18280">
-<div class="dmedia noimg t-green"><svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l6 9H6zM12 8l7 9H5zM12 17v4"/></svg></div>
+<div class="dmedia noimg art v2 t-green"><span class="art-ic"><svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l6 9H6zM12 8l7 9H5zM12 17v4"/></svg></span></div>
 <div class="dbody"><h3><a class="stretch" href="/kiryat-yovel/parks/%D7%92%D7%9F-%D7%A7%D7%9C%D7%A2%D7%99/">גן קלעי</a></h3><span class="w">קלעי פינת הדישון</span></div>
 <div class="dact"><a class="a-waze" href="https://waze.com/ul?ll=31.7539,35.1828&amp;navigate=yes" target="_blank" rel="noopener" aria-label="ניווט לגן קלעי ב-Waze" title="ניווט ב-Waze"><img src="/img/waze.png" alt="" width="44" height="44"></a></div>
 </article>
 <article class="dcard lift" data-group="גן משחקים" data-text="גן שטרן הצללה גן משחקים אברהם שטרן 51" data-id="517acf5a-6da0-45c9-beab-2482664cb281" data-t="parks" data-ll="31.75490,35.17970">
-<div class="dmedia noimg t-green"><svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l6 9H6zM12 8l7 9H5zM12 17v4"/></svg></div>
+<div class="dmedia noimg art v1 t-green"><span class="art-ic"><svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l6 9H6zM12 8l7 9H5zM12 17v4"/></svg></span></div>
 <div class="dbody"><h3><a class="stretch" href="/kiryat-yovel/parks/%D7%92%D7%9F-%D7%A9%D7%98%D7%A8%D7%9F/">גן שטרן</a></h3><span class="f">הצללה</span><span class="w">אברהם שטרן 51</span></div>
 <div class="dact"><a class="a-waze" href="https://waze.com/ul?ll=31.7549,35.1797&amp;navigate=yes" target="_blank" rel="noopener" aria-label="ניווט לגן שטרן ב-Waze" title="ניווט ב-Waze"><img src="/img/waze.png" alt="" width="44" height="44"></a></div>
 </article>
 <article class="dcard lift" data-group="גן משחקים" data-text="גן שטרן 4 ברזיות מים גן משחקים שטרן 4" data-id="f7017e15-1aa0-4293-9d8b-baeb9c175716" data-t="parks" data-ll="31.75650,35.18060">
-<div class="dmedia noimg t-green"><svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l6 9H6zM12 8l7 9H5zM12 17v4"/></svg></div>
+<div class="dmedia noimg art v0 t-green"><span class="art-ic"><svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l6 9H6zM12 8l7 9H5zM12 17v4"/></svg></span></div>
 <div class="dbody"><h3><a class="stretch" href="/kiryat-yovel/parks/%D7%92%D7%9F-%D7%A9%D7%98%D7%A8%D7%9F-4/">גן שטרן 4</a></h3><span class="f">ברזיות מים</span><span class="w">שטרן 4</span></div>
 <div class="dact"><a class="a-waze" href="https://waze.com/ul?ll=31.7565,35.1806&amp;navigate=yes" target="_blank" rel="noopener" aria-label="ניווט לגן שטרן 4 ב-Waze" title="ניווט ב-Waze"><img src="/img/waze.png" alt="" width="44" height="44"></a></div>
 </article>
 <article class="dcard lift" data-group="גן משחקים" data-text="גן שטרן 57  גן משחקים שטרן 57" data-id="ff71a732-ee78-460c-884f-5d822753c978" data-t="parks" data-ll="31.75450,35.17660">
-<div class="dmedia noimg t-green"><svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l6 9H6zM12 8l7 9H5zM12 17v4"/></svg></div>
+<div class="dmedia noimg art v1 t-green"><span class="art-ic"><svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l6 9H6zM12 8l7 9H5zM12 17v4"/></svg></span></div>
 <div class="dbody"><h3><a class="stretch" href="/kiryat-yovel/parks/%D7%92%D7%9F-%D7%A9%D7%98%D7%A8%D7%9F-57/">גן שטרן 57</a></h3><span class="w">שטרן 57</span></div>
 <div class="dact"><a class="a-waze" href="https://waze.com/ul?ll=31.7545,35.1766&amp;navigate=yes" target="_blank" rel="noopener" aria-label="ניווט לגן שטרן 57 ב-Waze" title="ניווט ב-Waze"><img src="/img/waze.png" alt="" width="44" height="44"></a></div>
 </article>
 <article class="dcard lift" data-group="גן משחקים" data-text="גן שצ״פ יהושוע ביצור  גן משחקים יהושוע ביצור" data-id="229094ed-b9f7-4d46-9a0a-9ce1ea7370a8" data-t="parks" data-ll="31.75110,35.16660">
-<div class="dmedia noimg t-green"><svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l6 9H6zM12 8l7 9H5zM12 17v4"/></svg></div>
+<div class="dmedia noimg art v0 t-green"><span class="art-ic"><svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l6 9H6zM12 8l7 9H5zM12 17v4"/></svg></span></div>
 <div class="dbody"><h3><a class="stretch" href="/kiryat-yovel/parks/%D7%92%D7%9F-%D7%A9%D7%A6%D7%A4-%D7%99%D7%94%D7%95%D7%A9%D7%95%D7%A2-%D7%91%D7%99%D7%A6%D7%95%D7%A8/">גן שצ״פ יהושוע ביצור</a></h3><span class="w">יהושוע ביצור</span></div>
 <div class="dact"><a class="a-waze" href="https://waze.com/ul?ll=31.7511,35.1666&amp;navigate=yes" target="_blank" rel="noopener" aria-label="ניווט לגן שצ״פ יהושוע ביצור ב-Waze" title="ניווט ב-Waze"><img src="/img/waze.png" alt="" width="44" height="44"></a></div>
 </article>
 <article class="dcard lift" data-group="גן משחקים" data-text="גן שצ״פ קוסטה ריקה 31  גן משחקים קוסטה ריקה 31" data-id="67f4a52d-09ba-4769-a934-c265fa67dabe" data-t="parks" data-ll="31.75330,35.17330">
-<div class="dmedia noimg t-green"><svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l6 9H6zM12 8l7 9H5zM12 17v4"/></svg></div>
+<div class="dmedia noimg art v0 t-green"><span class="art-ic"><svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l6 9H6zM12 8l7 9H5zM12 17v4"/></svg></span></div>
 <div class="dbody"><h3><a class="stretch" href="/kiryat-yovel/parks/%D7%92%D7%9F-%D7%A9%D7%A6%D7%A4-%D7%A7%D7%95%D7%A1%D7%98%D7%94-%D7%A8%D7%99%D7%A7%D7%94-31/">גן שצ״פ קוסטה ריקה 31</a></h3><span class="w">קוסטה ריקה 31</span></div>
 <div class="dact"><a class="a-waze" href="https://waze.com/ul?ll=31.7533,35.1733&amp;navigate=yes" target="_blank" rel="noopener" aria-label="ניווט לגן שצ״פ קוסטה ריקה 31 ב-Waze" title="ניווט ב-Waze"><img src="/img/waze.png" alt="" width="44" height="44"></a></div>
 </article>
 <article class="dcard lift" data-group="גן משחקים" data-text="פארק נחל רפאים  גן משחקים דרך יצחק מודעי" data-id="f4846d66-07c5-4898-bd79-9224a0a54c15" data-t="parks" data-ll="31.74730,35.18360">
-<div class="dmedia noimg t-green"><svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l6 9H6zM12 8l7 9H5zM12 17v4"/></svg></div>
+<div class="dmedia noimg art v2 t-green"><span class="art-ic"><svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l6 9H6zM12 8l7 9H5zM12 17v4"/></svg></span></div>
 <div class="dbody"><h3><a class="stretch" href="/kiryat-yovel/parks/%D7%A4%D7%90%D7%A8%D7%A7-%D7%A0%D7%97%D7%9C-%D7%A8%D7%A4%D7%90%D7%99%D7%9D/">פארק נחל רפאים</a></h3><span class="w">דרך יצחק מודעי</span></div>
 <div class="dact"><a class="a-waze" href="https://waze.com/ul?ll=31.7473,35.1836&amp;navigate=yes" target="_blank" rel="noopener" aria-label="ניווט לפארק נחל רפאים ב-Waze" title="ניווט ב-Waze"><img src="/img/waze.png" alt="" width="44" height="44"></a></div>
 </article>

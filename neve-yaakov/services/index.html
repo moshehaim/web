@@ -20,6 +20,18 @@
 <link href="https://fonts.googleapis.com/css2?family=Assistant:wght@400;600;700;800&family=Frank+Ruhl+Libre:wght@900&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
 <link rel="preconnect" href="https://mebomrqnfnbqijiuawdh.supabase.co">
 <style>
+.t-blue{--t1:#EFF4FF;--t2:#DCE6FB;--tf:#244782}.t-sky{--t1:#E9F4FC;--t2:#D3E8F7;--tf:#1F78B4}
+.t-green{--t1:#EAF7EE;--t2:#D4EEDC;--tf:#15803D}.t-violet{--t1:#F3EFFC;--t2:#E4DCF7;--tf:#6D4BB8}
+.t-teal{--t1:#E6F6F4;--t2:#CDEBE7;--tf:#0F766E}.t-amber{--t1:#FCF5E6;--t2:#F4E5C2;--tf:#8A5A00}
+.t-rose{--t1:#FCEFF2;--t2:#F5D9E0;--tf:#9F2D4B}
+/* תמונת ברירת מחדל: רקע בגוון הקטגוריה + דוגמה (נקודות / פסים / קו רקיע) + אייקון על משטח לבן */
+.art{position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,var(--t1),var(--t2))!important;color:var(--tf)}
+.art::before{content:'';position:absolute;inset:0;pointer-events:none}
+.art.v0::before{background:radial-gradient(color-mix(in srgb,var(--tf) 16%,transparent) 1.5px,transparent 1.8px) 0 0/16px 16px}
+.art.v1::before{background:repeating-linear-gradient(35deg,color-mix(in srgb,var(--tf) 8%,transparent) 0 9px,transparent 9px 22px)}
+.art.v2::before{background:color-mix(in srgb,var(--tf) 13%,transparent);-webkit-mask:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20400%20300%22%20preserveAspectRatio%3D%22none%22%3E%3Crect%20x%3D%220%22%20y%3D%22230%22%20width%3D%2246%22%20height%3D%2270%22%20rx%3D%223%22%2F%3E%3Crect%20x%3D%2250%22%20y%3D%22190%22%20width%3D%2234%22%20height%3D%22110%22%20rx%3D%223%22%2F%3E%3Crect%20x%3D%2288%22%20y%3D%22215%22%20width%3D%2252%22%20height%3D%2285%22%20rx%3D%223%22%2F%3E%3Crect%20x%3D%22144%22%20y%3D%22170%22%20width%3D%2230%22%20height%3D%22130%22%20rx%3D%223%22%2F%3E%3Crect%20x%3D%22178%22%20y%3D%22205%22%20width%3D%2258%22%20height%3D%2295%22%20rx%3D%223%22%2F%3E%3Crect%20x%3D%22240%22%20y%3D%22180%22%20width%3D%2240%22%20height%3D%22120%22%20rx%3D%223%22%2F%3E%3Crect%20x%3D%22284%22%20y%3D%22225%22%20width%3D%2250%22%20height%3D%2275%22%20rx%3D%223%22%2F%3E%3Crect%20x%3D%22338%22%20y%3D%22195%22%20width%3D%2230%22%20height%3D%22105%22%20rx%3D%223%22%2F%3E%3Crect%20x%3D%22372%22%20y%3D%22220%22%20width%3D%2240%22%20height%3D%2280%22%20rx%3D%223%22%2F%3E%3Ccircle%20cx%3D%22330%22%20cy%3D%2270%22%20r%3D%2226%22%2F%3E%3C%2Fsvg%3E") 0 0/100% 100% no-repeat;mask:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20400%20300%22%20preserveAspectRatio%3D%22none%22%3E%3Crect%20x%3D%220%22%20y%3D%22230%22%20width%3D%2246%22%20height%3D%2270%22%20rx%3D%223%22%2F%3E%3Crect%20x%3D%2250%22%20y%3D%22190%22%20width%3D%2234%22%20height%3D%22110%22%20rx%3D%223%22%2F%3E%3Crect%20x%3D%2288%22%20y%3D%22215%22%20width%3D%2252%22%20height%3D%2285%22%20rx%3D%223%22%2F%3E%3Crect%20x%3D%22144%22%20y%3D%22170%22%20width%3D%2230%22%20height%3D%22130%22%20rx%3D%223%22%2F%3E%3Crect%20x%3D%22178%22%20y%3D%22205%22%20width%3D%2258%22%20height%3D%2295%22%20rx%3D%223%22%2F%3E%3Crect%20x%3D%22240%22%20y%3D%22180%22%20width%3D%2240%22%20height%3D%22120%22%20rx%3D%223%22%2F%3E%3Crect%20x%3D%22284%22%20y%3D%22225%22%20width%3D%2250%22%20height%3D%2275%22%20rx%3D%223%22%2F%3E%3Crect%20x%3D%22338%22%20y%3D%22195%22%20width%3D%2230%22%20height%3D%22105%22%20rx%3D%223%22%2F%3E%3Crect%20x%3D%22372%22%20y%3D%22220%22%20width%3D%2240%22%20height%3D%2280%22%20rx%3D%223%22%2F%3E%3Ccircle%20cx%3D%22330%22%20cy%3D%2270%22%20r%3D%2226%22%2F%3E%3C%2Fsvg%3E") 0 0/100% 100% no-repeat}
+.art-ic{position:relative;z-index:1;display:flex;align-items:center;justify-content:center;width:84px;height:84px;border-radius:24px;background:rgba(255,255,255,.86);box-shadow:0 6px 18px rgba(20,40,80,.10);color:var(--tf)}
+.art-ic svg{width:44px;height:44px}
 *,*::before,*::after{box-sizing:border-box}
 :root{--navy:#172F57;--navy2:#213E6E;--brand:#244782;--sky:#8CCBF2;--accent:#2A6FB8;--ink:#1C2B45;
 --muted:#6B7689;--line:#E6E9EF;--bg:#F6F7F9;--soft:#EAF1FA;--ok:#5CD49A;--red:#B4233C}
@@ -293,14 +305,10 @@ footer .c{font-size:13px;color:#8A94A6}
 
 @media (prefers-reduced-motion:reduce){.mq,.mq.rev,.tick,.dot{animation:none}.track{transition:none}.lift:hover{transform:none}}
 
-.t-blue{--t1:#EFF4FF;--t2:#DCE6FB;--tf:#244782}.t-sky{--t1:#E9F4FC;--t2:#D3E8F7;--tf:#1F78B4}
-.t-green{--t1:#EAF7EE;--t2:#D4EEDC;--tf:#15803D}.t-violet{--t1:#F3EFFC;--t2:#E4DCF7;--tf:#6D4BB8}
-.t-teal{--t1:#E6F6F4;--t2:#CDEBE7;--tf:#0F766E}.t-amber{--t1:#FCF5E6;--t2:#F4E5C2;--tf:#8A5A00}
-.t-rose{--t1:#FCEFF2;--t2:#F5D9E0;--tf:#9F2D4B}
 .dcard.compact .dmedia{display:none}
 .dcard.compact .dbody{padding-top:18px}
 .dmedia.noimg{background:radial-gradient(120% 90% at 85% 0%,var(--t1) 0%,var(--t2) 100%)}
-.dmedia.noimg svg{width:64px;height:64px;color:var(--tf);opacity:.9}
+.dmedia.noimg.art::after{display:none}
 .dmedia.noimg::after{content:'';position:absolute;inset:auto 0 0 0;height:36%;opacity:.35;
 background:linear-gradient(to top,var(--t2),transparent)}
 .dir-hero{background:var(--navy);color:#fff}
@@ -376,7 +384,7 @@ background:linear-gradient(to top,var(--t2),transparent)}
 .dcard{display:grid;grid-template-columns:minmax(0,1fr) 96px;grid-template-areas:"b m" "a a"}
 .dmedia{grid-area:m;aspect-ratio:1/1;margin:14px 0 0 14px;border-radius:14px;width:82px;overflow:visible}
 .dmedia img{border-radius:14px}
-.dmedia.noimg svg{width:36px;height:36px}
+.dmedia.noimg .art-ic{width:52px;height:52px;border-radius:15px;box-shadow:0 3px 10px rgba(20,40,80,.10)}.dmedia.noimg .art-ic svg{width:28px;height:28px}
 .drec{top:-8px;right:auto;left:-8px}
 .dbody{grid-area:b;padding:14px 16px 0 12px}
 .dbody h3{font-size:17px}
@@ -478,42 +486,42 @@ background:linear-gradient(to top,var(--t2),transparent)}
 <div id="dmap" class="dmap" hidden></div>
 <div class="dgrid">
 <article class="dcard lift" data-group="דפיברילטורים" data-text="דפיברילטור  דפיברילטורים שדרות נווה יעקב" data-id="6a859c2f-ba9b-4e8e-a083-32470a0f09ff" data-t="community_services" data-ll="31.84117,35.24059">
-<div class="dmedia noimg t-teal"><svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 21V5h10v16M14 9h6v12M7 9h4M7 13h4M7 17h4"/></svg></div>
+<div class="dmedia noimg art v1 t-teal"><span class="art-ic"><svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 21V5h10v16M14 9h6v12M7 9h4M7 13h4M7 17h4"/></svg></span></div>
 <div class="dbody"><h3><a class="stretch" href="/neve-yaakov/services/%D7%93%D7%A4%D7%99%D7%91%D7%A8%D7%99%D7%9C%D7%98%D7%95%D7%A8/">דפיברילטור</a></h3><span class="w">שדרות נווה יעקב</span></div>
 <div class="dact"><a class="a-waze" href="https://waze.com/ul?ll=31.841167,35.240593&amp;navigate=yes" target="_blank" rel="noopener" aria-label="ניווט לדפיברילטור ב-Waze" title="ניווט ב-Waze"><img src="/img/waze.png" alt="" width="44" height="44"></a></div>
 </article>
 <article class="dcard lift" data-group="שירותים" data-text="הספרייה התורנית נווה יעקב  שירותים נווה יעקב 38" data-id="b732f381-8f13-4492-a1cb-7f07210c6a14" data-t="community_services" data-ll="31.83784,35.24014">
-<div class="dmedia noimg t-teal"><svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 21V5h10v16M14 9h6v12M7 9h4M7 13h4M7 17h4"/></svg></div>
+<div class="dmedia noimg art v2 t-teal"><span class="art-ic"><svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 21V5h10v16M14 9h6v12M7 9h4M7 13h4M7 17h4"/></svg></span></div>
 <div class="dbody"><h3><a class="stretch" href="/neve-yaakov/services/%D7%94%D7%A1%D7%A4%D7%A8%D7%99%D7%99%D7%94-%D7%94%D7%AA%D7%95%D7%A8%D7%A0%D7%99%D7%AA-%D7%A0%D7%95%D7%95%D7%94-%D7%99%D7%A2%D7%A7%D7%91/">הספרייה התורנית נווה יעקב</a></h3><span class="w">נווה יעקב 38</span></div>
 <div class="dact"><a class="a-waze" href="https://waze.com/ul?ll=31.837842,35.240142&amp;navigate=yes" target="_blank" rel="noopener" aria-label="ניווט להספרייה התורנית נווה יעקב ב-Waze" title="ניווט ב-Waze"><img src="/img/waze.png" alt="" width="44" height="44"></a></div>
 </article>
 <article class="dcard lift" data-group="מרכז קהילתי" data-text="מינהל קהילתי נווה יעקב  מרכז קהילתי נווה יעקב 38א" data-id="927d5d68-42b9-49d4-a701-8324f77bcb8f" data-t="community_services" data-ll="31.83784,35.24014">
-<div class="dmedia noimg t-teal"><svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 21V5h10v16M14 9h6v12M7 9h4M7 13h4M7 17h4"/></svg></div>
+<div class="dmedia noimg art v0 t-teal"><span class="art-ic"><svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 21V5h10v16M14 9h6v12M7 9h4M7 13h4M7 17h4"/></svg></span></div>
 <div class="dbody"><h3><a class="stretch" href="/neve-yaakov/services/%D7%9E%D7%99%D7%A0%D7%94%D7%9C-%D7%A7%D7%94%D7%99%D7%9C%D7%AA%D7%99-%D7%A0%D7%95%D7%95%D7%94-%D7%99%D7%A2%D7%A7%D7%91/">מינהל קהילתי נווה יעקב</a></h3><span class="w">נווה יעקב 38א</span></div>
 <div class="dact"><a class="a-waze" href="https://waze.com/ul?ll=31.837842,35.240142&amp;navigate=yes" target="_blank" rel="noopener" aria-label="ניווט למינהל קהילתי נווה יעקב ב-Waze" title="ניווט ב-Waze"><img src="/img/waze.png" alt="" width="44" height="44"></a></div>
 </article>
 <article class="dcard lift" data-group="מקוואות" data-text="מקווה גברים אביר יעקב  מקוואות אביר יעקב 1" data-id="89de22d5-93dd-4f3d-b7e9-b143281a4f1a" data-t="community_services" data-ll="31.84048,35.25043">
-<div class="dmedia noimg t-teal"><svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 21V5h10v16M14 9h6v12M7 9h4M7 13h4M7 17h4"/></svg></div>
+<div class="dmedia noimg art v1 t-teal"><span class="art-ic"><svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 21V5h10v16M14 9h6v12M7 9h4M7 13h4M7 17h4"/></svg></span></div>
 <div class="dbody"><h3><a class="stretch" href="/neve-yaakov/services/%D7%9E%D7%A7%D7%95%D7%95%D7%94-%D7%92%D7%91%D7%A8%D7%99%D7%9D-%D7%90%D7%91%D7%99%D7%A8-%D7%99%D7%A2%D7%A7%D7%91/">מקווה גברים אביר יעקב</a></h3><span class="w">אביר יעקב 1</span></div>
 <div class="dact"><a class="a-waze" href="https://waze.com/ul?ll=31.8404836,35.2504335&amp;navigate=yes" target="_blank" rel="noopener" aria-label="ניווט למקווה גברים אביר יעקב ב-Waze" title="ניווט ב-Waze"><img src="/img/waze.png" alt="" width="44" height="44"></a></div>
 </article>
 <article class="dcard lift" data-group="מקוואות" data-text="מקווה גברים שדיקר  מקוואות שדיקר 9" data-id="bd7329f4-2c31-42b1-8a13-e8b2ea2fab76" data-t="community_services" data-ll="31.84255,35.24989">
-<div class="dmedia noimg t-teal"><svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 21V5h10v16M14 9h6v12M7 9h4M7 13h4M7 17h4"/></svg></div>
+<div class="dmedia noimg art v2 t-teal"><span class="art-ic"><svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 21V5h10v16M14 9h6v12M7 9h4M7 13h4M7 17h4"/></svg></span></div>
 <div class="dbody"><h3><a class="stretch" href="/neve-yaakov/services/%D7%9E%D7%A7%D7%95%D7%95%D7%94-%D7%92%D7%91%D7%A8%D7%99%D7%9D-%D7%A9%D7%93%D7%99%D7%A7%D7%A8/">מקווה גברים שדיקר</a></h3><span class="w">שדיקר 9</span></div>
 <div class="dact"><a class="a-waze" href="https://waze.com/ul?ll=31.8425512,35.2498914&amp;navigate=yes" target="_blank" rel="noopener" aria-label="ניווט למקווה גברים שדיקר ב-Waze" title="ניווט ב-Waze"><img src="/img/waze.png" alt="" width="44" height="44"></a></div>
 </article>
 <article class="dcard lift" data-group="מקוואות" data-text="מקווה נווה יעקב מזרח  מקוואות הרב ש&quot;י זווין 2" data-id="14b49dcc-bfb4-40b0-8814-1a313224dfea" data-t="community_services" data-ll="31.83954,35.24790">
-<div class="dmedia noimg t-teal"><svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 21V5h10v16M14 9h6v12M7 9h4M7 13h4M7 17h4"/></svg></div>
+<div class="dmedia noimg art v2 t-teal"><span class="art-ic"><svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 21V5h10v16M14 9h6v12M7 9h4M7 13h4M7 17h4"/></svg></span></div>
 <div class="dbody"><h3><a class="stretch" href="/neve-yaakov/services/%D7%9E%D7%A7%D7%95%D7%95%D7%94-%D7%A0%D7%95%D7%95%D7%94-%D7%99%D7%A2%D7%A7%D7%91-%D7%9E%D7%96%D7%A8%D7%97/">מקווה נווה יעקב מזרח</a></h3><span class="w">הרב ש&quot;י זווין 2</span></div>
 <div class="dact"><a class="a-tel" href="tel:025849889" data-num="02-5849889" aria-label="טלפון של מקווה נווה יעקב מזרח" title="טלפון"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2"/></svg><span class="ld"></span></a><a class="a-waze" href="https://waze.com/ul?ll=31.839542,35.247897&amp;navigate=yes" target="_blank" rel="noopener" aria-label="ניווט למקווה נווה יעקב מזרח ב-Waze" title="ניווט ב-Waze"><img src="/img/waze.png" alt="" width="44" height="44"></a></div>
 </article>
 <article class="dcard lift" data-group="מקוואות" data-text="מקווה נווה יעקב מרכז  מקוואות מאיר בלבן 4" data-id="46e14abb-648d-4bcc-a531-b9b1eb113cba" data-t="community_services" data-ll="31.84457,35.24161">
-<div class="dmedia noimg t-teal"><svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 21V5h10v16M14 9h6v12M7 9h4M7 13h4M7 17h4"/></svg></div>
+<div class="dmedia noimg art v0 t-teal"><span class="art-ic"><svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 21V5h10v16M14 9h6v12M7 9h4M7 13h4M7 17h4"/></svg></span></div>
 <div class="dbody"><h3><a class="stretch" href="/neve-yaakov/services/%D7%9E%D7%A7%D7%95%D7%95%D7%94-%D7%A0%D7%95%D7%95%D7%94-%D7%99%D7%A2%D7%A7%D7%91-%D7%9E%D7%A8%D7%9B%D7%96/">מקווה נווה יעקב מרכז</a></h3><span class="w">מאיר בלבן 4</span></div>
 <div class="dact"><a class="a-tel" href="tel:025851355" data-num="02-5851355" aria-label="טלפון של מקווה נווה יעקב מרכז" title="טלפון"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2"/></svg><span class="ld"></span></a><a class="a-waze" href="https://waze.com/ul?ll=31.844568,35.241614&amp;navigate=yes" target="_blank" rel="noopener" aria-label="ניווט למקווה נווה יעקב מרכז ב-Waze" title="ניווט ב-Waze"><img src="/img/waze.png" alt="" width="44" height="44"></a></div>
 </article>
 <article class="dcard lift" data-group="מקוואות" data-text="מקווה פסגת זאב צפון  מקוואות מזל טלה 1" data-id="e2e90bb6-a9f9-4b25-a1be-cd9ffd3ce66b" data-t="community_services" data-ll="31.83620,35.23681">
-<div class="dmedia noimg t-teal"><svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 21V5h10v16M14 9h6v12M7 9h4M7 13h4M7 17h4"/></svg></div>
+<div class="dmedia noimg art v1 t-teal"><span class="art-ic"><svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 21V5h10v16M14 9h6v12M7 9h4M7 13h4M7 17h4"/></svg></span></div>
 <div class="dbody"><h3><a class="stretch" href="/neve-yaakov/services/%D7%9E%D7%A7%D7%95%D7%95%D7%94-%D7%A4%D7%A1%D7%92%D7%AA-%D7%96%D7%90%D7%91-%D7%A6%D7%A4%D7%95%D7%9F/">מקווה פסגת זאב צפון</a></h3><span class="w">מזל טלה 1</span></div>
 <div class="dact"><a class="a-tel" href="tel:026561951" data-num="02-6561951" aria-label="טלפון של מקווה פסגת זאב צפון" title="טלפון"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2"/></svg><span class="ld"></span></a><a class="a-waze" href="https://waze.com/ul?ll=31.836203,35.236812&amp;navigate=yes" target="_blank" rel="noopener" aria-label="ניווט למקווה פסגת זאב צפון ב-Waze" title="ניווט ב-Waze"><img src="/img/waze.png" alt="" width="44" height="44"></a></div>
 </article>
