@@ -42,6 +42,10 @@ export const ICON = {
   civic: 'M4 21V5h10v16M14 9h6v12M7 9h4M7 13h4M7 17h4',
   health: 'M11 2v2M5 2v2M5 3H4a2 2 0 0 0-2 2v4a6 6 0 0 0 12 0V5a2 2 0 0 0-2-2h-1M8 15a6 6 0 0 0 12 0v-3M20 8a2 2 0 1 0 0 4a2 2 0 1 0 0-4',
 };
+/** וריאציה קבועה לפריט (0–2) לפי המזהה שלו — ברשימה ארוכה מתחלפות, אותו פריט תמיד נראה אותו דבר */
+export const artV = (id) => { let h = 0; for (const ch of String(id ?? '')) h = (h * 31 + ch.charCodeAt(0)) >>> 0; return h % 3; };
+/** תוכן תמונת ברירת המחדל: אייקון על משטח לבן. המחלקות לעטיפה: art v{artV} t-{tone} */
+export const artIcon = (d) => `<span class="art-ic">${svg(d, 44, 'currentColor', 1.7)}</span>`;
 export const svg = (d, size = 24, stroke = 'currentColor', w = 1.9) =>
   `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="${stroke}" stroke-width="${w}" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="${d}"/></svg>`;
 
@@ -68,6 +72,18 @@ const FAQ = [
 ];
 
 export const CSS = `
+.t-blue{--t1:#EFF4FF;--t2:#DCE6FB;--tf:#244782}.t-sky{--t1:#E9F4FC;--t2:#D3E8F7;--tf:#1F78B4}
+.t-green{--t1:#EAF7EE;--t2:#D4EEDC;--tf:#15803D}.t-violet{--t1:#F3EFFC;--t2:#E4DCF7;--tf:#6D4BB8}
+.t-teal{--t1:#E6F6F4;--t2:#CDEBE7;--tf:#0F766E}.t-amber{--t1:#FCF5E6;--t2:#F4E5C2;--tf:#8A5A00}
+.t-rose{--t1:#FCEFF2;--t2:#F5D9E0;--tf:#9F2D4B}
+/* תמונת ברירת מחדל: רקע בגוון הקטגוריה + דוגמה (נקודות / פסים / קו רקיע) + אייקון על משטח לבן */
+.art{position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,var(--t1),var(--t2))!important;color:var(--tf)}
+.art::before{content:'';position:absolute;inset:0;pointer-events:none}
+.art.v0::before{background:radial-gradient(color-mix(in srgb,var(--tf) 16%,transparent) 1.5px,transparent 1.8px) 0 0/16px 16px}
+.art.v1::before{background:repeating-linear-gradient(35deg,color-mix(in srgb,var(--tf) 8%,transparent) 0 9px,transparent 9px 22px)}
+.art.v2::before{background:color-mix(in srgb,var(--tf) 13%,transparent);-webkit-mask:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20400%20300%22%20preserveAspectRatio%3D%22none%22%3E%3Crect%20x%3D%220%22%20y%3D%22230%22%20width%3D%2246%22%20height%3D%2270%22%20rx%3D%223%22%2F%3E%3Crect%20x%3D%2250%22%20y%3D%22190%22%20width%3D%2234%22%20height%3D%22110%22%20rx%3D%223%22%2F%3E%3Crect%20x%3D%2288%22%20y%3D%22215%22%20width%3D%2252%22%20height%3D%2285%22%20rx%3D%223%22%2F%3E%3Crect%20x%3D%22144%22%20y%3D%22170%22%20width%3D%2230%22%20height%3D%22130%22%20rx%3D%223%22%2F%3E%3Crect%20x%3D%22178%22%20y%3D%22205%22%20width%3D%2258%22%20height%3D%2295%22%20rx%3D%223%22%2F%3E%3Crect%20x%3D%22240%22%20y%3D%22180%22%20width%3D%2240%22%20height%3D%22120%22%20rx%3D%223%22%2F%3E%3Crect%20x%3D%22284%22%20y%3D%22225%22%20width%3D%2250%22%20height%3D%2275%22%20rx%3D%223%22%2F%3E%3Crect%20x%3D%22338%22%20y%3D%22195%22%20width%3D%2230%22%20height%3D%22105%22%20rx%3D%223%22%2F%3E%3Crect%20x%3D%22372%22%20y%3D%22220%22%20width%3D%2240%22%20height%3D%2280%22%20rx%3D%223%22%2F%3E%3Ccircle%20cx%3D%22330%22%20cy%3D%2270%22%20r%3D%2226%22%2F%3E%3C%2Fsvg%3E") 0 0/100% 100% no-repeat;mask:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20400%20300%22%20preserveAspectRatio%3D%22none%22%3E%3Crect%20x%3D%220%22%20y%3D%22230%22%20width%3D%2246%22%20height%3D%2270%22%20rx%3D%223%22%2F%3E%3Crect%20x%3D%2250%22%20y%3D%22190%22%20width%3D%2234%22%20height%3D%22110%22%20rx%3D%223%22%2F%3E%3Crect%20x%3D%2288%22%20y%3D%22215%22%20width%3D%2252%22%20height%3D%2285%22%20rx%3D%223%22%2F%3E%3Crect%20x%3D%22144%22%20y%3D%22170%22%20width%3D%2230%22%20height%3D%22130%22%20rx%3D%223%22%2F%3E%3Crect%20x%3D%22178%22%20y%3D%22205%22%20width%3D%2258%22%20height%3D%2295%22%20rx%3D%223%22%2F%3E%3Crect%20x%3D%22240%22%20y%3D%22180%22%20width%3D%2240%22%20height%3D%22120%22%20rx%3D%223%22%2F%3E%3Crect%20x%3D%22284%22%20y%3D%22225%22%20width%3D%2250%22%20height%3D%2275%22%20rx%3D%223%22%2F%3E%3Crect%20x%3D%22338%22%20y%3D%22195%22%20width%3D%2230%22%20height%3D%22105%22%20rx%3D%223%22%2F%3E%3Crect%20x%3D%22372%22%20y%3D%22220%22%20width%3D%2240%22%20height%3D%2280%22%20rx%3D%223%22%2F%3E%3Ccircle%20cx%3D%22330%22%20cy%3D%2270%22%20r%3D%2226%22%2F%3E%3C%2Fsvg%3E") 0 0/100% 100% no-repeat}
+.art-ic{position:relative;z-index:1;display:flex;align-items:center;justify-content:center;width:84px;height:84px;border-radius:24px;background:rgba(255,255,255,.86);box-shadow:0 6px 18px rgba(20,40,80,.10);color:var(--tf)}
+.art-ic svg{width:44px;height:44px}
 *,*::before,*::after{box-sizing:border-box}
 :root{--navy:#172F57;--navy2:#213E6E;--brand:#244782;--sky:#8CCBF2;--accent:#2A6FB8;--ink:#1C2B45;
 --muted:#6B7689;--line:#E6E9EF;--bg:#F6F7F9;--soft:#EAF1FA;--ok:#5CD49A;--red:#B4233C}
@@ -355,7 +371,7 @@ const img = (src, alt) => `<img src="${esc(src)}" alt="${esc(alt)}" loading="laz
 
 function promoCard(p) {
   return `<a href="${esc(p.href || APP)}" class="card promo lift${p.coupon ? ' coupon' : ''}">
-<div class="media">${p.img ? img(p.img, p.title) : `<span class="ph">${svg(p.coupon ? ICON.ticket || ICON.tag : ICON.tag, 56, 'currentColor', 1.6)}</span>`}<span class="tag">${esc(p.kind)}</span></div>
+<div class="media">${p.img ? img(p.img, p.title) : `<span class="ph art v${artV(p.id || p.title)} t-violet">${artIcon(p.coupon ? ICON.ticket || ICON.tag : ICON.tag)}</span>`}<span class="tag">${esc(p.kind)}</span></div>
 <div class="body"><b class="clamp2">${esc(p.title)}</b>${p.provider ? `<span class="sub">${esc(p.provider)}</span>` : ''}<span class="fine">${esc(p.until)}</span></div>
 </a>`;
 }
@@ -729,12 +745,12 @@ ${rows.map((r) => `<a class="fr" href="${esc(r.h)}"><i>${av(r)}</i><span class="
 }
 
 const DISC_ICON = { parks: ICON.tree, education: ICON.school, health: ICON.health, services: ICON.civic, gmach: ICON.heart, halls: ICON.hall };
-const DISC_TONE = { parks: 'green', education: 'teal', health: 'teal', services: 'teal', gmach: 'green', halls: 'amber' };
+const DISC_TONE = { parks: 'green', education: 'teal', health: 'rose', services: 'teal', gmach: 'violet', halls: 'amber' };
 function discoverSection(rows) {
   if (!rows?.length) return '';
   return `<section id="discover" aria-label="גלו את השכונה" class="wrap disc">
 <div class="sec-head">${head2('מקומות ושירותים קרובים', 'גלו את', 'השכונה')}</div>
-<div class="disc-row">${rows.map((r) => `<a class="disc-card lift" href="${esc(r.h)}"><div class="disc-media z-${DISC_TONE[r.seg] || 'blue'}">${r.img ? img(r.img, r.n) : svg(DISC_ICON[r.seg] || ICON.star, 40, 'currentColor', 1.6)}</div><div class="disc-body"><em>${esc(r.label)}</em><b class="clamp2">${esc(r.n)}</b>${r.s ? `<small>${esc(r.s)}</small>` : ''}</div></a>`).join('')}</div>
+<div class="disc-row">${rows.map((r) => `<a class="disc-card lift" href="${esc(r.h)}">${r.img ? `<div class="disc-media">${img(r.img, r.n)}</div>` : `<div class="disc-media art v${artV(r.h)} t-${DISC_TONE[r.seg] || 'blue'}">${artIcon(DISC_ICON[r.seg] || ICON.star)}</div>`}<div class="disc-body"><em>${esc(r.label)}</em><b class="clamp2">${esc(r.n)}</b>${r.s ? `<small>${esc(r.s)}</small>` : ''}</div></a>`).join('')}</div>
 </section>`;
 }
 

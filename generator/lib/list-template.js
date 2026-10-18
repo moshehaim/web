@@ -4,7 +4,7 @@
  */
 
 import { MAP_CSS, MAP_ICON, mapScript } from './map.js';
-import { pageHead, siteHeader, siteFooter, HOOD_JS, esc, svg, APP, navChips } from './home-template.js';
+import { pageHead, siteHeader, siteFooter, HOOD_JS, esc, svg, APP, navChips, artV, artIcon } from './home-template.js';
 
 const ICON_PHONE = 'M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2';
 const ICON_WA = 'M4 20l1.3-4A8 8 0 1 1 8 18.7zM9 9.5c.3 2 2.3 4.2 4.5 4.6l1-1.2 1.8.8-.4 1.6c-3.3.2-7-3.4-7-6.8l1.5-.5.8 1.8z';
@@ -44,14 +44,10 @@ const CAT_ICON = {
 };
 
 const CSS = `
-.t-blue{--t1:#EFF4FF;--t2:#DCE6FB;--tf:#244782}.t-sky{--t1:#E9F4FC;--t2:#D3E8F7;--tf:#1F78B4}
-.t-green{--t1:#EAF7EE;--t2:#D4EEDC;--tf:#15803D}.t-violet{--t1:#F3EFFC;--t2:#E4DCF7;--tf:#6D4BB8}
-.t-teal{--t1:#E6F6F4;--t2:#CDEBE7;--tf:#0F766E}.t-amber{--t1:#FCF5E6;--t2:#F4E5C2;--tf:#8A5A00}
-.t-rose{--t1:#FCEFF2;--t2:#F5D9E0;--tf:#9F2D4B}
 .dcard.compact .dmedia{display:none}
 .dcard.compact .dbody{padding-top:18px}
 .dmedia.noimg{background:radial-gradient(120% 90% at 85% 0%,var(--t1) 0%,var(--t2) 100%)}
-.dmedia.noimg svg{width:64px;height:64px;color:var(--tf);opacity:.9}
+.dmedia.noimg.art::after{display:none}
 .dmedia.noimg::after{content:'';position:absolute;inset:auto 0 0 0;height:36%;opacity:.35;
 background:linear-gradient(to top,var(--t2),transparent)}
 .dir-hero{background:var(--navy);color:#fff}
@@ -119,7 +115,7 @@ ${MAP_CSS}
 .dcard{display:grid;grid-template-columns:minmax(0,1fr) 96px;grid-template-areas:"b m" "a a"}
 .dmedia{grid-area:m;aspect-ratio:1/1;margin:14px 0 0 14px;border-radius:14px;width:82px;overflow:visible}
 .dmedia img{border-radius:14px}
-.dmedia.noimg svg{width:36px;height:36px}
+.dmedia.noimg .art-ic{width:52px;height:52px;border-radius:15px;box-shadow:0 3px 10px rgba(20,40,80,.10)}.dmedia.noimg .art-ic svg{width:28px;height:28px}
 .drec{top:-8px;right:auto;left:-8px}
 .dbody{grid-area:b;padding:14px 16px 0 12px}
 .dbody h3{font-size:17px}
@@ -234,8 +230,8 @@ function card(p, kind) {
   const text = [p.name, p.field, p.group, p.where].join(' ');
   const media = p.img
     ? `<img src="${esc(p.img)}" alt="${esc(p.name)}" loading="lazy" decoding="async">`
-    : svg((CAT_ICON[p.cat] || CAT_ICON.other)[0], 64, 'currentColor', 1.6);
-  const tone = p.img ? '' : ` noimg t-${(CAT_ICON[p.cat] || CAT_ICON.other)[1]}`;
+    : artIcon((CAT_ICON[p.cat] || CAT_ICON.other)[0]);
+  const tone = p.img ? '' : ` noimg art v${artV(p.id || p.name)} t-${(CAT_ICON[p.cat] || CAT_ICON.other)[1]}`;
   // בכרטיס הצר (טלפון) התג מתכווץ ללב עם מספר — כמו RecommendHeartBadge באפליקציה
   const recTxt = p.rec === 1 ? 'המלצה אחת' : `${p.rec} המלצות`;
   const rec = p.rec > 0 ? `<span class="drec" role="img" aria-label="${recTxt}"><span class="rp">${svg(ICON_HEART, 14, 'currentColor', 2)}${recTxt}</span><span class="rh" aria-hidden="true"><svg viewBox="0 0 24 24" width="36" height="36"><path d="M12 21.3s-8.3-5.3-8.3-11.6A4.8 4.8 0 0 1 12 6.4a4.8 4.8 0 0 1 8.3 3.3c0 6.3-8.3 11.6-8.3 11.6z" fill="#E24B4A" stroke="#fff" stroke-width="1.8" stroke-linejoin="round"></path></svg><b>${p.rec}</b></span></span>` : '';
@@ -335,10 +331,10 @@ function mediaCard(x, { tag, price, lines, cta, action, anchor }) {
   const tone = (CAT_ICON[x.cat] || CAT_ICON.other);
   const media = x.img
     ? `<img src="${esc(x.img)}" alt="${esc(x.title)}" loading="lazy" decoding="async">`
-    : svg(tone[0], 64, 'currentColor', 1.6);
+    : artIcon(tone[0]);
   const text = [x.title, ...lines, x.group].join(' ');
   return `<article class="dcard lift"${anchor ? ` id="${esc(anchor)}"` : ''} data-group="${esc(x.group)}" data-text="${esc(text)}">
-<div class="dmedia${x.img ? '' : ` noimg t-${tone[1]}`}">${media}${tag ? `<span class="dtag">${esc(tag)}</span>` : ''}${price ? `<span class="dprice">${esc(price)}</span>` : ''}</div>
+<div class="dmedia${x.img ? '' : ` noimg art v${artV(x.id || x.title)} t-${tone[1]}`}">${media}${tag ? `<span class="dtag">${esc(tag)}</span>` : ''}${price ? `<span class="dprice">${esc(price)}</span>` : ''}</div>
 <div class="dbody"><h3>${x.href ? `<a class="stretch" href="${esc(x.href)}">${esc(x.title)}</a>` : esc(x.title)}</h3>${price ? `<span class="pr">${esc(price)}</span>` : ''}${lines.filter(Boolean).map((l, i) => `<span class="${i ? 'w' : 'f'}">${esc(l)}</span>`).join('')}</div>
 <div class="dact">${action || `<a class="a-app" href="${esc(x.href || APP)}">${esc(x.href ? 'לפרטים' : cta)}</a>`}</div>
 </article>`;
