@@ -465,7 +465,7 @@ background:linear-gradient(to top,var(--t2),transparent)}
 </div>
 </div>
 <nav class="chips" aria-label="תחומים"><button type="button" class="cnav prev" aria-label="תחומים קודמים">→</button><button type="button" class="cnav next" aria-label="תחומים נוספים">←</button><div class="wrap">
-<a href="/merkaz-hair-nachlaot/">דף השכונה</a><a href="/merkaz-hair-nachlaot/minyanim/">מניינים ושיעורים</a><a href="/merkaz-hair-nachlaot/biz/">עסקים</a><a href="/merkaz-hair-nachlaot/pros/">בעלי מקצוע</a><a href="/merkaz-hair-nachlaot/board/#gmach">גמ״חים</a><a href="/merkaz-hair-nachlaot/events/">הכל לאירוע</a><a href="/merkaz-hair-nachlaot/education/">מוסדות חינוך</a><a href="/merkaz-hair-nachlaot/parks/">גנים ופארקים</a><a href="/merkaz-hair-nachlaot/services/">שירותי קהילה</a><a href="/merkaz-hair-nachlaot/health/">בריאות</a>
+<a href="/merkaz-hair-nachlaot/">דף השכונה</a><a href="/merkaz-hair-nachlaot/minyanim/">מניינים ושיעורים</a><a href="/merkaz-hair-nachlaot/biz/">עסקים</a><a href="/merkaz-hair-nachlaot/pros/">בעלי מקצוע</a><a href="/merkaz-hair-nachlaot/board/#gmach">גמ״חים</a><a href="/merkaz-hair-nachlaot/board/#jobs">דרושים</a><a href="/merkaz-hair-nachlaot/board/#second">יד שנייה</a><a href="/merkaz-hair-nachlaot/board/#vol">התנדבות</a><a href="/merkaz-hair-nachlaot/board/#lost">אבידות ומציאות</a><a href="/merkaz-hair-nachlaot/events/">הכל לאירוע</a><a href="/merkaz-hair-nachlaot/education/">מוסדות חינוך</a><a href="/merkaz-hair-nachlaot/parks/">גנים ופארקים</a><a href="/merkaz-hair-nachlaot/services/">שירותי קהילה</a><a href="/merkaz-hair-nachlaot/health/">בריאות</a>
 </div></nav></header>
 
 
@@ -479,8 +479,10 @@ background:linear-gradient(to top,var(--t2),transparent)}
 </div>
 </div></section>
 
-
-<section id="list" class="wrap dir-list" aria-label="לוח השכונה">
+<div class="fbar"><div class="fchips" role="group" aria-label="סינון">
+<button type="button" data-g="" aria-pressed="true">הכל</button><button type="button" data-g="דרושים" data-k="jobs" aria-pressed="false">דרושים</button><button type="button" data-g="יד שנייה" data-k="second" aria-pressed="false">יד שנייה</button><button type="button" data-g="גמ״חים" data-k="gmach" aria-pressed="false">גמ״חים</button><button type="button" data-g="התנדבות" data-k="vol" aria-pressed="false">התנדבות</button><button type="button" data-g="אבידות ומציאות" data-k="lost" aria-pressed="false">אבידות ומציאות</button>
+</div></div>
+<section id="list" class="wrap dir-list has-bar" aria-label="לוח השכונה">
 
 <div class="dgrid brows">
 <a class="dcard brow lift" href="/merkaz-hair-nachlaot/board/%D7%92%D7%9E%D7%97-%D7%94%D7%A0%D7%93%D7%A1%D7%99/" data-group="גמ״חים" data-text="גמח הנדסי אחר · בני ברית 14 גמ״חים">
@@ -523,7 +525,12 @@ var q=document.getElementById('dir-q'),cards=[].slice.call(document.querySelecto
     chips=[].slice.call(document.querySelectorAll('.fchips button')),empty=document.getElementById('dir-empty'),g='';
 function run(){var t=(q.value||'').trim(),n=0;
   cards.forEach(function(c){var ok=(!g||c.getAttribute('data-group')===g)&&(!t||c.getAttribute('data-text').indexOf(t)>=0);c.hidden=!ok;if(ok)n++;});
-  empty.hidden=n>0;if(window.__mapRefresh)window.__mapRefresh();}
+  empty.hidden=n>0;
+  // תחום בלי מודעות (למשל "דרושים" בלוח): הזמנה לפרסם במקום "לא מצאנו"
+  if(!n&&cards.length){var none=g&&!t&&!cards.some(function(c){return c.getAttribute('data-group')===g;});
+    empty.firstElementChild.textContent=none?'אין כרגע מודעות ב'+g:'לא מצאנו בשכונה את מה שחיפשת';
+    empty.lastElementChild.textContent=none?'רוצים לפרסם? זה דרך האפליקציה.':'נסו מילה אחרת, או בחרו "הכל".';}
+  if(window.__mapRefresh)window.__mapRefresh();}
 chips.forEach(function(b){b.addEventListener('click',function(){g=b.getAttribute('data-g');
   chips.forEach(function(x){x.setAttribute('aria-pressed',x===b);});run();});});
 q.addEventListener('input',function(){run();});

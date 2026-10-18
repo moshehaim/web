@@ -770,7 +770,12 @@ var q=document.getElementById('dir-q'),cards=[].slice.call(document.querySelecto
     chips=[].slice.call(document.querySelectorAll('.fchips button')),empty=document.getElementById('dir-empty'),g='';
 function run(){var t=(q.value||'').trim(),n=0;
   cards.forEach(function(c){var ok=(!g||c.getAttribute('data-group')===g)&&(!t||c.getAttribute('data-text').indexOf(t)>=0);c.hidden=!ok;if(ok)n++;});
-  empty.hidden=n>0;if(window.__mapRefresh)window.__mapRefresh();}
+  empty.hidden=n>0;
+  // תחום בלי מודעות (למשל "דרושים" בלוח): הזמנה לפרסם במקום "לא מצאנו"
+  if(!n&&cards.length){var none=g&&!t&&!cards.some(function(c){return c.getAttribute('data-group')===g;});
+    empty.firstElementChild.textContent=none?'אין כרגע מודעות ב'+g:'לא מצאנו בשכונה את מה שחיפשת';
+    empty.lastElementChild.textContent=none?'רוצים לפרסם? זה דרך האפליקציה.':'נסו מילה אחרת, או בחרו "הכל".';}
+  if(window.__mapRefresh)window.__mapRefresh();}
 chips.forEach(function(b){b.addEventListener('click',function(){g=b.getAttribute('data-g');
   chips.forEach(function(x){x.setAttribute('aria-pressed',x===b);});run();});});
 q.addEventListener('input',function(){run();});

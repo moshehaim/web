@@ -466,7 +466,7 @@ background:linear-gradient(to top,var(--t2),transparent)}
 </div>
 </div>
 <nav class="chips" aria-label="תחומים"><button type="button" class="cnav prev" aria-label="תחומים קודמים">→</button><button type="button" class="cnav next" aria-label="תחומים נוספים">←</button><div class="wrap">
-<a href="/ginot-hair/">דף השכונה</a><a href="/ginot-hair/minyanim/">מניינים ושיעורים</a><a href="/ginot-hair/biz/">עסקים</a><a href="/ginot-hair/pros/" aria-current="page" class="on">בעלי מקצוע</a><a href="/ginot-hair/events/">הכל לאירוע</a><a href="/ginot-hair/education/">מוסדות חינוך</a><a href="/ginot-hair/parks/">גנים ופארקים</a><a href="/ginot-hair/services/">שירותי קהילה</a><a href="/ginot-hair/health/">בריאות</a>
+<a href="/ginot-hair/">דף השכונה</a><a href="/ginot-hair/minyanim/">מניינים ושיעורים</a><a href="/ginot-hair/biz/">עסקים</a><a href="/ginot-hair/pros/" aria-current="page" class="on">בעלי מקצוע</a><a href="/ginot-hair/board/#gmach">גמ״חים</a><a href="/ginot-hair/board/#jobs">דרושים</a><a href="/ginot-hair/board/#second">יד שנייה</a><a href="/ginot-hair/board/#vol">התנדבות</a><a href="/ginot-hair/board/#lost">אבידות ומציאות</a><a href="/ginot-hair/events/">הכל לאירוע</a><a href="/ginot-hair/education/">מוסדות חינוך</a><a href="/ginot-hair/parks/">גנים ופארקים</a><a href="/ginot-hair/services/">שירותי קהילה</a><a href="/ginot-hair/health/">בריאות</a>
 </div></nav></header>
 
 
@@ -521,7 +521,12 @@ var q=document.getElementById('dir-q'),cards=[].slice.call(document.querySelecto
     chips=[].slice.call(document.querySelectorAll('.fchips button')),empty=document.getElementById('dir-empty'),g='';
 function run(){var t=(q.value||'').trim(),n=0;
   cards.forEach(function(c){var ok=(!g||c.getAttribute('data-group')===g)&&(!t||c.getAttribute('data-text').indexOf(t)>=0);c.hidden=!ok;if(ok)n++;});
-  empty.hidden=n>0;if(window.__mapRefresh)window.__mapRefresh();}
+  empty.hidden=n>0;
+  // תחום בלי מודעות (למשל "דרושים" בלוח): הזמנה לפרסם במקום "לא מצאנו"
+  if(!n&&cards.length){var none=g&&!t&&!cards.some(function(c){return c.getAttribute('data-group')===g;});
+    empty.firstElementChild.textContent=none?'אין כרגע מודעות ב'+g:'לא מצאנו בשכונה את מה שחיפשת';
+    empty.lastElementChild.textContent=none?'רוצים לפרסם? זה דרך האפליקציה.':'נסו מילה אחרת, או בחרו "הכל".';}
+  if(window.__mapRefresh)window.__mapRefresh();}
 chips.forEach(function(b){b.addEventListener('click',function(){g=b.getAttribute('data-g');
   chips.forEach(function(x){x.setAttribute('aria-pressed',x===b);});run();});});
 q.addEventListener('input',function(){run();});
