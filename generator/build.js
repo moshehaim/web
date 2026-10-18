@@ -100,7 +100,10 @@ function emptyKeys(dirRaw, lsRaw, moreRaw) {
   const n = (...a) => a.reduce((s, x) => s + (Array.isArray(x) ? x.length : 0), 0);
   const e = new Set();
   const add = (k, cnt) => { if (!cnt) e.add(k); };
-  if (dirRaw) { const d = shapeDirectory(dirRaw); add('biz', d.biz.items.length); add('pros', d.pros.items.length); }
+  if (dirRaw) {
+    const d = shapeDirectory(dirRaw); add('biz', d.biz.items.length); add('pros', d.pros.items.length);
+    add('events', d.biz.items.length + d.pros.items.length);  // "הכל לאירוע" נבנה מהעסקים ובעלי המקצוע
+  }
   if (lsRaw) {
     const L = lsRaw;
     add('promos', n(L.promotions, L.coupons)); add('realestate', n(L.sale, L.rent));
@@ -109,7 +112,7 @@ function emptyKeys(dirRaw, lsRaw, moreRaw) {
   }
   if (moreRaw) {
     const M = moreRaw;
-    add('halls', n(M.halls, M.hosting)); add('hosting', n(M.hosting)); add('events', n(M.events)); add('lessons', n(M.lessons));
+    add('halls', n(M.halls, M.hosting)); add('hosting', n(M.hosting)); add('lessons', n(M.lessons));
     add('education', n(M.edu)); add('parks', n(M.parks)); add('services', n(M.services)); add('health', n(M.health));
   }
   return e;
