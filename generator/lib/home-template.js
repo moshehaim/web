@@ -40,7 +40,7 @@ export const ICON = {
   bed: 'M3 18V8M3 14h18v4M21 14v-3a3 3 0 0 0-3-3h-7v6',
   party: 'M4 20l4-12 8 8zM14 4v2M18 6l-1.5 1.5M20 10h-2M12 9l3-3',
   civic: 'M4 21V5h10v16M14 9h6v12M7 9h4M7 13h4M7 17h4',
-  health: 'M9 3h6v6h6v6h-6v6H9v-6H3V9h6z',
+  health: 'M11 2v2M5 2v2M5 3H4a2 2 0 0 0-2 2v4a6 6 0 0 0 12 0V5a2 2 0 0 0-2-2h-1M8 15a6 6 0 0 0 12 0v-3M20 8a2 2 0 1 0 0 4a2 2 0 1 0 0-4',
 };
 export const svg = (d, size = 24, stroke = 'currentColor', w = 1.9) =>
   `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="${stroke}" stroke-width="${w}" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="${d}"/></svg>`;
