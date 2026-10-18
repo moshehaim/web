@@ -4,7 +4,7 @@ name: בדיקת בנייה — השוואה ל-main
 # ומעלה את הפלט כ-artifact. לא מבצע commit ולא נוגע באתר.
 on:
   push:
-    branches: ['feat/all-neighborhoods', 'feat/art-placeholders']
+    branches: ['feat/**']
   workflow_dispatch:
     inputs:
       only:

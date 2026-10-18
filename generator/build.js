@@ -186,7 +186,9 @@ const writeHome = (raw, dirRaw, lsRaw, moreRaw, synSlugs, detRaw) => {
   // עסקים ובעלי מקצוע נשארים בניווט גם כשהם ריקים — שם ההזמנה להירשם.
   for (const k of NAV_KEYS) HIDDEN_NAV.delete(k);
   EMPTY = emptyKeys(dirRaw, lsRaw, moreRaw);
-  for (const k of EMPTY) if (k !== 'biz' && k !== 'pros') HIDDEN_NAV.add(k);
+  // נשארים בניווט גם כשהם ריקים: עסקים ובעלי מקצוע (הזמנה להירשם) וכל סוגי הלוח (מה אפשר לפרסם)
+  const ALWAYS = new Set(['biz', 'pros', 'board', 'gmach', 'jobs', 'second', 'vol', 'lost']);
+  for (const k of EMPTY) if (!ALWAYS.has(k)) HIDDEN_NAV.add(k);
   const home = `/${HOME}/`;
   const vm = shapeHome(raw, { now: new Date(), base: BASE });
   // בורר השכונות: כל שכונה שיש לה עמודים — לעמוד שלה

@@ -454,8 +454,8 @@ function promosStrip(promos) {
 }
 
 function boardSection(vm) {
-  // רק לשוניות עם מודעות (בשכונה בלי דרושים — אין לשונית דרושים ריקה)
-  const tabs = vm.board.some((t) => t.items.length) ? vm.board.filter((t) => t.items.length) : vm.board.slice(0, 1);
+  // כל הלשוניות תמיד — גם ריקות ("אין כרגע מודעות... רוצים לפרסם?"), כדי שיידעו מה אפשר לפרסם
+  const tabs = vm.board;
   const first = Math.max(0, tabs.findIndex((t) => t.items.length));
   const now = new Date(vm.builtAt);
   const jt = new Date(now.toLocaleString('en-US', { timeZone: 'Asia/Jerusalem' }));
