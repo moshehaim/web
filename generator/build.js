@@ -63,13 +63,13 @@ const DRY    = args.includes('--dry');
 const outIdx = args.indexOf('--out');
 const OUT    = path.resolve(__dirname, outIdx > -1 ? args[outIdx + 1] : '../out');
 // השכונה שנבנית עכשיו (הבנייה רצה שכונה אחרי שכונה — ראו communities.js)
-let COMMUNITY_ID, HOME, SECTION, PRIMARY = false;  // HOME: /har-homa/ · SECTION: /har-homa/minyanim/
+let COMMUNITY_ID, HOME, SECTION, PRIMARY = false, NOINDEX = false;  // HOME: /har-homa/ · SECTION: /har-homa/minyanim/
 const OLD_SECTION = 'minyanim-har-homa';  // הכתובת הישנה של השכונה הראשית — נשארת כהפניות, גוגל כבר מכיר אותה
 const onlyIdx = args.indexOf('--only');   // --only gilo,beit-vagan  → רק השכונות האלה
 const ONLY = onlyIdx > -1 ? args[onlyIdx + 1].split(',') : null;
 
 function setCommunity(c) {
-  COMMUNITY_ID = c.id; HOME = c.slug; SECTION = `${HOME}/minyanim`; PRIMARY = !!c.primary;
+  COMMUNITY_ID = c.id; HOME = c.slug; SECTION = `${HOME}/minyanim`; PRIMARY = !!c.primary; NOINDEX = !!c.noindex;
   EXTRA_URLS = []; SEARCH = [];
   setSiteHome(`/${HOME}/`); setMinyanimSection(`/${SECTION}/`);
 }
@@ -83,6 +83,9 @@ if (!FIXTURE && (!SUPABASE_URL || !ANON_KEY)) {
 
 const write = (rel, content) => {
   const file = path.join(OUT, rel);
+  // שכונה בשלב בדיקה: כל העמודים שלה מוסתרים מגוגל
+  if (NOINDEX && rel.startsWith(HOME + path.sep) && rel.endsWith('.html'))
+    content = content.replace('<meta charset="utf-8">', '<meta charset="utf-8">\n<meta name="robots" content="noindex,follow">');
   if (DRY) { console.log(`  [dry] ${rel}  (${content.length} bytes)`); return; }
   fs.mkdirSync(path.dirname(file), { recursive: true });
   fs.writeFileSync(file, content, 'utf8');
@@ -382,7 +385,8 @@ async function main() {
   for (const c of list) {
     setCommunity(c);
     console.log(`\n— ${HOME} —`);
-    const r = await buildCommunity(db, urls);
+    // שכונה בשלב בדיקה לא נכנסת ל-sitemap
+    const r = await buildCommunity(db, NOINDEX ? [] : urls);
     totals.syns += r.syns; totals.prayers += r.prayers;
   }
 

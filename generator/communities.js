@@ -8,9 +8,9 @@
  */
 export const COMMUNITIES = [
   { slug: 'har-homa', id: '5e36552b-9fb2-45aa-90aa-03301111b2dd', build: true, primary: true },
-  { slug: 'gilo', id: '3fd4bab3-3f58-49d8-a19d-c106cda128d7' },
-  { slug: 'beit-vagan', id: '6d0987ac-b898-4469-886f-4173132d27ee' },
-  { slug: 'neve-yaakov', id: 'd7e4ce0d-d0a4-4a96-92f3-4a5755b02e57' },
+  { slug: 'gilo', id: '3fd4bab3-3f58-49d8-a19d-c106cda128d7', build: true, noindex: true },
+  { slug: 'beit-vagan', id: '6d0987ac-b898-4469-886f-4173132d27ee', build: true, noindex: true },
+  { slug: 'neve-yaakov', id: 'd7e4ce0d-d0a4-4a96-92f3-4a5755b02e57', build: true, noindex: true },
   { slug: 'pisgat-zeev', id: 'c0db1500-7701-4639-a30c-bcf78f88ec28' },
   { slug: 'ramot', id: '9ae42566-e7de-44b4-a94f-1ef4005f5927' },
   { slug: 'ramat-shlomo', id: 'b3a72945-1d26-4616-ba31-ed9d7a6b3a89' },
