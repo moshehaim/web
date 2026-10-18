@@ -50,7 +50,8 @@ button{font:inherit}
 @media (max-width:1100px){.brand small{display:none}}@media (max-width:760px){.brand{display:none}}
 .hood{position:relative}
 .hood-btn{display:flex;align-items:center;gap:10px;height:52px;padding:0 12px 0 10px;border-radius:14px;border:1.5px solid #DCE5F5;background:#F5F8FF;cursor:pointer;color:var(--navy)}
-.hood-btn small{display:block;font-size:12px;font-weight:700;color:var(--muted);text-align:right}
+.hood-btn{min-width:200px}.hood-btn>span{flex:1}
+.hood-btn small{display:block;font-size:12px;font-weight:700;color:var(--muted);text-align:right;white-space:nowrap}
 .hood-btn b{display:block;font-size:18px;font-weight:800;max-width:230px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .hood-pop{position:absolute;top:60px;right:0;width:min(440px,calc(100vw - 32px));background:#fff;border-radius:18px;box-shadow:0 18px 48px rgba(15,27,48,.22);border:1px solid var(--line);padding:14px;display:flex;flex-direction:column;gap:12px;z-index:30}
 .hood-pop[hidden]{display:none}
@@ -83,7 +84,7 @@ a.hood-item:hover{background:#F5F8FF}
 .btn-line{border:1.5px solid var(--brand);color:var(--brand)}
 .btn-dark{background:var(--navy);color:#fff}.btn-dark:hover{color:#fff;background:#0F1F3B}
 @media (max-width:760px){.hdr-row{display:flex;flex-wrap:wrap;gap:10px;padding-block:10px}.hdr-mid{display:contents}.hdr-actions{margin-inline-start:auto}.logo img{width:44px;height:44px}
-.hood{min-width:0}.hood-btn{height:46px;max-width:100%}.hood-btn b{max-width:150px}
+.hood{min-width:0}.hood-btn{height:46px;max-width:100%;min-width:150px}.hood-btn b{max-width:150px}
 .hdr-actions .btn-line,.hdr-actions .btn-dark{display:none}.hdr-actions .btn-ghost{width:46px;padding:0;justify-content:center}
 .btn-ghost .lbl{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}}
 .m-only{display:none}@media (max-width:760px){.m-only{display:inline-flex}}
@@ -370,7 +371,13 @@ footer .c{font-size:13px;color:#8A94A6}
 
 <section id="board" aria-label="לוח השכונה" class="wrap"><div class="board-grid">
 
-
+<div class="panel fresh">
+<div class="panel-head"><h2>חדש <span class="em">בשכונה</span></h2></div>
+<a class="fr" href="/beit-vagan/biz/%D7%90%D7%95%D7%A4%D7%98%D7%99%D7%A7%D7%94-%D7%A8%D7%95%D7%96%D7%A0%D7%91%D7%A8%D7%92/"><i><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 9l1.5-5h15L21 9M3 9h18v2a3 3 0 0 1-6 0a3 3 0 0 1-6 0a3 3 0 0 1-6 0zM5 13v8h14v-8"/></svg></i><span class="fr-t"><b>אופטיקה רוזנברג</b><small>עסק · חנות משקפיים / אופטיקה</small></span></a>
+<a class="fr" href="/beit-vagan/biz/%D7%93%D7%A4%D7%95%D7%A1-%D7%91%D7%99%D7%AA-%D7%95%D7%92%D7%9F/"><i><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 9l1.5-5h15L21 9M3 9h18v2a3 3 0 0 1-6 0a3 3 0 0 1-6 0a3 3 0 0 1-6 0zM5 13v8h14v-8"/></svg></i><span class="fr-t"><b>דפוס בית וגן</b><small>עסק · דפוס והדפסות</small></span></a>
+<a class="fr" href="/beit-vagan/biz/%D7%94%D7%97%D7%A0%D7%95%D7%AA-%D7%94%D7%9B%D7%9C%D7%9C%D7%99%D7%AA-%D7%98%D7%9E%D7%91%D7%95%D7%A8/"><i><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 9l1.5-5h15L21 9M3 9h18v2a3 3 0 0 1-6 0a3 3 0 0 1-6 0a3 3 0 0 1-6 0zM5 13v8h14v-8"/></svg></i><span class="fr-t"><b>החנות הכללית - טמבור</b><small>עסק · טמבוריה וחומרי בניין</small></span></a>
+<a class="fr" href="/beit-vagan/biz/%D7%9E%D7%90%D7%A4%D7%99%D7%99%D7%AA-%D7%90%D7%A0%D7%92%D7%9C/"><i><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 9l1.5-5h15L21 9M3 9h18v2a3 3 0 0 1-6 0a3 3 0 0 1-6 0a3 3 0 0 1-6 0zM5 13v8h14v-8"/></svg></i><span class="fr-t"><b>מאפיית אנג&#39;ל</b><small>עסק · מאפייה</small></span></a>
+</div>
 
 <div class="panel span2">
 <div class="panel-head"><h2>לוח <span class="em">השכונה</span></h2><a href="/app/" style="font-weight:800;font-size:14px;text-decoration:none">+ פרסום בלוח</a></div>
