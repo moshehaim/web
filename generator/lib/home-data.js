@@ -403,8 +403,8 @@ export function shapeListings(raw, community, now = new Date()) {
     ...raw.lostFound.map((l) => ({ id: l.id, key: 'lost', group: 'אבידות ומציאות', t: l.title, sub: ago(l.created_at, now), img: l.image_url || null,
       b: l.status === 'lost' ? 'אבד' : 'נמצא' })),
   ];
-  const boardGroups = [['jobs', 'דרושים'], ['second', 'יד שנייה'], ['gmach', 'גמ״חים'], ['vol', 'התנדבות'], ['lost', 'אבידות ומציאות']]
-    .filter(([k]) => board.some((x) => x.key === k));
+  // כל סוגי הלוח מופיעים תמיד, גם בלי מודעות — כדי שאנשים יידעו מה אפשר לפרסם
+  const boardGroups = [['jobs', 'דרושים'], ['second', 'יד שנייה'], ['gmach', 'גמ״חים'], ['vol', 'התנדבות'], ['lost', 'אבידות ומציאות']];
 
   return {
     promos: { items: promos, groups: ['מבצעים', 'קופונים'].filter((g) => promos.some((p) => p.group === g)) },
