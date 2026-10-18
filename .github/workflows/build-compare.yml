@@ -1,0 +1,69 @@
+name: בדיקת בנייה — השוואה ל-main
+
+# רץ רק על ענפי פיתוח של הגנרטור. בונה את main ואת הענף זה לצד זה, מציג את ההבדלים
+# ומעלה את הפלט כ-artifact. לא מבצע commit ולא נוגע באתר.
+on:
+  push:
+    branches: ['feat/all-neighborhoods']
+  workflow_dispatch:
+    inputs:
+      only:
+        description: 'שכונות נוספות לבנייה בענף (מופרד בפסיקים)'
+        required: false
+        default: ''
+
+permissions:
+  contents: read
+
+jobs:
+  compare:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '22'
+
+      - name: main בתיקייה נפרדת
+        run: git worktree add ../orig origin/main
+
+      - name: התקנת תלויות
+        run: |
+          (cd generator && (npm ci || npm install))
+          (cd ../orig/generator && (npm ci || npm install))
+
+      - name: בנייה — main (A) והענף (B), במקביל
+        run: |
+          mkdir -p /tmp/A /tmp/B
+          for d in /tmp/A /tmp/B; do cp -r har-homa minyanim-har-homa my-business "$d"/; done
+          (cd ../orig/generator && node build.js --out /tmp/A > /tmp/A.log 2>&1) &
+          (cd generator && node build.js --out /tmp/B > /tmp/B.log 2>&1) &
+          wait
+          echo "::group::A.log"; cat /tmp/A.log; echo "::endgroup::"
+          echo "::group::B.log"; cat /tmp/B.log; echo "::endgroup::"
+
+      - name: השוואה
+        run: |
+          echo "קבצים שונים:"
+          diff -rq /tmp/A /tmp/B | tee /tmp/diff-files.txt | head -100 || true
+          echo "סה\"כ: $(wc -l < /tmp/diff-files.txt)"
+          diff -r /tmp/A /tmp/B > /tmp/diff.txt || true
+          head -c 20000 /tmp/diff.txt
+
+      - name: שכונות נוספות (C)
+        if: ${{ github.event.inputs.only != '' }}
+        run: |
+          mkdir -p /tmp/C
+          (cd generator && node build.js --out /tmp/C --only "${{ github.event.inputs.only }}")
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: build-output
+          path: |
+            /tmp/B
+            /tmp/C
+            /tmp/diff.txt
+            /tmp/diff-files.txt
+          retention-days: 3

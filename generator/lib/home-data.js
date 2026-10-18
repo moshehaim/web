@@ -445,7 +445,7 @@ const SERVICE_TYPES = { atm: 'כספומטים', mikveh: 'מקוואות', post_
 const HOSTING_TYPES = { complex: 'מתחם אירוח', villa: 'וילה', apartment: 'דירה', unit: 'יחידת אירוח', room: 'חדר' };
 const DAY_ORDER = ['כל יום', 'ראשון', 'שני', 'שלישי', 'רביעי', 'חמישי', 'שישי', 'שבת', 'מוצאי שבת'];
 
-export function shapeMore(raw, dir, synSlugs = {}) {
+export function shapeMore(raw, dir, synSlugs = {}, minyanim = '/har-homa/minyanim/') {
   const synName = Object.fromEntries(raw.syns.map((s) => [String(s.id), s.name]));
   const order = (list, key) => [...new Set(list.map((x) => x[key]).filter(Boolean))];
 
@@ -453,7 +453,7 @@ export function shapeMore(raw, dir, synSlugs = {}) {
     const syn = synName[String(l.synagogue_id)] || l.location || '';
     return { group: (l.day || 'אחר').trim(), t: l.topic || 'שיעור',
       sub: [l.teacher, l.start_time, syn].filter(Boolean).join(' · '), b: l.audience || '',
-      href: synSlugs[syn] ? `/har-homa/minyanim/${encodeURIComponent(synSlugs[syn])}/` : null, time: l.start_time || '' };
+      href: synSlugs[syn] ? `${minyanim}${encodeURIComponent(synSlugs[syn])}/` : null, time: l.start_time || '' };
   }).sort((a, b) => (DAY_ORDER.indexOf(a.group) + 1 || 99) - (DAY_ORDER.indexOf(b.group) + 1 || 99) || a.time.localeCompare(b.time));
   const lessonGroups = order(lessons, 'group');
 

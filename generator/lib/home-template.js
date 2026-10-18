@@ -16,7 +16,9 @@ const LOGIN = '/app/';
 // בעלי עסקים — לעמוד ניהול העסק באתר (/my-business/, js/manage.js)
 const BIZ_PORTAL = '/my-business/';
 const DOWNLOAD = '/b/';
-const MINYANIM = '/har-homa/minyanim/';
+let MINYANIM = '/har-homa/minyanim/';
+/** השכונה שנבנית עכשיו — קובע את כתובת המניינים בכל התבניות (הבנייה רצה שכונה אחרי שכונה) */
+export function setSiteHome(home) { MINYANIM = `${home}minyanim/`; }
 
 export const ICON = {
   clock: 'M12 4a8 8 0 1 0 0 16a8 8 0 1 0 0-16zM12 8v4l3 2',
@@ -44,7 +46,7 @@ export const svg = (d, size = 24, stroke = 'currentColor', w = 1.9) =>
   `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="${stroke}" stroke-width="${w}" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="${d}"/></svg>`;
 
 const ZONES = [
-  ['מניינים ושיעורים', ICON.clock, 'blue', MINYANIM],
+  ['מניינים ושיעורים', ICON.clock, 'blue', '@minyanim'],
   ['עסקים', ICON.store, 'sky', 'biz/'], ['בעלי מקצוע', ICON.wrench, 'sky', 'pros/'],
   ['מבצעים וקופונים', ICON.tag, 'sky', 'promos/'],
   ['שירותי קהילה', ICON.civic, 'teal', 'services/'], ['גמ״חים', ICON.heart, 'green', 'board/#gmach'], ['אירועים', ICON.star, 'green', 'happenings/', 'happenings'],
@@ -408,7 +410,7 @@ ${list.map((r) => `<div class="slide" data-kind="${esc(r.kind)}"><a href="${esc(
 }
 
 const typeOrder = ['שחרית', 'מנחה', 'ערבית'];
-/** שורות התפילה הבאה — אותו חישוב רץ גם בדפדפן (ראו CLIENT_JS). */
+/** שורות התפילה הבאה — אותו חישוב רץ גם בדפדפן (ראו clientJs). */
 function nextPrayers(prayers, nowMin, dow) {
   return typeOrder.map((t) => {
     const of = prayers.filter((p) => p.t === t);
@@ -520,7 +522,7 @@ if(gf){var hdr=document.querySelector('.hdr'),gopen=document.querySelector('.gs-
   document.addEventListener('click',function(e){if(!gf.contains(e.target))gr.hidden=true;});}
 })();`;
 
-const CLIENT_JS = `
+const clientJs = () => `
 (function(){
 var TZ='Asia/Jerusalem',DAYS=['ראשון','שני','שלישי','רביעי','חמישי','שישי','שבת'];
 function jnow(){var s=new Date().toLocaleString('en-US',{timeZone:TZ});return new Date(s);}
@@ -604,7 +606,7 @@ tabs.forEach(function(t,i){t.addEventListener('click',function(){sel(t);});
 export const HIDDEN_NAV = new Set(['happenings']);
 
 export function navChips(home, current = '') {
-  const M = '/har-homa/minyanim/';
+  const M = MINYANIM;
   const items = [
     ['home', 'דף השכונה', home], ['minyanim', 'מניינים ושיעורים', M],
     ['biz', 'עסקים', `${home}biz/`], ['pros', 'בעלי מקצוע', `${home}pros/`],
@@ -775,7 +777,7 @@ ${discoverSection(discover)}
 <section id="zones" aria-label="כל התחומים" class="wrap" style="display:flex;flex-direction:column;gap:18px">
 <h2 style="margin:0;font-size:30px;font-weight:800;color:var(--navy)">כל <span class="em">התחומים</span></h2>
 <div class="zones">
-${ZONES.filter((z) => !HIDDEN_NAV.has(z[4])).map(([n, d, c, href]) => `<a class="zone lift" href="${href || APP}"><i class="z-${c}">${svg(d)}</i>${esc(n)}</a>`).join('\n')}
+${ZONES.filter((z) => !HIDDEN_NAV.has(z[4])).map(([n, d, c, href]) => `<a class="zone lift" href="${href === '@minyanim' ? MINYANIM : href || APP}"><i class="z-${c}">${svg(d)}</i>${esc(n)}</a>`).join('\n')}
 </div>
 </section>
 
@@ -808,7 +810,7 @@ ${phonesStrip()}
 ${siteFooter()}
 
 <script type="application/json" id="prayers-data">${JSON.stringify(vm.prayers).replace(/</g, '\\u003c')}</script>
-<script>${CLIENT_JS}</script>
+<script>${clientJs()}</script>
 <script>${HOOD_JS}</script>
 </body>
 </html>

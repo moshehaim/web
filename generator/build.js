@@ -19,7 +19,9 @@ import { isPrayerInSeason } from './lib/season.js';
 import { sitemap } from './lib/template.js';
 import { minyanimIndexPage, synagoguePageNew } from './lib/minyanim-template.js';
 import { fetchHome, shapeHome, shapePrayers, fetchDirectory, shapeDirectory, fetchListings, shapeListings, fetchMore, shapeMore } from './lib/home-data.js';
-import { homePage, HIDDEN_NAV, navChips } from './lib/home-template.js';
+import { homePage, HIDDEN_NAV, navChips, setSiteHome } from './lib/home-template.js';
+import { setMinyanimSection } from './lib/minyanim-template.js';
+import { COMMUNITIES } from './communities.js';
 import { entityPage, detailPage } from './lib/entity-template.js';
 import { fetchDetails, shapeDetails, shabbatTimes, nextShabbat } from './lib/details.js';
 import { isIsraeliDST } from './lib/season.js';
@@ -54,16 +56,23 @@ const env = fromDotEnv(path.resolve(__dirname, '../app/.env'));
 
 const SUPABASE_URL = process.env.SUPABASE_URL || env.SUPABASE_URL;
 const ANON_KEY     = process.env.SUPABASE_ANON_KEY || env.SUPABASE_ANON_KEY;
-const COMMUNITY_ID = process.env.COMMUNITY_ID || '5e36552b-9fb2-45aa-90aa-03301111b2dd';
 const BASE         = process.env.SITE_BASE || 'https://shchuna.co.il';
 
 const args   = process.argv.slice(2);
 const DRY    = args.includes('--dry');
 const outIdx = args.indexOf('--out');
 const OUT    = path.resolve(__dirname, outIdx > -1 ? args[outIdx + 1] : '../out');
-const HOME    = 'har-homa';          // עמוד הבית החדש של השכונה: /har-homa/
-const SECTION = `${HOME}/minyanim`;  // המניינים, כמו כל שאר עמודי המידע: /har-homa/minyanim/
-const OLD_SECTION = 'minyanim-har-homa';  // הכתובת הישנה — נשארת כהפניות, גוגל כבר מכיר אותה
+// השכונה שנבנית עכשיו (הבנייה רצה שכונה אחרי שכונה — ראו communities.js)
+let COMMUNITY_ID, HOME, SECTION, PRIMARY = false;  // HOME: /har-homa/ · SECTION: /har-homa/minyanim/
+const OLD_SECTION = 'minyanim-har-homa';  // הכתובת הישנה של השכונה הראשית — נשארת כהפניות, גוגל כבר מכיר אותה
+const onlyIdx = args.indexOf('--only');   // --only gilo,beit-vagan  → רק השכונות האלה
+const ONLY = onlyIdx > -1 ? args[onlyIdx + 1].split(',') : null;
+
+function setCommunity(c) {
+  COMMUNITY_ID = c.id; HOME = c.slug; SECTION = `${HOME}/minyanim`; PRIMARY = !!c.primary;
+  EXTRA_URLS = []; SEARCH = [];
+  setSiteHome(`/${HOME}/`); setMinyanimSection(`/${SECTION}/`);
+}
 const fxIdx   = args.indexOf('--fixture');
 const FIXTURE = fxIdx > -1 ? path.resolve(process.cwd(), args[fxIdx + 1]) : null;
 
@@ -82,9 +91,9 @@ const write = (rel, content) => {
 // ספירת לחיצות מהדפדפן: אותו anon key ציבורי שהאפליקציה בווב משתמשת בו
 const API = SUPABASE_URL && ANON_KEY ? { url: SUPABASE_URL, key: ANON_KEY } : null;
 
-const EXTRA_URLS = [];
+let EXTRA_URLS = [];
 /** אינדקס החיפוש שבראש העמוד: {n שם, t סוג, s תיאור, h קישור, o סדר} → har-homa/search.json */
-const SEARCH = [];
+let SEARCH = [];
 const addSearch = (n, t, s, h, o) => { if (n && h) SEARCH.push({ n: String(n).trim(), t, s: (s || '').trim() || undefined, h, o }); };
 const writeSearch = () => {
   const seen = new Set();
@@ -212,8 +221,8 @@ const writeHome = (raw, dirRaw, lsRaw, moreRaw, synSlugs, detRaw) => {
   // 0. עמוד הבית — אחרי שלכל ישות יש קישור (בשביל "חדש בשכונה")
   const shabbat = raw.community.latitude ? nextShabbat(raw.community.latitude, raw.community.longitude) : null;
   write(path.join(HOME, 'index.html'), homePage(vm, { base: BASE, path: home, shabbat, fresh: dir ? freshItems(dir, allDetails, detRaw, hrefById) : [], discover: discoverItems(allDetails) }));
-  // ניהול העסק (שלד; הלוגיקה ב-/js/manage.js) — noindex, לא ב-sitemap
-  write(path.join('my-business', 'index.html'), managePage(vm, { base: BASE, home }));
+  // ניהול העסק (שלד; הלוגיקה ב-/js/manage.js) — noindex, לא ב-sitemap. עמוד אחד לכל האתר
+  if (PRIMARY) write(path.join('my-business', 'index.html'), managePage(vm, { base: BASE, home }));
   console.log(`  ${HOME}/  · ${vm.promos.length} מבצעים · ${vm.professionals.length} בעלי מקצוע · ` +
     `${vm.businesses.length} עסקים · ${vm.realEstate.length} נכסים · ${vm.prayers.length} מניינים היום`);
 
@@ -235,7 +244,7 @@ const writeHome = (raw, dirRaw, lsRaw, moreRaw, synSlugs, detRaw) => {
   }
   console.log(`  ${HOME}/pros/ · ${dir.pros.items.length}   ${HOME}/biz/ · ${dir.biz.items.length}`);
   if (moreRaw) {
-    const m = shapeMore(moreRaw, dir, synSlugs || {});
+    const m = shapeMore(moreRaw, dir, synSlugs || {}, `${home}minyanim/`);
     // שיעורים בחיפוש — לפי נושא, רב ובית כנסת
     for (const l of m.lessons.items) addSearch(l.t, 'שיעור', [l.group, l.sub].filter(Boolean).join(' · '), l.href || `${home}lessons/`, 3);
     [m.halls, m.hosting, m.edu, m.parks, m.services, m.health, m.events].forEach((x) => link(x.items));
@@ -252,7 +261,7 @@ const writeHome = (raw, dirRaw, lsRaw, moreRaw, synSlugs, detRaw) => {
 /** slug יציב לבתי הכנסת: בפעם הראשונה בכתובת החדשה — יורש את ה-slugs מהכתובת הישנה */
 function synSlugStore() {
   const file = path.join(OUT, SECTION, 'slugs.json'), old = path.join(OUT, OLD_SECTION, 'slugs.json');
-  if (!DRY && !fs.existsSync(file) && fs.existsSync(old)) { fs.mkdirSync(path.dirname(file), { recursive: true }); fs.copyFileSync(old, file); }
+  if (PRIMARY && !DRY && !fs.existsSync(file) && fs.existsSync(old)) { fs.mkdirSync(path.dirname(file), { recursive: true }); fs.copyFileSync(old, file); }
   return new SlugStore(file);
 }
 
@@ -281,7 +290,7 @@ function writeMinyanim({ vm, community, syns, prayers, lessons, slugs, urls }) {
     syn.slug = slugs.get(syn.id, syn.name);
     const p = (P[String(syn.id)] || []).filter((x) => isPrayerInSeason(x));
     const l = L[String(syn.id)] || [];
-    write(path.join(OLD_SECTION, syn.slug, 'index.html'), redirectPage(`/${SECTION}/${encodeURIComponent(syn.slug)}/`));
+    if (PRIMARY) write(path.join(OLD_SECTION, syn.slug, 'index.html'), redirectPage(`/${SECTION}/${encodeURIComponent(syn.slug)}/`));
     write(path.join(SECTION, syn.slug, 'index.html'),
       synagoguePageNew({ vm, home, syn, prayers: p, lessons: l, zmanim, today: todayList, base: BASE }));
     urls.push({ loc: `${BASE}/${SECTION}/${encodeURIComponent(syn.slug)}/`, freq: 'weekly', pri: '0.7' });
@@ -297,7 +306,7 @@ function writeMinyanim({ vm, community, syns, prayers, lessons, slugs, urls }) {
   }
   // בתי כנסת עם זמנים קודם, ואז לפי א״ב
   listed.sort((a, b) => (b.has - a.has) || a.name.localeCompare(b.name, 'he'));
-  write(path.join(OLD_SECTION, 'index.html'), redirectPage(`/${SECTION}/`));
+  if (PRIMARY) write(path.join(OLD_SECTION, 'index.html'), redirectPage(`/${SECTION}/`));
   write(path.join(SECTION, 'index.html'), minyanimIndexPage({ vm, home, synagogues: listed, today: todayList, base: BASE }));
   console.log(`  ${SECTION}/ · ${syns.length} בתי כנסת · ${todayList.length} מניינים היום`);
 }
@@ -307,7 +316,11 @@ const fallbackVm = (c) => ({ name: c.neighborhood, alias: c.secondaryname || '',
   hoods: [{ name: c.neighborhood, active: true, current: true }] });
 
 async function main() {
+  const list = COMMUNITIES.filter((c) => (ONLY ? ONLY.includes(c.slug) : c.build));
+  if (!list.length) { console.error('אין שכונות לבנייה'); process.exit(1); }
+
   if (FIXTURE) {
+    setCommunity(list[0]);
     const fx = JSON.parse(fs.readFileSync(FIXTURE, 'utf8'));
     const vm = writeHome(fx, fx.directory, fx.listings, fx.more, {}, fx.details);
     if (fx.minyanim) {
@@ -320,6 +333,31 @@ async function main() {
 
   const db = createClient(SUPABASE_URL, ANON_KEY, { auth: { persistSession: false } });
 
+  // דפי השורש הידניים. חייבים להיות זהים תו-לתו ל-canonical שבקבצים
+  // עצמם (index.html, privacy.html, terms.html) — פער ביניהם הוא סתירה.
+  const urls = [
+    { loc: `${BASE}/`,             freq: 'monthly', pri: '1.0' },
+    { loc: `${BASE}/privacy.html`, freq: 'yearly',  pri: '0.2' },
+    { loc: `${BASE}/terms.html`,   freq: 'yearly',  pri: '0.2' },
+  ];
+  let totals = { syns: 0, prayers: 0 };
+  for (const c of list) {
+    setCommunity(c);
+    console.log(`\n— ${HOME} —`);
+    const r = await buildCommunity(db, urls);
+    totals.syns += r.syns; totals.prayers += r.prayers;
+  }
+
+  write('sitemap.xml', sitemap(urls));
+  write('robots.txt', `User-agent: *\nAllow: /\n\nSitemap: ${BASE}/sitemap.xml\n`);
+
+  console.log(`\n✓ ${list.length} שכונות · ${totals.syns} בתי כנסת · ${totals.prayers} מניינים`);
+  console.log(`  ${urls.length} כתובות ב-sitemap`);
+  if (DRY) console.log('  (הרצה יבשה — לא נכתבו קבצים)');
+}
+
+/** שכונה אחת: עמוד הבית, הרשימות, העמודים המלאים והמניינים. מוסיף את הכתובות שלה ל-urls. */
+async function buildCommunity(db, urls) {
   const [{ data: community, error: e0 }, { data: syns, error: e1 }] = await Promise.all([
     db.from('community').select('neighborhood,secondaryname,city,latitude,longitude').eq('id', COMMUNITY_ID).single(),
     db.from('synagogues')
@@ -341,12 +379,7 @@ async function main() {
 
   const slugs  = synSlugStore();
 
-  // דפי השורש הידניים. חייבים להיות זהים תו-לתו ל-canonical שבקבצים
-  // עצמם (index.html, privacy.html, terms.html) — פער ביניהם הוא סתירה.
-  const urls = [
-    { loc: `${BASE}/`,             freq: 'monthly', pri: '1.0' },
-    { loc: `${BASE}/privacy.html`, freq: 'yearly',  pri: '0.2' },
-    { loc: `${BASE}/terms.html`,   freq: 'yearly',  pri: '0.2' },
+  urls.push(
     { loc: `${BASE}/${SECTION}/`,  freq: 'weekly',  pri: '0.9' },
     { loc: `${BASE}/${HOME}/`,     freq: 'daily',   pri: '0.9' },
     { loc: `${BASE}/${HOME}/pros/`, freq: 'weekly', pri: '0.8' },
@@ -356,7 +389,7 @@ async function main() {
     { loc: `${BASE}/${HOME}/board/`, freq: 'daily', pri: '0.7' },
     ...['lessons', 'halls', 'hosting', 'education', 'parks', 'services', 'health', 'events']
       .map((k) => ({ loc: `${BASE}/${HOME}/${k}/`, freq: 'weekly', pri: '0.6' })),
-  ];
+  );
 
   // עמוד הבית והרשימות — כשל בהם לא יעצור את עמודי המניינים
   let vm = fallbackVm(community);
@@ -373,14 +406,9 @@ async function main() {
   writeMinyanim({ vm, community, syns, prayers, lessons, slugs, urls });
   urls.push(...EXTRA_URLS);
   writeSearch();
-  write('sitemap.xml', sitemap(urls));
-  write('robots.txt', `User-agent: *\nAllow: /\n\nSitemap: ${BASE}/sitemap.xml\n`);
 
   if (!DRY && slugs.save()) console.log('  slugs.json עודכן');
-
-  console.log(`\n✓ ${syns.length} בתי כנסת · ${prayers.length} מניינים`);
-  console.log(`  ${urls.length} כתובות ב-sitemap`);
-  if (DRY) console.log('  (הרצה יבשה — לא נכתבו קבצים)');
+  return { syns: syns.length, prayers: prayers.length };
 }
 
 main().catch((e) => { console.error(e); process.exit(1); });
