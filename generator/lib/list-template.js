@@ -40,7 +40,7 @@ const CAT_ICON = {
   edu: ['M2 9l10-5 10 5-10 5zM6 11v5c3 2 9 2 12 0v-5', 'teal'],
   park: ['M12 3l6 9H6zM12 8l7 9H5zM12 17v4', 'green'],
   service: ['M4 21V5h10v16M14 9h6v12M7 9h4M7 13h4M7 17h4', 'teal'],
-  health: ['M9 3h6v6h6v6h-6v6H9v-6H3V9h6z', 'rose'],
+  health: ['M11 2v2M5 2v2M5 3H4a2 2 0 0 0-2 2v4a6 6 0 0 0 12 0V5a2 2 0 0 0-2-2h-1M8 15a6 6 0 0 0 12 0v-3M20 8a2 2 0 1 0 0 4a2 2 0 1 0 0-4', 'rose'],
 };
 
 const CSS = `
