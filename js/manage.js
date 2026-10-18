@@ -92,9 +92,12 @@
       return sb.from('subscriptions').select('id,status,next_charge_date').eq('entity_id', biz.id).eq('entity_type', biz._k)
         .eq('payment_type', t).or('status.eq.active,status.eq.trial,status.eq.cancelled').gte('next_charge_date', today).maybeSingle();
     };
-    var slugP = biz.community_id === HOME_COMMUNITY
-      ? fetch('/har-homa/' + E().seg + '/slugs.json').then(function (r) { return r.ok ? r.json() : {}; }).catch(function () { return {}; })
-      : Promise.resolve({});
+    // העמוד באתר: /<שכונה>/<biz|pros>/<slug>/ — השכונה לפי /hoods.json (מזהה קהילה → כתובת), רק לשכונות שיש להן עמודים
+    var json = function (u) { return fetch(u).then(function (r) { return r.ok ? r.json() : {}; }).catch(function () { return {}; }); };
+    var slugP = json('/hoods.json').then(function (h) {
+      var hood = h[biz.community_id] || (biz.community_id === HOME_COMMUNITY ? 'har-homa' : null);
+      return hood ? json('/' + hood + '/' + E().seg + '/slugs.json').then(function (m) { return { hood: hood, slug: m[biz.id] || null }; }) : {};
+    });
     return Promise.all([
       sb.from('app_config').select('key,value').in('key', ['features_monetization', 'monetization_excluded_business_types']),
       biz._k === 'business' && biz.business_type ? sb.from('business_types').select('name_he').eq('id', biz.business_type).maybeSingle() : Promise.resolve({ data: null }),
@@ -120,7 +123,8 @@
         pkg: (r[5].data || []).filter(function (p) { return (p.total_promotions_bought || 0) - (p.total_promotions_used || 0) > 0 && (!p.expires_at || new Date(p.expires_at) > nowD); })[0] || null,
         coupons: (r[6].data || []).filter(function (c) { return ['expired', 'completed'].indexOf(c.status) < 0 && (!c.expires_at || new Date(c.expires_at) > nowD); }),
         promSub: r[7].data,
-        slug: (r[8] || {})[biz.id] || null
+        hood: (r[8] || {}).hood || null,
+        slug: (r[8] || {}).slug || null
       };
       render();
     }).catch(function () { showError(); });
@@ -141,7 +145,7 @@
       '<span class="tx"><b>' + esc(o.title) + '</b><span class="s">' + esc(o.sub) + '</span></span>' +
       (o.badge ? '<em style="background:' + (o.badgeColor || o.color) + '1A;color:' + (o.badgeColor || o.color) + '">' + esc(o.badge) + '</em>' : '') + '</button>';
   }
-  function bizUrl() { return ctx.slug ? '/har-homa/' + E().seg + '/' + encodeURIComponent(ctx.slug) + '/' : null; }
+  function bizUrl() { return ctx.slug && ctx.hood ? '/' + ctx.hood + '/' + E().seg + '/' + encodeURIComponent(ctx.slug) + '/' : null; }
 
   function render() {
     var hasSchedule = biz.weekly_schedule && DAYS.some(function (d) { return (biz.weekly_schedule[d[0]] || []).length; });

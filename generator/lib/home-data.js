@@ -224,7 +224,7 @@ export function shapeHome(raw, { now = new Date(), base = '' } = {}) {
 
   const active = new Set(raw.communities.filter((c) => c.is_active).map((c) => c.id));
   const hoods = raw.communities
-    .map((c) => ({ name: c.neighborhood, active: active.has(c.id), current: c.id === community.id,
+    .map((c) => ({ id: c.id, name: c.neighborhood, active: active.has(c.id), current: c.id === community.id,
       also: [c.secondaryname, ...(Array.isArray(c.neighborhoods) ? c.neighborhoods : [])].filter((x) => x && typeof x === 'string').join(' ') }))
     .sort((a, b) => (b.current - a.current) || (b.active - a.active) || a.name.localeCompare(b.name, 'he'));
 

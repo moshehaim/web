@@ -21,7 +21,7 @@ import { minyanimIndexPage, synagoguePageNew } from './lib/minyanim-template.js'
 import { fetchHome, shapeHome, shapePrayers, fetchDirectory, shapeDirectory, fetchListings, shapeListings, fetchMore, shapeMore } from './lib/home-data.js';
 import { homePage, HIDDEN_NAV, navChips, setSiteHome } from './lib/home-template.js';
 import { setMinyanimSection } from './lib/minyanim-template.js';
-import { COMMUNITIES } from './communities.js';
+import { COMMUNITIES, slugById } from './communities.js';
 import { entityPage, detailPage } from './lib/entity-template.js';
 import { fetchDetails, shapeDetails, shabbatTimes, nextShabbat } from './lib/details.js';
 import { isIsraeliDST } from './lib/season.js';
@@ -92,6 +92,31 @@ const write = (rel, content) => {
 const API = SUPABASE_URL && ANON_KEY ? { url: SUPABASE_URL, key: ANON_KEY } : null;
 
 let EXTRA_URLS = [];
+/** תחומים בלי תוכן בשכונה הנוכחית */
+let EMPTY = new Set();
+let LIVE = new Set();
+const NAV_KEYS = ['biz', 'pros', 'promos', 'gmach', 'jobs', 'second', 'realestate', 'vol', 'lost', 'halls', 'events', 'education', 'parks', 'services', 'health', 'board', 'lessons', 'hosting'];
+function emptyKeys(dirRaw, lsRaw, moreRaw) {
+  const n = (...a) => a.reduce((s, x) => s + (Array.isArray(x) ? x.length : 0), 0);
+  const e = new Set();
+  const add = (k, cnt) => { if (!cnt) e.add(k); };
+  if (dirRaw) { const d = shapeDirectory(dirRaw); add('biz', d.biz.items.length); add('pros', d.pros.items.length); }
+  if (lsRaw) {
+    const L = lsRaw;
+    add('promos', n(L.promotions, L.coupons)); add('realestate', n(L.sale, L.rent));
+    add('gmach', n(L.gmachim)); add('jobs', n(L.jobs)); add('second', n(L.secondHand)); add('vol', n(L.volunteering)); add('lost', n(L.lostFound));
+    add('board', n(L.gmachim, L.jobs, L.secondHand, L.volunteering, L.lostFound));
+  }
+  if (moreRaw) {
+    const M = moreRaw;
+    add('halls', n(M.halls, M.hosting)); add('hosting', n(M.hosting)); add('events', n(M.events)); add('lessons', n(M.lessons));
+    add('education', n(M.edu)); add('parks', n(M.parks)); add('services', n(M.services)); add('health', n(M.health));
+  }
+  return e;
+}
+/** עמוד רשימה של תחום ריק: noindex (שגוגל לא יציג עמוד ריק) */
+const listHtml = (key, html) => (EMPTY.has(key)
+  ? html.replace('<meta name="description"', '<meta name="robots" content="noindex,follow">\n<meta name="description"') : html);
 /** אינדקס החיפוש שבראש העמוד: {n שם, t סוג, s תיאור, h קישור, o סדר} → har-homa/search.json */
 let SEARCH = [];
 const addSearch = (n, t, s, h, o) => { if (n && h) SEARCH.push({ n: String(n).trim(), t, s: (s || '').trim() || undefined, h, o }); };
@@ -151,8 +176,16 @@ function freshItems(dir, details, detRaw, hrefById) {
 const writeHome = (raw, dirRaw, lsRaw, moreRaw, synSlugs, detRaw) => {
   // "אירועים" מופיע בשורת התחומים רק כשיש אירועים קרובים
   if (moreRaw?.events?.length) HIDDEN_NAV.delete('happenings'); else HIDDEN_NAV.add('happenings');
+  // תחומים ריקים בשכונה: לא בשורת התחומים, לא באריחים, noindex ולא ב-sitemap.
+  // עסקים ובעלי מקצוע נשארים בניווט גם כשהם ריקים — שם ההזמנה להירשם.
+  for (const k of NAV_KEYS) HIDDEN_NAV.delete(k);
+  EMPTY = emptyKeys(dirRaw, lsRaw, moreRaw);
+  for (const k of EMPTY) if (k !== 'biz' && k !== 'pros') HIDDEN_NAV.add(k);
   const home = `/${HOME}/`;
   const vm = shapeHome(raw, { now: new Date(), base: BASE });
+  // בורר השכונות: כל שכונה שיש לה עמודים — לעמוד שלה
+  for (const h of vm.hoods) if (!h.current && LIVE.has(h.id)) h.href = `/${slugById[h.id]}/`;
+  vm.hoods.sort((a, b) => (b.current - a.current) || (b.active - a.active) || (!!b.href - !!a.href) || a.name.localeCompare(b.name, 'he'));
   const st = raw.community.latitude ? shabbatTimes(raw.community.latitude, raw.community.longitude) : null;
 
   // 1. עסקים ובעלי מקצוע — slug יציב לכל ישות (נשמר ב-slugs.json)
@@ -231,16 +264,16 @@ const writeHome = (raw, dirRaw, lsRaw, moreRaw, synSlugs, detRaw) => {
     const ls = shapeListings(lsRaw, raw.community);
     [ls.promos, ls.realEstate, ls.board].forEach((x) => link(x.items));
     const o = { base: BASE, home };
-    write(path.join(HOME, 'promos', 'index.html'), promosPage(vm, ls, o));
-    write(path.join(HOME, 'realestate', 'index.html'), realEstatePage(vm, ls, o));
-    write(path.join(HOME, 'board', 'index.html'), boardPage(vm, ls, o));
+    write(path.join(HOME, 'promos', 'index.html'), listHtml('promos', promosPage(vm, ls, o)));
+    write(path.join(HOME, 'realestate', 'index.html'), listHtml('realestate', realEstatePage(vm, ls, o)));
+    write(path.join(HOME, 'board', 'index.html'), listHtml('board', boardPage(vm, ls, o)));
     console.log(`  promos · ${ls.promos.items.length}   realestate · ${ls.realEstate.items.length}   board · ${ls.board.items.length}`);
   }
   if (!dir) return vm;
   // שעות לתג "פתוח עכשיו" ברשימות
   for (const x of [...dir.pros.items, ...dir.biz.items]) x.hoursJ = compactHours(x.detail?.schedule, st, isIsraeliDST());
   for (const kind of ['pros', 'biz']) {
-    write(path.join(HOME, kind, 'index.html'), listPage(vm, dir, kind, { base: BASE, home, api: API }));
+    write(path.join(HOME, kind, 'index.html'), listHtml(kind, listPage(vm, dir, kind, { base: BASE, home, api: API })));
   }
   console.log(`  ${HOME}/pros/ · ${dir.pros.items.length}   ${HOME}/biz/ · ${dir.biz.items.length}`);
   if (moreRaw) {
@@ -252,7 +285,7 @@ const writeHome = (raw, dirRaw, lsRaw, moreRaw, synSlugs, detRaw) => {
     const pages = { lessons: lessonsPage, halls: hallsPage, hosting: hostingPage, education: eduPage,
       parks: parksPage, services: servicesPage, health: healthPage, events: eventsPage };
     if (m.happenings.items.length) pages.happenings = happeningsPage;
-    for (const [slug, fn] of Object.entries(pages)) write(path.join(HOME, slug, 'index.html'), fn(vm, m, o));
+    for (const [slug, fn] of Object.entries(pages)) write(path.join(HOME, slug, 'index.html'), listHtml(slug, fn(vm, m, o)));
     console.log(`  lessons · ${m.lessons.items.length}  halls · ${m.halls.items.length}  hosting · ${m.hosting.items.length}  education · ${m.edu.items.length}  parks · ${m.parks.items.length}  services · ${m.services.items.length}  events · ${m.events.items.length}`);
   }
   return vm;
@@ -317,6 +350,8 @@ const fallbackVm = (c) => ({ name: c.neighborhood, alias: c.secondaryname || '',
 
 async function main() {
   const list = COMMUNITIES.filter((c) => (ONLY ? ONLY.includes(c.slug) : c.build));
+  // שכונות עם עמודים באוויר: הקבועות (build) + מה שנבנה בריצה הזו
+  LIVE = new Set([...COMMUNITIES.filter((c) => c.build), ...list].map((c) => c.id));
   if (!list.length) { console.error('אין שכונות לבנייה'); process.exit(1); }
 
   if (FIXTURE) {
@@ -348,6 +383,8 @@ async function main() {
     totals.syns += r.syns; totals.prayers += r.prayers;
   }
 
+  // מזהה קהילה → כתובת, לעמוד ניהול העסק (js/manage.js). רק שכונות שנבנות קבוע
+  write('hoods.json', JSON.stringify(Object.fromEntries(COMMUNITIES.filter((c) => c.build).map((c) => [c.id, c.slug]))));
   write('sitemap.xml', sitemap(urls));
   write('robots.txt', `User-agent: *\nAllow: /\n\nSitemap: ${BASE}/sitemap.xml\n`);
 
@@ -379,20 +416,11 @@ async function buildCommunity(db, urls) {
 
   const slugs  = synSlugStore();
 
-  urls.push(
-    { loc: `${BASE}/${SECTION}/`,  freq: 'weekly',  pri: '0.9' },
-    { loc: `${BASE}/${HOME}/`,     freq: 'daily',   pri: '0.9' },
-    { loc: `${BASE}/${HOME}/pros/`, freq: 'weekly', pri: '0.8' },
-    { loc: `${BASE}/${HOME}/biz/`,  freq: 'weekly', pri: '0.8' },
-    { loc: `${BASE}/${HOME}/promos/`, freq: 'daily', pri: '0.7' },
-    { loc: `${BASE}/${HOME}/realestate/`, freq: 'daily', pri: '0.8' },
-    { loc: `${BASE}/${HOME}/board/`, freq: 'daily', pri: '0.7' },
-    ...['lessons', 'halls', 'hosting', 'education', 'parks', 'services', 'health', 'events']
-      .map((k) => ({ loc: `${BASE}/${HOME}/${k}/`, freq: 'weekly', pri: '0.6' })),
-  );
+
 
   // עמוד הבית והרשימות — כשל בהם לא יעצור את עמודי המניינים
   let vm = fallbackVm(community);
+  EMPTY = new Set();
   try {
     const [home, dirRaw, lsRaw, moreRaw, detRaw] = await Promise.all([
       fetchHome(db, COMMUNITY_ID), fetchDirectory(db, COMMUNITY_ID), fetchListings(db, COMMUNITY_ID), fetchMore(db, COMMUNITY_ID),
@@ -403,6 +431,18 @@ async function buildCommunity(db, urls) {
   }
   catch (e) { console.error(`  ⚠ ${HOME}/ לא נבנה:`, e.message || e); process.exitCode = 0; }
 
+  // תחומים ריקים לא נכנסים ל-sitemap
+  urls.push(...[
+    { loc: `${BASE}/${SECTION}/`,  freq: 'weekly',  pri: '0.9' },
+    { loc: `${BASE}/${HOME}/`,     freq: 'daily',   pri: '0.9' },
+    { loc: `${BASE}/${HOME}/pros/`, freq: 'weekly', pri: '0.8' },
+    { loc: `${BASE}/${HOME}/biz/`,  freq: 'weekly', pri: '0.8' },
+    { loc: `${BASE}/${HOME}/promos/`, freq: 'daily', pri: '0.7' },
+    { loc: `${BASE}/${HOME}/realestate/`, freq: 'daily', pri: '0.8' },
+    { loc: `${BASE}/${HOME}/board/`, freq: 'daily', pri: '0.7' },
+    ...['lessons', 'halls', 'hosting', 'education', 'parks', 'services', 'health', 'events']
+      .map((k) => ({ loc: `${BASE}/${HOME}/${k}/`, freq: 'weekly', pri: '0.6' })),
+  ].filter((u) => !EMPTY.has(u.loc.slice(`${BASE}/${HOME}/`.length).replace(/\/$/, ''))));
   writeMinyanim({ vm, community, syns, prayers, lessons, slugs, urls });
   urls.push(...EXTRA_URLS);
   writeSearch();

@@ -55,13 +55,16 @@ const ZONES = [
   ['מוסדות חינוך', ICON.school, 'teal', 'education/'], ['גנים ופארקים', ICON.tree, 'teal', 'parks/'], ['בריאות', ICON.health, 'teal', 'health/'],
 ];
 
+/** מפתח התחום של אריח לפי הכתובת שלו ('board/#gmach' → gmach, 'biz/' → biz) — כדי להסתיר תחום ריק */
+const zoneKey = (href) => (href === '@minyanim' ? 'minyanim' : String(href).replace(/^board\/#/, '').replace(/\/$/, ''));
+
 const PHONES = [['מוקד עירוני', '106'], ['מד״א', '101', 1], ['משטרה', '100', 1], ['כיבוי והצלה', '102', 1], ['חברת החשמל', '103']];
 
 const FAQ = [
   ['מה זה שכונה?', 'אתר ואפליקציה שמרכזים את כל מה שקורה בשכונה: מניינים ושיעורים, עסקים ובעלי מקצוע, גמ״חים, מבצעים, דרושים ויד שנייה.'],
   ['מי מעדכן את זמני התפילה?', 'הגבאים והשכנים מעדכנים את הזמנים, וכל שינוי מופיע באתר ובאפליקציה.'],
   ['איך מוסיפים עסק או בעל מקצוע?', 'דרך כפתור "פרסם" באפליקציה. ממלאים פרטים, והעסק עולה לשכונה.'],
-  ['באילו שכונות זה פועל?', 'כרגע בחומת שמואל, ושכונות נוספות בירושלים והסביבה בדרך.'],
+  ['באילו שכונות זה פועל?', 'בשכונות ירושלים והסביבה. בוחרים שכונה בראש העמוד, ושכונות נוספות בדרך.'],
 ];
 
 export const CSS = `
@@ -670,6 +673,8 @@ ${vm.hoods.map((h) => {
     const sub = h.also ? `<small>${esc(h.also)}</small>` : '';
     return h.current
       ? `<a class="hood-item" href="${esc(pagePath)}" aria-current="page"${ds}><span>${esc(h.name)}${sub}</span><span class="badge on">נבחרה</span></a>`
+      : h.href
+        ? `<a class="hood-item" href="${esc(h.href)}"${ds}><span>${esc(h.name)}${sub}</span>${h.active ? '<span class="badge on">פעילה</span>' : ''}</a>`
       : h.active
         ? `<a class="hood-item" href="/"${ds}><span>${esc(h.name)}${sub}</span><span class="badge on">פעילה</span></a>`
         : `<div class="hood-item off"${ds}><span>${esc(h.name)}${sub}</span><span class="badge">בקרוב</span></div>`;
@@ -777,7 +782,7 @@ ${discoverSection(discover)}
 <section id="zones" aria-label="כל התחומים" class="wrap" style="display:flex;flex-direction:column;gap:18px">
 <h2 style="margin:0;font-size:30px;font-weight:800;color:var(--navy)">כל <span class="em">התחומים</span></h2>
 <div class="zones">
-${ZONES.filter((z) => !HIDDEN_NAV.has(z[4])).map(([n, d, c, href]) => `<a class="zone lift" href="${href === '@minyanim' ? MINYANIM : href || APP}"><i class="z-${c}">${svg(d)}</i>${esc(n)}</a>`).join('\n')}
+${ZONES.filter((z) => !HIDDEN_NAV.has(z[4] || zoneKey(z[3]))).map(([n, d, c, href]) => `<a class="zone lift" href="${href === '@minyanim' ? MINYANIM : href || APP}"><i class="z-${c}">${svg(d)}</i>${esc(n)}</a>`).join('\n')}
 </div>
 </section>
 
