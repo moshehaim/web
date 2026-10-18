@@ -656,7 +656,6 @@ export function pageHead({ title, desc, url, base, css = '' }) {
 }
 
 export function siteHeader(vm, pagePath, navChips) {
-  const multi = vm.subs.length > 1;
   return `<header class="hdr">
 <div class="wrap hdr-row">
 <a class="logo" href="/" aria-label="שכונה — דף הבית"><img src="/app_icon.png" alt="" width="52" height="52"><span class="brand"><b>שכונה</b><small>הכל בשכונה, במקום אחד</small></span></a>
@@ -664,7 +663,7 @@ export function siteHeader(vm, pagePath, navChips) {
 <div class="hood">
 <button type="button" class="hood-btn" id="hood-btn" aria-haspopup="dialog" aria-expanded="false" aria-controls="hood-pop">
 ${svg('M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21zM12 7a2.5 2.5 0 1 0 0 5a2.5 2.5 0 1 0 0-5', 20, '#244782', 2)}
-<span><small>${multi ? `קהילה · ${vm.subs.length} שכונות` : 'השכונה שלך'}</small><b>${esc(vm.name)}</b></span>
+<span><small>השכונה שלך</small><b>${esc(vm.name)}</b></span>
 ${svg('M6 9l6 6 6-6', 16, '#244782', 2.4)}
 </button>
 <div class="hood-pop" id="hood-pop" role="dialog" aria-label="בחירת שכונה" hidden>
