@@ -791,8 +791,8 @@ ${ZONES.filter((z) => !HIDDEN_NAV.has(z[4] || zoneKey(z[3]))).map(([n, d, c, hre
 <div class="txt">
 <span style="font-size:15px;font-weight:800;color:var(--sky)">לבעלי עסקים ובעלי מקצוע</span>
 <h2>השכנים כבר <span class="emd">מחפשים אותך.</span></h2>
-<p>פרופיל עסק, מבצעים וקופונים והמלצות מלקוחות — במקום אחד.</p>
-<div style="display:flex;gap:12px;flex-wrap:wrap"><a class="pill btn-sky" href="${APP}">להרשמת עסק</a><a class="pill btn-out" href="${DOWNLOAD}">להורדת האפליקציה</a></div>
+<p>פרופיל עסק, מבצעים וקופונים והמלצות מלקוחות — במקום אחד. ההרשמה בחינם.</p>
+<div style="display:flex;gap:12px;flex-wrap:wrap"><a class="pill btn-sky" href="${APP}">להרשמת עסק בחינם</a><a class="pill btn-out" href="${DOWNLOAD}">להורדת האפליקציה</a></div>
 <a href="${BIZ_PORTAL}" style="color:var(--sky);font-weight:800;font-size:15px">כבר רשומים? לכניסה ולניהול העסק ←</a>
 </div>
 <div class="feat">

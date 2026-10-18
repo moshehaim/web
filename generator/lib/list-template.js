@@ -325,8 +325,8 @@ export function listPage(vm, dir, kind, { base, home, api }) {
     // ItemList לגוגל: כל הפריטים ברשימה עם הקישור לעמוד המלא
     ld: JSON.stringify({ '@context': 'https://schema.org', '@type': 'ItemList', name: `${label} ב${vm.name}`,
       itemListElement: data.items.filter((p) => p.href).map((p, i) => ({ '@type': 'ListItem', position: i + 1, name: p.name, url: `${base}${p.href}` })) }).replace(/</g, '\\u003c'),
-    join: '<b>עובדים בשכונה? <span class="em">תופיעו כאן.</span></b><span>פרופיל עם תמונה, טלפון, WhatsApp ו-Waze, מבצעים והמלצות מלקוחות.</span>',
-    joinCta: 'להרשמת עסק',
+    join: '<b>עובדים בשכונה? <span class="em">תופיעו כאן, בחינם.</span></b><span>פרופיל עם תמונה, טלפון, WhatsApp ו-Waze, מבצעים והמלצות מלקוחות.</span>',
+    joinCta: 'להרשמת עסק בחינם',
   });
 }
 
@@ -492,7 +492,7 @@ export function eventsPage(vm, m, { base, home, api }) {
     title: `הכל לאירוע ב${where(vm)} — אולמות, ציוד וצלמים | שכונה`,
     desc: `אולמות, ציוד לאירועים, צלמים, הפעלות וקייטרינג ב${where(vm)}, ${vm.city}.`,
     placeholder: 'אולם, צלם, ציוד…', cards: dirCards(d.items), emptyText: 'אין כרגע ספקים',
-    join: '<b>נותנים שירות לאירועים? <span class="em">תופיעו כאן.</span></b><span>פרופיל עם תמונה, טלפון ו-WhatsApp.</span>', joinCta: 'להרשמת עסק',
+    join: '<b>נותנים שירות לאירועים? <span class="em">תופיעו כאן, בחינם.</span></b><span>פרופיל עם תמונה, טלפון ו-WhatsApp.</span>', joinCta: 'להרשמת עסק בחינם',
   });
 }
 
