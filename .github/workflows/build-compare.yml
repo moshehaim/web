@@ -52,16 +52,18 @@ jobs:
           diff -r /tmp/A /tmp/B > /tmp/diff.txt || true
           head -c 20000 /tmp/diff.txt
 
-      - name: שכונות נוספות (C)
-        if: ${{ github.event.inputs.only != '' }}
+      - name: שכונות לתצוגה מקדימה (C)
+        env:
+          PREVIEW: ${{ github.event.inputs.only || 'gilo,beit-vagan,neve-yaakov' }}
         run: |
           mkdir -p /tmp/C
-          (cd generator && node build.js --out /tmp/C --only "${{ github.event.inputs.only }}")
+          (cd generator && node build.js --out /tmp/C --only "$PREVIEW" > /tmp/C.log 2>&1) || true
+          cat /tmp/C.log
 
       - name: פלט לענף build-preview (לא מתפרסם; לבדיקה בלבד)
         run: |
           mkdir -p /tmp/out && cd /tmp/out
-          cp /tmp/diff.txt /tmp/diff-files.txt /tmp/A.log /tmp/B.log . 
+          cp /tmp/diff.txt /tmp/diff-files.txt /tmp/A.log /tmp/B.log /tmp/C.log . 
           cp -r /tmp/B B
           [ -d /tmp/C ] && cp -r /tmp/C C || true
           git init -q -b build-preview
