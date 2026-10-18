@@ -437,7 +437,8 @@ function promosStrip(promos) {
 }
 
 function boardSection(vm) {
-  const tabs = vm.board;
+  // רק לשוניות עם מודעות (בשכונה בלי דרושים — אין לשונית דרושים ריקה)
+  const tabs = vm.board.some((t) => t.items.length) ? vm.board.filter((t) => t.items.length) : vm.board.slice(0, 1);
   const first = Math.max(0, tabs.findIndex((t) => t.items.length));
   const now = new Date(vm.builtAt);
   const jt = new Date(now.toLocaleString('en-US', { timeZone: 'Asia/Jerusalem' }));
