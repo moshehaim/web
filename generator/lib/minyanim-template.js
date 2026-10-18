@@ -7,7 +7,8 @@ import { pageHead, siteHeader, siteFooter, HOOD_JS, esc, svg, navChips, APP } fr
 import { MAP_CSS, MAP_ICON, mapScript } from './map.js';
 import { sortPrayers, formatPrayerTime, formatSelectedDays, NUSACH } from './prayers.js';
 
-const SECTION = '/har-homa/minyanim/';
+let SECTION = '/har-homa/minyanim/';
+export function setMinyanimSection(path) { SECTION = path; }
 const enc = (s) => encodeURIComponent(s);
 const TYPES = ['שחרית', 'מנחה', 'ערבית'];
 const typeOf = (t = '') => TYPES.find((x) => t.includes(x)) || t;

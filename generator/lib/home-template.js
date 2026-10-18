@@ -16,7 +16,9 @@ const LOGIN = '/app/';
 // בעלי עסקים — לעמוד ניהול העסק באתר (/my-business/, js/manage.js)
 const BIZ_PORTAL = '/my-business/';
 const DOWNLOAD = '/b/';
-const MINYANIM = '/har-homa/minyanim/';
+let MINYANIM = '/har-homa/minyanim/';
+/** השכונה שנבנית עכשיו — קובע את כתובת המניינים בכל התבניות (הבנייה רצה שכונה אחרי שכונה) */
+export function setSiteHome(home) { MINYANIM = `${home}minyanim/`; }
 
 export const ICON = {
   clock: 'M12 4a8 8 0 1 0 0 16a8 8 0 1 0 0-16zM12 8v4l3 2',
@@ -44,7 +46,7 @@ export const svg = (d, size = 24, stroke = 'currentColor', w = 1.9) =>
   `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="${stroke}" stroke-width="${w}" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="${d}"/></svg>`;
 
 const ZONES = [
-  ['מניינים ושיעורים', ICON.clock, 'blue', MINYANIM],
+  ['מניינים ושיעורים', ICON.clock, 'blue', '@minyanim'],
   ['עסקים', ICON.store, 'sky', 'biz/'], ['בעלי מקצוע', ICON.wrench, 'sky', 'pros/'],
   ['מבצעים וקופונים', ICON.tag, 'sky', 'promos/'],
   ['שירותי קהילה', ICON.civic, 'teal', 'services/'], ['גמ״חים', ICON.heart, 'green', 'board/#gmach'], ['אירועים', ICON.star, 'green', 'happenings/', 'happenings'],
@@ -53,13 +55,16 @@ const ZONES = [
   ['מוסדות חינוך', ICON.school, 'teal', 'education/'], ['גנים ופארקים', ICON.tree, 'teal', 'parks/'], ['בריאות', ICON.health, 'teal', 'health/'],
 ];
 
+/** מפתח התחום של אריח לפי הכתובת שלו ('board/#gmach' → gmach, 'biz/' → biz) — כדי להסתיר תחום ריק */
+const zoneKey = (href) => (href === '@minyanim' ? 'minyanim' : String(href).replace(/^board\/#/, '').replace(/\/$/, ''));
+
 const PHONES = [['מוקד עירוני', '106'], ['מד״א', '101', 1], ['משטרה', '100', 1], ['כיבוי והצלה', '102', 1], ['חברת החשמל', '103']];
 
 const FAQ = [
   ['מה זה שכונה?', 'אתר ואפליקציה שמרכזים את כל מה שקורה בשכונה: מניינים ושיעורים, עסקים ובעלי מקצוע, גמ״חים, מבצעים, דרושים ויד שנייה.'],
   ['מי מעדכן את זמני התפילה?', 'הגבאים והשכנים מעדכנים את הזמנים, וכל שינוי מופיע באתר ובאפליקציה.'],
   ['איך מוסיפים עסק או בעל מקצוע?', 'דרך כפתור "פרסם" באפליקציה. ממלאים פרטים, והעסק עולה לשכונה.'],
-  ['באילו שכונות זה פועל?', 'כרגע בחומת שמואל, ושכונות נוספות בירושלים והסביבה בדרך.'],
+  ['באילו שכונות זה פועל?', 'בשכונות ירושלים והסביבה. בוחרים שכונה בראש העמוד, ושכונות נוספות בדרך.'],
 ];
 
 export const CSS = `
@@ -408,7 +413,7 @@ ${list.map((r) => `<div class="slide" data-kind="${esc(r.kind)}"><a href="${esc(
 }
 
 const typeOrder = ['שחרית', 'מנחה', 'ערבית'];
-/** שורות התפילה הבאה — אותו חישוב רץ גם בדפדפן (ראו CLIENT_JS). */
+/** שורות התפילה הבאה — אותו חישוב רץ גם בדפדפן (ראו clientJs). */
 function nextPrayers(prayers, nowMin, dow) {
   return typeOrder.map((t) => {
     const of = prayers.filter((p) => p.t === t);
@@ -432,7 +437,8 @@ function promosStrip(promos) {
 }
 
 function boardSection(vm) {
-  const tabs = vm.board;
+  // רק לשוניות עם מודעות (בשכונה בלי דרושים — אין לשונית דרושים ריקה)
+  const tabs = vm.board.some((t) => t.items.length) ? vm.board.filter((t) => t.items.length) : vm.board.slice(0, 1);
   const first = Math.max(0, tabs.findIndex((t) => t.items.length));
   const now = new Date(vm.builtAt);
   const jt = new Date(now.toLocaleString('en-US', { timeZone: 'Asia/Jerusalem' }));
@@ -520,7 +526,7 @@ if(gf){var hdr=document.querySelector('.hdr'),gopen=document.querySelector('.gs-
   document.addEventListener('click',function(e){if(!gf.contains(e.target))gr.hidden=true;});}
 })();`;
 
-const CLIENT_JS = `
+const clientJs = () => `
 (function(){
 var TZ='Asia/Jerusalem',DAYS=['ראשון','שני','שלישי','רביעי','חמישי','שישי','שבת'];
 function jnow(){var s=new Date().toLocaleString('en-US',{timeZone:TZ});return new Date(s);}
@@ -604,7 +610,7 @@ tabs.forEach(function(t,i){t.addEventListener('click',function(){sel(t);});
 export const HIDDEN_NAV = new Set(['happenings']);
 
 export function navChips(home, current = '') {
-  const M = '/har-homa/minyanim/';
+  const M = MINYANIM;
   const items = [
     ['home', 'דף השכונה', home], ['minyanim', 'מניינים ושיעורים', M],
     ['biz', 'עסקים', `${home}biz/`], ['pros', 'בעלי מקצוע', `${home}pros/`],
@@ -668,6 +674,8 @@ ${vm.hoods.map((h) => {
     const sub = h.also ? `<small>${esc(h.also)}</small>` : '';
     return h.current
       ? `<a class="hood-item" href="${esc(pagePath)}" aria-current="page"${ds}><span>${esc(h.name)}${sub}</span><span class="badge on">נבחרה</span></a>`
+      : h.href
+        ? `<a class="hood-item" href="${esc(h.href)}"${ds}><span>${esc(h.name)}${sub}</span>${h.active ? '<span class="badge on">פעילה</span>' : ''}</a>`
       : h.active
         ? `<a class="hood-item" href="/"${ds}><span>${esc(h.name)}${sub}</span><span class="badge on">פעילה</span></a>`
         : `<div class="hood-item off"${ds}><span>${esc(h.name)}${sub}</span><span class="badge">בקרוב</span></div>`;
@@ -775,7 +783,7 @@ ${discoverSection(discover)}
 <section id="zones" aria-label="כל התחומים" class="wrap" style="display:flex;flex-direction:column;gap:18px">
 <h2 style="margin:0;font-size:30px;font-weight:800;color:var(--navy)">כל <span class="em">התחומים</span></h2>
 <div class="zones">
-${ZONES.filter((z) => !HIDDEN_NAV.has(z[4])).map(([n, d, c, href]) => `<a class="zone lift" href="${href || APP}"><i class="z-${c}">${svg(d)}</i>${esc(n)}</a>`).join('\n')}
+${ZONES.filter((z) => !HIDDEN_NAV.has(z[4] || zoneKey(z[3]))).map(([n, d, c, href]) => `<a class="zone lift" href="${href === '@minyanim' ? MINYANIM : href || APP}"><i class="z-${c}">${svg(d)}</i>${esc(n)}</a>`).join('\n')}
 </div>
 </section>
 
@@ -808,7 +816,7 @@ ${phonesStrip()}
 ${siteFooter()}
 
 <script type="application/json" id="prayers-data">${JSON.stringify(vm.prayers).replace(/</g, '\\u003c')}</script>
-<script>${CLIENT_JS}</script>
+<script>${clientJs()}</script>
 <script>${HOOD_JS}</script>
 </body>
 </html>
