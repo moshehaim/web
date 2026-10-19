@@ -6,6 +6,8 @@
  * פעולות (התחברות, פרסום, יצירת קשר) עוברות לאפליקציה.
  */
 
+import { CAT_ICON } from './cat-icons.js';
+
 export const esc = (s) => String(s ?? '')
   .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
   .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
@@ -269,6 +271,8 @@ a.hood-item:hover{background:#F5F8FF}
 .biz{display:flex;align-items:center;gap:12px;padding:8px 18px 8px 8px;border-radius:999px;background:#fff;box-shadow:0 2px 10px rgba(0,0,0,.06);text-decoration:none;color:var(--ink);white-space:nowrap}
 .biz:hover{color:var(--ink)}
 .biz img{width:48px;height:48px;border-radius:50%;object-fit:cover;background:#DCE5F5}
+.biz-art{flex:none;width:48px;height:48px;border-radius:50%}.biz-art .art-ic{width:30px;height:30px;border-radius:9px;box-shadow:none}.biz-art .art-ic svg{width:18px;height:18px}.biz span.biz-art{display:flex}
+.pro-art{position:absolute;inset:0}
 .biz b{display:block;font-size:16px;max-width:260px;overflow:hidden;text-overflow:ellipsis}
 .biz span{display:block;font-size:13px;color:var(--muted)}
 
@@ -367,6 +371,8 @@ const arrows = (id) =>
   `<button type="button" class="arrow" data-prev="${id}" aria-label="הקודם">→</button>` +
   `<button type="button" class="arrow" data-next="${id}" aria-label="הבא">←</button>`;
 
+/** תמונת ברירת מחדל לכרטיס לפי הקטגוריה (עסק / בעל מקצוע) */
+const catArt = (x, cls) => { const [d, tone] = CAT_ICON[x.cat] || CAT_ICON.other; return `<span class="${cls} art v${artV(x.id || x.name)} t-${tone}">${artIcon(d)}</span>`; };
 const img = (src, alt) => `<img src="${esc(src)}" alt="${esc(alt)}" loading="lazy" decoding="async">`;
 
 function promoCard(p) {
@@ -395,7 +401,7 @@ function prosSection(pros) {
 <div class="sec-head">${head2('לבית, למשפחה ולאירועים', 'בעלי מקצוע', 'בשכונה')}<div class="ctrls">${arrows('pros')}<a class="more" href="pros/">לכל בעלי המקצוע ←</a></div></div>
 <div class="car car-pro" data-car="pros" data-auto="4000"><div class="track">
 ${pros.map((p) => `<div class="slide"><a href="${esc(p.href || 'pros/')}" class="card pro lift">
-<div class="media">${img(p.img, p.name)}${p.rec ? `<span class="rec" role="img" aria-label="${p.rec === 1 ? 'המלצה אחת' : `${p.rec} המלצות`}"><span class="rp">${svg(ICON.heart, 14, 'currentColor', 2)}${p.rec === 1 ? 'המלצה אחת' : `${p.rec} המלצות`}</span><span class="rh" aria-hidden="true"><svg viewBox="0 0 24 24" width="36" height="36"><path d="M12 21.3s-8.3-5.3-8.3-11.6A4.8 4.8 0 0 1 12 6.4a4.8 4.8 0 0 1 8.3 3.3c0 6.3-8.3 11.6-8.3 11.6z" fill="#E24B4A" stroke="#fff" stroke-width="1.8" stroke-linejoin="round"></path></svg><b>${p.rec}</b></span></span>` : ''}</div>
+<div class="media">${p.img ? img(p.img, p.name) : catArt(p, 'pro-art')}${p.rec ? `<span class="rec" role="img" aria-label="${p.rec === 1 ? 'המלצה אחת' : `${p.rec} המלצות`}"><span class="rp">${svg(ICON.heart, 14, 'currentColor', 2)}${p.rec === 1 ? 'המלצה אחת' : `${p.rec} המלצות`}</span><span class="rh" aria-hidden="true"><svg viewBox="0 0 24 24" width="36" height="36"><path d="M12 21.3s-8.3-5.3-8.3-11.6A4.8 4.8 0 0 1 12 6.4a4.8 4.8 0 0 1 8.3 3.3c0 6.3-8.3 11.6-8.3 11.6z" fill="#E24B4A" stroke="#fff" stroke-width="1.8" stroke-linejoin="round"></path></svg><b>${p.rec}</b></span></span>` : ''}</div>
 <div class="body"><b style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(p.name)}</b><span class="field">${esc(p.field)}</span></div>
 </a></div>`).join('\n')}
 </div></div>
@@ -404,7 +410,7 @@ ${pros.map((p) => `<div class="slide"><a href="${esc(p.href || 'pros/')}" class=
 
 function bizSection(biz) {
   if (!biz.length) return '';
-  const pill = (b) => `<a href="${esc(b.href || 'biz/')}" class="biz lift">${img(b.img, '')}<span><b>${esc(b.name)}</b><span>${esc(b.type)}</span></span></a>`;
+  const pill = (b) => `<a href="${esc(b.href || 'biz/')}" class="biz lift">${b.img ? img(b.img, '') : catArt(b, 'biz-art')}<span><b>${esc(b.name)}</b><span>${esc(b.type)}</span></span></a>`;
   const half = Math.ceil(biz.length / 2);
   const row = (list, cls) => `<div class="mq${cls}">${list.map(pill).join('')}<span style="display:contents" aria-hidden="true">${list.map(pill).join('')}</span></div>`;
   return `<section id="biz" aria-label="עסקים בשכונה" class="sec" style="padding-bottom:16px">

@@ -46,14 +46,14 @@ export async function fetchHome(db, communityId) {
     q(db.from('sub_neighborhoods').select('label,sort_order,is_active').eq('community_id', communityId).order('sort_order')),
     q(db.from('business_types').select('id,name_he')),
     q(db.from('professional_categories').select('id,name_he')),
-    q(byCommunity('businesses', 'id,name,image_url,business_type,recommend_count,image_women_only,content_audience')
-      .not('is_active', 'is', false).not('image_url', 'is', null)
+    q(byCommunity('businesses', 'id,name,image_url,business_type,business_category,recommend_count,image_women_only,content_audience')
+      .not('is_active', 'is', false)
       .order('is_prominent', { ascending: false, nullsFirst: false })
       .order('priority', { ascending: false, nullsFirst: false })
       .order('recommend_count', { ascending: false, nullsFirst: false })
       .order('updated_at', { ascending: false }).limit(40)),
     q(byCommunity('professionals', 'id,name,main_category,image_url,recommend_count,image_women_only,content_audience')
-      .not('is_active', 'is', false).not('image_url', 'is', null)
+      .not('is_active', 'is', false)
       .order('is_prominent', { ascending: false, nullsFirst: false })
       .order('priority', { ascending: false, nullsFirst: false })
       .order('recommend_count', { ascending: false, nullsFirst: false })
@@ -170,15 +170,16 @@ export function shapeHome(raw, { now = new Date(), base = '' } = {}) {
   const bt = raw.businessTypes || {};
   const pc = raw.profCategories || {};
 
-  const businesses = raw.businesses
-    .filter((b) => SHOW(b) && b.image_url)
+  // עם תמונה קודם; בלי תמונה (או תמונה לנשים בלבד) — עם תמונת ברירת מחדל לפי הקטגוריה
+  const imgOf = (r) => (SHOW(r) && r.image_url ? r.image_url : null);
+  const imgFirst = (a, b) => !!imgOf(b) - !!imgOf(a);
+  const businesses = [...raw.businesses].sort(imgFirst)
     .slice(0, 18)
-    .map((b) => ({ id: b.id, name: b.name, type: bt[b.business_type] || '', img: b.image_url }));
+    .map((b) => ({ id: b.id, name: b.name, type: bt[b.business_type] || '', img: imgOf(b), cat: b.business_category || 'other' }));
 
-  const professionals = raw.professionals
-    .filter((p) => SHOW(p) && p.image_url)
+  const professionals = [...raw.professionals].sort(imgFirst)
     .slice(0, 14)
-    .map((p) => ({ id: p.id, name: p.name, field: pc[p.main_category] || '', img: p.image_url, rec: p.recommend_count || 0 }));
+    .map((p) => ({ id: p.id, name: p.name, field: pc[p.main_category] || '', img: imgOf(p), cat: p.main_category || 'other', rec: p.recommend_count || 0 }));
 
   const promos = [
     // image_women_only מסתיר רק את התמונה — לא את המבצע עצמו
