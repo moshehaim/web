@@ -6,6 +6,7 @@
 import { pageHead, siteHeader, siteFooter, HOOD_JS, esc, svg, navChips, APP } from './home-template.js';
 import { MAP_CSS, MAP_ICON, mapScript } from './map.js';
 import { sortPrayers, formatPrayerTime, formatSelectedDays, NUSACH } from './prayers.js';
+import { shtiblachText } from './home-data.js';
 
 let SECTION = '/har-homa/minyanim/';
 export function setMinyanimSection(path) { SECTION = path; }
@@ -15,6 +16,7 @@ const typeOf = (t = '') => TYPES.find((x) => t.includes(x)) || t;
 const nusachOf = (s) => (s.prayer_nusach ? NUSACH[s.prayer_nusach] || NUSACH.other : '');
 
 const CSS = `${MAP_CSS}
+.sht{margin:0 0 14px;padding:10px 14px;border-radius:14px;background:#EFF4FF;color:var(--navy);font-size:16px}
 .syn-head{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}.syn-head h2{margin:0}
 .mn-sec .map-btn{background:#EFF4FF;color:var(--navy)}.mn-sec .map-btn[aria-pressed=true]{background:var(--brand);color:#fff}
 
@@ -107,7 +109,7 @@ export function minyanimIndexPage({ vm, home, synagogues, today, base }) {
     const n = nusachOf(s);
     return `<a class="scard lift" href="${SECTION}${enc(s.slug)}/"${s.latitude && s.longitude ? ` data-ll="${(+s.latitude).toFixed(5)},${(+s.longitude).toFixed(5)}"` : ''} data-n="${esc(n)}" data-text="${esc([s.name, s.address, n].filter(Boolean).join(' '))}">
 ${n ? `<span class="nchip">${esc(n)}</span>` : ''}<h3>${esc(s.name)}</h3>${s.address ? `<span class="a">${esc(s.address)}</span>` : ''}
-${s.first.length ? `<span class="tm">${s.first.map((f) => `<span>${esc(f.type)} <b>${esc(f.time)}</b></span>`).join('')}</span>` : '<span class="a">טרם נמסרו זמנים</span>'}
+${s.sht ? `<span class="tm"><span><b>שטיבלך</b> · ${esc(s.sht)}</span></span>` : ''}${s.first.length ? `<span class="tm">${s.first.map((f) => `<span>${esc(f.type)} <b>${esc(f.time)}</b></span>`).join('')}</span>` : s.sht ? '' : '<span class="a">טרם נמסרו זמנים</span>'}
 </a>`;
   }).join('\n');
 
@@ -125,15 +127,18 @@ function pad(n){return(n<10?'0':'')+n;}
 function esc(s){return String(s).replace(/[&<>"']/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
 function row(p,w,past){var href=S[p.n]?'${SECTION}'+encodeURIComponent(S[p.n])+'/':'#';
   return '<a class="nrow'+(past?' past':'')+'" href="'+href+'"><span class="t">'+esc(p.c)+'</span><span><b>'+esc(p.n)+'</b><small>'+esc(p.l||p.t)+'</small></span><span class="when">'+w+'</span></a>';}
+function shOn(p,m){var x=(m<300&&p.b>1440)?m+1440:m;return x>=p.a&&x<p.b;}
 function draw(){var n=now(),m=n.getHours()*60+n.getMinutes(),d=n.getDay();
-  var list=P.filter(function(p){return p.t===type&&p.d.indexOf(d)>=0;});
+  /* שטיבלך פעילים עכשיו — ראשונים, עם "שטיבלך" במקום שעה */
+  var sh=P.filter(function(p){return p.sh&&p.t===type&&shOn(p,m);}).map(function(p){return row(p,'עכשיו',false);}).join('');
+  var list=P.filter(function(p){return !p.sh&&p.t===type&&p.d.indexOf(d)>=0;});
   var up=list.filter(function(p){return p.m>=m;});
-  if(all){more.hidden=true;box.innerHTML=list.length?list.map(function(p){var x=p.m-m;return row(p,x>=0&&x<=60?'בעוד '+x+' דק׳':'',x<0);}).join(''):'<p class="nempty">אין '+esc(type)+' היום.</p>';return;}
-  if(!up.length){var t2=P.filter(function(p){return p.t===type&&p.d.indexOf((d+1)%7)>=0;}).slice(0,8);
+  if(all){more.hidden=true;box.innerHTML=sh+(list.length?list.map(function(p){var x=p.m-m;return row(p,x>=0&&x<=60?'בעוד '+x+' דק׳':'',x<0);}).join(''):'<p class="nempty">אין '+esc(type)+' היום.</p>');return;}
+  if(!up.length){var t2=P.filter(function(p){return !p.sh&&p.t===type&&p.d.indexOf((d+1)%7)>=0;}).slice(0,8);
     more.hidden=!list.length;more.textContent='כל המניינים של היום ('+type+')';
-    box.innerHTML=t2.length?'<p class="nempty">אין עוד '+esc(type)+' היום. מחר:</p>'+t2.map(function(p){return row(p,'מחר',false);}).join(''):'<p class="nempty">אין עוד '+esc(type)+' היום.</p>';return;}
+    box.innerHTML=sh+(t2.length?'<p class="nempty">אין עוד '+esc(type)+' היום. מחר:</p>'+t2.map(function(p){return row(p,'מחר',false);}).join(''):'<p class="nempty">אין עוד '+esc(type)+' היום.</p>');return;}
   more.hidden=up.length<=8&&list.length===up.length;more.textContent='כל המניינים של היום ('+type+')';
-  box.innerHTML=up.slice(0,8).map(function(p){var x=p.m-m;return row(p,x===0?'עכשיו':x<=60?'בעוד '+x+' דק׳':'',false);}).join('');}
+  box.innerHTML=sh+up.slice(0,8).map(function(p){var x=p.m-m;return row(p,x===0?'עכשיו':x<=60?'בעוד '+x+' דק׳':'',false);}).join('');}
 function pick(t){type=t;all=false;tabs.forEach(function(b){b.setAttribute('aria-selected',b.getAttribute('data-t')===t);});draw();}
 tabs.forEach(function(b){b.addEventListener('click',function(){pick(b.getAttribute('data-t'));});});
 more.addEventListener('click',function(){all=true;draw();});
@@ -195,6 +200,7 @@ ${siteFooter()}
 export function synagoguePageNew({ vm, home, syn, prayers, lessons, zmanim, today, base }) {
   const url = `${base}${SECTION}${enc(syn.slug)}/`;
   const nusach = nusachOf(syn);
+  const sht = shtiblachText(syn.shtiblach);
   const sorted = sortPrayers(prayers, zmanim);
   const clockOf = {};               // שעה משוערת להיום לזמנים יחסיים (שקיעה, הנץ, פלג)
   for (const t of today.filter((x) => x.n === syn.name)) (clockOf[`${t.t}|${t.l}`] ||= t.c);
@@ -233,14 +239,15 @@ ${siteHeader(vm, home, nav(home))}
 <h1>${esc(syn.name)}</h1>
 ${syn.address ? `<p>${esc(syn.address)}${syn.access_notes ? ` · ${esc(syn.access_notes)}` : ''}</p>` : ''}
 <div class="mn-chips">
-${nusach ? `<span class="mn-chip hi">נוסח ${esc(nusach)}</span>` : ''}${syn.rabbi_name ? `<span class="mn-chip">הרב ${esc(syn.rabbi_name)}</span>` : ''}${syn.is_accessible ? '<span class="mn-chip">נגיש</span>' : ''}${syn.has_hall ? '<span class="mn-chip">אולם אירועים</span>' : ''}${syn.can_study_during_day ? '<span class="mn-chip">פתוח ללמידה ביום</span>' : ''}
+${sht ? '<span class="mn-chip hi">שטיבלך</span>' : ''}${nusach ? `<span class="mn-chip hi">נוסח ${esc(nusach)}</span>` : ''}${syn.rabbi_name ? `<span class="mn-chip">הרב ${esc(syn.rabbi_name)}</span>` : ''}${syn.is_accessible ? '<span class="mn-chip">נגיש</span>' : ''}${syn.has_hall ? '<span class="mn-chip">אולם אירועים</span>' : ''}${syn.can_study_during_day ? '<span class="mn-chip">פתוח ללמידה ביום</span>' : ''}
 </div>
 </div></section>
 
 <div class="wrap syn">
 <section id="times" class="pcard" aria-label="זמני תפילה">
 <h2>זמני <span class="em">תפילה</span></h2>
-${sorted.length ? sections : '<p class="nempty">טרם נמסרו זמני תפילה לבית כנסת זה.</p>'}
+${sht ? `<p class="sht"><b>שטיבלך — מניינים מתחלפים:</b> ${esc(sht)}</p>` : ''}
+${sorted.length ? sections : sht ? '' : '<p class="nempty">טרם נמסרו זמני תפילה לבית כנסת זה.</p>'}
 </section>
 <aside class="side">
 ${syn.latitude ? `<div class="info"><h2>הגעה</h2>${syn.address ? `<p>${esc(syn.address)}</p>` : ''}<div class="btns">

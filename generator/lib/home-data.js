@@ -81,7 +81,7 @@ export async function fetchHome(db, communityId) {
       .order('created_at', { ascending: false }).limit(6)),
     q(byCommunity('lost_and_found', 'id,status,title,created_at')
       .order('created_at', { ascending: false }).limit(6)),
-    q(byCommunity('synagogues', 'id,name')),
+    q(byCommunity('synagogues', 'id,name,shtiblach')),
   ]);
 
   const names = Object.fromEntries(syns.map((s) => [String(s.id), s.name]));
@@ -97,6 +97,7 @@ export async function fetchHome(db, communityId) {
     profCategories: Object.fromEntries(profCategories.map((t) => [t.id, t.name_he])),
     businesses, professionals, promotions, coupons, sale, rent,
     jobs, secondHand, gmachim, volunteering, lostFound, prayers,
+    shtiblach: syns.filter((s) => s.shtiblach),
   };
 }
 
@@ -136,6 +137,28 @@ const until = (iso) => {
  * תפילות היום: מחשבים זמני היום (העמוד נבנה פעם ביום ב-01:00 UTC),
  * ממירים כל מניין לדקות-מחצות ושולחים לדפדפן. הדפדפן בוחר את הבא בתור.
  */
+/** שטיבלך (synagogues.shtiblach): מניינים מתחלפים — בלי שעה, רק חלון "פעיל עכשיו".
+ *  {n שם, t סוג, sh:1, c 'שטיבלך', l תיאור, a/b דקות-מחצות (b יכול לעבור 1440), d ימים} */
+const SHT = [['shacharit', 'שחרית'], ['mincha', 'מנחה'], ['maariv', 'ערבית']];
+const clockMin = (s) => { const m = String(s || '').match(/^(\d{1,2}):(\d{2})/); return m ? +m[1] * 60 + +m[2] : null; };
+export function shtiblachText(sh) {
+  return SHT.filter(([k]) => sh && sh[k]).map(([k, t]) => t + (sh[k].until ? ` עד ${sh[k].until}` : '')).join(' · ');
+}
+export function shapeShtiblach(syns, community, today) {
+  const z = computeZmanim(community.latitude, community.longitude, today);
+  const out = [];
+  for (const s of syns || []) for (const [k, t] of SHT) {
+    const o = s.shtiblach?.[k]; if (!o) continue;
+    const u = clockMin(o.until);
+    let a, b;
+    if (k === 'shacharit') { a = (z.sunrise ?? 360) - 90; b = u ?? z.chatzot ?? 720; }
+    else if (k === 'mincha') { a = (z.chatzot ?? 720) + 30; b = z.sunset ?? 1080; }
+    else { a = z.sunset ?? 1080; b = u == null ? 1440 : (u < 720 ? u + 1440 : u); }
+    out.push({ n: s.name, t, sh: 1, c: 'שטיבלך', l: 'מניינים מתחלפים' + (o.until ? ` · עד ${o.until}` : ''), a, b, d: [0, 1, 2, 3, 4, 5, 6] });
+  }
+  return out;
+}
+
 export function shapePrayers(rows, community, today) {
   const z = computeZmanim(community.latitude, community.longitude, today);
   const inSeason = rows.filter((p) => isPrayerInSeason(p, today));
@@ -237,7 +260,7 @@ export function shapeHome(raw, { now = new Date(), base = '' } = {}) {
     subs: (raw.subs || []).map((s) => s.label),
     hoods,
     promos, professionals, businesses, realEstate, board,
-    prayers: shapePrayers(raw.prayers || [], community, now),
+    prayers: [...shapeShtiblach(raw.shtiblach, community, now), ...shapePrayers(raw.prayers || [], community, now)],
     builtAt: now.toISOString(),
   };
 }
