@@ -106,7 +106,7 @@
 
     function seg(attr, on) { [].forEach.call(f.querySelectorAll('[' + attr + ']'), function (b) { b.setAttribute('aria-pressed', String(b.getAttribute(attr) === on)); }); }
     f.addEventListener('click', function (e) {
-      var b = e.target.closest('button'); if (!b || b.type === 'submit') return;
+      var b = e.target.closest('button'); if (!b || b.type === 'submit') return; A.setErr('');
       if (b.hasAttribute('data-st')) { st.status = b.getAttribute('data-st'); seg('data-st', st.status); }
       else if (b.hasAttribute('data-free')) {
         st.free = b.getAttribute('data-free') === '1'; seg('data-free', b.getAttribute('data-free'));
@@ -116,7 +116,7 @@
       else if (b.hasAttribute('data-cond')) { st.cond = +b.getAttribute('data-cond'); seg('data-cond', String(st.cond)); }
       else if (b.hasAttribute('data-rm')) { st.files.splice(+b.getAttribute('data-rm'), 1); drawImgs(); }
     });
-    f.addEventListener('input', function (e) { if (e.target.name === 'ttl') { st.dupOk = false; f.querySelector('[data-dup]').innerHTML = ''; } });
+    f.addEventListener('input', function (e) { A.setErr(''); if (e.target.name === 'ttl') { st.dupOk = false; f.querySelector('[data-dup]').innerHTML = ''; } });
 
     var imgs = f.querySelector('[data-imgs]');
     function drawImgs() {

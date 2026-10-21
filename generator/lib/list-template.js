@@ -110,7 +110,7 @@ ${MAP_CSS}
 .bgrp{font-size:12px;font-weight:800;color:var(--accent)}
 .bbadge2{font-size:13px;font-weight:800;background:#EFF4FF;color:var(--brand);border-radius:8px;padding:3px 10px;white-space:nowrap}
 .dbody .pr{font-size:17px;font-weight:800;color:var(--navy);font-variant-numeric:tabular-nums}
-@media (max-width:620px){.brow{display:flex!important}.dtag,.dprice{display:none}}
+@media (max-width:620px){.brow:not([hidden]){display:flex!important}.dtag,.dprice{display:none}}
 @media (min-width:621px){.dbody .pr{display:none}}
 .join{background:var(--soft);border-radius:22px;padding:26px;display:flex;flex-wrap:wrap;gap:18px;align-items:center;justify-content:space-between;margin-bottom:56px}
 .join b{display:block;font-size:24px;color:var(--navy)}.join span{font-size:16px;color:#3B4860}
@@ -170,7 +170,7 @@ function run(){var t=(q.value||'').trim(),n=0,pk=pbar&&pbar.querySelector('[data
     empty.firstElementChild.textContent=none?'אין כרגע מודעות ב'+g:'לא מצאנו בשכונה את מה שחיפשת';
     empty.children[1].textContent=none?(pk?'היו הראשונים לפרסם — זה לוקח דקה.':'רוצים לפרסם? זה דרך האפליקציה.'):'נסו מילה אחרת, או בחרו "הכל".';}
   // פרסום מהאתר: רק בתחומים שיש להם טופס (יד שנייה, אבידות)
-  if(pbar){[].forEach.call(pbar.querySelectorAll('[data-post]'),function(a){a.hidden=a.getAttribute('data-post')!==gk;});pbar.hidden=!pk;}
+  if(pbar){[].forEach.call(pbar.querySelectorAll('[data-post]'),function(a){a.hidden=a.getAttribute('data-post')!==gk;});pbar.hidden=!pk||(!n&&!t);}
   if(epost){epost.hidden=!(pk&&!n&&!t);if(pk){epost.setAttribute('data-post',pk);epost.setAttribute('data-c',pbar.getAttribute('data-c'));epost.textContent=pbar.querySelector('[data-post="'+pk+'"]').textContent;}}
   if(window.__mapRefresh)window.__mapRefresh();}
 chips.forEach(function(b){b.addEventListener('click',function(){g=b.getAttribute('data-g');gk=b.getAttribute('data-k')||'';
