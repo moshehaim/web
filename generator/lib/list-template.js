@@ -54,6 +54,7 @@ ${MAP_CSS}
 .dbody .w{font-size:14px;color:var(--muted)}
 .oh{align-self:flex-start;font-size:13px;font-weight:800;border-radius:7px;padding:2px 8px;margin-top:2px}.oh[hidden]{display:none}
 .oh-on{background:#E7F7EC;color:#166534}.oh-soon{background:#FEF3C7;color:#92400E}.oh-off{background:#F1F4F8;color:#566173}
+.cnote{display:inline-flex;align-self:flex-start;margin-top:6px;font-size:12.5px;font-weight:800;color:#6D4BB8;background:#F3EFFC;border-radius:8px;padding:2px 9px}
 .dact{padding:12px 16px 16px;display:flex;gap:10px;align-items:center;position:relative;z-index:1}
 /* כל הכרטיס לחיץ לעמוד המלא; כפתורי הפעולה מעליו */
 .dcard{position:relative}
@@ -303,7 +304,7 @@ export function listPage(vm, dir, kind, { base, home, api }) {
 }
 
 /* כרטיס תמונה כללי (מבצע, נכס) */
-function mediaCard(x, { tag, price, lines, cta, action, anchor }) {
+function mediaCard(x, { tag, price, lines, cta, action, anchor, note }) {
   const tone = (CAT_ICON[x.cat] || CAT_ICON.other);
   const media = x.img
     ? `<img src="${esc(x.img)}" alt="${esc(x.title)}" loading="lazy" decoding="async">`
@@ -311,7 +312,7 @@ function mediaCard(x, { tag, price, lines, cta, action, anchor }) {
   const text = [x.title, ...lines, x.group].join(' ');
   return `<article class="dcard lift"${anchor ? ` id="${esc(anchor)}"` : ''} data-group="${esc(x.group)}" data-text="${esc(text)}">
 <div class="dmedia${x.img ? '' : ` noimg art v${artV(x.id || x.title)} t-${tone[1]}`}">${media}${tag ? `<span class="dtag">${esc(tag)}</span>` : ''}${price ? `<span class="dprice">${esc(price)}</span>` : ''}</div>
-<div class="dbody"><h3>${x.href ? `<a class="stretch" href="${esc(x.href)}">${esc(x.title)}</a>` : esc(x.title)}</h3>${price ? `<span class="pr">${esc(price)}</span>` : ''}${lines.filter(Boolean).map((l, i) => `<span class="${i ? 'w' : 'f'}">${esc(l)}</span>`).join('')}</div>
+<div class="dbody"><h3>${x.href ? `<a class="stretch" href="${esc(x.href)}">${esc(x.title)}</a>` : esc(x.title)}</h3>${price ? `<span class="pr">${esc(price)}</span>` : ''}${lines.filter(Boolean).map((l, i) => `<span class="${i ? 'w' : 'f'}">${esc(l)}</span>`).join('')}${note ? `<span class="cnote">${esc(note)}</span>` : ''}</div>
 <div class="dact">${action || `<a class="a-app" href="${esc(x.href || APP)}">${esc(x.href ? 'לפרטים' : cta)}</a>`}</div>
 </article>`;
 }
@@ -321,8 +322,9 @@ export function promosPage(vm, ls, { base, home }) {
   const d = ls.promos;
   const row = (label, id, items) => items.length
     ? `<h2 class="grow-h" id="${id}">${label}</h2>\n` + items.map((p) => p.coupon
-        // קופון: לוקחים כאן (רק משתמש מחובר ומאומת — /js/auth.js); המימוש בעסק רק באפליקציה, וזה נאמר אחרי הלקיחה
+        // קופון: לוקחים כאן (רק משתמש מחובר ומאומת — /js/auth.js); המימוש בעסק רק באפליקציה — כתוב על הכרטיס ובחלון אחרי הלקיחה
         ? mediaCard({ ...p, href: null }, { tag: p.kind, lines: [p.provider, p.until], anchor: `c-${p.id}`,
+            note: 'המימוש בעסק — באפליקציה בלבד',
             action: `<a class="a-app a-coupon" href="${APP}" data-coupon="${esc(p.id)}">לקיחת הקופון</a>` })
         : mediaCard({ ...p }, { tag: p.kind, lines: [p.provider, p.until], cta: 'לפרטים באפליקציה' })).join('\n')
     : '';

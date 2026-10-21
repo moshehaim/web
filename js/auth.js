@@ -357,14 +357,10 @@
     b.classList.add('taken'); b.textContent = 'הקופון שמור לך ✓'; b.setAttribute('data-taken', '1');
   }
   function appOnlyView(title, lead) {
-    var desk = window.matchMedia && matchMedia('(hover: hover) and (pointer: fine)').matches;
     open('<h2 id="sa-h">' + esc(title) + '</h2>' +
       '<p>' + esc(lead) + '</p>' +
-      '<p class="sa-note"><b>שימו לב:</b> ניתן לממש את הקופון רק באפליקציה שכונה. בעסק פותחים את הקופון באפליקציה ומציגים אותו בקופה.</p>' +
-      (desk
-        ? '<div class="sa-qr"><img src="/img/qr-app.svg" alt="קוד QR להורדת האפליקציה" width="148" height="148"><span>סרקו עם הטלפון להורדת האפליקציה</span></div>'
-        : '<a class="sa-b pri" href="' + DOWNLOAD + '">להורדת האפליקציה</a>') +
-      '<p class="sa-small">כבר יש לכם את האפליקציה? הקופון מחכה ב"הקופונים שלי".</p>' +
+      '<p class="sa-note"><b>אפשר לממש את הקופון בעסק רק עם אפליקציית שכונה.</b> נכנסים לאפליקציה עם אותו חשבון — והקופון מחכה ב"הקופונים שלי". בעסק פותחים אותו ומציגים בקופה.</p>' +
+      '<a class="sa-b pri" href="' + DOWNLOAD + '">להורדת האפליקציה</a>' +
       '<button class="sa-b" type="button" data-c>סגירה</button>');
     dlg.querySelector('[data-c]').addEventListener('click', close);
   }
@@ -376,8 +372,9 @@
       return sb.rpc('redeem_coupon_safe', { p_user_id: user.id, p_coupon_id: id }).then(function (r) {
         if (r.error) return notice('לא הצלחנו לשמור את הקופון. נסו שוב');
         var d = r.data || {};
-        if (d.success) { paintCoupon(id); return appOnlyView('הקופון נשמר!', 'הקופון שמור על שמכם.'); }
+        if (d.success) { paintCoupon(id); return appOnlyView('הקופון נשמר!', 'הקופון רשום על שמכם.'); }
         if (d.error_code === 'ALREADY_TAKEN') { paintCoupon(id); return appOnlyView('הקופון שמור לך', 'לקחת כבר את הקופון הזה.'); }
+        if (d.error_code === 'MAX_ACTIVE_COUPONS_REACHED') return appOnlyView('יש לך כבר 3 קופונים', 'אפשר להחזיק עד 3 קופונים שעוד לא מומשו. אחרי שתממשו אחד מהם בעסק, אפשר לקחת חדש.');
         return notice(d.message || 'לא הצלחנו לשמור את הקופון. נסו שוב');
       });
     }).catch(function () { notice('אין חיבור. נסו שוב'); }).then(function () { if (b) b.removeAttribute('aria-busy'); });
