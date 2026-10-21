@@ -271,7 +271,7 @@ const writeHome = (raw, dirRaw, lsRaw, moreRaw, synSlugs, detRaw) => {
   if (lsRaw) {
     const ls = shapeListings(lsRaw, raw.community);
     [ls.promos, ls.realEstate, ls.board].forEach((x) => link(x.items));
-    const o = { base: BASE, home };
+    const o = { base: BASE, home, cid: COMMUNITY_ID };
     write(path.join(HOME, 'promos', 'index.html'), listHtml('promos', promosPage(vm, ls, o)));
     write(path.join(HOME, 'realestate', 'index.html'), listHtml('realestate', realEstatePage(vm, ls, o)));
     write(path.join(HOME, 'board', 'index.html'), listHtml('board', boardPage(vm, ls, o)));

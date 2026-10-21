@@ -109,18 +109,18 @@
   function esc(s) { return String(s == null ? '' : s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
 
   /* ── חלון ── */
-  var dlg = null, onDone = null;
+  var dlg = null, onDone = null, sticky = false;
   function dialog() {
     if (dlg) return dlg;
     injectCss();
     dlg = document.createElement('dialog'); dlg.className = 'sa-dlg'; dlg.setAttribute('aria-labelledby', 'sa-h');
-    dlg.addEventListener('click', function (e) { if (e.target === dlg) close(); });
+    dlg.addEventListener('click', function (e) { if (e.target === dlg && !sticky) close(); });
     dlg.addEventListener('cancel', function () { onDone = null; });
     document.body.appendChild(dlg);
     return dlg;
   }
-  function open(html) {
-    var d = dialog();
+  function open(html, keep) {
+    var d = dialog(); sticky = !!keep;
     d.innerHTML = '<button class="sa-x" type="button" aria-label="סגירה">×</button><div class="sa-in">' + html + '</div>';
     d.querySelector('.sa-x').addEventListener('click', close);
     if (!d.open) { if (d.showModal) d.showModal(); else d.setAttribute('open', ''); }
@@ -226,10 +226,12 @@
     if (ctx && ctx.json) return ctx.json().then(function (j) { return (j && j.error) || 'שגיאה. נסו שוב'; }, function () { return 'שגיאה. נסו שוב'; });
     return Promise.resolve('אין חיבור. נסו שוב');
   }
-  function phoneView(sb, done) {
+  var PHONE_WHY = null;
+  function phoneView(sb, done, why) {
+    PHONE_WHY = why || null;
     var d = open(
       '<h2 id="sa-h">אימות מספר טלפון</h2>' +
-      '<p>כדי שההמלצות בשכונה יהיו של שכנים אמיתיים, מאמתים טלפון פעם אחת. נשלח אליכם קוד ב-SMS.</p>' +
+      '<p>' + esc(why || 'כדי שההמלצות בשכונה יהיו של שכנים אמיתיים, מאמתים טלפון פעם אחת.') + ' נשלח אליכם קוד ב-SMS.</p>' +
       '<form class="sa-f" novalidate><input name="phone" type="tel" dir="ltr" inputmode="numeric" autocomplete="tel-national" placeholder="050-0000000" required>' +
       '<p class="sa-msg" hidden></p><button class="sa-b pri" type="submit">שליחת קוד</button></form>' +
       '<p class="sa-small">המספר לא יוצג באתר.</p>'
@@ -255,7 +257,7 @@
       '<p class="sa-msg" hidden></p><button class="sa-b pri" type="submit">אימות</button></form>' +
       '<button class="sa-lnk" type="button" data-back>מספר אחר / שליחה מחדש</button>'
     );
-    d.querySelector('[data-back]').addEventListener('click', function () { phoneView(sb, done); });
+    d.querySelector('[data-back]').addEventListener('click', function () { phoneView(sb, done, PHONE_WHY); });
     var f = d.querySelector('form');
     f.addEventListener('submit', function (ev) {
       ev.preventDefault();
@@ -303,7 +305,7 @@
   }
   /* שער משותף לפעולות שדורשות משתמש מחובר עם טלפון מאומת (המלצה, לקיחת קופון).
    * pending נשמר ב-sessionStorage כדי שהפעולה תמשיך אחרי חזרה מ-Google/Apple. */
-  function gate(pending, why, run) {
+  function gate(pending, why, run, phoneWhy) {
     return getUser().then(function (x) {
       if (!x.user) {
         try { pending.p = location.pathname; sessionStorage.setItem(PENDING, JSON.stringify(pending)); } catch (e) {}
@@ -312,7 +314,7 @@
         return false;
       }
       return isVerified(x.sb, x.user.id).then(function (ok) {
-        if (!ok) { phoneView(x.sb, function () { close(); resume(pending); }); return false; }
+        if (!ok) { phoneView(x.sb, function () { close(); resume(pending); }, phoneWhy); return false; }
         return run(x.sb, x.user);
       });
     });
@@ -320,6 +322,32 @@
   function resume(p) {
     if (p.a === 'rec') doRecommend(p.t, p.id, true);
     else if (p.a === 'coupon') doCoupon(p.id);
+    else if (p.a === 'post') doPost(p.k, p.c);
+  }
+
+  /* ── פרסום מודעה מהאתר (יד שנייה, אבידות ומציאות) — הטופס ב-/js/post.js, נטען רק כשצריך ── */
+  var POST_JS = '/js/post.js?v=1', postP = null;
+  function loadPost() {
+    if (window.ShchunaPost) return Promise.resolve(window.ShchunaPost);
+    if (postP) return postP;
+    postP = new Promise(function (res, rej) {
+      var s = document.createElement('script'); s.src = POST_JS;
+      s.onload = function () { window.ShchunaPost ? res(window.ShchunaPost) : rej(new Error('load')); };
+      s.onerror = function () { postP = null; rej(new Error('load')); };
+      document.head.appendChild(s);
+    });
+    return postP;
+  }
+  var POST_WHY = { second: 'כדי לפרסם מודעה צריך להתחבר. הטופס ייפתח מיד אחרי ההתחברות.', lost: 'כדי לפרסם אבידה או מציאה צריך להתחבר. הטופס ייפתח מיד אחרי ההתחברות.' };
+  function doPost(kind, cid) {
+    if (!POST_WHY[kind] || !cid) return;
+    loadPost().catch(function () {}); // טעינה מוקדמת בזמן ההתחברות
+    return gate({ a: 'post', k: kind, c: cid }, POST_WHY[kind], function (sb, user) {
+      return loadPost().then(function (P) {
+        P.form(kind, cid, { sb: sb, user: user, open: open, close: close, toast: toast, setErr: setErr, busy: busy, esc: esc,
+          reverify: function () { verifiedCache = false; phoneView(sb, function () { close(); doPost(kind, cid); }, 'כדי לפרסם בשכונה מאמתים טלפון פעם אחת.'); } });
+      });
+    }, 'כדי שהמודעות בשכונה יהיו של שכנים אמיתיים, מאמתים טלפון פעם אחת.').catch(function () { notice('אין חיבור. נסו שוב'); });
   }
 
   function doRecommend(type, id, value) {
@@ -498,6 +526,11 @@
       e.preventDefault(); doCoupon(c.getAttribute('data-coupon'));
     });
     var hasCoupons = !!document.querySelector('[data-coupon]');
+
+    document.addEventListener('click', function (e) {
+      var c = e.target.closest && e.target.closest('[data-post]'); if (!c) return;
+      e.preventDefault(); doPost(c.getAttribute('data-post'), c.getAttribute('data-c'));
+    });
 
     var q = new URLSearchParams(location.search);
     var oauthBack = q.has('code');
