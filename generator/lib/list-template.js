@@ -80,7 +80,9 @@ ${MAP_CSS}
 .dempty[hidden]{display:none}
 .grow-h{grid-column:1/-1;margin:8px 0 -4px;font-size:24px;font-weight:800;color:var(--navy)}.grow-h:first-child{margin-top:0}
 .dempty{background:#fff;border-radius:20px;padding:36px 24px;text-align:center;display:flex;flex-direction:column;gap:8px;align-items:center}
-.dempty b{font-size:20px}.dempty span{font-size:16px;color:#566173}
+.dempty b{font-size:20px}.dempty span{font-size:16px;color:#566173}.dempty .pill{margin-top:8px}
+.post-bar{display:flex;justify-content:center;margin:0 0 16px}.post-bar[hidden],.post-bar [hidden],.dempty [hidden]{display:none}
+.post-acts{display:flex;flex-wrap:wrap;gap:8px}
 .dgrid .dcard:hover{transform:none}
 @media (max-width:620px){
 /* כמו באפליקציה: הטקסט מימין, התמונה בצד השני */
@@ -158,16 +160,20 @@ function hm(x){x=x%1440;return (x<600?'0':'')+Math.floor(x/60)+':'+(x%60<10?'0':
   el.textContent=r[1];el.className='oh oh-'+r[0];el.hidden=false;});})();
 
 var q=document.getElementById('dir-q'),cards=[].slice.call(document.querySelectorAll('.dcard')),
-    chips=[].slice.call(document.querySelectorAll('.fchips button')),empty=document.getElementById('dir-empty'),g='';
-function run(){var t=(q.value||'').trim(),n=0;
+    chips=[].slice.call(document.querySelectorAll('.fchips button')),empty=document.getElementById('dir-empty'),g='',gk='',
+    pbar=document.getElementById('post-bar'),epost=document.getElementById('dir-post');
+function run(){var t=(q.value||'').trim(),n=0,pk=pbar&&pbar.querySelector('[data-post="'+gk+'"]')?gk:'';
   cards.forEach(function(c){var ok=(!g||c.getAttribute('data-group')===g)&&(!t||c.getAttribute('data-text').indexOf(t)>=0);c.hidden=!ok;if(ok)n++;});
   empty.hidden=n>0;
   // תחום בלי מודעות (למשל "דרושים" בלוח): הזמנה לפרסם במקום "לא מצאנו"
   if(!n&&cards.length){var none=g&&!t&&!cards.some(function(c){return c.getAttribute('data-group')===g;});
     empty.firstElementChild.textContent=none?'אין כרגע מודעות ב'+g:'לא מצאנו בשכונה את מה שחיפשת';
-    empty.lastElementChild.textContent=none?'רוצים לפרסם? זה דרך האפליקציה.':'נסו מילה אחרת, או בחרו "הכל".';}
+    empty.children[1].textContent=none?(pk?'היו הראשונים לפרסם — זה לוקח דקה.':'רוצים לפרסם? זה דרך האפליקציה.'):'נסו מילה אחרת, או בחרו "הכל".';}
+  // פרסום מהאתר: רק בתחומים שיש להם טופס (יד שנייה, אבידות)
+  if(pbar){[].forEach.call(pbar.querySelectorAll('[data-post]'),function(a){a.hidden=a.getAttribute('data-post')!==gk;});pbar.hidden=!pk;}
+  if(epost){epost.hidden=!(pk&&!n&&!t);if(pk){epost.setAttribute('data-post',pk);epost.setAttribute('data-c',pbar.getAttribute('data-c'));epost.textContent=pbar.querySelector('[data-post="'+pk+'"]').textContent;}}
   if(window.__mapRefresh)window.__mapRefresh();}
-chips.forEach(function(b){b.addEventListener('click',function(){g=b.getAttribute('data-g');
+chips.forEach(function(b){b.addEventListener('click',function(){g=b.getAttribute('data-g');gk=b.getAttribute('data-k')||'';
   chips.forEach(function(x){x.setAttribute('aria-pressed',x===b);});run();});});
 q.addEventListener('input',function(){run();});
 function byHash(){var h='';try{h=decodeURIComponent((location.hash||'').slice(1));}catch(_){}if(h){chips.forEach(function(b){if(b.getAttribute('data-k')===h)b.click();});}}
@@ -256,16 +262,16 @@ ${o.tabs || ''}
 ${chips ? `<div class="fbar">${chips}</div>` : ''}
 <section id="list" class="wrap dir-list${chips ? ' has-bar' : ''}" aria-label="${esc(o.label)}">
 ${o.cards.includes('data-ll=') ? '<div id="dmap" class="dmap" hidden></div>' : ''}
-<div class="dgrid${o.gridClass ? ' ' + o.gridClass : ''}">
+${o.postbar || ''}<div class="dgrid${o.gridClass ? ' ' + o.gridClass : ''}">
 ${o.cards}
 </div>
 ${o.ld ? `<script type="application/ld+json">${o.ld}</script>` : ''}
-<div class="dempty" id="dir-empty"${o.cards.trim() ? ' hidden' : ''}><b>${o.cards.trim() ? 'לא מצאנו בשכונה את מה שחיפשת' : esc(o.emptyText || 'אין כרגע מודעות')}</b><span>${o.cards.trim() ? 'נסו מילה אחרת, או בחרו "הכל".' : 'רוצים לפרסם? זה דרך האפליקציה.'}</span></div>
+<div class="dempty" id="dir-empty"${o.cards.trim() ? ' hidden' : ''}><b>${o.cards.trim() ? 'לא מצאנו בשכונה את מה שחיפשת' : esc(o.emptyText || 'אין כרגע מודעות')}</b><span>${o.cards.trim() ? 'נסו מילה אחרת, או בחרו "הכל".' : 'רוצים לפרסם? זה דרך האפליקציה.'}</span>${o.postbar ? '<a class="pill btn-dark" id="dir-post" href="' + APP + '" hidden>+ פרסום מודעה</a>' : ''}</div>
 </section>
 
 <section class="wrap" aria-label="פרסום"><div class="join">
 <div style="min-width:0;flex:1 1 320px">${o.join}</div>
-<a class="pill btn-dark" href="${APP}">${esc(o.joinCta || 'לפרסום באפליקציה')}</a>
+${o.joinActions || `<a class="pill btn-dark" href="${APP}">${esc(o.joinCta || 'לפרסום באפליקציה')}</a>`}
 </div></section>
 </main>
 
@@ -355,7 +361,7 @@ export function realEstatePage(vm, ls, { base, home }) {
   });
 }
 
-export function boardPage(vm, ls, { base, home }) {
+export function boardPage(vm, ls, { base, home, cid }) {
   const d = ls.board;
   const row = (x) => `<a class="dcard brow lift" href="${esc(x.href || APP)}" data-group="${esc(x.group)}" data-text="${esc([x.t, x.sub, x.group].join(' '))}">
 ${x.img ? `<span class="bthumb"><img src="${esc(x.img)}" alt="${esc(x.t)}" loading="lazy" decoding="async"></span>` : ''}<span class="dbody"><span class="bgrp">${esc(x.group)}</span><h3>${esc(x.t)}</h3><span class="w">${esc(x.sub)}</span></span>
@@ -367,7 +373,9 @@ ${x.img ? `<span class="bthumb"><img src="${esc(x.img)}" alt="${esc(x.t)}" loadi
     desc: `לוח המודעות של ${where(vm)}: דרושים, יד שנייה, גמ״חים, התנדבות ואבידות ומציאות.`,
     placeholder: 'עגלה, סייעת, שולחן…',
     cards: d.items.map(row).join('\n'),
-    join: '<b>יש לכם מה לפרסם? <span class="em">ללוח השכונה.</span></b><span>דרושים, יד שנייה, גמ״ח, התנדבות או אבידה — דרך האפליקציה.</span>',
+    join: '<b>יש לכם מה לפרסם? <span class="em">ללוח השכונה.</span></b><span>יד שנייה ואבידות — כאן באתר. דרושים, גמ״ח והתנדבות — דרך האפליקציה.</span>',
+    joinActions: cid ? `<span class="post-acts"><a class="pill btn-dark" href="${APP}" data-post="second" data-c="${esc(cid)}">+ יד שנייה</a><a class="pill btn-dark" href="${APP}" data-post="lost" data-c="${esc(cid)}">+ אבידה / מציאה</a><a class="pill" href="${APP}">לאפליקציה</a></span>` : '',
+    postbar: cid ? `<div class="post-bar" id="post-bar" data-c="${esc(cid)}" hidden><a class="pill btn-dark" href="${APP}" data-post="second" data-c="${esc(cid)}">+ פרסום מודעת יד שנייה</a><a class="pill btn-dark" href="${APP}" data-post="lost" data-c="${esc(cid)}">+ פרסום אבידה או מציאה</a></div>` : '',
   });
 }
 
