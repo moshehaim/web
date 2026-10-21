@@ -78,6 +78,9 @@ export function sortKey(prayer, z) {
     case 'לפני שקיעה':    return rel(z.sunset, -1);
     case 'אחרי שקיעה':    return rel(z.sunset, +1);
     case 'בחצות':         return rel(z.midnight, +1);
+    // חצות היום (שחרית מאוחרת / מנחה גדולה) — מתאחר עם השעון
+    case 'לפני חצות היום': return rel(z.chatzot, -1);
+    case 'אחרי חצות היום': return rel(z.chatzot, +1);
     case 'צאת הכוכבים':   return z.tzait ?? FALLBACK;
     case 'זמן רבינו תם':  return z.tzait_72 ?? FALLBACK;
     case 'הדלקת נרות':    return z.candle_lighting ?? FALLBACK;
@@ -137,6 +140,8 @@ export function formatPrayerTime(set, time) {
     case 'הדלקת נרות':    return 'הדלקת נרות';
     case 'לפני צאת שבת':  return has ? `${time} דקות לפני צאת שבת` : 'לפני צאת שבת';
     case 'בחצות':         return 'חצות הלילה';
+    case 'לפני חצות היום': return has && +time ? `${time} דקות לפני חצות היום` : 'בחצות היום';
+    case 'אחרי חצות היום': return has && +time ? `${time} דקות אחרי חצות היום` : 'בחצות היום';
     default:              return set;
   }
 }
