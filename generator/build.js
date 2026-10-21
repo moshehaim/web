@@ -18,7 +18,7 @@ import { computeZmanim, sortPrayers, formatPrayerTime, NUSACH } from './lib/pray
 import { isPrayerInSeason } from './lib/season.js';
 import { sitemap } from './lib/template.js';
 import { minyanimIndexPage, synagoguePageNew } from './lib/minyanim-template.js';
-import { fetchHome, shapeHome, shapePrayers, fetchDirectory, shapeDirectory, fetchListings, shapeListings, fetchMore, shapeMore } from './lib/home-data.js';
+import { fetchHome, shapeHome, shapePrayers, shapeShtiblach, shtiblachText, fetchDirectory, shapeDirectory, fetchListings, shapeListings, fetchMore, shapeMore } from './lib/home-data.js';
 import { homePage, HIDDEN_NAV, navChips, setSiteHome } from './lib/home-template.js';
 import { setMinyanimSection } from './lib/minyanim-template.js';
 import { COMMUNITIES, slugById } from './communities.js';
@@ -325,6 +325,8 @@ function writeMinyanim({ vm, community, syns, prayers, lessons, slugs, urls }) {
   const name = Object.fromEntries(syns.map((s) => [String(s.id), s.name]));
   const todayList = shapePrayers((prayers || []).map((p) => ({ syn: name[String(p.synagogue_id)], type: p.type,
     time: p.time, set: p.set, season: p.season, days: p.selected_days })).filter((p) => p.syn), community, today);
+  // שטיבלך: שורות "פעיל עכשיו" בראש "המניין הבא" (מחושב בדפדפן)
+  todayList.unshift(...shapeShtiblach(syns.filter((s) => s.shtiblach), community, today));
 
   const listed = [];
   for (const syn of syns) {
@@ -337,11 +339,11 @@ function writeMinyanim({ vm, community, syns, prayers, lessons, slugs, urls }) {
     urls.push({ loc: `${BASE}/${SECTION}/${encodeURIComponent(syn.slug)}/`, freq: 'weekly', pri: '0.7' });
     // תצוגה מקדימה: התפילה הראשונה של היום בכל סוג
     const seen = new Set();
-    const first = todayList.filter((t) => t.n === syn.name && !seen.has(t.t) && seen.add(t.t))
+    const first = todayList.filter((t) => !t.sh && t.n === syn.name && !seen.has(t.t) && seen.add(t.t))
       .sort((a, b) => ['שחרית', 'מנחה', 'ערבית'].indexOf(a.t) - ['שחרית', 'מנחה', 'ערבית'].indexOf(b.t))
       .filter((t) => ['שחרית', 'מנחה', 'ערבית'].includes(t.t))
       .map((t) => ({ type: t.t, time: t.c }));
-    listed.push({ ...syn, first, has: p.length > 0 });
+    listed.push({ ...syn, first, has: p.length > 0 || !!syn.shtiblach, sht: shtiblachText(syn.shtiblach) });
     addSearch(syn.name, 'בית כנסת', [NUSACH[syn.prayer_nusach] && syn.prayer_nusach !== 'other' ? `נוסח ${NUSACH[syn.prayer_nusach]}` : '', syn.address].filter(Boolean).join(' · '),
       `/${SECTION}/${encodeURIComponent(syn.slug)}/`, 2);
   }
@@ -408,7 +410,7 @@ async function buildCommunity(db, urls) {
     db.from('community').select('neighborhood,secondaryname,city,latitude,longitude').eq('id', COMMUNITY_ID).single(),
     db.from('synagogues')
       .select('id,name,address,access_notes,rabbi_name,prayer_nusach,latitude,longitude,' +
-              'is_accessible,has_hall,can_study_during_day,study_during_day_details')
+              'is_accessible,has_hall,can_study_during_day,study_during_day_details,shtiblach')
       .eq('community_id', COMMUNITY_ID)
       .order('name'),
   ]);
