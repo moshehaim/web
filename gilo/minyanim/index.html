@@ -315,6 +315,7 @@ footer .c{font-size:13px;color:#8A94A6}
 @media (max-width:620px){.dmap{height:60vh}}
 .leaflet-popup-content{font-family:inherit;direction:rtl;text-align:right;font-size:15px}.leaflet-popup-content a,.leaflet-popup-content b{font-weight:800}.mp-f{color:#566173;font-size:13px}
 
+.sht{margin:0 0 14px;padding:10px 14px;border-radius:14px;background:#EFF4FF;color:var(--navy);font-size:16px}
 .syn-head{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}.syn-head h2{margin:0}
 .mn-sec .map-btn{background:#EFF4FF;color:var(--navy)}.mn-sec .map-btn[aria-pressed=true]{background:var(--brand);color:#fff}
 
@@ -787,15 +788,18 @@ function pad(n){return(n<10?'0':'')+n;}
 function esc(s){return String(s).replace(/[&<>"']/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
 function row(p,w,past){var href=S[p.n]?'/gilo/minyanim/'+encodeURIComponent(S[p.n])+'/':'#';
   return '<a class="nrow'+(past?' past':'')+'" href="'+href+'"><span class="t">'+esc(p.c)+'</span><span><b>'+esc(p.n)+'</b><small>'+esc(p.l||p.t)+'</small></span><span class="when">'+w+'</span></a>';}
+function shOn(p,m){var x=(m<300&&p.b>1440)?m+1440:m;return x>=p.a&&x<p.b;}
 function draw(){var n=now(),m=n.getHours()*60+n.getMinutes(),d=n.getDay();
-  var list=P.filter(function(p){return p.t===type&&p.d.indexOf(d)>=0;});
+  /* שטיבלך פעילים עכשיו — ראשונים, עם "שטיבלך" במקום שעה */
+  var sh=P.filter(function(p){return p.sh&&p.t===type&&shOn(p,m);}).map(function(p){return row(p,'עכשיו',false);}).join('');
+  var list=P.filter(function(p){return !p.sh&&p.t===type&&p.d.indexOf(d)>=0;});
   var up=list.filter(function(p){return p.m>=m;});
-  if(all){more.hidden=true;box.innerHTML=list.length?list.map(function(p){var x=p.m-m;return row(p,x>=0&&x<=60?'בעוד '+x+' דק׳':'',x<0);}).join(''):'<p class="nempty">אין '+esc(type)+' היום.</p>';return;}
-  if(!up.length){var t2=P.filter(function(p){return p.t===type&&p.d.indexOf((d+1)%7)>=0;}).slice(0,8);
+  if(all){more.hidden=true;box.innerHTML=sh+(list.length?list.map(function(p){var x=p.m-m;return row(p,x>=0&&x<=60?'בעוד '+x+' דק׳':'',x<0);}).join(''):'<p class="nempty">אין '+esc(type)+' היום.</p>');return;}
+  if(!up.length){var t2=P.filter(function(p){return !p.sh&&p.t===type&&p.d.indexOf((d+1)%7)>=0;}).slice(0,8);
     more.hidden=!list.length;more.textContent='כל המניינים של היום ('+type+')';
-    box.innerHTML=t2.length?'<p class="nempty">אין עוד '+esc(type)+' היום. מחר:</p>'+t2.map(function(p){return row(p,'מחר',false);}).join(''):'<p class="nempty">אין עוד '+esc(type)+' היום.</p>';return;}
+    box.innerHTML=sh+(t2.length?'<p class="nempty">אין עוד '+esc(type)+' היום. מחר:</p>'+t2.map(function(p){return row(p,'מחר',false);}).join(''):'<p class="nempty">אין עוד '+esc(type)+' היום.</p>');return;}
   more.hidden=up.length<=8&&list.length===up.length;more.textContent='כל המניינים של היום ('+type+')';
-  box.innerHTML=up.slice(0,8).map(function(p){var x=p.m-m;return row(p,x===0?'עכשיו':x<=60?'בעוד '+x+' דק׳':'',false);}).join('');}
+  box.innerHTML=sh+up.slice(0,8).map(function(p){var x=p.m-m;return row(p,x===0?'עכשיו':x<=60?'בעוד '+x+' דק׳':'',false);}).join('');}
 function pick(t){type=t;all=false;tabs.forEach(function(b){b.setAttribute('aria-selected',b.getAttribute('data-t')===t);});draw();}
 tabs.forEach(function(b){b.addEventListener('click',function(){pick(b.getAttribute('data-t'));});});
 more.addEventListener('click',function(){all=true;draw();});

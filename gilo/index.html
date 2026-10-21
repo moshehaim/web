@@ -521,8 +521,10 @@ var P=[];try{P=JSON.parse(document.getElementById('prayers-data').textContent);}
 var clock=document.querySelector('[data-clock]'),np=document.querySelector('[data-next-prayers]'),
     day=document.querySelector('[data-day]'),greet=document.querySelector('[data-greet]');
 var TYPES=['שחרית','מנחה','ערבית'],lastMin=-1;
+function shOn(p,m){var x=(m<300&&p.b>1440)?m+1440:m;return x>=p.a&&x<p.b;}
 function nextList(nowMin,dow){return TYPES.map(function(t){
-  var of=P.filter(function(p){return p.t===t;}),p=null,w='';
+  for(var s=0;s<P.length;s++){if(P[s].sh&&P[s].t===t&&shOn(P[s],nowMin))return{p:P[s],w:'עכשיו'};}
+  var of=P.filter(function(p){return p.t===t&&!p.sh;}),p=null,w='';
   for(var i=0;i<of.length;i++){if(of[i].d.indexOf(dow)>=0&&of[i].m>=nowMin){p=of[i];break;}}
   if(p){w=p.m===nowMin?'עכשיו':p.m-nowMin<=60?'בעוד '+(p.m-nowMin)+' דק׳':'היום';}
   else{for(var j=0;j<of.length;j++){if(of[j].d.indexOf((dow+1)%7)>=0){p=of[j];break;}}w='מחר';}
