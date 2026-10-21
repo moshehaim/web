@@ -91,6 +91,13 @@
   .feat-card h3 { font-size: 18px; font-weight: 700; margin-bottom: 5px; }
   .feat-card p { font-size: 14.5px; color: rgba(255,255,255,0.66); line-height: 1.55; }
 
+  section.hoods { padding: 6px 0 56px; }
+  .hood-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); gap: 10px; }
+  .hood-chip { display: flex; align-items: center; min-height: 52px; padding: 12px 16px; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.11); border-radius: 14px; font-weight: 700; font-size: 15.5px; line-height: 1.35; transition: transform 0.15s, background 0.2s, border-color 0.2s; }
+  .hood-chip::after { content: "←"; margin-inline-start: auto; padding-inline-start: 10px; color: #f0a92d; }
+  .hood-chip:hover { transform: translateY(-2px); background: rgba(255,255,255,0.10); border-color: rgba(240,169,45,0.4); }
+  @media (max-width: 560px) { .hood-grid { grid-template-columns: 1fr 1fr; gap: 8px; } .hood-chip { font-size: 14px; padding: 10px 12px; } }
+
   section.testimonials { padding: 20px 0 68px; }
   .testi-head { text-align: center; margin-bottom: 38px; }
   .testi-head p { color: rgba(255,255,255,0.6); font-size: 16px; margin-top: 8px; }
@@ -189,6 +196,7 @@
             </a>
           </div>
           <a href="https://wa.me/972523114129?text=%D7%94%D7%99%D7%99%2C%20%D7%99%D7%A9%20%D7%9C%D7%99%20%D7%A9%D7%90%D7%9C%D7%94%20%D7%A2%D7%9C%20%D7%A9%D7%9B%D7%95%D7%A0%D7%94" class="hood-link" target="_blank" rel="noopener">💬 יש שאלה? דברו איתנו בוואטסאפ</a>
+          <a href="#hoods" class="web-link">🏘️ לעמוד השכונה שלכם</a>
           <a href="https://shchuna.co.il/app/" class="web-link">🌐 גלישה באתר</a>
         </div>
 
@@ -210,6 +218,39 @@
           </div>
         </div>
       </div>
+    </section>
+
+    <!-- ===== Neighborhoods ===== -->
+    <section class="hoods" id="hoods">
+      <div class="section-head">
+        <div class="kicker">השכונות</div>
+        <div class="head-row">
+          <h2>בחרו את השכונה שלכם</h2>
+          <span class="head-note">מניינים, עסקים, גמ"חים ומבצעים — לכל שכונה עמוד משלה</span>
+        </div>
+      </div>
+      <nav class="hood-grid" aria-label="שכונות ירושלים">
+        <a href="/armon-hanatziv/" class="hood-chip">ארמון הנציב (תלפיות מזרח)</a>
+        <a href="/beit-hakerem-givat-mordechai/" class="hood-chip">בית הכרם וגבעת מרדכי</a>
+        <a href="/beit-vagan/" class="hood-chip">בית וגן (רמת שרת ורמת דניה)</a>
+        <a href="/baka-arnona-talpiot/" class="hood-chip">בקעה, ארנונה ותלפיות</a>
+        <a href="/givaa-tzarfatit-ramat-eshkol/" class="hood-chip">גבעה צרפתית ורמת אשכול</a>
+        <a href="/givat-zeev/" class="hood-chip">גבעת זאב</a>
+        <a href="/gonenim/" class="hood-chip">גוננים</a>
+        <a href="/gilo/" class="hood-chip">גילה</a>
+        <a href="/ginot-hair/" class="hood-chip">גינות העיר (רחביה, טלביה והמושבה)</a>
+        <a href="/hair-haatika-mamilla/" class="hood-chip">העיר העתיקה וממילא (הרובע היהודי)</a>
+        <a href="/har-homa/" class="hood-chip">חומת שמואל (הר חומה)</a>
+        <a href="/mea-shearim-geula/" class="hood-chip">מאה שערים וגאולה</a>
+        <a href="/merkaz-hair-nachlaot/" class="hood-chip">מרכז העיר ונחלאות</a>
+        <a href="/neve-yaakov/" class="hood-chip">נווה יעקב</a>
+        <a href="/pisgat-zeev/" class="hood-chip">פסגת זאב</a>
+        <a href="/kamash-gavash-har-nof/" class="hood-chip">קמש, גבש והר נוף</a>
+        <a href="/kiryat-yovel/" class="hood-chip">קרית יובל והסביבה</a>
+        <a href="/romema-sanhedria/" class="hood-chip">רוממה וסנהדריה</a>
+        <a href="/ramot/" class="hood-chip">רמות</a>
+        <a href="/ramat-shlomo/" class="hood-chip">רמת שלמה</a>
+      </nav>
     </section>
 
     <!-- ===== Features ===== -->
