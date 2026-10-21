@@ -379,7 +379,9 @@ background:linear-gradient(to top,var(--t2),transparent)}
 .dempty[hidden]{display:none}
 .grow-h{grid-column:1/-1;margin:8px 0 -4px;font-size:24px;font-weight:800;color:var(--navy)}.grow-h:first-child{margin-top:0}
 .dempty{background:#fff;border-radius:20px;padding:36px 24px;text-align:center;display:flex;flex-direction:column;gap:8px;align-items:center}
-.dempty b{font-size:20px}.dempty span{font-size:16px;color:#566173}
+.dempty b{font-size:20px}.dempty span{font-size:16px;color:#566173}.dempty .pill{margin-top:8px}
+.post-bar{display:flex;justify-content:center;margin:0 0 16px}.post-bar[hidden],.post-bar [hidden],.dempty [hidden]{display:none}
+.post-acts{display:flex;flex-wrap:wrap;gap:8px}
 .dgrid .dcard:hover{transform:none}
 @media (max-width:620px){
 /* כמו באפליקציה: הטקסט מימין, התמונה בצד השני */
@@ -407,7 +409,7 @@ background:linear-gradient(to top,var(--t2),transparent)}
 .bgrp{font-size:12px;font-weight:800;color:var(--accent)}
 .bbadge2{font-size:13px;font-weight:800;background:#EFF4FF;color:var(--brand);border-radius:8px;padding:3px 10px;white-space:nowrap}
 .dbody .pr{font-size:17px;font-weight:800;color:var(--navy);font-variant-numeric:tabular-nums}
-@media (max-width:620px){.brow{display:flex!important}.dtag,.dprice{display:none}}
+@media (max-width:620px){.brow:not([hidden]){display:flex!important}.dtag,.dprice{display:none}}
 @media (min-width:621px){.dbody .pr{display:none}}
 .join{background:var(--soft);border-radius:22px;padding:26px;display:flex;flex-wrap:wrap;gap:18px;align-items:center;justify-content:space-between;margin-bottom:56px}
 .join b{display:block;font-size:24px;color:var(--navy)}.join span{font-size:16px;color:#3B4860}
@@ -549,7 +551,7 @@ background:linear-gradient(to top,var(--t2),transparent)}
 <nav aria-label="קישורים"><a href="/">כל השכונות</a><a href="/my-business/">כניסה לבעלי עסקים</a><a href="/terms.html">תנאי שימוש</a><a href="/privacy.html">פרטיות</a></nav>
 <span class="c">© שכונה, כל הזכויות שמורות</span>
 </div></footer>
-<script src="/js/auth.js?v=7" defer></script>
+<script src="/js/auth.js?v=8" defer></script>
 
 <script>window.__SB={"url":"https://mebomrqnfnbqijiuawdh.supabase.co","key":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1lYm9tcnFuZm5icWlqaXVhd2RoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzkxOTc3MDEsImV4cCI6MjA1NDc3MzcwMX0.OSpzG4pnsgIiOEefWK0Z29ZHOo12bIhp0QXTdk2Hsg4"};</script>
 <script>(function(){
@@ -565,16 +567,20 @@ function hm(x){x=x%1440;return (x<600?'0':'')+Math.floor(x/60)+':'+(x%60<10?'0':
   el.textContent=r[1];el.className='oh oh-'+r[0];el.hidden=false;});})();
 
 var q=document.getElementById('dir-q'),cards=[].slice.call(document.querySelectorAll('.dcard')),
-    chips=[].slice.call(document.querySelectorAll('.fchips button')),empty=document.getElementById('dir-empty'),g='';
-function run(){var t=(q.value||'').trim(),n=0;
+    chips=[].slice.call(document.querySelectorAll('.fchips button')),empty=document.getElementById('dir-empty'),g='',gk='',
+    pbar=document.getElementById('post-bar'),epost=document.getElementById('dir-post');
+function run(){var t=(q.value||'').trim(),n=0,pk=pbar&&pbar.querySelector('[data-post="'+gk+'"]')?gk:'';
   cards.forEach(function(c){var ok=(!g||c.getAttribute('data-group')===g)&&(!t||c.getAttribute('data-text').indexOf(t)>=0);c.hidden=!ok;if(ok)n++;});
   empty.hidden=n>0;
   // תחום בלי מודעות (למשל "דרושים" בלוח): הזמנה לפרסם במקום "לא מצאנו"
   if(!n&&cards.length){var none=g&&!t&&!cards.some(function(c){return c.getAttribute('data-group')===g;});
     empty.firstElementChild.textContent=none?'אין כרגע מודעות ב'+g:'לא מצאנו בשכונה את מה שחיפשת';
-    empty.lastElementChild.textContent=none?'רוצים לפרסם? זה דרך האפליקציה.':'נסו מילה אחרת, או בחרו "הכל".';}
+    empty.children[1].textContent=none?(pk?'היו הראשונים לפרסם — זה לוקח דקה.':'רוצים לפרסם? זה דרך האפליקציה.'):'נסו מילה אחרת, או בחרו "הכל".';}
+  // פרסום מהאתר: רק בתחומים שיש להם טופס (יד שנייה, אבידות)
+  if(pbar){[].forEach.call(pbar.querySelectorAll('[data-post]'),function(a){a.hidden=a.getAttribute('data-post')!==gk;});pbar.hidden=!pk||(!n&&!t);}
+  if(epost){epost.hidden=!(pk&&!n&&!t);if(pk){epost.setAttribute('data-post',pk);epost.setAttribute('data-c',pbar.getAttribute('data-c'));epost.textContent=pbar.querySelector('[data-post="'+pk+'"]').textContent;}}
   if(window.__mapRefresh)window.__mapRefresh();}
-chips.forEach(function(b){b.addEventListener('click',function(){g=b.getAttribute('data-g');
+chips.forEach(function(b){b.addEventListener('click',function(){g=b.getAttribute('data-g');gk=b.getAttribute('data-k')||'';
   chips.forEach(function(x){x.setAttribute('aria-pressed',x===b);});run();});});
 q.addEventListener('input',function(){run();});
 function byHash(){var h='';try{h=decodeURIComponent((location.hash||'').slice(1));}catch(_){}if(h){chips.forEach(function(b){if(b.getAttribute('data-k')===h)b.click();});}}
