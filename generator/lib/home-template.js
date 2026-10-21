@@ -378,7 +378,7 @@ const img = (src, alt) => `<img src="${esc(src)}" alt="${esc(alt)}" loading="laz
 function promoCard(p) {
   return `<a href="${esc(p.href || APP)}" class="card promo lift${p.coupon ? ' coupon' : ''}">
 <div class="media">${p.img ? img(p.img, p.title) : `<span class="ph art v${artV(p.id || p.title)} t-violet">${artIcon(p.coupon ? ICON.ticket || ICON.tag : ICON.tag)}</span>`}<span class="tag">${esc(p.kind)}</span></div>
-<div class="body"><b class="clamp2">${esc(p.title)}</b>${p.provider ? `<span class="sub">${esc(p.provider)}</span>` : ''}<span class="fine">${esc(p.until)}</span></div>
+<div class="body"><b class="clamp2">${esc(p.title)}</b>${p.provider ? `<span class="sub">${esc(p.provider)}</span>` : ''}<span class="fine">${esc(p.until)}${p.coupon ? ' · מימוש באפליקציה' : ''}</span></div>
 </a>`;
 }
 
@@ -730,7 +730,7 @@ export function siteFooter() {
 <nav aria-label="קישורים"><a href="/">כל השכונות</a><a href="${BIZ_PORTAL}">כניסה לבעלי עסקים</a><a href="/terms.html">תנאי שימוש</a><a href="/privacy.html">פרטיות</a></nav>
 <span class="c">© שכונה, כל הזכויות שמורות</span>
 </div></footer>
-<script src="/js/auth.js?v=6" defer></script>`;
+<script src="/js/auth.js?v=7" defer></script>`;
 }
 
 function shabbatCard(sh) {
