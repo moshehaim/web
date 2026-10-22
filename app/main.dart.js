@@ -52254,7 +52254,7 @@ WF:function WF(a){this.a=a},
 aA0:function aA0(a,b){var _=this
 _.d=a
 _.e=b
-_.c=_.a=null},
+_.c=_.a=_.f=null},
 cbL:function cbL(a){this.a=a},
 cbG:function cbG(){},
 cbH:function cbH(){},
@@ -214452,99 +214452,110 @@ new A.m5(s,s.$ti.i("m5<1>")).fp(new A.cbL(this))},
 v(a){return new A.SU(new A.ccb(this),null,null,t.Ra)}}
 A.cbL.prototype={
 $1(a){return this.aHO(a)},
-aHO(a1){var s=0,r=A.j(t.H),q,p=2,o=[],n=this,m,l,k,j,i,h,g,f,e,d,c,b,a,a0
-var $async$$1=A.e(function(a2,a3){if(a2===1){o.push(a3)
-s=p}while(true)switch(s){case 0:c=a1.a
-b=a1.b
-a=b==null?null:b.r.a
-if(c===B.lj){n.a.Lg()
+aHO(a2){var s=0,r=A.j(t.H),q,p=2,o=[],n=this,m,l,k,j,i,h,g,f,e,d,c,b,a,a0,a1
+var $async$$1=A.e(function(a3,a4){if(a3===1){o.push(a4)
+s=p}while(true)switch(s){case 0:b=a2.a
+a=a2.b
+a0=a==null?null:a.r.a
+if(b===B.lj){h=n.a
+h.f=a0
+h.Lg()
 s=1
-break}if(c===B.li){$.ahY=!0
+break}if(b===B.li){$.ahY=!0
 h=n.a.d.ga0()
 if(h!=null)h.BL("/reset-password",t.X)
 s=1
-break}s=c===B.ip?3:4
+break}s=b===B.ip?3:4
 break
 case 3:if($.ahY){s=1
 break}s=$.ahX?5:6
 break
-case 5:h=$.qS
-if(h==null){h=$.k5
-g=(h==null?$.k5=$.vl():h).ru("[DEFAULT]")
-A.fS(g,$.qt(),!0)
-h=$.qS=A.Um(new A.nh(g))}f=a
-if(f==null)f=""
-h.gK2().yA(f)
+case 5:h=n.a
+h.f=a0
+g=$.qS
+if(g==null){g=$.k5
+f=(g==null?$.k5=$.vl():g).ru("[DEFAULT]")
+A.fS(f,$.qt(),!0)
+g=$.qS=A.Um(new A.nh(f))}e=a0
+if(e==null)e=""
+g.gK2().yA(e)
 s=7
 return A.c($.yo().xS(),$async$$1)
 case 7:$.cJs=null
-n.a.Lg()
+h.Lg()
 s=1
 break
-case 6:e=$.WS
-s=!(e==null||e==="/auth"||e==="/")?8:9
+case 6:d=$.WS
+s=!(d==null||d==="/auth"||d==="/")?8:9
 break
-case 8:s=10
+case 8:h=n.a
+g=h.f
+if(g!=null&&g===a0){s=1
+break}h.f=a0
+s=10
 return A.c(A.pu().kU(0,B.Jp,new A.cbG()),$async$$1)
-case 10:h=$.qS
-if(h==null){h=$.k5
-g=(h==null?$.k5=$.vl():h).ru("[DEFAULT]")
-A.fS(g,$.qt(),!0)
-h=$.qS=A.Um(new A.nh(g))}f=a
-if(f==null)f=""
-h.gK2().yA(f)
+case 10:g=$.qS
+if(g==null){g=$.k5
+f=(g==null?$.k5=$.vl():g).ru("[DEFAULT]")
+A.fS(f,$.qt(),!0)
+g=$.qS=A.Um(new A.nh(f))}e=a0
+if(e==null)e=""
+g.gK2().yA(e)
 s=11
 return A.c($.yo().xS(),$async$$1)
-case 11:n.a.Lg()
+case 11:h.Lg()
 s=1
 break
-case 9:p=13
+case 9:h=n.a
+h.f=a0
+p=13
 s=16
 return A.c(A.pu().kU(0,B.Jp,new A.cbH()),$async$$1)
-case 16:h=$.qS
-if(h==null){h=$.k5
-g=(h==null?$.k5=$.vl():h).ru("[DEFAULT]")
-A.fS(g,$.qt(),!0)
-h=$.qS=A.Um(new A.nh(g))}f=a
-if(f==null)f=""
-h.gK2().yA(f)
+case 16:g=$.qS
+if(g==null){g=$.k5
+f=(g==null?$.k5=$.vl():g).ru("[DEFAULT]")
+A.fS(f,$.qt(),!0)
+g=$.qS=A.Um(new A.nh(f))}e=a0
+if(e==null)e=""
+g.gK2().yA(e)
 s=17
 return A.c($.yo().xS(),$async$$1)
-case 17:f=n.a
-f.Lg()
+case 17:h.Lg()
 m=$.WS
 if(m!=null&&m!=="/auth"&&m!=="/"){s=1
 break}s=A.cI8()?18:20
 break
-case 18:a3=null
+case 18:a4=null
 s=19
 break
 case 20:s=21
 return A.c(A.Am(),$async$$1)
-case 21:case 19:l=a3
+case 21:case 19:l=a4
 k=A.cI8()?"/select-community":"/categories"
-h=f.d
-f=h.ga0()
-if(f!=null)f.m3(k,new A.cbI(),t.X)
-if(l!=null){h=h.ga0()
-if(h!=null)h.BL(l,t.X)}p=2
+g=h.d
+e=g.ga0()
+if(e!=null)e.m3(k,new A.cbI(),t.X)
+if(l!=null){g=g.ga0()
+if(g!=null)g.BL(l,t.X)}p=2
 s=15
 break
 case 13:p=12
-a0=o.pop()
-j=A.F(a0)
+a1=o.pop()
+j=A.F(a1)
 A.au().$1("\ud83d\udd10 Error: "+A.m(j))
 i=$.WS
-if(i==null||i==="/auth"||i==="/"){h=n.a.d.ga0()
+if(i==null||i==="/auth"||i==="/"){h=h.d.ga0()
 if(h!=null)h.m3("/categories",new A.cbJ(),t.X)}s=15
 break
 case 12:s=2
 break
 case 15:s=1
 break
-case 4:if(c===B.lk){$.ahY=!1
+case 4:if(b===B.lk){h=n.a
+h.f=null
+$.ahY=!1
 if($.aYo){s=1
-break}h=n.a.d.ga0()
+break}h=h.d.ga0()
 if(h!=null)h.m3("/auth",new A.cbK(),t.X)}case 1:return A.h(q,r)
 case 2:return A.f(o.at(-1),r)}})
 return A.i($async$$1,r)},
