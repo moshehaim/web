@@ -222,6 +222,7 @@
     }
 
     function done() {
+      try { if (window.shchunaTrack) window.shchunaTrack('post', kind); } catch (e) {}
       st.files.forEach(function (x) { URL.revokeObjectURL(x.url); });
       var dd = A.open(
         '<div class="sp-done" aria-hidden="true">🎉</div>' +
