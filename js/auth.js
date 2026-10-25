@@ -272,6 +272,7 @@
     });
   }
   var verifiedCache = null;
+  function track(kind, target) { try { if (window.shchunaTrack) window.shchunaTrack(kind, target); } catch (e) {} } // /js/t.js
   function isVerified(sb, uid) {
     if (verifiedCache) return Promise.resolve(true);
     return sb.from('userdata').select('is_verified').eq('user_id', uid).maybeSingle().then(function (r) {
@@ -326,7 +327,7 @@
   }
 
   /* ── פרסום מודעה מהאתר (יד שנייה, אבידות ומציאות) — הטופס ב-/js/post.js, נטען רק כשצריך ── */
-  var POST_JS = '/js/post.js?v=1', postP = null;
+  var POST_JS = '/js/post.js?v=2', postP = null;
   function loadPost() {
     if (window.ShchunaPost) return Promise.resolve(window.ShchunaPost);
     if (postP) return postP;
@@ -368,7 +369,7 @@
             return notice(REC_ERR[m] || 'לא הצלחנו לשמור. נסו שוב');
           }
           paintRec(r.data.recommended, r.data.count);
-          if (value) toast('תודה! ההמלצה נשמרה');
+          if (value) { toast('תודה! ההמלצה נשמרה'); track('recommend', type); }
         });
       });
     }).catch(function () { if (b) b.removeAttribute('aria-busy'); notice('אין חיבור. נסו שוב'); });
@@ -400,7 +401,7 @@
       return sb.rpc('redeem_coupon_safe', { p_user_id: user.id, p_coupon_id: id }).then(function (r) {
         if (r.error) return notice('לא הצלחנו לשמור את הקופון. נסו שוב');
         var d = r.data || {};
-        if (d.success) { paintCoupon(id); return appOnlyView('הקופון נשמר!', 'הקופון רשום על שמכם.'); }
+        if (d.success) { paintCoupon(id); track('coupon'); return appOnlyView('הקופון נשמר!', 'הקופון רשום על שמכם.'); }
         if (d.error_code === 'ALREADY_TAKEN') { paintCoupon(id); return appOnlyView('הקופון שמור לך', 'לקחת כבר את הקופון הזה.'); }
         if (d.error_code === 'MAX_ACTIVE_COUPONS_REACHED') return appOnlyView('יש לך כבר 3 קופונים', 'אפשר להחזיק עד 3 קופונים שעוד לא מומשו. אחרי שתממשו אחד מהם בעסק, אפשר לקחת חדש.');
         return notice(d.message || 'לא הצלחנו לשמור את הקופון. נסו שוב');
