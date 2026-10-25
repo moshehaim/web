@@ -32,7 +32,8 @@
   var refHost = '', refKind = 'direct';
   try { if (document.referrer) refHost = new window.URL(document.referrer).hostname.replace(/^www\./, ''); } catch (e) {}
   if (refHost) {
-    if (refHost === location.hostname) { refKind = 'internal'; refHost = ''; }
+    // חזרה מהתחברות (Google/Apple) — לא הגעה מחיפוש
+    if (refHost === location.hostname || /^(accounts\.google\.|appleid\.apple\.com$|[a-z0-9]+\.supabase\.co$)/.test(refHost)) { refKind = 'internal'; refHost = ''; }
     else if (/(^|\.)google\./.test(refHost)) refKind = 'google';
     else if (/whatsapp|^wa\.me$/.test(refHost)) refKind = 'whatsapp';
     else if (/(^|\.)(facebook\.com|fb\.com|fb\.me)$/.test(refHost)) refKind = 'facebook';
@@ -75,6 +76,7 @@
   function view() { send('view'); }
   if (document.readyState === 'complete') setTimeout(view, 0); else window.addEventListener('load', function () { setTimeout(view, 0); });
 
+  var lastT = null, lastAt = 0;
   // לחיצות הורדה: חנויות, /b/ (מפנה לחנות), והאתר הדינמי /app/
   document.addEventListener('click', function (e) {
     var a = e.target.closest && e.target.closest('a[href]'); if (!a) return;
@@ -86,6 +88,7 @@
       if (a.hasAttribute('data-post') || a.hasAttribute('data-coupon') || a.hasAttribute('data-rec')) return; // נתפס ע"י auth.js
       t = 'webapp';
     }
-    if (t) send('download', t);
+    // לחיצה כפולה — נספרת פעם אחת (3 שניות)
+    if (t) { var now = Date.now(); if (t === lastT && now - lastAt < 3000) return; lastT = t; lastAt = now; send('download', t); }
   }, true);
 })();
