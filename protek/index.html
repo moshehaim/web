@@ -77,24 +77,26 @@
     setTimeout(go, 1200);
   }
 
+  var DESKTOP_URL = "https://shchuna.co.il/#hoods";   // מחשב — אין טעם להפנות לחנות
+
+  // מחשב / דפדפן לא מזוהה — מפנים לעמודי השכונות באתר
+  if (platform === "other") {
+    px.onload  = goDesktop;
+    px.onerror = goDesktop;
+    setTimeout(goDesktop, 1200);
+  }
+
+  function goDesktop() {
+    if (redirected) return;
+    redirected = true;
+    location.replace(DESKTOP_URL);
+  }
+
   px.src = SCAN_URL
     + "?s=" + encodeURIComponent(CODE)
     + "&p=" + encodeURIComponent(platform)
     + (isTest ? "&t=1" : "")
     + "&r=" + Date.now();          // עוקף מטמון
-
-  // מחשב / דפדפן לא מזוהה — שני כפתורים
-  if (platform === "other") {
-    var show = function () {
-      var w = document.getElementById("wait");
-      var c = document.getElementById("choice");
-      if (w) w.style.display = "none";
-      if (c) c.style.display = "block";
-    };
-    if (document.readyState === "loading") {
-      document.addEventListener("DOMContentLoaded", show);
-    } else { show(); }
-  }
 })();
 </script>
 </body>
