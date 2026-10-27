@@ -180,13 +180,13 @@
   <url><loc>https://shchuna.co.il/har-homa/biz/%D7%A8%D7%95%D7%96%D7%9E%D7%A8%D7%99%D7%9F/</loc><changefreq>weekly</changefreq><priority>0.6</priority></url>
   <url><loc>https://shchuna.co.il/har-homa/biz/%D7%A8%D7%A0%D7%A0%D7%94-%D7%A2%D7%99%D7%A6%D7%95%D7%91-%D7%92%D7%A8%D7%A4%D7%99/</loc><changefreq>weekly</changefreq><priority>0.6</priority></url>
   <url><loc>https://shchuna.co.il/har-homa/biz/%D7%A9%D7%91%D7%97-%D7%94%D7%A9%D7%9D/</loc><changefreq>weekly</changefreq><priority>0.6</priority></url>
-  <url><loc>https://shchuna.co.il/har-homa/halls/%D7%90%D7%95%D7%9C%D7%9D-%D7%99%D7%A9%D7%99%D7%91%D7%AA-%D7%94%D7%A8-%D7%94%D7%9E%D7%95%D7%A8/</loc><changefreq>weekly</changefreq><priority>0.5</priority></url>
   <url><loc>https://shchuna.co.il/har-homa/halls/%D7%9B%D7%95%D7%9B%D7%91%D7%99-%D7%90%D7%95%D7%A8/</loc><changefreq>weekly</changefreq><priority>0.5</priority></url>
+  <url><loc>https://shchuna.co.il/har-homa/halls/%D7%90%D7%95%D7%9C%D7%9D-%D7%99%D7%A9%D7%99%D7%91%D7%AA-%D7%94%D7%A8-%D7%94%D7%9E%D7%95%D7%A8/</loc><changefreq>weekly</changefreq><priority>0.5</priority></url>
   <url><loc>https://shchuna.co.il/har-homa/halls/%D7%90%D7%95%D7%9C%D7%9D-%D7%91%D7%99%D7%AA-%D7%9B%D7%A0%D7%A1%D7%AA-%D7%96%D7%95%D7%94%D7%A8-%D7%9E%D7%99%D7%9B%D7%9C/</loc><changefreq>weekly</changefreq><priority>0.5</priority></url>
   <url><loc>https://shchuna.co.il/har-homa/halls/%D7%A9%D7%A2%D7%A8%D7%99-%D7%94%D7%97%D7%95%D7%9E%D7%94/</loc><changefreq>weekly</changefreq><priority>0.5</priority></url>
+  <url><loc>https://shchuna.co.il/har-homa/halls/%D7%97%D7%A1%D7%93%D7%99-%D7%A9%D7%9E%D7%95%D7%90%D7%9C-%D7%94%D7%A8%D7%91-%D7%A2%D7%9E%D7%A8%D7%9E%D7%99/</loc><changefreq>weekly</changefreq><priority>0.5</priority></url>
   <url><loc>https://shchuna.co.il/har-homa/halls/%D7%90%D7%95%D7%94%D7%9C-%D7%99%D7%A6%D7%97%D7%A7-%D7%95%D7%97%D7%A0%D7%94/</loc><changefreq>weekly</changefreq><priority>0.5</priority></url>
   <url><loc>https://shchuna.co.il/har-homa/halls/%D7%9E%D7%A9%D7%9B%D7%9F-%D7%90%D7%A8%D7%99%D7%90%D7%9C%D7%94/</loc><changefreq>weekly</changefreq><priority>0.5</priority></url>
-  <url><loc>https://shchuna.co.il/har-homa/halls/%D7%97%D7%A1%D7%93%D7%99-%D7%A9%D7%9E%D7%95%D7%90%D7%9C-%D7%94%D7%A8%D7%91-%D7%A2%D7%9E%D7%A8%D7%9E%D7%99/</loc><changefreq>weekly</changefreq><priority>0.5</priority></url>
   <url><loc>https://shchuna.co.il/har-homa/halls/%D7%90%D7%95%D7%9C%D7%9D-%D7%91%D7%99%D7%AA-%D7%94%D7%9B%D7%A0%D7%A1%D7%AA-%D7%9E%D7%A0%D7%97%D7%AA-%D7%A9%D7%99-%D7%A1%D7%95%D7%9C-%D7%9C%D7%99%D7%A4%D7%A6%D7%99%D7%9F/</loc><changefreq>weekly</changefreq><priority>0.5</priority></url>
   <url><loc>https://shchuna.co.il/har-homa/hosting/%D7%97%D7%A1%D7%93%D7%99-%D7%A9%D7%9E%D7%95%D7%90%D7%9C/</loc><changefreq>weekly</changefreq><priority>0.5</priority></url>
   <url><loc>https://shchuna.co.il/har-homa/hosting/%D7%95%D7%99%D7%9C%D7%94-%D7%9C%D7%90%D7%99%D7%A8%D7%95%D7%97/</loc><changefreq>weekly</changefreq><priority>0.5</priority></url>
@@ -201,7 +201,6 @@
   <url><loc>https://shchuna.co.il/har-homa/education/%D7%92%D7%9F-%D7%9E%D7%A8%D7%95%D7%9D/</loc><changefreq>weekly</changefreq><priority>0.5</priority></url>
   <url><loc>https://shchuna.co.il/har-homa/education/%D7%92%D7%9F-%D7%90%D7%94%D7%91%D7%94/</loc><changefreq>weekly</changefreq><priority>0.5</priority></url>
   <url><loc>https://shchuna.co.il/har-homa/education/%D7%92%D7%9F-%D7%99%D7%A4%D7%94-%D7%A0%D7%95%D7%A3/</loc><changefreq>weekly</changefreq><priority>0.5</priority></url>
-  <url><loc>https://shchuna.co.il/har-homa/education/%D7%AA%D7%99%D7%9B%D7%95%D7%9F-%D7%93%D7%A8%D7%9A/</loc><changefreq>weekly</changefreq><priority>0.5</priority></url>
   <url><loc>https://shchuna.co.il/har-homa/education/%D7%92%D7%9F-%D7%A8%D7%9E%D7%94-%D7%9E%D7%9B%D7%99%D7%A0%D7%94-%D7%A6%D7%A2%D7%99%D7%A8/</loc><changefreq>weekly</changefreq><priority>0.5</priority></url>
   <url><loc>https://shchuna.co.il/har-homa/education/%D7%92%D7%9F-%D7%97%D7%96%D7%95%D7%9F/</loc><changefreq>weekly</changefreq><priority>0.5</priority></url>
   <url><loc>https://shchuna.co.il/har-homa/education/%D7%92%D7%9F-%D7%A1%D7%A4%D7%99%D7%A8/</loc><changefreq>weekly</changefreq><priority>0.5</priority></url>
@@ -233,6 +232,7 @@
   <url><loc>https://shchuna.co.il/har-homa/education/%D7%92%D7%9F-%D7%99%D7%A1%D7%93%D7%AA-%D7%A2%D7%96-%D7%92%D7%99%D7%9C-3-%D7%91/</loc><changefreq>weekly</changefreq><priority>0.5</priority></url>
   <url><loc>https://shchuna.co.il/har-homa/education/%F0%9F%A4%8D%F0%9F%AA%AC%D7%94%D7%A7%D7%98%D7%A0%D7%98%D7%A0%D7%99%D7%9D-%D7%A9%D7%9C-%D7%9C%D7%99%D7%9E%D7%95%D7%A8%F0%9F%A4%8D%F0%9F%AA%AC/</loc><changefreq>weekly</changefreq><priority>0.5</priority></url>
   <url><loc>https://shchuna.co.il/har-homa/education/%D7%94%D7%9E%D7%A9%D7%A4%D7%97%D7%AA%D7%95%D7%9F-%D7%A9%D7%9C-%D7%94%D7%95%D7%93%D7%99%D7%94/</loc><changefreq>weekly</changefreq><priority>0.5</priority></url>
+  <url><loc>https://shchuna.co.il/har-homa/education/%D7%AA%D7%99%D7%9B%D7%95%D7%9F-%D7%93%D7%A8%D7%9A/</loc><changefreq>weekly</changefreq><priority>0.5</priority></url>
   <url><loc>https://shchuna.co.il/har-homa/education/%D7%92%D7%9F-%D7%A4%D7%98%D7%9C/</loc><changefreq>weekly</changefreq><priority>0.5</priority></url>
   <url><loc>https://shchuna.co.il/har-homa/education/%D7%A0%D7%A2%D7%9D-%D7%91%D7%A0%D7%95%D7%AA/</loc><changefreq>weekly</changefreq><priority>0.5</priority></url>
   <url><loc>https://shchuna.co.il/har-homa/education/%D7%9E%D7%A2%D7%95%D7%9F-%D7%97%D7%95%D7%9E%D7%AA-%D7%A9%D7%9E%D7%95%D7%90%D7%9C-%D7%91/</loc><changefreq>weekly</changefreq><priority>0.5</priority></url>
@@ -823,12 +823,12 @@
   <url><loc>https://shchuna.co.il/beit-vagan/biz/%D7%A8%D7%99%D7%A0%D7%92-%D7%98%D7%99%D7%99%D7%9D-2/</loc><changefreq>weekly</changefreq><priority>0.6</priority></url>
   <url><loc>https://shchuna.co.il/beit-vagan/biz/%D7%A9%D7%95%D7%A4%D7%A8%D7%A1%D7%9C-%D7%99%D7%A9-%D7%97%D7%A1%D7%93-%D7%91%D7%99%D7%AA-%D7%95%D7%92%D7%9F-%D7%99%D7%A9-%D7%97%D7%A1%D7%93/</loc><changefreq>weekly</changefreq><priority>0.6</priority></url>
   <url><loc>https://shchuna.co.il/beit-vagan/halls/%D7%90%D7%95%D7%9C%D7%9D-%D7%91%D7%99%D7%AA-%D7%94%D7%9B%D7%A0%D7%A1%D7%AA-%D7%99%D7%A9%D7%9E%D7%97-%D7%9C%D7%91/</loc><changefreq>weekly</changefreq><priority>0.5</priority></url>
+  <url><loc>https://shchuna.co.il/beit-vagan/halls/%D7%90%D7%95%D7%9C%D7%9D-%D7%91%D7%99%D7%AA-%D7%94%D7%9B%D7%A0%D7%A1%D7%AA-%D7%91%D7%99%D7%AA-%D7%99%D7%94%D7%95%D7%93%D7%94/</loc><changefreq>weekly</changefreq><priority>0.5</priority></url>
   <url><loc>https://shchuna.co.il/beit-vagan/halls/%D7%90%D7%95%D7%9C%D7%9D-%D7%91%D7%99%D7%AA-%D7%94%D7%9B%D7%A0%D7%A1%D7%AA-%D7%9E%D7%A0%D7%97%D7%AA-%D7%A9%D7%9C%D7%9E%D7%94/</loc><changefreq>weekly</changefreq><priority>0.5</priority></url>
   <url><loc>https://shchuna.co.il/beit-vagan/halls/%D7%90%D7%95%D7%9C%D7%9D-%D7%91%D7%99%D7%AA-%D7%94%D7%9B%D7%A0%D7%A1%D7%AA-%D7%AA%D7%A4%D7%90%D7%A8%D7%AA-%D7%A6%D7%91%D7%99/</loc><changefreq>weekly</changefreq><priority>0.5</priority></url>
-  <url><loc>https://shchuna.co.il/beit-vagan/halls/%D7%90%D7%95%D7%9C%D7%9D-%D7%91%D7%99%D7%AA-%D7%94%D7%9B%D7%A0%D7%A1%D7%AA-%D7%91%D7%99%D7%AA-%D7%99%D7%94%D7%95%D7%93%D7%94/</loc><changefreq>weekly</changefreq><priority>0.5</priority></url>
-  <url><loc>https://shchuna.co.il/beit-vagan/halls/%D7%90%D7%95%D7%9C%D7%9D-%D7%91%D7%99%D7%AA-%D7%94%D7%9B%D7%A0%D7%A1%D7%AA-%D7%A2%D7%93%D7%AA-%D7%99%D7%A9%D7%A8%D7%90%D7%9C/</loc><changefreq>weekly</changefreq><priority>0.5</priority></url>
   <url><loc>https://shchuna.co.il/beit-vagan/halls/%D7%90%D7%95%D7%9C%D7%9D-%D7%99%D7%A9%D7%99%D7%91%D7%AA-%D7%A0%D7%AA%D7%99%D7%91-%D7%9E%D7%90%D7%99%D7%A8/</loc><changefreq>weekly</changefreq><priority>0.5</priority></url>
   <url><loc>https://shchuna.co.il/beit-vagan/halls/%D7%91%D7%99%D7%AA-%D7%94%D7%90%D7%A8%D7%97%D7%94-%D7%91%D7%99%D7%AA-%D7%95%D7%92%D7%9F-%E2%80%94-%D7%90%D7%95%D7%9C%D7%9D-%D7%A7%D7%A8%D7%99%D7%A1%D7%98%D7%9C/</loc><changefreq>weekly</changefreq><priority>0.5</priority></url>
+  <url><loc>https://shchuna.co.il/beit-vagan/halls/%D7%90%D7%95%D7%9C%D7%9D-%D7%91%D7%99%D7%AA-%D7%94%D7%9B%D7%A0%D7%A1%D7%AA-%D7%A2%D7%93%D7%AA-%D7%99%D7%A9%D7%A8%D7%90%D7%9C/</loc><changefreq>weekly</changefreq><priority>0.5</priority></url>
   <url><loc>https://shchuna.co.il/beit-vagan/education/%D7%94%D7%A4%D7%A1%D7%92%D7%94-31/</loc><changefreq>weekly</changefreq><priority>0.5</priority></url>
   <url><loc>https://shchuna.co.il/beit-vagan/education/%D7%91%D7%99%D7%AA-%D7%95%D7%92%D7%9F-%D7%96%D7%90%D7%91-%D7%97%D7%A7%D7%9C%D7%90%D7%99-15-%D7%92%D7%99%D7%9C-3/</loc><changefreq>weekly</changefreq><priority>0.5</priority></url>
   <url><loc>https://shchuna.co.il/beit-vagan/education/%D7%91%D7%99%D7%AA-%D7%95%D7%92%D7%9F-%D7%9E%D7%99%D7%9B%D7%9C%D7%99%D7%9F-21-%D7%92%D7%99%D7%9C-3/</loc><changefreq>weekly</changefreq><priority>0.5</priority></url>
@@ -1157,6 +1157,7 @@
   <url><loc>https://shchuna.co.il/neve-yaakov/biz/%D7%A9%D7%95%D7%A7-%D7%9E%D7%94%D7%93%D7%A8%D7%99%D7%9F-2/</loc><changefreq>weekly</changefreq><priority>0.6</priority></url>
   <url><loc>https://shchuna.co.il/neve-yaakov/biz/%D7%A9%D7%A8%D7%99-%D7%A7%D7%9C%D7%99%D7%A0%D7%99%D7%A7-2/</loc><changefreq>weekly</changefreq><priority>0.6</priority></url>
   <url><loc>https://shchuna.co.il/neve-yaakov/education/%D7%A0%D7%99%D7%A2%D7%A7%D7%91-%D7%90%D7%91%D7%A8%D7%94%D7%9D-%D7%A8%D7%91%D7%99%D7%A5-22-%D7%92%D7%99%D7%9C-3/</loc><changefreq>weekly</changefreq><priority>0.5</priority></url>
+  <url><loc>https://shchuna.co.il/neve-yaakov/education/%D7%A0%D7%95%D7%94-%D7%99%D7%A2%D7%A7%D7%91-%D7%91%D7%9C%D7%91%D7%9F-%D7%A0%D7%95%D7%94-%D7%92%D7%A8%D7%A9%D7%95%D7%9F/</loc><changefreq>weekly</changefreq><priority>0.5</priority></url>
   <url><loc>https://shchuna.co.il/neve-yaakov/education/%D7%A0%D7%99%D7%A2%D7%A7%D7%91-%D7%A7%D7%9E%D7%A0%D7%99%D7%A5-%D7%AA%D7%AA-%D7%95%D7%A1%D7%A8%D7%9E%D7%9F-4-%D7%92%D7%99%D7%9C-3/</loc><changefreq>weekly</changefreq><priority>0.5</priority></url>
   <url><loc>https://shchuna.co.il/neve-yaakov/education/%D7%A0%D7%99%D7%A2%D7%A7%D7%91-%D7%A7%D7%94%D7%99%D7%9C%D7%95%D7%AA-%D7%99%D7%A2%D7%A7%D7%91-%D7%AA%D7%AA-%D7%A9%D7%93-%D7%A0%D7%99%D7%A2%D7%A7%D7%91-38-%D7%9E%D7%A2%D7%9C-%D7%94%D7%9E%D7%A0%D7%94%D7%9C-%D7%92%D7%99%D7%9C-3/</loc><changefreq>weekly</changefreq><priority>0.5</priority></url>
   <url><loc>https://shchuna.co.il/neve-yaakov/education/%D7%A0%D7%99%D7%A2%D7%A7%D7%91-%D7%AA%D7%95%D7%A8%D7%94-%D7%95%D7%93%D7%A2%D7%AA-%D7%AA%D7%AA-%D7%91%D7%9C%D7%91%D7%9F-5-%D7%92%D7%99%D7%9C-3/</loc><changefreq>weekly</changefreq><priority>0.5</priority></url>
@@ -1246,7 +1247,6 @@
   <url><loc>https://shchuna.co.il/neve-yaakov/education/%D7%91%D7%99%D7%AA-%D7%99%D7%A2%D7%A7%D7%91-%D7%A2%D7%9C-%D7%98%D7%94%D7%A8%D7%AA-%D7%94%D7%A7%D7%95%D7%93%D7%A9-%D7%A0%D7%95%D7%94-%D7%99%D7%A2%D7%A7%D7%91/</loc><changefreq>weekly</changefreq><priority>0.5</priority></url>
   <url><loc>https://shchuna.co.il/neve-yaakov/education/%D7%91%D7%99%D7%AA-%D7%99%D7%A2%D7%A7%D7%91-%D7%A4%D7%A0%D7%99%D7%A0%D7%AA-%D7%94%D7%A6%D7%A4%D7%95%D7%9F-%D7%99%D7%95%D7%A1%D7%A3-%D7%9C%D7%A7%D7%97-%D7%91%D7%A0%D7%95%D7%AA/</loc><changefreq>weekly</changefreq><priority>0.5</priority></url>
   <url><loc>https://shchuna.co.il/neve-yaakov/education/%D7%94%D7%A6%D7%A0%D7%A2-%D7%9C%D7%9B%D7%AA-%D7%A1%D7%A0%D7%99%D7%A3/</loc><changefreq>weekly</changefreq><priority>0.5</priority></url>
-  <url><loc>https://shchuna.co.il/neve-yaakov/education/%D7%A0%D7%95%D7%94-%D7%99%D7%A2%D7%A7%D7%91-%D7%91%D7%9C%D7%91%D7%9F-%D7%A0%D7%95%D7%94-%D7%92%D7%A8%D7%A9%D7%95%D7%9F/</loc><changefreq>weekly</changefreq><priority>0.5</priority></url>
   <url><loc>https://shchuna.co.il/neve-yaakov/education/%D7%A0%D7%95%D7%94-%D7%99%D7%A2%D7%A7%D7%91-%D7%98%D7%91%D7%A0%D7%A7%D7%99%D7%9F-%D7%A0%D7%95%D7%94-%D7%90%D7%9C%D7%99%D7%A9%D7%99%D7%91/</loc><changefreq>weekly</changefreq><priority>0.5</priority></url>
   <url><loc>https://shchuna.co.il/neve-yaakov/education/%D7%A0%D7%95%D7%94-%D7%99%D7%A2%D7%A7%D7%91-%D7%A4%D7%A8%D7%93%D7%A1-%D7%A0%D7%95%D7%94-%D7%91%D7%AA-%D7%A9%D7%91%D7%A2/</loc><changefreq>weekly</changefreq><priority>0.5</priority></url>
   <url><loc>https://shchuna.co.il/neve-yaakov/education/%D7%A2%D7%96%D7%A8-%D7%9C%D7%97%D7%99%D7%A0%D7%95%D7%9A-%D7%AA%D7%95%D7%A8%D7%94-%D7%95%D7%93%D7%A2%D7%AA/</loc><changefreq>weekly</changefreq><priority>0.5</priority></url>
