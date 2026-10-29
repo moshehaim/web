@@ -77,9 +77,9 @@
     setTimeout(go, 1200);
   }
 
-  var DESKTOP_URL = "https://shchuna.co.il/#hoods";   // מחשב — אין טעם להפנות לחנות
+  var DESKTOP_URL = "https://shchuna.co.il/";   // מחשב — לראש דף הבית (רואים את האפליקציה)
 
-  // מחשב / דפדפן לא מזוהה — מפנים לעמודי השכונות באתר
+  // מחשב / דפדפן לא מזוהה — מפנים לראש דף הבית
   if (platform === "other") {
     px.onload  = goDesktop;
     px.onerror = goDesktop;
