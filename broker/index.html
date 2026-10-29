@@ -66,7 +66,7 @@
   <main id="list"><p class="empty">טוען…</p></main>
   <footer class="send" id="send" hidden>
     <a id="wa" class="wa" href="#" target="_blank" rel="noopener">שליחה בוואטסאפ</a>
-    <p class="sub">נפתחת הודעה מוכנה עם כל מה שמילאת. בוחרים את משה ושולחים.</p>
+    <p class="sub">נפתחת הודעה מוכנה למשה עם כל מה שמילאת. רק לוחצים "שלח".</p>
   </footer>
 </div>
 <script>
@@ -105,7 +105,7 @@ function render(){
       <span class="price">${price}</span><span class="chip">${m.length?'חסר: '+m.map(k=>LBL[k]).join(', '):'מלא'}</span></div>
       ${r.ask?`<div class="note">${esc(r.ask)}</div>`:''}
       <div class="grid">${field(r,'area','שטח בנוי (מ"ר)','num')}${field(r,'floor','קומה (קרקע = 0)','num')}${BOOLS.map(([k,l])=>field(r,k,l,'bool')).join('')}${field(r,'note','הערות','text')}</div></section>`}).join(''):'<p class="empty">הכול מלא ✓</p>';
-  document.getElementById('wa').href='https://wa.me/?text='+encodeURIComponent(message());
+  document.getElementById('wa').href='https://wa.me/972523114129?text='+encodeURIComponent(message());
   if(focused){const el=document.getElementById(focused);if(el){el.focus();try{const L=el.value.length;el.setSelectionRange(L,L)}catch(_){}}}
 }
 function save(id,patch){const r=rows.find(x=>x.id===id);if(r)Object.assign(r,patch);store();render()}
