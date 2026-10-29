@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>שכונה — פרטים לפרסום הנכסים</title>
+<link rel="icon" href="/app_icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Assistant:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+  :root{--navy:#0b3a78;--gold:#ffd23f;--bg:#f4f6fa;--card:#fff;--fg:#14213d;--muted:#5d6b82;--line:#dbe1ec;--miss:#b4561f;--miss-soft:#fdf0e6;--ok:#1f7a4d;--ok-soft:#e5f3ec}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--fg);font-family:"Assistant",system-ui,sans-serif;font-size:16px;padding:0 max(16px,env(safe-area-inset-left)) 40px max(16px,env(safe-area-inset-right))}
+  .wrap{max-width:760px;margin:0 auto;display:grid;gap:12px}
+  header{position:sticky;top:0;z-index:5;background:var(--bg);padding:16px 0 10px;display:grid;gap:8px;border-bottom:1px solid var(--line)}
+  .brand{display:flex;align-items:center;gap:8px;color:var(--navy);font-weight:800}
+  .brand img{width:28px;height:28px;border-radius:7px}
+  h1{font-size:1.4rem;margin:0;color:var(--navy);font-weight:800}
+  .sub{color:var(--muted);margin:0;font-size:.95rem;line-height:1.5}
+  .bar{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+  .track{flex:1;min-width:140px;height:8px;background:var(--line);border-radius:4px;overflow:hidden}
+  .fill{height:100%;background:var(--navy);width:0;transition:width .3s}
+  .count{font-variant-numeric:tabular-nums;font-weight:800;font-size:.95rem}
+  .toggle{display:flex;gap:6px;align-items:center;font-size:.95rem;color:var(--muted);cursor:pointer}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px;display:grid;gap:12px}
+  .card.done{border-color:var(--ok)}
+  .top{display:flex;gap:10px;align-items:flex-start;justify-content:space-between;flex-wrap:wrap}
+  .num{font-weight:800;color:var(--muted);min-width:2ch}
+  .ttl{flex:1 1 calc(100% - 3.5ch);min-width:0}
+  .top .price{margin-inline-start:3ch}.ttl b{font-size:1.05rem}.ttl div{color:var(--muted);font-size:.9rem;margin-top:2px}
+  .price{font-variant-numeric:tabular-nums;font-weight:800;white-space:nowrap}
+  .chip{font-size:.8rem;padding:2px 8px;border-radius:99px;background:var(--miss-soft);color:var(--miss);white-space:nowrap}
+  .card.done .chip{background:var(--ok-soft);color:var(--ok)}
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px}
+  .f{display:grid;gap:4px;min-width:0}.f>span{font-size:.85rem;color:var(--muted)}
+  .f.need>span{color:var(--miss);font-weight:600}
+  input{width:100%;font:inherit;padding:9px 10px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--fg);font-variant-numeric:tabular-nums}
+  .f.need input{border-color:var(--miss)}
+  input:focus-visible,button:focus-visible,a:focus-visible{outline:2px solid var(--navy);outline-offset:1px}
+  .seg{display:flex;border:1px solid var(--line);border-radius:8px;overflow:hidden}
+  .f.need .seg{border-color:var(--miss)}
+  .seg button{flex:1;font:inherit;padding:9px 0;border:0;background:var(--bg);color:var(--fg);cursor:pointer}
+  .seg button+button{border-inline-start:1px solid var(--line)}
+  .seg button[aria-pressed="true"]{background:var(--navy);color:#fff;font-weight:800}
+  .wide{grid-column:1/-1}
+  .note{font-size:.9rem;color:var(--miss);background:var(--miss-soft);border-radius:8px;padding:6px 10px}
+  .send{display:grid;gap:8px;justify-items:center;padding:10px 0 24px}
+  .wa{display:inline-block;background:#1f9d55;color:#fff;font-weight:800;font-size:1.15rem;padding:14px 30px;border-radius:12px;text-decoration:none}
+  .empty{color:var(--muted);text-align:center;padding:40px 0}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="brand"><img src="/app_icon.png" alt="">שכונה</div>
+    <h1 id="h1">חסרים לנו כמה פרטים</h1>
+    <p class="sub">כדי לפרסם את הנכסים מהקטלוג שלך באפליקציית שכונה (בחינם, עם התמונות). ממלאים מה שחסר (בכתום) ולוחצים "שליחה בוואטסאפ" בתחתית. אפשר לדלג על מה שלא ידוע.</p>
+    <div class="bar">
+      <div class="track"><div class="fill" id="fill"></div></div>
+      <span class="count" id="count">—</span>
+      <label class="toggle"><input type="checkbox" id="onlyMissing" style="width:auto"> רק מה שחסר</label>
+    </div>
+  </header>
+  <main id="list"><p class="empty">טוען…</p></main>
+  <footer class="send" id="send" hidden>
+    <a id="wa" class="wa" href="#" target="_blank" rel="noopener">שליחה בוואטסאפ</a>
+    <p class="sub">נפתחת הודעה מוכנה עם כל מה שמילאת. בוחרים את משה ושולחים.</p>
+  </footer>
+</div>
+<script>
+const REQ=['area','floor','elevator','mamad'];
+const LBL={area:'שטח',floor:'קומה',elevator:'מעלית',mamad:'ממ"ד'};
+const BOOLS=[['elevator','מעלית'],['mamad','ממ"ד'],['parking','חניה'],['storage','מחסן']];
+const list=document.getElementById('list');
+const key=(new URLSearchParams(location.search).get('b')||'').replace(/[^a-z0-9-]/gi,'');
+let rows=[], meta={}, onlyMissing=false;
+const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const missing=r=>REQ.filter(k=>r[k]===null||r[k]===undefined||r[k]==='');
+const fmt=n=>Number(n).toLocaleString('he-IL');
+const yn=v=>v===true?'כן':v===false?'לא':'?';
+function store(){try{const d={};rows.forEach(x=>d[x.id]={area:x.area,floor:x.floor,elevator:x.elevator,mamad:x.mamad,parking:x.parking,storage:x.storage,note:x.note});localStorage.setItem('draft-'+key,JSON.stringify(d))}catch(e){}}
+function field(r,k,label,kind){
+  const need=REQ.includes(k)&&(r[k]===null||r[k]===undefined||r[k]==='');
+  if(kind==='bool'){const v=r[k];return `<div class="f ${need?'need':''}"><span>${label}</span><div class="seg" data-id="${r.id}" data-k="${k}"><button type="button" aria-pressed="${v===true}" data-v="true">כן</button><button type="button" aria-pressed="${v===false}" data-v="false">לא</button></div></div>`}
+  const t=kind==='text'?'text':'number';
+  return `<label class="f ${need?'need':''} ${kind==='text'?'wide':''}"><span>${label}</span><input type="${t}" id="${r.id}-${k}" data-id="${r.id}" data-k="${k}" value="${esc(r[k])}" ${t==='number'?'inputmode="decimal" step="any"':''}></label>`;
+}
+function message(){
+  const L=[`פרטים לנכסים בשכונה (מ${meta.full}):`,''];
+  rows.forEach(r=>L.push(`${r.n}. ${r.street} ${r.rooms==='?'?'(חדרים ?)':r.rooms+' חד׳'} — מ"ר: ${r.area??'?'} | קומה: ${r.floor??'?'} | מעלית: ${yn(r.elevator)} | ממ"ד: ${yn(r.mamad)} | חניה: ${yn(r.parking)} | מחסן: ${yn(r.storage)}${r.note?' | הערה: '+r.note:''}`));
+  return L.join('\n');
+}
+function render(){
+  const done=rows.filter(r=>!missing(r).length).length;
+  document.getElementById('count').textContent=`${done} מתוך ${rows.length} מלאים`;
+  document.getElementById('fill').style.width=rows.length?(100*done/rows.length)+'%':'0';
+  const shown=rows.filter(r=>!onlyMissing||missing(r).length);
+  const focused=document.activeElement&&document.activeElement.id;
+  list.innerHTML=shown.length?shown.map(r=>{const m=missing(r);
+    const price=r.price==null?'מחיר: חסר':fmt(r.price)+' ₪'+(r.kind==='rental'?' לחודש':'');
+    return `<section class="card ${m.length?'':'done'}"><div class="top"><span class="num">${r.n}</span>
+      <div class="ttl"><b>${esc(r.street)}</b><div>${r.rooms==='?'?'חדרים: ?':esc(r.rooms)+' חד׳'}${r.title?' · '+esc(r.title):''}</div></div>
+      <span class="price">${price}</span><span class="chip">${m.length?'חסר: '+m.map(k=>LBL[k]).join(', '):'מלא'}</span></div>
+      ${r.ask?`<div class="note">${esc(r.ask)}</div>`:''}
+      <div class="grid">${field(r,'area','שטח בנוי (מ"ר)','num')}${field(r,'floor','קומה (קרקע = 0)','num')}${BOOLS.map(([k,l])=>field(r,k,l,'bool')).join('')}${field(r,'note','הערות','text')}</div></section>`}).join(''):'<p class="empty">הכול מלא ✓</p>';
+  document.getElementById('wa').href='https://wa.me/?text='+encodeURIComponent(message());
+  if(focused){const el=document.getElementById(focused);if(el){el.focus();try{const L=el.value.length;el.setSelectionRange(L,L)}catch(_){}}}
+}
+function save(id,patch){const r=rows.find(x=>x.id===id);if(r)Object.assign(r,patch);store();render()}
+list.addEventListener('click',e=>{const b=e.target.closest('.seg button');if(!b)return;const s=b.parentElement,v=b.dataset.v==='true',r=rows.find(x=>x.id===s.dataset.id);save(s.dataset.id,{[s.dataset.k]:r&&r[s.dataset.k]===v?null:v})});
+list.addEventListener('change',e=>{const i=e.target.closest('input[data-k]');if(!i)return;let v=i.value.trim();v=v===''?null:(i.type==='number'?Number(v):v);save(i.dataset.id,{[i.dataset.k]:v})});
+document.getElementById('onlyMissing').addEventListener('change',e=>{onlyMissing=e.target.checked;render()});
+(async()=>{
+  if(!key){list.innerHTML='<p class="empty">הקישור לא שלם. בקשו ממשה קישור חדש.</p>';return}
+  try{const r=await fetch('d/'+key+'.json',{cache:'no-store'});if(!r.ok)throw 0;const d=await r.json();meta=d;rows=d.rows;}
+  catch(e){list.innerHTML='<p class="empty">לא מצאנו את הרשימה. בקשו ממשה קישור חדש.</p>';return}
+  try{const d=JSON.parse(localStorage.getItem('draft-'+key)||'null');if(d)rows=rows.map(r=>({...r,...(d[r.id]||{})}))}catch(e){}
+  document.getElementById('h1').textContent=`${meta.first}, חסרים לנו כמה פרטים`;
+  document.getElementById('send').hidden=false;
+  render();
+})();
+</script>
+</body>
+</html>
