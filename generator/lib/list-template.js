@@ -10,6 +10,7 @@ const ICON_PHONE = 'M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2
 const ICON_WA = 'M4 20l1.3-4A8 8 0 1 1 8 18.7zM9 9.5c.3 2 2.3 4.2 4.5 4.6l1-1.2 1.8.8-.4 1.6c-3.3.2-7-3.4-7-6.8l1.5-.5.8 1.8z';
 const ICON_WAZE = 'M12 3l7 18-7-4-7 4z';
 const ICON_HEART = 'M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z';
+const ICON_CAL = 'M3 5h18v16H3zM3 10h18M8 3v4M16 3v4';
 
 /* כרטיס בלי תמונה: אייקון התחום על רקע בצבע התחום (כמו באפליקציה — לוגו / אייקון קטגוריה) */
 import { CAT_ICON } from './cat-icons.js';
@@ -76,6 +77,8 @@ ${MAP_CSS}
 /* מסך רחב: הכפתורים נפרשים לרוחב השורה */
 @media (min-width:621px){.dact a{flex:1 1 0;width:auto;border-radius:12px}.a-waze{background:#E3F4FB}.a-waze:hover{background:#D3EDF8}.a-waze img{width:28px;height:28px}.a-waze:hover img{transform:none}}
 .a-app{background:#F1F4F8;color:var(--navy)}
+.dact a.a-book{flex:1 1 auto;width:auto;gap:6px;border-radius:12px;font-weight:800;font-size:15px;background:#2A6FB8;color:#fff;text-decoration:none}
+.dact a.a-book:hover{background:#1F5A99}
 .dact [data-tip]{position:relative}
 .dempty[hidden]{display:none}
 .grow-h{grid-column:1/-1;margin:8px 0 -4px;font-size:24px;font-weight:800;color:var(--navy)}.grow-h:first-child{margin-top:0}
@@ -219,6 +222,8 @@ function card(p, kind) {
   const recTxt = p.rec === 1 ? 'המלצה אחת' : `${p.rec} המלצות`;
   const rec = p.rec > 0 ? `<span class="drec" role="img" aria-label="${recTxt}"><span class="rp">${svg(ICON_HEART, 14, 'currentColor', 2)}${recTxt}</span><span class="rh" aria-hidden="true"><svg viewBox="0 0 24 24" width="36" height="36"><path d="M12 21.3s-8.3-5.3-8.3-11.6A4.8 4.8 0 0 1 12 6.4a4.8 4.8 0 0 1 8.3 3.3c0 6.3-8.3 11.6-8.3 11.6z" fill="#E24B4A" stroke="#fff" stroke-width="1.8" stroke-linejoin="round"></path></svg><b>${p.rec}</b></span></span>` : '';
   const acts = [];
+  // מערכת תורים פעילה (סטטוס 2/3) — כפתור ישר לעסק באתר הדינמי
+  if (p.detail?.booking && p.id) acts.push(`<a class="a-book" href="${APP}${p.table === 'professionals' ? 'professional' : 'business'}/${encodeURIComponent(p.id)}" title="קביעת תור">${svg(ICON_CAL, 18, 'currentColor', 2.2)}<span>קביעת תור</span></a>`);
   if (p.phone) acts.push(`<a class="a-tel" href="${esc(p.phone.tel)}" data-num="${esc(p.phone.display)}" aria-label="טלפון של ${esc(p.name)}" title="טלפון">${svg(ICON_PHONE, 19, 'currentColor', 2.2)}<span class="ld"></span></a>`);
   if (p.phone?.wa) acts.push(`<a class="a-wa" href="${esc(p.phone.wa)}" target="_blank" rel="noopener" aria-label="WhatsApp ל${esc(p.name)}" title="WhatsApp">${svg(ICON_WA, 20, 'currentColor', 2)}</a>`);
   if (p.waze) acts.push(`<a class="a-waze" href="${esc(p.waze)}" target="_blank" rel="noopener" aria-label="ניווט ל${esc(p.name)} ב-Waze" title="ניווט ב-Waze"><img src="/img/waze.png" alt="" width="44" height="44"></a>`);

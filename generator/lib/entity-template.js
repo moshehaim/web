@@ -151,7 +151,9 @@ export function detailPage(vm, e, { base, home, kind, listLabel, ldType, listHre
   if (e.phone && !e.appOnly) acts.push(`<a class="e-tel" href="${esc(e.phone.tel)}" data-num="${esc(e.phone.display)}">${svg(ICON.phone, 19, 'currentColor', 2.2)}<span class="lbl">התקשרו</span><span class="num" dir="ltr" hidden>${esc(e.phone.display)}</span></a>`);
   if (e.phone?.wa && !e.appOnly) acts.push(`<a class="e-wa" href="${esc(e.phone.wa)}" target="_blank" rel="noopener">${svg(ICON.wa, 19, 'currentColor', 2)}WhatsApp</a>`);
   if (e.providerHref) acts.push(`<a class="e-map" href="${esc(e.providerHref)}">לעמוד העסק</a>`);
-  if (d.booking) acts.push(`<a class="e-book" href="${APP}">${svg(ICON.cal, 19, 'currentColor', 2)}קביעת תור</a>`);
+  // קביעת תור: ישר לעסק באתר הדינמי (/app/business/<id> → EntityLinkScreen עם "קבע תור")
+  const bookPath = e.table === 'professionals' ? 'professional' : e.table === 'businesses' ? 'business' : null;
+  if (d.booking) acts.push(`<a class="e-book" href="${APP}${bookPath && e.id ? `${bookPath}/${encodeURIComponent(e.id)}` : ''}">${svg(ICON.cal, 19, 'currentColor', 2)}קביעת תור</a>`);
   const noContact = !acts.length;
   // המלצה: באתר עצמו (/js/auth.js — התחברות + אימות טלפון + set_recommendation). בלי JS: לאפליקציה (?recommend=1)
   const recPath = e.table === 'professionals' ? 'professional' : e.table === 'businesses' ? 'business' : null;

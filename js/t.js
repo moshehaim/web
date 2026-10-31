@@ -86,7 +86,7 @@
     else if (/^https?:\/\/[^/]*shchuna\.co\.il\/b\/?(\?|#|$)/.test(h) || a.getAttribute('href') === '/b/') t = 'b';
     else if (/^https?:\/\/[^/]*shchuna\.co\.il\/app\//.test(h) || /^\/app\//.test(a.getAttribute('href') || '')) {
       if (a.hasAttribute('data-post') || a.hasAttribute('data-coupon') || a.hasAttribute('data-rec')) return; // נתפס ע"י auth.js
-      t = 'webapp';
+      t = a.classList.contains('a-book') || a.classList.contains('e-book') ? 'book' : 'webapp';
     }
     // כפתור עם data-cta (syn-times / sticky / edu) — נרשם בשם הכפתור, כדי לדעת איזה מביא לחיצות
     if (t && a.getAttribute('data-cta')) t = a.getAttribute('data-cta').slice(0, 40);
