@@ -334,7 +334,7 @@ export function shapeDirectory(raw) {
         rec: p.recommend_count || 0, where: p.address || '', phone: phoneLinks(p.phone),
         waze: p.latitude && p.longitude ? `https://waze.com/ul?ll=${p.latitude},${p.longitude}&navigate=yes` : null,
         owner: p.user_id ? 'owner' : 'team',
-        detail: { desc: p.description || '', schedule: p.weekly_schedule, booking: [2, 3].includes(p.appointment_system_status),
+        detail: { desc: p.description || '', schedule: p.weekly_schedule, booking: p.appointment_system_status === 3,
           facts: [p.experience_years ? `${p.experience_years} שנות ניסיון` : '', p.price_range || '', p.provides_warranty ? 'נותן אחריות' : '']
             .filter(Boolean), tags: [...subs.slice(3), ...(p.tags || [])], lat: p.latitude, lng: p.longitude,
           promos: promosOf(p.id) },
@@ -352,7 +352,7 @@ export function shapeDirectory(raw) {
         where: b.address || '', phone: phoneLinks(b.phone),
         waze: b.latitude && b.longitude ? `https://waze.com/ul?ll=${b.latitude},${b.longitude}&navigate=yes` : null,
         owner: b.user_id ? 'owner' : 'team',
-        detail: { desc: b.event_services_description || '', schedule: b.weekly_schedule, booking: [2, 3].includes(b.appointment_system_status),
+        detail: { desc: b.event_services_description || '', schedule: b.weekly_schedule, booking: b.appointment_system_status === 3,
           facts: [b.kosher_info ? `כשרות: ${b.kosher_info}` : ''].filter(Boolean), tags: [], lat: b.latitude, lng: b.longitude,
           promos: promosOf(b.id) },
       };
