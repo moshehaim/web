@@ -306,6 +306,8 @@ footer .c{font-size:13px;color:#8A94A6}
 
 @media (prefers-reduced-motion:reduce){.mq,.mq.rev,.tick,.dot{animation:none}.track{transition:none}.lift:hover{transform:none}}
 
+.in-cta{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:16px;padding:14px 16px;border-radius:16px;background:#EEF4FF;border:1px solid #D6E3FA;text-decoration:none;color:var(--navy)}
+.in-cta span{flex:1 1 220px;min-width:0;font-size:15.5px;line-height:1.45}.in-cta b.go{flex:none;background:var(--navy);color:#fff;border-radius:999px;padding:9px 18px;font-size:15px}
 .e-hero{background:var(--navy);color:#fff}
 .e-hero .wrap{padding-block:26px 28px;display:flex;flex-direction:column;gap:12px}
 .crumb{font-size:14px;color:#A9BAD4}.crumb a{color:#C9D6EA}
@@ -437,6 +439,7 @@ footer .c{font-size:13px;color:#8A94A6}
 </div>
 <aside class="e-side">
 <div class="e-card"><h2>יצירת קשר</h2><div class="e-acts"><a class="e-tel" href="tel:026414146" data-num="02-6414146"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2"/></svg><span class="lbl">התקשרו</span><span class="num" dir="ltr" hidden>02-6414146</span></a></div></div>
+<a class="in-cta" href="/b/" data-cta="edu"><span>🎒 כל הגנים ומוסדות החינוך בקרית יובל והסביבה, באפליקציה אחת</span><b class="go">לאפליקציה</b></a>
 <div class="e-card"><h2>הגעה</h2><p class="e-addr">תורה ועבודה 1</p><div class="e-acts"><a class="e-waze" href="https://waze.com/ul?ll=31.76463,35.18014&amp;navigate=yes" target="_blank" rel="nofollow noopener"><img src="/img/waze.png" alt="" width="24" height="24" style="display:block">ניווט ב-Waze</a><a class="e-map" href="https://www.google.com/maps/search/?api=1&amp;query=31.76463,35.18014" target="_blank" rel="nofollow noopener"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21zM12 7a2.5 2.5 0 1 0 0 5a2.5 2.5 0 1 0 0-5"/></svg>פתיחה במפות</a></div></div>
 
 <p class="e-note">הפרטים נמסרו על ידי בעל העסק ומתעדכנים על ידו באפליקציה.</p>
@@ -446,7 +449,23 @@ footer .c{font-size:13px;color:#8A94A6}
 
 <div class="wrap"><div class="app-cta"><div style="min-width:0;flex:1 1 300px"><b>עוד במוסדות חינוך</b><span>כל הרשימה בקרית יובל והסביבה, עם חיפוש וסינון.</span></div><a class="pill btn-dark" href="/kiryat-yovel/education/">למוסדות חינוך ←</a></div></div>
 </main>
-
+<div class="sticky-app" id="sticky-app" hidden role="complementary" aria-label="אפליקציית שכונה">
+<button type="button" class="sa-close" aria-label="סגירה">×</button>
+<img src="/app_icon.png" alt="" width="34" height="34">
+<span class="sa-t">כל <b>קרית יובל והסביבה</b> באפליקציה אחת</span>
+<a class="sa-go" href="/b/" data-cta="sticky">פתיחה</a>
+</div>
+<style>.sticky-app{display:none}
+@media (max-width:720px){.sticky-app:not([hidden]){display:flex;position:fixed;left:8px;right:8px;bottom:calc(8px + env(safe-area-inset-bottom));z-index:50;align-items:center;gap:10px;padding:8px 10px 8px 8px;background:#172F57;color:#fff;border-radius:16px;box-shadow:0 10px 28px rgba(10,20,40,.35)}
+.sticky-app img{border-radius:9px;flex:none}.sticky-app .sa-t{flex:1;min-width:0;font-size:15px;line-height:1.3}
+.sticky-app .sa-go{flex:none;background:#fff;color:#172F57;font-weight:800;text-decoration:none;border-radius:999px;padding:9px 16px;font-size:15px}
+.sticky-app .sa-close{flex:none;width:28px;height:28px;border:0;border-radius:50%;background:rgba(255,255,255,.14);color:#fff;font-size:18px;line-height:1;cursor:pointer}
+body.has-sticky{padding-bottom:calc(76px + env(safe-area-inset-bottom))}}</style>
+<script>(function(){var K='shchuna.stickyOff',b=document.getElementById('sticky-app');if(!b)return;
+var off=0;try{off=+localStorage.getItem(K)||0}catch(e){}
+if(Date.now()-off<7*864e5)return;
+b.hidden=false;document.body.classList.add('has-sticky');
+b.querySelector('.sa-close').addEventListener('click',function(){b.hidden=true;document.body.classList.remove('has-sticky');try{localStorage.setItem(K,String(Date.now()))}catch(e){}});})();</script>
 <footer><div class="wrap">
 <img src="/app_icon.png" alt="שכונה" width="48" height="48" loading="lazy">
 <span>שכונה · <a href="mailto:info@shchuna.co.il">info@shchuna.co.il</a></span>
@@ -454,7 +473,7 @@ footer .c{font-size:13px;color:#8A94A6}
 <span class="c">© שכונה, כל הזכויות שמורות</span>
 </div></footer>
 <script src="/js/auth.js?v=9" defer></script>
-<script src="/js/t.js?v=2" defer></script>
+<script src="/js/t.js?v=4" defer></script>
 
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"School","name":"גן בנין עולם 1","url":"https://shchuna.co.il/kiryat-yovel/education/%D7%92%D7%9F-%D7%91%D7%A0%D7%99%D7%9F-%D7%A2%D7%95%D7%9C%D7%9D-1/","telephone":"02-6414146","address":{"@type":"PostalAddress","streetAddress":"תורה ועבודה 1","addressLocality":"ירושלים","addressCountry":"IL"},"geo":{"@type":"GeoCoordinates","latitude":31.76463,"longitude":35.18014}}</script>
 <script>window.__SB={"url":"https://mebomrqnfnbqijiuawdh.supabase.co","key":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1lYm9tcnFuZm5icWlqaXVhd2RoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzkxOTc3MDEsImV4cCI6MjA1NDc3MzcwMX0.OSpzG4pnsgIiOEefWK0Z29ZHOo12bIhp0QXTdk2Hsg4"};</script>
