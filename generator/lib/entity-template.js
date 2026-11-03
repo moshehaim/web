@@ -190,7 +190,6 @@ ${siteHeader(vm, home, navChips(home, kind))}
 <div class="e-main">
 ${e.img ? `<div class="e-img"><img src="${esc(e.img)}" alt="${esc(e.name)}" decoding="async"></div>` : ''}
 ${(e.gallery || []).length ? `<div class="e-gal">${e.gallery.slice(0, 8).map((g) => `<a href="${esc(g)}" target="_blank" rel="noopener"><img src="${esc(g)}" alt="" loading="lazy"></a>`).join('')}</div>` : ''}
-${kind === 'education' ? `<a class="in-cta" href="/b/" data-cta="edu"><span>🎒 כל הגנים ומוסדות החינוך ב${esc(vm.name)}, באפליקציה אחת</span><b class="go">לאפליקציה</b></a>` : ''}
 ${d.desc ? `<div class="e-card"><h2>אודות</h2><p class="e-desc">${esc(d.desc)}</p></div>` : ''}
 ${(d.facts || []).length || (d.tags || []).length ? `<div class="e-card"><h2>פרטים</h2><div class="e-chips">${[...(d.facts || []), ...(d.tags || [])].map((t) => `<span>${esc(t)}</span>`).join('')}</div></div>` : ''}
 ${(d.sections || []).filter((x) => (x.chips || []).length || x.text).map((x) => `<div class="e-card"><h2>${esc(x.title)}</h2>${x.text ? `<p class="e-desc">${esc(x.text)}</p>` : `<div class="e-chips">${x.chips.map((c) => `<span>${esc(c)}</span>`).join('')}</div>`}</div>`).join('')}
@@ -198,6 +197,7 @@ ${(d.promos || []).length ? `<div class="e-card"><h2>מבצעים <span class="e
 </div>
 <aside class="e-side">
 <div class="e-card"><h2>יצירת קשר</h2><div class="e-acts">${acts.join('')}</div></div>
+${kind === 'education' ? `<a class="in-cta" href="/b/" data-cta="edu"><span>🎒 כל הגנים ומוסדות החינוך ב${esc(vm.name)}, באפליקציה אחת</span><b class="go">לאפליקציה</b></a>` : ''}
 ${e.where || d.lat ? `<div class="e-card"><h2>הגעה</h2>${e.where ? `<p class="e-addr">${esc(e.where)}</p>` : ''}${d.lat ? `<div class="e-acts">${e.waze ? `<a class="e-waze" href="${esc(e.waze)}" target="_blank" rel="nofollow noopener"><img src="/img/waze.png" alt="" width="24" height="24" style="display:block">ניווט ב-Waze</a>` : ''}${maps ? `<a class="e-map" href="${esc(maps)}" target="_blank" rel="nofollow noopener">${svg(ICON.pin, 18, 'currentColor', 2)}פתיחה במפות</a>` : ''}</div>` : ''}</div>` : ''}
 ${hours(d.schedule, st)}
 <p class="e-note">${OWNER_NOTE[e.owner] || OWNER_NOTE.team}</p>
