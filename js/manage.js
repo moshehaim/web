@@ -159,7 +159,7 @@
     var chips = '<span class="mb-chip">' + svg(IC.eye, '#fff').replace(/24/g, '16') + (biz.view_count || 0) + ' צפיות</span>' +
       (ctx.promo ? '<span class="mb-chip">' + svg(IC.tag, '#fff').replace(/24/g, '16') + 'מבצע פעיל</span>' : '') +
       (ctx.coupons.length ? '<span class="mb-chip">' + svg(IC.ticket, '#fff').replace(/24/g, '16') + ctx.coupons.length + ' חבילות קופונים</span>' : '') +
-      (apptOk && biz.appointment_system_status === 2 ? '<span class="mb-chip">' + svg(IC.cal, '#fff').replace(/24/g, '16') + 'תורים פעיל</span>' : '');
+      (apptOk && biz.appointment_system_status === 3 ? '<span class="mb-chip">' + svg(IC.cal, '#fff').replace(/24/g, '16') + 'תורים פעיל</span>' : '');
 
     var mixed = list.some(function (b) { return b._k !== list[0]._k; });
     var pick = list.length > 1 ? '<select class="mb-pick" id="mb-pick" aria-label="בחירת עסק">' + list.map(function (b) {

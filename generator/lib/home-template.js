@@ -755,7 +755,7 @@ export function siteFooter() {
 <span class="c">© שכונה, כל הזכויות שמורות</span>
 </div></footer>
 <script src="/js/auth.js?v=9" defer></script>
-<script src="/js/t.js?v=4" defer></script>`;
+<script src="/js/t.js?v=5" defer></script>`;
 }
 
 function shabbatCard(sh) {
