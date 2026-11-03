@@ -3,7 +3,7 @@
  * אותה מעטפת כמו עמוד השכונה (ראש, ניווט, תחתית), אותם צבעים.
  */
 
-import { pageHead, siteHeader, siteFooter, HOOD_JS, esc, svg, navChips, APP } from './home-template.js';
+import { pageHead, siteHeader, siteFooter, stickyApp, HOOD_JS, esc, svg, navChips, APP } from './home-template.js';
 import { MAP_CSS, MAP_ICON, mapScript } from './map.js';
 import { sortPrayers, formatPrayerTime, formatSelectedDays, NUSACH } from './prayers.js';
 import { shtiblachText } from './home-data.js';
@@ -90,11 +90,13 @@ const CSS = `${MAP_CSS}
 .note2{font-size:13px;color:var(--muted);text-align:center;padding-block:18px 0}
 .app-cta{background:var(--soft);border-radius:22px;padding:22px;display:flex;flex-wrap:wrap;gap:14px;align-items:center;justify-content:space-between;margin-block:28px 56px}
 .app-cta b{display:block;font-size:20px;color:var(--navy)}.app-cta span{font-size:15px;color:#3B4860}
+.in-cta{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-top:18px;padding:14px 16px;border-radius:16px;background:#EEF4FF;border:1px solid #D6E3FA;text-decoration:none;color:var(--navy)}
+.in-cta span{flex:1 1 220px;min-width:0;font-size:15.5px;line-height:1.45}.in-cta b.go{flex:none;background:var(--navy);color:#fff;border-radius:999px;padding:9px 18px;font-size:15px}
 `;
 
 const nav = (home) => navChips(home, 'minyanim');
 
-const appCta = `<div class="app-cta"><div style="min-width:0;flex:1 1 300px"><b>המניין הקרוב אליך, עכשיו</b><span>באפליקציה: כל המניינים לפי מרחק ולפי השעה, עם התראות על שינויים.</span></div><a class="pill btn-dark" href="/b/">להורדת האפליקציה</a></div>`;
+const appCta = `<div class="app-cta"><div style="min-width:0;flex:1 1 300px"><b>המניין הקרוב אליך, עכשיו</b><span>באפליקציה: כל המניינים לפי מרחק ולפי השעה, בלחיצה אחת.</span></div><a class="pill btn-dark" href="/b/">להורדת האפליקציה</a></div>`;
 
 /* ── אינדקס ───────────────────────────────────────────────────── */
 
@@ -248,6 +250,7 @@ ${sht ? '<span class="mn-chip hi">שטיבלך</span>' : ''}${nusach ? `<span cl
 <h2>זמני <span class="em">תפילה</span></h2>
 ${sht ? `<p class="sht"><b>שטיבלך — מניינים מתחלפים:</b> ${esc(sht)}</p>` : ''}
 ${sorted.length ? sections : sht ? '' : '<p class="nempty">טרם נמסרו זמני תפילה לבית כנסת זה.</p>'}
+<a class="in-cta" href="/b/" data-cta="syn-times"><span>📍 הזמנים ב${esc(syn.name)} ובכל בתי הכנסת ב${esc(vm.name)}, תמיד איתך</span><b class="go">לאפליקציה</b></a>
 </section>
 <aside class="side">
 ${syn.latitude ? `<div class="info"><h2>הגעה</h2>${syn.address ? `<p>${esc(syn.address)}</p>` : ''}<div class="btns">
@@ -262,7 +265,7 @@ ${syn.study_during_day_details ? `<div class="info"><h2>לימוד ביום</h2>
 
 <div class="wrap">${appCta}</div>
 </main>
-
+${stickyApp(vm)}
 ${siteFooter()}
 
 <script type="application/ld+json">${JSON.stringify(jsonld).replace(/</g, '\\u003c')}</script>

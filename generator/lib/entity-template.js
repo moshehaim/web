@@ -5,7 +5,7 @@
  */
 
 import { isIsraeliDST } from './season.js';
-import { pageHead, siteHeader, siteFooter, HOOD_JS, esc, svg, APP, navChips } from './home-template.js';
+import { pageHead, siteHeader, siteFooter, stickyApp, HOOD_JS, esc, svg, APP, navChips } from './home-template.js';
 
 const DAYS = [['sunday', 'ראשון'], ['monday', 'שני'], ['tuesday', 'שלישי'], ['wednesday', 'רביעי'],
   ['thursday', 'חמישי'], ['friday', 'שישי'], ['saturday', 'שבת']];
@@ -26,6 +26,8 @@ const OWNER_NOTE = {
 };
 
 const CSS = `
+.in-cta{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:16px;padding:14px 16px;border-radius:16px;background:#EEF4FF;border:1px solid #D6E3FA;text-decoration:none;color:var(--navy)}
+.in-cta span{flex:1 1 220px;min-width:0;font-size:15.5px;line-height:1.45}.in-cta b.go{flex:none;background:var(--navy);color:#fff;border-radius:999px;padding:9px 18px;font-size:15px}
 .e-hero{background:var(--navy);color:#fff}
 .e-hero .wrap{padding-block:26px 28px;display:flex;flex-direction:column;gap:12px}
 .crumb{font-size:14px;color:#A9BAD4}.crumb a{color:#C9D6EA}
@@ -188,6 +190,7 @@ ${siteHeader(vm, home, navChips(home, kind))}
 <div class="e-main">
 ${e.img ? `<div class="e-img"><img src="${esc(e.img)}" alt="${esc(e.name)}" decoding="async"></div>` : ''}
 ${(e.gallery || []).length ? `<div class="e-gal">${e.gallery.slice(0, 8).map((g) => `<a href="${esc(g)}" target="_blank" rel="noopener"><img src="${esc(g)}" alt="" loading="lazy"></a>`).join('')}</div>` : ''}
+${kind === 'education' ? `<a class="in-cta" href="/b/" data-cta="edu"><span>🎒 כל הגנים ומוסדות החינוך ב${esc(vm.name)}, באפליקציה אחת</span><b class="go">לאפליקציה</b></a>` : ''}
 ${d.desc ? `<div class="e-card"><h2>אודות</h2><p class="e-desc">${esc(d.desc)}</p></div>` : ''}
 ${(d.facts || []).length || (d.tags || []).length ? `<div class="e-card"><h2>פרטים</h2><div class="e-chips">${[...(d.facts || []), ...(d.tags || [])].map((t) => `<span>${esc(t)}</span>`).join('')}</div></div>` : ''}
 ${(d.sections || []).filter((x) => (x.chips || []).length || x.text).map((x) => `<div class="e-card"><h2>${esc(x.title)}</h2>${x.text ? `<p class="e-desc">${esc(x.text)}</p>` : `<div class="e-chips">${x.chips.map((c) => `<span>${esc(c)}</span>`).join('')}</div>`}</div>`).join('')}
@@ -205,7 +208,7 @@ ${e.related?.length ? `<section class="wrap rel" aria-label="עוד ב${esc(e.gr
 <div class="rel-row">${e.related.map((o) => `<a class="rel-card lift" href="${esc(o.href)}"><div class="rel-media">${o.img ? `<img src="${esc(o.img)}" alt="" loading="lazy">` : ''}</div><div class="rel-body"><b>${esc(o.name)}</b>${o.field ? `<small>${esc(o.field)}</small>` : ''}</div></a>`).join('')}</div></section>` : ''}
 <div class="wrap"><div class="app-cta"><div style="min-width:0;flex:1 1 300px"><b>עוד ב${esc(listLabel)}</b><span>כל הרשימה ב${esc(vm.name)}, עם חיפוש וסינון.</span></div><a class="pill btn-dark" href="${listHref || `${home}${kind}/`}">ל${esc(listLabel)} ←</a></div></div>
 </main>
-
+${stickyApp(vm)}
 ${siteFooter()}
 
 <script type="application/ld+json">${JSON.stringify(jsonld).replace(/</g, '\\u003c')}</script>

@@ -725,6 +725,28 @@ ${navChips}</header>
 `;
 }
 
+/** פס צף בתחתית המסך — רק בטלפון ורק בעמודי פריט (בית כנסת, עסק, גן, מודעה).
+ * נסגר ב-× ולא חוזר שבוע באותו דפדפן. נסתר עד שה-JS מחליט להציג (בלי JS — לא מופיע). */
+export function stickyApp(vm) {
+  return `<div class="sticky-app" id="sticky-app" hidden role="complementary" aria-label="אפליקציית שכונה">
+<button type="button" class="sa-close" aria-label="סגירה">×</button>
+<img src="/app_icon.png" alt="" width="34" height="34">
+<span class="sa-t">כל <b>${esc(vm.name)}</b> באפליקציה אחת</span>
+<a class="sa-go" href="${DOWNLOAD}" data-cta="sticky">פתיחה</a>
+</div>
+<style>.sticky-app{display:none}
+@media (max-width:720px){.sticky-app:not([hidden]){display:flex;position:fixed;left:8px;right:8px;bottom:calc(8px + env(safe-area-inset-bottom));z-index:50;align-items:center;gap:10px;padding:8px 10px 8px 8px;background:#172F57;color:#fff;border-radius:16px;box-shadow:0 10px 28px rgba(10,20,40,.35)}
+.sticky-app img{border-radius:9px;flex:none}.sticky-app .sa-t{flex:1;min-width:0;font-size:15px;line-height:1.3}
+.sticky-app .sa-go{flex:none;background:#fff;color:#172F57;font-weight:800;text-decoration:none;border-radius:999px;padding:9px 16px;font-size:15px}
+.sticky-app .sa-close{flex:none;width:28px;height:28px;border:0;border-radius:50%;background:rgba(255,255,255,.14);color:#fff;font-size:18px;line-height:1;cursor:pointer}
+body.has-sticky{padding-bottom:calc(76px + env(safe-area-inset-bottom))}}</style>
+<script>(function(){var K='shchuna.stickyOff',b=document.getElementById('sticky-app');if(!b)return;
+var off=0;try{off=+localStorage.getItem(K)||0}catch(e){}
+if(Date.now()-off<7*864e5)return;
+b.hidden=false;document.body.classList.add('has-sticky');
+b.querySelector('.sa-close').addEventListener('click',function(){b.hidden=true;document.body.classList.remove('has-sticky');try{localStorage.setItem(K,String(Date.now()))}catch(e){}});})();</script>`;
+}
+
 export function siteFooter() {
   return `<footer><div class="wrap">
 <img src="/app_icon.png" alt="שכונה" width="48" height="48" loading="lazy">
@@ -733,7 +755,7 @@ export function siteFooter() {
 <span class="c">© שכונה, כל הזכויות שמורות</span>
 </div></footer>
 <script src="/js/auth.js?v=9" defer></script>
-<script src="/js/t.js?v=2" defer></script>`;
+<script src="/js/t.js?v=4" defer></script>`;
 }
 
 function shabbatCard(sh) {
