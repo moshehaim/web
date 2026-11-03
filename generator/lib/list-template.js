@@ -223,7 +223,7 @@ function card(p, kind) {
   const rec = p.rec > 0 ? `<span class="drec" role="img" aria-label="${recTxt}"><span class="rp">${svg(ICON_HEART, 14, 'currentColor', 2)}${recTxt}</span><span class="rh" aria-hidden="true"><svg viewBox="0 0 24 24" width="36" height="36"><path d="M12 21.3s-8.3-5.3-8.3-11.6A4.8 4.8 0 0 1 12 6.4a4.8 4.8 0 0 1 8.3 3.3c0 6.3-8.3 11.6-8.3 11.6z" fill="#E24B4A" stroke="#fff" stroke-width="1.8" stroke-linejoin="round"></path></svg><b>${p.rec}</b></span></span>` : '';
   const acts = [];
   // מערכת תורים פעילה (סטטוס 2/3) — כפתור ישר לעסק באתר הדינמי
-  if (p.detail?.booking && p.id) acts.push(`<a class="a-book" href="${APP}${p.table === 'professionals' ? 'professional' : 'business'}/${encodeURIComponent(p.id)}" title="קביעת תור">${svg(ICON_CAL, 18, 'currentColor', 2.2)}<span>קביעת תור</span></a>`);
+  if (p.detail?.booking && p.id) acts.push(`<a class="a-book" href="${APP}${p.table === 'professionals' ? 'professional' : 'business'}/${encodeURIComponent(p.id)}?book=1" title="קביעת תור">${svg(ICON_CAL, 18, 'currentColor', 2.2)}<span>קביעת תור</span></a>`);
   if (p.phone) acts.push(`<a class="a-tel" href="${esc(p.phone.tel)}" data-num="${esc(p.phone.display)}" aria-label="טלפון של ${esc(p.name)}" title="טלפון">${svg(ICON_PHONE, 19, 'currentColor', 2.2)}<span class="ld"></span></a>`);
   if (p.phone?.wa) acts.push(`<a class="a-wa" href="${esc(p.phone.wa)}" target="_blank" rel="noopener" aria-label="WhatsApp ל${esc(p.name)}" title="WhatsApp">${svg(ICON_WA, 20, 'currentColor', 2)}</a>`);
   if (p.waze) acts.push(`<a class="a-waze" href="${esc(p.waze)}" target="_blank" rel="noopener" aria-label="ניווט ל${esc(p.name)} ב-Waze" title="ניווט ב-Waze"><img src="/img/waze.png" alt="" width="44" height="44"></a>`);

@@ -153,7 +153,7 @@ export function detailPage(vm, e, { base, home, kind, listLabel, ldType, listHre
   if (e.providerHref) acts.push(`<a class="e-map" href="${esc(e.providerHref)}">לעמוד העסק</a>`);
   // קביעת תור: ישר לעסק באתר הדינמי (/app/business/<id> → EntityLinkScreen עם "קבע תור")
   const bookPath = e.table === 'professionals' ? 'professional' : e.table === 'businesses' ? 'business' : null;
-  if (d.booking) acts.push(`<a class="e-book" href="${APP}${bookPath && e.id ? `${bookPath}/${encodeURIComponent(e.id)}` : ''}">${svg(ICON.cal, 19, 'currentColor', 2)}קביעת תור</a>`);
+  if (d.booking) acts.push(`<a class="e-book" href="${APP}${bookPath && e.id ? `${bookPath}/${encodeURIComponent(e.id)}?book=1` : ''}">${svg(ICON.cal, 19, 'currentColor', 2)}קביעת תור</a>`);
   const noContact = !acts.length;
   // המלצה: באתר עצמו (/js/auth.js — התחברות + אימות טלפון + set_recommendation). בלי JS: לאפליקציה (?recommend=1)
   const recPath = e.table === 'professionals' ? 'professional' : e.table === 'businesses' ? 'business' : null;
