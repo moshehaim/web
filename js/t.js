@@ -88,6 +88,8 @@
       if (a.hasAttribute('data-post') || a.hasAttribute('data-coupon') || a.hasAttribute('data-rec')) return; // נתפס ע"י auth.js
       t = 'webapp';
     }
+    // כפתור עם data-cta (syn-times / sticky / edu) — נרשם בשם הכפתור, כדי לדעת איזה מביא לחיצות
+    if (t && a.getAttribute('data-cta')) t = a.getAttribute('data-cta').slice(0, 40);
     // לחיצה כפולה — נספרת פעם אחת (3 שניות)
     if (t) { var now = Date.now(); if (t === lastT && now - lastAt < 3000) return; lastT = t; lastAt = now; send('download', t); }
   }, true);
