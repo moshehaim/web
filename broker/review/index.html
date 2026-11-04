@@ -49,6 +49,7 @@
   .wa{display:inline-block;background:#1f9d55;color:#fff;font-weight:800;font-size:1.15rem;padding:14px 30px;border-radius:12px;text-decoration:none;border:0;cursor:pointer;font-family:inherit}
   .copy{font:inherit;background:none;border:0;color:var(--navy);text-decoration:underline;cursor:pointer}
   .empty{color:var(--muted);text-align:center;padding:40px 0}
+  .agent{font-size:.88rem;color:var(--navy);margin-top:2px;font-weight:600}
   .row.need{background:#fdf0e6;border-radius:8px;padding:6px 8px}
   .needl{color:#b4561f;font-weight:700;font-size:.92rem}
   input.floor{flex:0 1 170px;min-width:120px;border-color:#b4561f}
@@ -64,7 +65,7 @@
       <div class="chips" id="chips"></div>
     </div>
     <div class="tools">
-      <input type="search" class="search" id="q" placeholder="חיפוש רחוב / שכונה" aria-label="חיפוש">
+      <input type="search" class="search" id="q" placeholder="חיפוש רחוב / שכונה / סוכן" aria-label="חיפוש">
       <label class="toggle"><input type="checkbox" id="onlyMarked"> רק מסומנים</label>
       <span class="count" id="count"></span>
     </div>
@@ -95,7 +96,7 @@
   function label(r){return (r.addr||r.title)+(r.zone?' ('+r.zone+')':'')}
   function render(){
     const q=$('q').value.trim(),only=$('onlyMarked').checked;
-    const rows=D.rows.filter(r=>(office==='all'||r.o===office)&&(!q||(r.addr+' '+r.zone+' '+r.title).includes(q))&&(!only||st(r).s||st(r).n||st(r).f));
+    const rows=D.rows.filter(r=>(office==='all'||r.o===office)&&(!q||(r.addr+' '+r.zone+' '+r.title+' '+(r.agent||'')).includes(q))&&(!only||st(r).s||st(r).n||st(r).f));
     const L=$('list');L.innerHTML='';
     if(!rows.length){L.innerHTML='<div class="empty">אין נכסים להצגה</div>';return}
     const groups={};rows.forEach(r=>{const z=r.zone||'ללא שכונה';(groups[z]=groups[z]||[]).push(r)});
@@ -111,7 +112,8 @@
     const b=document.createElement('b');b.textContent=r.title||label(r);
     const tag=document.createElement('span');tag.className='tag';tag.textContent=(r.kind==='rental'?'השכרה':'מכירה')+(office==='all'?' · '+D.offices[r.o].replace('רי/מקס ',''):'');b.appendChild(tag);
     const m=document.createElement('div');m.className='meta';m.textContent=[r.addr,meta(r)].filter(Boolean).join(' · ');
-    t.append(b,m);
+    const ag=document.createElement('div');ag.className='agent';ag.textContent=r.agent?'סוכן/ת: '+r.agent+(r.agentPhone?' · '+r.agentPhone:''):'';
+    t.append(b,m);if(r.agent)t.append(ag);
     const pr=document.createElement('div');pr.className='price';pr.textContent=fmt(r.price)+(r.kind==='rental'?' לחודש':'');
     top.append(t,pr);
     const row=document.createElement('div');row.className='row';
@@ -144,7 +146,7 @@
     const m=marked();
     if(!m.length)return 'עברתי על הנכסים ('+D.rows.length+') — כולם רלוונטיים 👍';
     const lines=['מעבר על נכסי '+(D.full||'רי/מקס')+' לאפליקציית שכונה:',''];
-    m.forEach(r=>{const s=st(r);let l='• '+label(r)+(r.rooms?' '+r.rooms+' חד׳':'')+' ['+r.id+']';if(s.s==='off')l+=' — נמכר/לא רלוונטי';else if((s.f||'').trim())l+=' — קומה '+s.f.trim();if((s.n||'').trim())l+=' — '+s.n.trim();lines.push(l)});
+    m.forEach(r=>{const s=st(r);let l='• '+label(r)+(r.rooms?' '+r.rooms+' חד׳':'')+(r.agent?' · '+r.agent:'')+' ['+r.id+']';if(s.s==='off')l+=' — נמכר/לא רלוונטי';else if((s.f||'').trim())l+=' — קומה '+s.f.trim();if((s.n||'').trim())l+=' — '+s.n.trim();lines.push(l)});
     lines.push('','סה״כ '+D.rows.length+' נכסים, '+m.length+' עם סימון/הערה/קומה.');
     return lines.join('\n');
   }
