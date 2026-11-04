@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>שכונה — מעבר על הנכסים</title>
+<link rel="icon" href="/app_icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Assistant:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+  :root{--navy:#0b3a78;--bg:#f4f6fa;--card:#fff;--fg:#14213d;--muted:#5d6b82;--line:#dbe1ec;--red:#b42318;--red-soft:#fdecea;--ok:#1f7a4d}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--fg);font-family:"Assistant",system-ui,sans-serif;font-size:16px;padding:0 max(16px,env(safe-area-inset-left)) 40px max(16px,env(safe-area-inset-right))}
+  .wrap{max-width:820px;margin:0 auto;display:grid;gap:10px}
+  header{background:var(--bg);padding:14px 0 10px;display:grid;gap:8px;border-bottom:1px solid var(--line)}
+  .brand{display:flex;align-items:center;gap:8px;color:var(--navy);font-weight:800}
+  .brand img{width:28px;height:28px;border-radius:7px}
+  h1{font-size:1.35rem;margin:0;color:var(--navy);font-weight:800}
+  .sub{color:var(--muted);margin:0;font-size:.95rem;line-height:1.5}
+  .tools{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+  .chips{display:flex;gap:6px;flex-wrap:wrap}
+  .chips button{font:inherit;font-size:.9rem;padding:5px 12px;border-radius:99px;border:1px solid var(--line);background:var(--card);color:var(--fg);cursor:pointer}
+  .chips button[aria-pressed="true"]{background:var(--navy);border-color:var(--navy);color:#fff;font-weight:700}
+  input[type=search],input[type=text]{font:inherit;padding:8px 10px;border:1px solid var(--line);border-radius:8px;background:var(--card);color:var(--fg);width:100%}
+  .search{flex:1;min-width:180px}
+  .count{font-weight:800;font-variant-numeric:tabular-nums;white-space:nowrap}
+  .toggle{display:flex;gap:6px;align-items:center;font-size:.92rem;color:var(--muted);cursor:pointer;white-space:nowrap}
+  .zone{font-weight:800;color:var(--navy);margin:10px 2px 0;font-size:1rem}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px;display:grid;gap:8px}
+  .card.off{border-color:var(--red);background:var(--red-soft)}
+  .top{display:flex;gap:10px;justify-content:space-between;align-items:flex-start}
+  .ttl{min-width:0;flex:1}
+  .ttl b{font-size:1rem;display:block;overflow-wrap:anywhere}
+  .meta{color:var(--muted);font-size:.88rem;margin-top:2px;overflow-wrap:anywhere}
+  .price{font-weight:800;font-variant-numeric:tabular-nums;white-space:nowrap}
+  .row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+  .seg{display:flex;border:1px solid var(--line);border-radius:8px;overflow:hidden;flex-shrink:0}
+  .seg button{font:inherit;font-size:.92rem;padding:7px 12px;border:0;background:var(--bg);color:var(--fg);cursor:pointer}
+  .seg button+button{border-inline-start:1px solid var(--line)}
+  .seg button[aria-pressed="true"].a{background:var(--ok);color:#fff;font-weight:700}
+  .seg button[aria-pressed="true"].s{background:var(--red);color:#fff;font-weight:700}
+  .row input{flex:1;min-width:160px}
+  a.link{font-size:.85rem;color:var(--navy);white-space:nowrap}
+  .tag{font-size:.75rem;padding:1px 7px;border-radius:99px;background:var(--line);color:var(--muted);margin-inline-start:6px;vertical-align:1px}
+  button:focus-visible,a:focus-visible,input:focus-visible{outline:2px solid var(--navy);outline-offset:1px}
+  .send{display:grid;gap:8px;justify-items:center;padding:14px 0 24px;text-align:center}
+  .wa{display:inline-block;background:#1f9d55;color:#fff;font-weight:800;font-size:1.15rem;padding:14px 30px;border-radius:12px;text-decoration:none;border:0;cursor:pointer;font-family:inherit}
+  .copy{font:inherit;background:none;border:0;color:var(--navy);text-decoration:underline;cursor:pointer}
+  .empty{color:var(--muted);text-align:center;padding:40px 0}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="brand"><img src="/app_icon.png" alt="">שכונה</div>
+    <h1 id="h1">מעבר מהיר על הנכסים</h1>
+    <p class="sub">אלה הנכסים מאתר רי/מקס בירושלים שנפרסם באפליקציית שכונה. מסמנים <b>"נמכר / לא רלוונטי"</b> על מה שכבר לא בשוק, ואפשר להוסיף הערה לכל נכס. בסוף לוחצים "שליחה בוואטסאפ" — נשלחים רק הנכסים שסימנת או שכתבת עליהם הערה.</p>
+    <div class="tools">
+      <div class="chips" id="chips"></div>
+    </div>
+    <div class="tools">
+      <input type="search" class="search" id="q" placeholder="חיפוש רחוב / שכונה" aria-label="חיפוש">
+      <label class="toggle"><input type="checkbox" id="onlyMarked"> רק מסומנים</label>
+      <span class="count" id="count"></span>
+    </div>
+  </header>
+  <main id="list"><div class="empty">טוען…</div></main>
+  <div class="send" id="sendBox" hidden>
+    <a class="wa" id="wa" href="#" target="_blank" rel="noopener">שליחה בוואטסאפ</a>
+    <button class="copy" id="copy" type="button">או העתקת הרשימה</button>
+    <span class="sub" id="sendNote"></span>
+  </div>
+</div>
+<script>
+(function(){
+  const PHONE='972523114129';
+  const key=(new URLSearchParams(location.search).get('b')||'').replace(/[^a-z0-9-]/g,'');
+  const $=id=>document.getElementById(id);
+  const fmt=n=>n==null?'':n.toLocaleString('he-IL')+' ₪';
+  let D=null,state={},office='all';
+  const LS='review_'+key;
+  function load(){try{state=JSON.parse(localStorage.getItem(LS)||'{}')}catch(e){state={}}}
+  function save(){try{localStorage.setItem(LS,JSON.stringify(state))}catch(e){}}
+  function st(r){return state[r.id]||{s:r.st?'off':'',n:''}}
+  function setSt(r,patch){state[r.id]=Object.assign({},st(r),patch);save();updateCount();buildMsg()}
+  function meta(r){
+    const p=[];if(r.type)p.push(r.type);if(r.rooms)p.push(r.rooms+' חד׳');if(r.area)p.push(r.area+' מ״ר');if(r.floor!==''&&r.floor!=null)p.push('קומה '+r.floor);
+    return p.join(' · ');
+  }
+  function label(r){return (r.addr||r.title)+(r.zone?' ('+r.zone+')':'')}
+  function render(){
+    const q=$('q').value.trim(),only=$('onlyMarked').checked;
+    const rows=D.rows.filter(r=>(office==='all'||r.o===office)&&(!q||(r.addr+' '+r.zone+' '+r.title).includes(q))&&(!only||st(r).s||st(r).n));
+    const L=$('list');L.innerHTML='';
+    if(!rows.length){L.innerHTML='<div class="empty">אין נכסים להצגה</div>';return}
+    const groups={};rows.forEach(r=>{const z=r.zone||'ללא שכונה';(groups[z]=groups[z]||[]).push(r)});
+    Object.keys(groups).sort((a,b)=>groups[b].length-groups[a].length||a.localeCompare(b,'he')).forEach(z=>{
+      const h=document.createElement('div');h.className='zone';h.textContent=z+' · '+groups[z].length;L.appendChild(h);
+      groups[z].forEach(r=>L.appendChild(card(r)));
+    });
+  }
+  function card(r){
+    const s=st(r);const c=document.createElement('div');c.className='card'+(s.s==='off'?' off':'');
+    const top=document.createElement('div');top.className='top';
+    const t=document.createElement('div');t.className='ttl';
+    const b=document.createElement('b');b.textContent=r.title||label(r);
+    const tag=document.createElement('span');tag.className='tag';tag.textContent=(r.kind==='rental'?'השכרה':'מכירה')+(office==='all'?' · '+D.offices[r.o].replace('רי/מקס ',''):'');b.appendChild(tag);
+    const m=document.createElement('div');m.className='meta';m.textContent=[r.addr,meta(r)].filter(Boolean).join(' · ');
+    t.append(b,m);
+    const pr=document.createElement('div');pr.className='price';pr.textContent=fmt(r.price)+(r.kind==='rental'?' לחודש':'');
+    top.append(t,pr);
+    const row=document.createElement('div');row.className='row';
+    const seg=document.createElement('div');seg.className='seg';seg.setAttribute('role','group');seg.setAttribute('aria-label','סטטוס');
+    const bA=document.createElement('button');bA.type='button';bA.className='a';bA.textContent='עדיין בשוק';
+    const bS=document.createElement('button');bS.type='button';bS.className='s';bS.textContent='נמכר / לא רלוונטי';
+    const paint=()=>{const v=st(r).s;bA.setAttribute('aria-pressed',v==='on');bS.setAttribute('aria-pressed',v==='off');c.className='card'+(v==='off'?' off':'')};
+    bA.onclick=()=>{setSt(r,{s:st(r).s==='on'?'':'on'});paint()};
+    bS.onclick=()=>{setSt(r,{s:st(r).s==='off'?'':'off'});paint()};
+    seg.append(bA,bS);paint();
+    const n=document.createElement('input');n.type='text';n.placeholder='הערה (מחיר חדש, פרט שגוי…)';n.value=s.n||'';n.setAttribute('aria-label','הערה');
+    n.oninput=()=>setSt(r,{n:n.value});
+    const a=document.createElement('a');a.className='link';a.target='_blank';a.rel='noopener';a.textContent='לנכס באתר';
+    a.href='https://www.remax-israel.com/he-il/%D7%93%D7%99%D7%A8%D7%95%D7%AA/a/b/%D7%99%D7%A8%D7%95%D7%A9%D7%9C%D7%99%D7%9D/'+r.id;
+    row.append(seg,n,a);
+    c.append(top,row);return c;
+  }
+  function marked(){return D.rows.filter(r=>{const s=st(r);return s.s==='off'||(s.n&&s.n.trim())})}
+  function updateCount(){
+    const off=D.rows.filter(r=>st(r).s==='off').length,notes=D.rows.filter(r=>(st(r).n||'').trim()).length;
+    $('count').textContent=off+' סומנו · '+notes+' הערות · '+D.rows.length+' נכסים';
+  }
+  function msg(){
+    const m=marked();
+    if(!m.length)return 'עברתי על הנכסים ('+D.rows.length+') — כולם רלוונטיים 👍';
+    const lines=['מעבר על נכסי רי/מקס ירושלים לאפליקציית שכונה:',''];
+    m.forEach(r=>{const s=st(r);let l='• '+label(r)+(r.rooms?' '+r.rooms+' חד׳':'')+' ['+r.id+']';if(s.s==='off')l+=' — נמכר/לא רלוונטי';if((s.n||'').trim())l+=' — '+s.n.trim();lines.push(l)});
+    lines.push('','סה״כ '+D.rows.length+' נכסים, '+m.length+' עם סימון/הערה.');
+    return lines.join('\n');
+  }
+  function buildMsg(){
+    const t=msg();$('wa').href='https://wa.me/'+PHONE+'?text='+encodeURIComponent(t);
+    $('sendNote').textContent=t.length>3500?'הרשימה ארוכה — אם וואטסאפ לא נפתח עם כל הטקסט, לחצו "העתקת הרשימה" והדביקו בצ׳אט.':'';
+  }
+  $('copy').onclick=async()=>{try{await navigator.clipboard.writeText(msg());$('copy').textContent='הועתק ✓'}catch(e){$('copy').textContent='לא הצלחתי להעתיק'}};
+  $('q').oninput=render;$('onlyMarked').onchange=render;
+  if(!key){$('list').innerHTML='<div class="empty">הקישור חסר</div>';return}
+  fetch('../d/'+key+'.json',{cache:'no-store'}).then(r=>{if(!r.ok)throw 0;return r.json()}).then(d=>{
+    D=d;load();
+    if(d.first)$('h1').textContent='שלום '+d.first+', מעבר מהיר על הנכסים';
+    const chips=$('chips');const opts=[['all','הכול ('+d.rows.length+')']].concat(Object.entries(d.offices).map(([k,v])=>[k,v+' ('+d.rows.filter(r=>r.o===k).length+')']).filter(x=>!x[1].endsWith('(0)')));
+    opts.forEach(([k,v])=>{const b=document.createElement('button');b.type='button';b.textContent=v;b.setAttribute('aria-pressed',k===office);b.onclick=()=>{office=k;[...chips.children].forEach(x=>x.setAttribute('aria-pressed',x===b));render()};chips.appendChild(b)});
+    $('sendBox').hidden=false;updateCount();buildMsg();render();
+  }).catch(()=>{$('list').innerHTML='<div class="empty">לא הצלחתי לטעון את הרשימה</div>'});
+})();
+</script>
+</body>
+</html>
