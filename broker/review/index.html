@@ -49,6 +49,9 @@
   .wa{display:inline-block;background:#1f9d55;color:#fff;font-weight:800;font-size:1.15rem;padding:14px 30px;border-radius:12px;text-decoration:none;border:0;cursor:pointer;font-family:inherit}
   .copy{font:inherit;background:none;border:0;color:var(--navy);text-decoration:underline;cursor:pointer}
   .empty{color:var(--muted);text-align:center;padding:40px 0}
+  .row.need{background:#fdf0e6;border-radius:8px;padding:6px 8px}
+  .needl{color:#b4561f;font-weight:700;font-size:.92rem}
+  input.floor{flex:0 1 170px;min-width:120px;border-color:#b4561f}
 </style>
 </head>
 <body>
@@ -56,7 +59,7 @@
   <header>
     <div class="brand"><img src="/app_icon.png" alt="">שכונה</div>
     <h1 id="h1">מעבר מהיר על הנכסים</h1>
-    <p class="sub">אלה הנכסים מאתר רי/מקס בירושלים שנפרסם באפליקציית שכונה. מסמנים <b>"נמכר / לא רלוונטי"</b> על מה שכבר לא בשוק, ואפשר להוסיף הערה לכל נכס. בסוף לוחצים "שליחה בוואטסאפ" — נשלחים רק הנכסים שסימנת או שכתבת עליהם הערה.</p>
+    <p class="sub">אלה הנכסים מאתר רי/מקס בירושלים שנפרסם באפליקציית שכונה. מסמנים <b>"נמכר / לא רלוונטי"</b> על מה שכבר לא בשוק, ואפשר להוסיף הערה לכל נכס. איפה שחסרה קומה (בכתום) — ממלאים אותה. בסוף לוחצים "שליחה בוואטסאפ" — נשלחים רק הנכסים שסימנת, שהוספת להם הערה או שמילאת להם קומה.</p>
     <div class="tools">
       <div class="chips" id="chips"></div>
     </div>
@@ -92,7 +95,7 @@
   function label(r){return (r.addr||r.title)+(r.zone?' ('+r.zone+')':'')}
   function render(){
     const q=$('q').value.trim(),only=$('onlyMarked').checked;
-    const rows=D.rows.filter(r=>(office==='all'||r.o===office)&&(!q||(r.addr+' '+r.zone+' '+r.title).includes(q))&&(!only||st(r).s||st(r).n));
+    const rows=D.rows.filter(r=>(office==='all'||r.o===office)&&(!q||(r.addr+' '+r.zone+' '+r.title).includes(q))&&(!only||st(r).s||st(r).n||st(r).f));
     const L=$('list');L.innerHTML='';
     if(!rows.length){L.innerHTML='<div class="empty">אין נכסים להצגה</div>';return}
     const groups={};rows.forEach(r=>{const z=r.zone||'ללא שכונה';(groups[z]=groups[z]||[]).push(r)});
@@ -124,19 +127,27 @@
     const a=document.createElement('a');a.className='link';a.target='_blank';a.rel='noopener';a.textContent='לנכס באתר';
     a.href='https://www.remax-israel.com/he-il/%D7%93%D7%99%D7%A8%D7%95%D7%AA/a/b/%D7%99%D7%A8%D7%95%D7%A9%D7%9C%D7%99%D7%9D/'+r.id;
     row.append(seg,n,a);
-    c.append(top,row);return c;
+    c.append(top,row);
+    if(r.floor===''||r.floor==null){
+      const fr=document.createElement('div');fr.className='row need';
+      const lb=document.createElement('span');lb.className='needl';lb.textContent='חסרה קומה:';
+      const fi=document.createElement('input');fi.type='text';fi.inputMode='numeric';fi.className='floor';fi.placeholder='למשל 3 או 0 לקרקע';fi.value=s.f||'';fi.setAttribute('aria-label','קומה');
+      fi.oninput=()=>setSt(r,{f:fi.value});fr.append(lb,fi);c.append(fr);
+    }
+    return c;
   }
-  function marked(){return D.rows.filter(r=>{const s=st(r);return s.s==='off'||(s.n&&s.n.trim())})}
+  function marked(){return D.rows.filter(r=>{const s=st(r);return s.s==='off'||(s.n&&s.n.trim())||(s.f&&s.f.trim())})}
   function updateCount(){
     const off=D.rows.filter(r=>st(r).s==='off').length,notes=D.rows.filter(r=>(st(r).n||'').trim()).length;
-    $('count').textContent=off+' סומנו · '+notes+' הערות · '+D.rows.length+' נכסים';
+    const nf=D.rows.filter(r=>(r.floor===''||r.floor==null)&&st(r).s!=='off'),ff=nf.filter(r=>(st(r).f||'').trim()).length;
+    $('count').textContent=off+' סומנו · '+notes+' הערות'+(nf.length?' · קומות '+ff+'/'+nf.length:'')+' · '+D.rows.length+' נכסים';
   }
   function msg(){
     const m=marked();
     if(!m.length)return 'עברתי על הנכסים ('+D.rows.length+') — כולם רלוונטיים 👍';
-    const lines=['מעבר על נכסי רי/מקס ירושלים לאפליקציית שכונה:',''];
-    m.forEach(r=>{const s=st(r);let l='• '+label(r)+(r.rooms?' '+r.rooms+' חד׳':'')+' ['+r.id+']';if(s.s==='off')l+=' — נמכר/לא רלוונטי';if((s.n||'').trim())l+=' — '+s.n.trim();lines.push(l)});
-    lines.push('','סה״כ '+D.rows.length+' נכסים, '+m.length+' עם סימון/הערה.');
+    const lines=['מעבר על נכסי '+(D.full||'רי/מקס')+' לאפליקציית שכונה:',''];
+    m.forEach(r=>{const s=st(r);let l='• '+label(r)+(r.rooms?' '+r.rooms+' חד׳':'')+' ['+r.id+']';if(s.s==='off')l+=' — נמכר/לא רלוונטי';else if((s.f||'').trim())l+=' — קומה '+s.f.trim();if((s.n||'').trim())l+=' — '+s.n.trim();lines.push(l)});
+    lines.push('','סה״כ '+D.rows.length+' נכסים, '+m.length+' עם סימון/הערה/קומה.');
     return lines.join('\n');
   }
   function buildMsg(){
@@ -148,8 +159,8 @@
   if(!key){$('list').innerHTML='<div class="empty">הקישור חסר</div>';return}
   fetch('../d/'+key+'.json',{cache:'no-store'}).then(r=>{if(!r.ok)throw 0;return r.json()}).then(d=>{
     D=d;load();
-    if(d.first)$('h1').textContent='שלום '+d.first+', מעבר מהיר על הנכסים';
-    const chips=$('chips');const opts=[['all','הכול ('+d.rows.length+')']].concat(Object.entries(d.offices).map(([k,v])=>[k,v+' ('+d.rows.filter(r=>r.o===k).length+')']).filter(x=>!x[1].endsWith('(0)')));
+    $('h1').textContent=(d.first?'שלום '+d.first+', ':'')+'מעבר מהיר על הנכסים'+(d.full?' — '+d.full:'');
+    const chips=$('chips');if(Object.keys(d.offices).length<2){chips.parentElement.style.display='none';office=Object.keys(d.offices)[0]||'all'}const opts=[['all','הכול ('+d.rows.length+')']].concat(Object.entries(d.offices).map(([k,v])=>[k,v+' ('+d.rows.filter(r=>r.o===k).length+')']).filter(x=>!x[1].endsWith('(0)')));
     opts.forEach(([k,v])=>{const b=document.createElement('button');b.type='button';b.textContent=v;b.setAttribute('aria-pressed',k===office);b.onclick=()=>{office=k;[...chips.children].forEach(x=>x.setAttribute('aria-pressed',x===b));render()};chips.appendChild(b)});
     $('sendBox').hidden=false;updateCount();buildMsg();render();
   }).catch(()=>{$('list').innerHTML='<div class="empty">לא הצלחתי לטעון את הרשימה</div>'});
