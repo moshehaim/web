@@ -59,7 +59,7 @@
   <header>
     <div class="brand"><img src="/app_icon.png" alt="">שכונה</div>
     <h1 id="h1">מעבר מהיר על הנכסים</h1>
-    <p class="sub">אלה הנכסים מאתר רי/מקס בירושלים שנפרסם באפליקציית שכונה. מסמנים <b>"נמכר / לא רלוונטי"</b> על מה שכבר לא בשוק, ואפשר להוסיף הערה לכל נכס. איפה שחסרה קומה (בכתום) — ממלאים אותה. בסוף לוחצים "שליחה בוואטסאפ" — נשלחים רק הנכסים שסימנת, שהוספת להם הערה או שמילאת להם קומה.</p>
+    <p class="sub">אלה הנכסים מהאתר שנפרסם באפליקציית שכונה. כל נכס שלא נוגעים בו — נשאר ומתפרסם כמו שהוא.<br>רק אם נכס כבר לא רלוונטי — לוחצים <b>"נמכר / לא רלוונטי"</b>. איפה שחסרה קומה (בכתום) — ממלאים אותה. אפשר להוסיף הערה לכל נכס.<br>בסוף לוחצים "שליחה בוואטסאפ".</p>
     <div class="tools">
       <div class="chips" id="chips"></div>
     </div>
@@ -116,12 +116,10 @@
     top.append(t,pr);
     const row=document.createElement('div');row.className='row';
     const seg=document.createElement('div');seg.className='seg';seg.setAttribute('role','group');seg.setAttribute('aria-label','סטטוס');
-    const bA=document.createElement('button');bA.type='button';bA.className='a';bA.textContent='עדיין בשוק';
     const bS=document.createElement('button');bS.type='button';bS.className='s';bS.textContent='נמכר / לא רלוונטי';
-    const paint=()=>{const v=st(r).s;bA.setAttribute('aria-pressed',v==='on');bS.setAttribute('aria-pressed',v==='off');c.className='card'+(v==='off'?' off':'')};
-    bA.onclick=()=>{setSt(r,{s:st(r).s==='on'?'':'on'});paint()};
+    const paint=()=>{const v=st(r).s;bS.setAttribute('aria-pressed',v==='off');c.className='card'+(v==='off'?' off':'')};
     bS.onclick=()=>{setSt(r,{s:st(r).s==='off'?'':'off'});paint()};
-    seg.append(bA,bS);paint();
+    seg.append(bS);paint();
     const n=document.createElement('input');n.type='text';n.placeholder='הערה (מחיר חדש, פרט שגוי…)';n.value=s.n||'';n.setAttribute('aria-label','הערה');
     n.oninput=()=>setSt(r,{n:n.value});
     const a=document.createElement('a');a.className='link';a.target='_blank';a.rel='noopener';a.textContent='לנכס באתר';
