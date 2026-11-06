@@ -188,11 +188,11 @@
   <url><loc>https://shchuna.co.il/har-homa/biz/%D7%A9%D7%91%D7%97-%D7%94%D7%A9%D7%9D/</loc><changefreq>weekly</changefreq><priority>0.6</priority></url>
   <url><loc>https://shchuna.co.il/har-homa/halls/%D7%90%D7%95%D7%9C%D7%9D-%D7%99%D7%A9%D7%99%D7%91%D7%AA-%D7%94%D7%A8-%D7%94%D7%9E%D7%95%D7%A8/</loc><changefreq>weekly</changefreq><priority>0.5</priority></url>
   <url><loc>https://shchuna.co.il/har-homa/halls/%D7%9B%D7%95%D7%9B%D7%91%D7%99-%D7%90%D7%95%D7%A8/</loc><changefreq>weekly</changefreq><priority>0.5</priority></url>
-  <url><loc>https://shchuna.co.il/har-homa/halls/%D7%A9%D7%A2%D7%A8%D7%99-%D7%94%D7%97%D7%95%D7%9E%D7%94/</loc><changefreq>weekly</changefreq><priority>0.5</priority></url>
   <url><loc>https://shchuna.co.il/har-homa/halls/%D7%90%D7%95%D7%9C%D7%9D-%D7%91%D7%99%D7%AA-%D7%9B%D7%A0%D7%A1%D7%AA-%D7%96%D7%95%D7%94%D7%A8-%D7%9E%D7%99%D7%9B%D7%9C/</loc><changefreq>weekly</changefreq><priority>0.5</priority></url>
-  <url><loc>https://shchuna.co.il/har-homa/halls/%D7%9E%D7%A9%D7%9B%D7%9F-%D7%90%D7%A8%D7%99%D7%90%D7%9C%D7%94/</loc><changefreq>weekly</changefreq><priority>0.5</priority></url>
-  <url><loc>https://shchuna.co.il/har-homa/halls/%D7%90%D7%95%D7%94%D7%9C-%D7%99%D7%A6%D7%97%D7%A7-%D7%95%D7%97%D7%A0%D7%94/</loc><changefreq>weekly</changefreq><priority>0.5</priority></url>
+  <url><loc>https://shchuna.co.il/har-homa/halls/%D7%A9%D7%A2%D7%A8%D7%99-%D7%94%D7%97%D7%95%D7%9E%D7%94/</loc><changefreq>weekly</changefreq><priority>0.5</priority></url>
   <url><loc>https://shchuna.co.il/har-homa/halls/%D7%97%D7%A1%D7%93%D7%99-%D7%A9%D7%9E%D7%95%D7%90%D7%9C-%D7%94%D7%A8%D7%91-%D7%A2%D7%9E%D7%A8%D7%9E%D7%99/</loc><changefreq>weekly</changefreq><priority>0.5</priority></url>
+  <url><loc>https://shchuna.co.il/har-homa/halls/%D7%90%D7%95%D7%94%D7%9C-%D7%99%D7%A6%D7%97%D7%A7-%D7%95%D7%97%D7%A0%D7%94/</loc><changefreq>weekly</changefreq><priority>0.5</priority></url>
+  <url><loc>https://shchuna.co.il/har-homa/halls/%D7%9E%D7%A9%D7%9B%D7%9F-%D7%90%D7%A8%D7%99%D7%90%D7%9C%D7%94/</loc><changefreq>weekly</changefreq><priority>0.5</priority></url>
   <url><loc>https://shchuna.co.il/har-homa/halls/%D7%90%D7%95%D7%9C%D7%9D-%D7%91%D7%99%D7%AA-%D7%94%D7%9B%D7%A0%D7%A1%D7%AA-%D7%9E%D7%A0%D7%97%D7%AA-%D7%A9%D7%99-%D7%A1%D7%95%D7%9C-%D7%9C%D7%99%D7%A4%D7%A6%D7%99%D7%9F/</loc><changefreq>weekly</changefreq><priority>0.5</priority></url>
   <url><loc>https://shchuna.co.il/har-homa/hosting/%D7%97%D7%A1%D7%93%D7%99-%D7%A9%D7%9E%D7%95%D7%90%D7%9C/</loc><changefreq>weekly</changefreq><priority>0.5</priority></url>
   <url><loc>https://shchuna.co.il/har-homa/hosting/%D7%95%D7%99%D7%9C%D7%94-%D7%9C%D7%90%D7%99%D7%A8%D7%95%D7%97/</loc><changefreq>weekly</changefreq><priority>0.5</priority></url>
@@ -539,6 +539,7 @@
   <url><loc>https://shchuna.co.il/gilo/minyanim/%D7%AA%D7%A4%D7%99%D7%9C%D7%AA-%D7%99%D7%A9%D7%A8%D7%90%D7%9C/</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
   <url><loc>https://shchuna.co.il/gilo/pros/asher/</loc><changefreq>weekly</changefreq><priority>0.6</priority></url>
   <url><loc>https://shchuna.co.il/gilo/pros/%D7%90%D7%99%D7%AA%D7%9E%D7%A8-%D7%A4%D7%A8%D7%90%D7%A0%D7%A7/</loc><changefreq>weekly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://shchuna.co.il/gilo/pros/%D7%91%D7%A8%D7%A7-%D7%9B%D7%94%D7%9F/</loc><changefreq>weekly</changefreq><priority>0.6</priority></url>
   <url><loc>https://shchuna.co.il/gilo/pros/%D7%96%D7%A4%D7%A8%D7%A0%D7%99-%D7%94%D7%A0%D7%93%D7%99%D7%9E%D7%9F-%D7%9C%D7%A9%D7%99%D7%A8%D7%95%D7%AA%D7%9A/</loc><changefreq>weekly</changefreq><priority>0.6</priority></url>
   <url><loc>https://shchuna.co.il/gilo/pros/%D7%97%D7%93%D7%95%D7%95%D7%94-%D7%A4%D7%A8%D7%97%D7%99/</loc><changefreq>weekly</changefreq><priority>0.6</priority></url>
   <url><loc>https://shchuna.co.il/gilo/pros/%D7%99%D7%A2%D7%A7%D7%91-%D7%9C%D7%95%D7%99/</loc><changefreq>weekly</changefreq><priority>0.6</priority></url>
@@ -723,6 +724,7 @@
   <url><loc>https://shchuna.co.il/gilo/promos/%D7%9E%D7%91%D7%A6%D7%A2-%D7%94%D7%9B%D7%A8%D7%95%D7%AA/</loc><changefreq>weekly</changefreq><priority>0.5</priority></url>
   <url><loc>https://shchuna.co.il/gilo/promos/7-%D7%A4%D7%9C%D7%95%D7%A1-1-%D7%97%D7%99%D7%A0%D7%9D/</loc><changefreq>weekly</changefreq><priority>0.5</priority></url>
   <url><loc>https://shchuna.co.il/gilo/board/%D7%A9%D7%99%D7%95%D7%95%D7%A7-%D7%90%D7%A4%D7%9C%D7%99%D7%A7%D7%A6%D7%99%D7%94/</loc><changefreq>weekly</changefreq><priority>0.5</priority></url>
+  <url><loc>https://shchuna.co.il/gilo/board/%D7%AA%D7%9E%D7%99-4-%D7%90%D7%93%D7%92-%D7%A4%D7%9C%D7%95%D7%A1/</loc><changefreq>weekly</changefreq><priority>0.5</priority></url>
   <url><loc>https://shchuna.co.il/gilo/board/%D7%92%D7%9E%D7%97-%D7%95%D7%A8%D7%9E%D7%95%D7%A7%D7%A1-%E2%80%94-%D7%A0%D7%92%D7%93-%D7%AA%D7%95%D7%9C%D7%A2%D7%99%D7%9D/</loc><changefreq>weekly</changefreq><priority>0.5</priority></url>
   <url><loc>https://shchuna.co.il/gilo/board/%D7%92%D7%9E%D7%97-%D7%91%D7%A8%D7%9B%D7%AA-%D7%9B%D7%9C%D7%94-%D7%9E%D7%94%D7%95%D7%93%D7%A8%D7%AA/</loc><changefreq>weekly</changefreq><priority>0.5</priority></url>
   <url><loc>https://shchuna.co.il/gilo/board/%D7%92%D7%9E%D7%97-%D7%9E%D7%9B%D7%A9%D7%99%D7%A8-%D7%90%D7%99%D7%A0%D7%94%D7%9C%D7%A6%D7%99%D7%94/</loc><changefreq>weekly</changefreq><priority>0.5</priority></url>
@@ -4076,6 +4078,7 @@
   <url><loc>https://shchuna.co.il/givat-zeev/pros/Elisheva-Man/</loc><changefreq>weekly</changefreq><priority>0.6</priority></url>
   <url><loc>https://shchuna.co.il/givat-zeev/pros/%D7%93%D7%99%D7%92%D7%99-%D7%A9%D7%99%D7%A8%D7%94/</loc><changefreq>weekly</changefreq><priority>0.6</priority></url>
   <url><loc>https://shchuna.co.il/givat-zeev/pros/%D7%9E%D7%A8%D7%92%D7%9C%D7%99%D7%AA-%D7%97%D7%A0%D7%9F/</loc><changefreq>weekly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://shchuna.co.il/givat-zeev/biz/%D7%90%D7%97%D7%95%D7%96%D7%AA-%D7%94%D7%A7%D7%95%D7%93%D7%A9/</loc><changefreq>weekly</changefreq><priority>0.6</priority></url>
   <url><loc>https://shchuna.co.il/givat-zeev/biz/%D7%93%D7%99-%D7%92%D7%99%D7%99/</loc><changefreq>weekly</changefreq><priority>0.6</priority></url>
   <url><loc>https://shchuna.co.il/givat-zeev/biz/%D7%9E%D7%92%D7%A9%D7%99-%D7%A4%D7%99%D7%A8%D7%95%D7%AA-%D7%A8%D7%97%D7%9C-%D7%A7%D7%9C%D7%99%D7%99%D7%9F/</loc><changefreq>weekly</changefreq><priority>0.6</priority></url>
   <url><loc>https://shchuna.co.il/givat-zeev/biz/%D7%9E%D7%A8%D7%92%D7%9C%D7%99%D7%AA-%D7%A7%D7%99%D7%A0%D7%95%D7%97%D7%99%D7%9D/</loc><changefreq>weekly</changefreq><priority>0.6</priority></url>
@@ -4146,6 +4149,7 @@
   <url><loc>https://shchuna.co.il/givat-zeev/health/%D7%9E%D7%A8%D7%A4%D7%90%D7%AA-%D7%9E%D7%9B%D7%91%D7%99-%E2%80%94-%D7%94%D7%9E%D7%9B%D7%91%D7%99%D7%9D/</loc><changefreq>weekly</changefreq><priority>0.5</priority></url>
   <url><loc>https://shchuna.co.il/givat-zeev/health/%D7%91%D7%99%D7%AA-%D7%9E%D7%A8%D7%A7%D7%97%D7%AA-%D7%94%D7%9E%D7%9B%D7%91%D7%99%D7%9D/</loc><changefreq>weekly</changefreq><priority>0.5</priority></url>
   <url><loc>https://shchuna.co.il/givat-zeev/promos/%D7%A7%D7%A0%D7%95-%D7%97%D7%9E%D7%A9-%D7%A7%D7%99%D7%A0%D7%95%D7%97%D7%99%D7%9D-%D7%95%D7%94%D7%A9%D7%99%D7%A9%D7%99-%D7%97%D7%99%D7%A0%D7%9D/</loc><changefreq>weekly</changefreq><priority>0.5</priority></url>
+  <url><loc>https://shchuna.co.il/givat-zeev/promos/%D7%A1%D7%98-%D7%AA%D7%A4%D7%99%D7%9C%D7%99%D7%9F-%D7%A9%D7%9C%D7%9D/</loc><changefreq>weekly</changefreq><priority>0.5</priority></url>
   <url><loc>https://shchuna.co.il/givat-zeev/board/%D7%98%D7%99%D7%98%D7%95%D7%9C%D7%99%D7%9D-%D7%9E%D7%98%D7%A8%D7%A0%D7%94-%D7%9C%D7%A2%D7%A0-%D7%90%D7%99%D7%99%D7%9C-%D7%91%D7%9F-%D7%96%D7%94%D7%91%D7%94-%D7%96%D7%9C/</loc><changefreq>weekly</changefreq><priority>0.5</priority></url>
   <url><loc>https://shchuna.co.il/givat-zeev/board/%D7%9B%D7%A8%D7%99%D7%AA-%D7%9C%D7%91%D7%A8%D7%99%D7%AA/</loc><changefreq>weekly</changefreq><priority>0.5</priority></url>
   <url><loc>https://shchuna.co.il/givat-zeev/board/%D7%92%D7%9E%D7%97-%D7%91%D7%A8%D7%9B%D7%AA-%D7%90%D7%9C%D7%99%D7%A2%D7%96%D7%A8/</loc><changefreq>weekly</changefreq><priority>0.5</priority></url>
@@ -5850,6 +5854,7 @@
   <url><loc>https://shchuna.co.il/beit-hakerem-givat-mordechai/minyanim/%D7%A9%D7%A2%D7%A8%D7%99-%D7%AA%D7%A4%D7%99%D7%9C%D7%94-%D7%91%D7%A0%D7%99%D7%99%D7%9F-%D7%95%D7%99%D7%A6%D7%95/</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
   <url><loc>https://shchuna.co.il/beit-hakerem-givat-mordechai/pros/%D7%90%D7%91%D7%99%D7%A2%D7%93-%D7%96%D7%A4%D7%A8%D7%A0%D7%99/</loc><changefreq>weekly</changefreq><priority>0.6</priority></url>
   <url><loc>https://shchuna.co.il/beit-hakerem-givat-mordechai/pros/%D7%92%D7%95%D7%90%D7%A0%D7%94-%D7%91%D7%95%D7%A8%D7%95%D7%A1/</loc><changefreq>weekly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://shchuna.co.il/beit-hakerem-givat-mordechai/pros/%D7%A0%D7%95%D7%A2%D7%9D-%D7%A0%D7%95%D7%A2%D7%9D/</loc><changefreq>weekly</changefreq><priority>0.6</priority></url>
   <url><loc>https://shchuna.co.il/beit-hakerem-givat-mordechai/biz/shabbat-baTaam/</loc><changefreq>weekly</changefreq><priority>0.6</priority></url>
   <url><loc>https://shchuna.co.il/beit-hakerem-givat-mordechai/biz/PAVO-%D7%9E%D7%A2%D7%91%D7%93%D7%AA-%D7%9E%D7%97%D7%A9%D7%91%D7%99%D7%9D-2/</loc><changefreq>weekly</changefreq><priority>0.6</priority></url>
   <url><loc>https://shchuna.co.il/beit-hakerem-givat-mordechai/biz/SABON-%D7%91%D7%99%D7%AA-%D7%94%D7%9B%D7%A8%D7%9D/</loc><changefreq>weekly</changefreq><priority>0.6</priority></url>
@@ -5919,12 +5924,12 @@
   <url><loc>https://shchuna.co.il/beit-hakerem-givat-mordechai/education/%D7%92%D7%9F-%D7%97%D7%99%D7%A0%D7%95%D7%9A-%D7%9E%D7%99%D7%95%D7%97%D7%93-%D7%A7%D7%A8%D7%99%D7%AA-%D7%94%D7%99%D7%9C%D7%93-%D7%97%D7%93%D7%A9/</loc><changefreq>weekly</changefreq><priority>0.5</priority></url>
   <url><loc>https://shchuna.co.il/beit-hakerem-givat-mordechai/education/%D7%92%D7%A0%D7%99-%D7%98%D7%91%D7%A2-%D7%9C%D7%9E%D7%99%D7%93%D7%94-%D7%97%D7%95%D7%A5-%D7%92%D7%A0%D7%99%D7%AA-%D7%91%D7%99%D7%AA-%D7%94%D7%9B%D7%A8%D7%9D-%D7%A8%D7%97-%D7%94%D7%97%D7%9C%D7%95%D7%A5-47-%D7%92%D7%9F-%D7%AA%D7%A0%D7%A9%D7%9E%D7%AA/</loc><changefreq>weekly</changefreq><priority>0.5</priority></url>
   <url><loc>https://shchuna.co.il/beit-hakerem-givat-mordechai/parks/%D7%92%D7%9F-%D7%90%D7%91%D7%99%D7%96%D7%95%D7%94%D7%A8/</loc><changefreq>weekly</changefreq><priority>0.5</priority></url>
-  <url><loc>https://shchuna.co.il/beit-hakerem-givat-mordechai/parks/%D7%92%D7%9F-%D7%94%D7%A9%D7%91%D7%A9%D7%91%D7%AA-%D7%94%D7%9E%D7%97%D7%95%D7%93%D7%A9/</loc><changefreq>weekly</changefreq><priority>0.5</priority></url>
   <url><loc>https://shchuna.co.il/beit-hakerem-givat-mordechai/parks/%D7%92%D7%9F-%D7%99%D7%9C%D7%93%D7%99%D7%9D-%D7%94%D7%AA%D7%95%D7%9E%D7%A8-8/</loc><changefreq>weekly</changefreq><priority>0.5</priority></url>
   <url><loc>https://shchuna.co.il/beit-hakerem-givat-mordechai/parks/%D7%92%D7%9F-%D7%9E%D7%A9%D7%94-%D7%A7%D7%95%D7%9C/</loc><changefreq>weekly</changefreq><priority>0.5</priority></url>
   <url><loc>https://shchuna.co.il/beit-hakerem-givat-mordechai/parks/%D7%92%D7%9F-%D7%91%D7%99%D7%90%D7%9C%D7%99%D7%A7/</loc><changefreq>weekly</changefreq><priority>0.5</priority></url>
   <url><loc>https://shchuna.co.il/beit-hakerem-givat-mordechai/parks/%D7%92%D7%9F-%D7%9E%D7%A9%D7%97%D7%A7%D7%99%D7%9D-%D7%92%D7%9F-%D7%97%D7%95%D7%A8%D7%A9%D7%AA-%D7%94%D7%A0%D7%96%D7%99%D7%A8/</loc><changefreq>weekly</changefreq><priority>0.5</priority></url>
   <url><loc>https://shchuna.co.il/beit-hakerem-givat-mordechai/parks/%D7%92%D7%9F-%D7%9E%D7%A9%D7%97%D7%A7%D7%99%D7%9D-%D7%9E%D7%A9%D7%9B%D7%9F-%D7%A9%D7%99%D7%9C%D7%94/</loc><changefreq>weekly</changefreq><priority>0.5</priority></url>
+  <url><loc>https://shchuna.co.il/beit-hakerem-givat-mordechai/parks/%D7%92%D7%9F-%D7%94%D7%A9%D7%91%D7%A9%D7%91%D7%AA-%D7%94%D7%9E%D7%97%D7%95%D7%93%D7%A9/</loc><changefreq>weekly</changefreq><priority>0.5</priority></url>
   <url><loc>https://shchuna.co.il/beit-hakerem-givat-mordechai/parks/%D7%92%D7%9F-%D7%A0%D7%97%D7%9E%D7%99%D7%94-%D7%A2%D7%95%D7%96/</loc><changefreq>weekly</changefreq><priority>0.5</priority></url>
   <url><loc>https://shchuna.co.il/beit-hakerem-givat-mordechai/parks/%D7%92%D7%9F-%D7%A0%D7%99%D7%A1%D7%9F-%D7%94%D7%A8%D7%A4%D7%96/</loc><changefreq>weekly</changefreq><priority>0.5</priority></url>
   <url><loc>https://shchuna.co.il/beit-hakerem-givat-mordechai/parks/%D7%92%D7%9F-%D7%92%D7%95%D7%9C%D7%93/</loc><changefreq>weekly</changefreq><priority>0.5</priority></url>
@@ -5989,6 +5994,7 @@
   <url><loc>https://shchuna.co.il/armon-hanatziv/minyanim/%D7%AA%D7%A4%D7%90%D7%A8%D7%AA-%D7%9E%D7%A9%D7%94/</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
   <url><loc>https://shchuna.co.il/armon-hanatziv/pros/%D7%9C%D7%91-%D7%98%D7%95%D7%91-%D7%90%D7%97%D7%96%D7%A7%D7%95%D7%AA/</loc><changefreq>weekly</changefreq><priority>0.6</priority></url>
   <url><loc>https://shchuna.co.il/armon-hanatziv/biz/shabbat-baTaam/</loc><changefreq>weekly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://shchuna.co.il/armon-hanatziv/biz/%D7%90%D7%97%D7%95%D7%96%D7%AA-%D7%94%D7%A7%D7%95%D7%93%D7%A9/</loc><changefreq>weekly</changefreq><priority>0.6</priority></url>
   <url><loc>https://shchuna.co.il/armon-hanatziv/biz/Kastelhadar_nails/</loc><changefreq>weekly</changefreq><priority>0.6</priority></url>
   <url><loc>https://shchuna.co.il/armon-hanatziv/biz/%D7%93%D7%9C%D7%A7-%D7%AA%D7%9C%D7%A4%D7%99%D7%95%D7%AA/</loc><changefreq>weekly</changefreq><priority>0.6</priority></url>
   <url><loc>https://shchuna.co.il/armon-hanatziv/biz/%D7%A4%D7%99%D7%90%D7%93%D7%A8%D7%94-%D7%A1%D7%A0%D7%99%D7%A3-%D7%90%D7%A8%D7%A0%D7%95%D7%A0%D7%94%D7%90%D7%A8%D7%9E%D7%95%D7%9F-%D7%94%D7%A0%D7%A6%D7%99%D7%91-2/</loc><changefreq>weekly</changefreq><priority>0.6</priority></url>
