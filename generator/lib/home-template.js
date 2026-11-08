@@ -20,7 +20,8 @@ const BIZ_PORTAL = '/my-business/';
 const DOWNLOAD = '/b/';
 let MINYANIM = '/har-homa/minyanim/';
 /** השכונה שנבנית עכשיו — קובע את כתובת המניינים בכל התבניות (הבנייה רצה שכונה אחרי שכונה) */
-export function setSiteHome(home) { MINYANIM = `${home}minyanim/`; }
+let CID = '';
+export function setSiteHome(home, cid) { MINYANIM = `${home}minyanim/`; CID = cid || ''; }
 
 export const ICON = {
   clock: 'M12 4a8 8 0 1 0 0 16a8 8 0 1 0 0-16zM12 8v4l3 2',
@@ -650,7 +651,7 @@ export function navChips(home, current = '') {
     ['services', 'שירותי קהילה', `${home}services/`], ['health', 'בריאות', `${home}health/`], ['happenings', 'אירועים', `${home}happenings/`],
   ];
   return `<nav class="chips" aria-label="תחומים"><button type="button" class="cnav prev" aria-label="תחומים קודמים">→</button><button type="button" class="cnav next" aria-label="תחומים נוספים">←</button><div class="wrap">
-<a class="chip-post" href="${APP}">+ פרסם</a>${items.filter(([k]) => !HIDDEN_NAV.has(k)).map(([k, l, h]) => `<a href="${h}"${k === current ? ' aria-current="page" class="on"' : ''}>${l}</a>`).join('')}
+<a class="chip-post" href="${APP}" data-post="pick" data-c="${esc(CID)}">+ פרסם</a>${items.filter(([k]) => !HIDDEN_NAV.has(k)).map(([k, l, h]) => `<a href="${h}"${k === current ? ' aria-current="page" class="on"' : ''}>${l}</a>`).join('')}
 </div></nav>`;
 }
 
@@ -719,7 +720,7 @@ ${vm.hoods.map((h) => {
 <div class="hdr-actions">
 <button type="button" class="pill btn-ghost gs-open" aria-label="חיפוש">${svg('M11 4a7 7 0 1 0 0 14a7 7 0 1 0 0-14zM20 20l-4-4', 20, 'currentColor', 2)}</button>
 <a class="pill btn-ghost acct" id="acct" href="${LOGIN}" aria-label="התחברות">${svg('M12 4a4 4 0 1 0 0 8a4 4 0 1 0 0-8zM4 21a8 8 0 0 1 16 0', 20, 'currentColor', 2)}<span class="lbl">התחברות</span></a>
-<a class="pill btn-post" href="${APP}">${svg('M12 5v14M5 12h14', 18, 'currentColor', 2.6)}פרסם</a>
+<a class="pill btn-post" href="${APP}" data-post="pick" data-c="${esc(CID)}">${svg('M12 5v14M5 12h14', 18, 'currentColor', 2.6)}פרסם</a>
 <a class="pill btn-dark" href="${DOWNLOAD}">להורדת האפליקציה</a>
 </div>
 </div>
@@ -756,7 +757,7 @@ export function siteFooter() {
 <nav aria-label="קישורים"><a href="/">כל השכונות</a><a href="${BIZ_PORTAL}">כניסה לבעלי עסקים</a><a href="/terms.html">תנאי שימוש</a><a href="/privacy.html">פרטיות</a></nav>
 <span class="c">© שכונה, כל הזכויות שמורות</span>
 </div></footer>
-<script src="/js/auth.js?v=9" defer></script>
+<script src="/js/auth.js?v=10" defer></script>
 <script src="/js/t.js?v=5" defer></script>`;
 }
 

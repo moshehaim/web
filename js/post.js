@@ -34,7 +34,16 @@
     '.sp-hint{font-size:13px!important;color:#8A94A6!important}' +
     '.sp-dup{background:#FFF6E0;border:1px solid #F3D27A;border-radius:14px;padding:12px;display:flex;flex-direction:column;gap:8px}' +
     '.sp-dup p{color:#5C4400!important;font-size:15px!important}' +
-    '.sp-done{font-size:44px;text-align:center;line-height:1}';
+    '.sp-done{font-size:44px;text-align:center;line-height:1}' +
+    '.sp-f select{height:50px;border-radius:14px;border:1.5px solid #DCE2EC;padding:0 12px;font:inherit;font-size:16px;color:#1C2B45;background:#fff;width:100%}' +
+    '.sp-f input[type=date],.sp-f input[type=email],.sp-f input[type=url],.sp-f input[type=time]{border-radius:14px;border:1.5px solid #DCE2EC;padding:0 14px;font:inherit;font-size:16px;color:#1C2B45;background:#fff;width:100%;box-sizing:border-box}' +
+    '.sp-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}' +
+    '.sp-chk{display:flex;align-items:center;gap:8px;font-weight:700;font-size:15px;color:#172F57;cursor:pointer}.sp-chk input{width:20px;height:20px;accent-color:#2A6FB8}' +
+    '.sp-chkg{display:grid;grid-template-columns:1fr 1fr;gap:8px}' +
+    '.sp-x{display:flex;flex-direction:column;gap:14px}.sp-x[hidden],.sp-more[hidden]{display:none}' +
+    '.sp-more{border:0;background:none;color:#2A6FB8;font:inherit;font-weight:800;font-size:14.5px;cursor:pointer;padding:4px 0;text-align:right}' +
+    '.sp-days{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}.sp-days button{height:40px;border-radius:10px;border:1px solid #DCE2EC;background:#fff;font:inherit;font-weight:800;color:#566173;cursor:pointer}.sp-days button[aria-pressed=true]{background:#172F57;border-color:#172F57;color:#fff}' +
+    '.sp-sug{border:1px solid #DCE2EC;border-radius:12px;background:#fff;max-height:220px;overflow:auto;margin-top:4px}.sp-sug button{display:block;width:100%;text-align:right;padding:10px 12px;border:0;border-bottom:1px solid #F1F3F6;background:none;font:inherit;font-size:15px;cursor:pointer}.sp-sug button:hover{background:#F5F9FF}.sp-sug small{color:#6B7689;font-weight:600}';
 
   function css() { if (document.getElementById('sp-css')) return; var s = document.createElement('style'); s.id = 'sp-css'; s.textContent = CSS; document.head.appendChild(s); }
 
@@ -235,5 +244,35 @@
     }
   }
 
+  /* מסך "פורסם!" משותף לכל הטפסים */
+  function doneView(A, kind, o) {
+    o = o || {};
+    try { if (window.shchunaTrack) window.shchunaTrack('post', kind); } catch (e) {}
+    var dd = A.open(
+      '<div class="sp-done" aria-hidden="true">🎉</div>' +
+      '<h2 id="sa-h" style="text-align:center;padding:0">' + (o.title || 'פורסם!') + '</h2>' +
+      '<p style="text-align:center">' + (o.text || 'המודעה כבר באפליקציה, ותופיע כאן באתר תוך כשעה.') + (o.extra || '') + '</p>' +
+      (o.noApp ? '' : '<p class="sa-note">' + (o.note || 'רוצים לערוך או להסיר את המודעה? זה באפליקציה, עם אותו חשבון.') + '</p>' +
+      '<a class="sa-b pri" href="' + DOWNLOAD + '">להורדת האפליקציה</a>') +
+      '<button class="sa-b" type="button" data-c>סגירה</button>');
+    dd.querySelector('[data-c]').addEventListener('click', A.close);
+  }
+  /* מילוי מוקדם של שם וטלפון מהחשבון */
+  function prefill(A, nameEl, phoneEl) {
+    var meta = A.user.user_metadata || {};
+    if (nameEl && !nameEl.value && (meta.full_name || meta.name)) nameEl.value = meta.full_name || meta.name;
+    return A.sb.from('userdata').select('owner_name,owner_phone,email').eq('user_id', A.user.id).maybeSingle().then(function (r) {
+      var u = r.data || {};
+      if (nameEl && u.owner_name && !nameEl.value) nameEl.value = u.owner_name;
+      if (phoneEl && u.owner_phone && !phoneEl.value) phoneEl.value = u.owner_phone;
+      return u;
+    }, function () { return {}; });
+  }
+  function ilikeEsc(v) { return String(v).replace(/[%_\\]/g, '\\$&'); }
+
   window.ShchunaPost = { form: form };
+  window.ShchunaKit = { css: css, shrink: shrink, upload: upload, phoneOk: phoneOk, digits: digits, doneView: doneView, prefill: prefill, ilikeEsc: ilikeEsc, DOWNLOAD: DOWNLOAD };
+  window.ShchunaForms = window.ShchunaForms || {};
+  window.ShchunaForms.second = function (cid, A) { form('second', cid, A); };
+  window.ShchunaForms.lost = function (cid, A) { form('lost', cid, A); };
 })();

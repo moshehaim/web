@@ -71,7 +71,7 @@ const ONLY = onlyIdx > -1 ? args[onlyIdx + 1].split(',') : null;
 function setCommunity(c) {
   COMMUNITY_ID = c.id; HOME = c.slug; SECTION = `${HOME}/minyanim`; PRIMARY = !!c.primary; NOINDEX = !!c.noindex;
   EXTRA_URLS = []; SEARCH = [];
-  setSiteHome(`/${HOME}/`); setMinyanimSection(`/${SECTION}/`);
+  setSiteHome(`/${HOME}/`, COMMUNITY_ID); setMinyanimSection(`/${SECTION}/`);
 }
 const fxIdx   = args.indexOf('--fixture');
 const FIXTURE = fxIdx > -1 ? path.resolve(process.cwd(), args[fxIdx + 1]) : null;

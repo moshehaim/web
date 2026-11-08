@@ -323,32 +323,79 @@
   function resume(p) {
     if (p.a === 'rec') doRecommend(p.t, p.id, true);
     else if (p.a === 'coupon') doCoupon(p.id);
-    else if (p.a === 'post') doPost(p.k, p.c);
+    else if (p.a === 'post') doPost(p.k, p.c, p.x);
   }
 
-  /* ── פרסום מודעה מהאתר (יד שנייה, אבידות ומציאות) — הטופס ב-/js/post.js, נטען רק כשצריך ── */
-  var POST_JS = '/js/post.js?v=2', postP = null;
-  function loadPost() {
-    if (window.ShchunaPost) return Promise.resolve(window.ShchunaPost);
-    if (postP) return postP;
-    postP = new Promise(function (res, rej) {
-      var s = document.createElement('script'); s.src = POST_JS;
-      s.onload = function () { window.ShchunaPost ? res(window.ShchunaPost) : rej(new Error('load')); };
-      s.onerror = function () { postP = null; rej(new Error('load')); };
+  /* ── פרסום ועריכה מהאתר — כל טופס בקובץ משלו, נטען רק כשצריך.
+   * post.js (יד שנייה, אבידות + ערכת כלים משותפת ShchunaKit) נטען תמיד ראשון; שאר הקבצים נשענים עליו.
+   * כל קובץ רושם window.ShchunaForms[kind] = function (cid, A, extra). */
+  var FORM_JS = { post: '/js/post.js?v=3', forms: '/js/forms.js?v=1', property: '/js/property.js?v=1', prayer: '/js/prayer.js?v=1' };
+  var KINDS = {
+    second: { js: 'post', why: 'כדי לפרסם מודעה צריך להתחבר. הטופס ייפתח מיד אחרי ההתחברות.' },
+    lost: { js: 'post', why: 'כדי לפרסם אבידה או מציאה צריך להתחבר. הטופס ייפתח מיד אחרי ההתחברות.' },
+    job: { js: 'forms', why: 'כדי לפרסם משרה צריך להתחבר. הטופס ייפתח מיד אחרי ההתחברות.' },
+    gmach: { js: 'forms', why: 'כדי להוסיף גמ״ח צריך להתחבר. הטופס ייפתח מיד אחרי ההתחברות.' },
+    volunteer: { js: 'forms', why: 'כדי לפרסם התנדבות צריך להתחבר. הטופס ייפתח מיד אחרי ההתחברות.' },
+    sale: { js: 'property', why: 'כדי לפרסם דירה למכירה צריך להתחבר. הטופס ייפתח מיד אחרי ההתחברות.' },
+    rent: { js: 'property', why: 'כדי לפרסם דירה להשכרה צריך להתחבר. הטופס ייפתח מיד אחרי ההתחברות.' },
+    broker: { js: 'property', why: 'פרסום מהיר למתווכים — צריך להתחבר. הטופס ייפתח מיד אחרי ההתחברות.' },
+    prayer: { js: 'prayer', why: 'כדי לעדכן זמני תפילה צריך להתחבר. הטופס ייפתח מיד אחרי ההתחברות.', noCid: true }
+  };
+  var jsP = {};
+  function loadJs(key) {
+    if (jsP[key]) return jsP[key];
+    jsP[key] = new Promise(function (res, rej) {
+      var s = document.createElement('script'); s.src = FORM_JS[key];
+      s.onload = function () { res(); };
+      s.onerror = function () { delete jsP[key]; rej(new Error('load')); };
       document.head.appendChild(s);
     });
-    return postP;
+    return jsP[key];
   }
-  var POST_WHY = { second: 'כדי לפרסם מודעה צריך להתחבר. הטופס ייפתח מיד אחרי ההתחברות.', lost: 'כדי לפרסם אבידה או מציאה צריך להתחבר. הטופס ייפתח מיד אחרי ההתחברות.' };
-  function doPost(kind, cid) {
-    if (!POST_WHY[kind] || !cid) return;
-    loadPost().catch(function () {}); // טעינה מוקדמת בזמן ההתחברות
-    return gate({ a: 'post', k: kind, c: cid }, POST_WHY[kind], function (sb, user) {
-      return loadPost().then(function (P) {
-        P.form(kind, cid, { sb: sb, user: user, open: open, close: close, toast: toast, setErr: setErr, busy: busy, esc: esc,
-          reverify: function () { verifiedCache = false; phoneView(sb, function () { close(); doPost(kind, cid); }, 'כדי לפרסם בשכונה מאמתים טלפון פעם אחת.'); } });
+  function loadForm(kind) {
+    var k = KINDS[kind];
+    return loadJs('post').then(function () { return k.js === 'post' ? null : loadJs(k.js); }).then(function () {
+      var f = window.ShchunaForms && window.ShchunaForms[kind];
+      if (!f) throw new Error('load');
+      return f;
+    });
+  }
+  function doPost(kind, cid, extra) {
+    if (kind === 'pick') return pickView(cid);
+    var k = KINDS[kind]; if (!k || (!cid && !k.noCid)) return;
+    loadForm(kind).catch(function () {}); // טעינה מוקדמת בזמן ההתחברות
+    return gate({ a: 'post', k: kind, c: cid, x: extra || null }, k.why, function (sb, user) {
+      return loadForm(kind).then(function (F) {
+        F(cid, { sb: sb, user: user, open: open, close: close, toast: toast, setErr: setErr, busy: busy, esc: esc, SB_URL: SB_URL,
+          reverify: function () { verifiedCache = false; phoneView(sb, function () { close(); doPost(kind, cid, extra); }, 'כדי לפרסם בשכונה מאמתים טלפון פעם אחת.'); } }, extra || {});
       });
     }, 'כדי שהמודעות בשכונה יהיו של שכנים אמיתיים, מאמתים טלפון פעם אחת.').catch(function () { notice('אין חיבור. נסו שוב'); });
+  }
+  /* "+ פרסם" — חלון בחירה. פרסומי תושבים למעלה, עסקים ובעלי מקצוע למטה (כמו באפליקציה). */
+  function pickView(cid) {
+    var home = (location.pathname.match(/^\/[^/]+\//) || ['/'])[0];
+    var I = {
+      second: 'M3 7h18l-2 13H5zM8 7a4 4 0 0 1 8 0', lost: 'M11 4a7 7 0 1 0 0 14a7 7 0 1 0 0-14zM20 20l-4-4',
+      job: 'M4 7h16v12H4zM9 7V5h6v2', gmach: 'M12 21s-7-4.5-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 11c0 5.5-7 10-7 10z',
+      volunteer: 'M7 11l3 3 7-7M4 12a8 8 0 1 0 16 0a8 8 0 1 0-16 0', sale: 'M3 11l9-7 9 7v9H3zM9 20v-6h6v6',
+      rent: 'M3 11l9-7 9 7v9H3zM12 14v6', broker: 'M13 2L4 14h7l-1 8 9-12h-7z', prayer: 'M12 3v4M8 7h8M6 21V11l6-4 6 4v10z',
+      biz: 'M4 10h16v10H4zM3 10l2-6h14l2 6', pro: 'M14 7l3 3-8 8H6v-3zM16 5l3 3'
+    };
+    function ic(k) { return '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="' + I[k] + '"/></svg>'; }
+    function it(k, label, sub) { return '<button type="button" class="pk-i" data-post="' + k + '" data-c="' + esc(cid || '') + '">' + ic(k) + '<span><b>' + label + '</b>' + (sub ? '<small>' + sub + '</small>' : '') + '</span></button>'; }
+    function ln(k, label, sub, href) { return '<a class="pk-i" href="' + href + '">' + ic(k) + '<span><b>' + label + '</b>' + (sub ? '<small>' + sub + '</small>' : '') + '</span></a>'; }
+    var d = open(
+      '<h2 id="sa-h">מה תרצו לפרסם?</h2>' +
+      '<style>.pk-g{display:grid;grid-template-columns:1fr 1fr;gap:8px}.pk-i{display:flex;align-items:center;gap:10px;padding:12px;border-radius:14px;border:1px solid #E3E8F0;background:#fff;font:inherit;text-align:right;cursor:pointer;color:#172F57;text-decoration:none}.pk-i:hover{border-color:#2A6FB8;background:#F5F9FF}.pk-i svg{flex:none;color:#2A6FB8}.pk-i b{display:block;font-size:15px}.pk-i small{display:block;font-size:12.5px;color:#6B7689;font-weight:600}.pk-h{font-size:13px;font-weight:800;color:#6B7689;margin:14px 0 6px}</style>' +
+      '<div class="pk-h">מהשכונה</div><div class="pk-g">' +
+      it('second', 'יד שנייה', 'מכירה או מסירה') + it('lost', 'אבידה / מציאה') +
+      it('job', 'דרושים') + it('gmach', 'גמ״ח') + it('volunteer', 'התנדבות') +
+      ln('prayer', 'זמני תפילה', 'בעמוד בית הכנסת', home !== '/' ? home + 'minyanim/' : '/app/') +
+      it('sale', 'דירה למכירה') + it('rent', 'דירה להשכרה') + it('broker', 'מתווכים', 'פרסום מהיר מהמודעה') +
+      '</div><div class="pk-h">עסקים ובעלי מקצוע</div><div class="pk-g">' +
+      ln('biz', 'עסק', 'הרשמה בחינם', '/app/') + ln('pro', 'בעל מקצוע', 'הרשמה בחינם', '/app/') +
+      '</div>');
+    return d;
   }
 
   function doRecommend(type, id, value) {
@@ -530,7 +577,9 @@
 
     document.addEventListener('click', function (e) {
       var c = e.target.closest && e.target.closest('[data-post]'); if (!c) return;
-      e.preventDefault(); doPost(c.getAttribute('data-post'), c.getAttribute('data-c'));
+      e.preventDefault();
+      var x = null; try { x = JSON.parse(c.getAttribute('data-x') || 'null'); } catch (er) {}
+      doPost(c.getAttribute('data-post'), c.getAttribute('data-c'), x);
     });
 
     var q = new URLSearchParams(location.search);
