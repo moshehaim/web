@@ -1,5 +1,5 @@
 /* דרושים, גמ"ח והתנדבות מהאתר — אותם שדות וכללים כמו באפליקציה (JobFormScreen, AddOrEditGmachScreen, VolunteerFormScreen).
- * נטען דרך auth.js אחרי התחברות + אימות טלפון. כתובת בדרושים ובגמ"ח — כמו AddressLocationPicker (ShchunaKit.addr*);
+ * נטען דרך auth.js אחרי התחברות + אימות טלפון. כתובת בדרושים ובגמ"ח — כמו AddressLocationPicker (ShchunaKit.addr*, רחוב לא מזוהה נשמר כמו שהוא);
  * בהתנדבות — טקסט חופשי, כמו באפליקציה. טלפון ליצירת קשר ששונה מהמאומת — אימות SMS (verifyPhoneIfNeeded). */
 (function () {
   var K = window.ShchunaKit;
@@ -87,7 +87,6 @@
       A.busy(btn, true, 'בודקים…');
       var L;
       K.addrResolve(A, ad, { cid: cid }).then(function (x) {
-        if (x.unknown) return K.askNewStreet(f, x.unknown).then(function (yes) { if (yes) { ad.newOk = true; setTimeout(function () { f.requestSubmit ? f.requestSubmit() : btn.click(); }); } else ad.input.focus(); throw 'stop'; });
         L = x;
         return A.sb.from('jobs').select('id').eq('community_id', L.cid).ilike('title', K.ilikeEsc(v('title'))).ilike('company_name', K.ilikeEsc(v('company'))).eq('is_active', true).limit(1);
       }).then(function (r) {
@@ -105,10 +104,7 @@
           company_name: v('company'), company_description: v('cdesc'), contact_person: v('cname'), contact_phone: v('phone'),
           contact_email: v('email'), application_link: v('link'), expires_at: expIso(f), community_id: L.cid,
           user_id: A.user.id, updated_at: now
-        }).select('id').single().then(function (x) {
-          if (x.error) throw x.error;
-          if (L.newStreet) return K.addNewStreet(A, { street: L.newStreet, cid: cid, itemId: x.data && x.data.id, type: 'job' });
-        });
+        }).then(function (x) { if (x.error) throw x.error; });
       }).then(function () { K.doneView(A, 'job'); }, failer(A, btn));
     });
   }
@@ -151,7 +147,6 @@
       A.busy(btn, true, 'בודקים…');
       var L;
       K.addrResolve(A, ad, { cid: cid }).then(function (x) {
-        if (x.unknown) return K.askNewStreet(f, x.unknown).then(function (yes) { if (yes) { ad.newOk = true; setTimeout(function () { f.requestSubmit ? f.requestSubmit() : btn.click(); }); } else ad.input.focus(); throw 'stop'; });
         L = x;
         var q = A.sb.from('gmachim').select('id').eq('community_id', L.cid).ilike('name', K.ilikeEsc(v('name')));
         if (L.address) q = q.ilike('address', K.ilikeEsc(L.address));
@@ -165,10 +160,7 @@
         return A.sb.from('gmachim').insert({
           community_id: L.cid, user_id: A.user.id, name: v('name'), categories: cats, manager: v('manager'), phone: v('phone'),
           address: L.address || null, description: v('desc') || null, weekly_schedule: null, latitude: L.lat, longitude: L.lng
-        }).select('id').single().then(function (x) {
-          if (x.error) throw x.error;
-          if (L.newStreet) return K.addNewStreet(A, { street: L.newStreet, cid: cid, itemId: x.data && x.data.id, type: 'gmach' });
-        });
+        }).then(function (x) { if (x.error) throw x.error; });
       }).then(function () { K.doneView(A, 'gmach', { text: 'הגמ״ח כבר באפליקציה, ויופיע כאן באתר תוך כשעה.', note: 'רוצים להוסיף שעות פעילות, לערוך או להסיר? זה באפליקציה, עם אותו חשבון.' }); }, failer(A, btn));
     });
   }

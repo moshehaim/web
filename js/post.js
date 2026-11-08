@@ -168,7 +168,6 @@
       A.setErr(''); A.busy(btn, true, 'בודקים…');
 
       (ad ? addrResolve(A, ad, { cid: cid }) : Promise.resolve({ cid: cid })).then(function (L) {
-        if (L.unknown) return askNewStreet(f, L.unknown).then(function (yes) { A.busy(btn, false); if (yes) { ad.newOk = true; f.requestSubmit ? f.requestSubmit() : btn.click(); } else ad.input.focus(); return 'stop'; });
         loc = L;
         return checkDup(title, L.cid);
       }).then(function (dup) {
@@ -213,10 +212,7 @@
           is_free: st.free, condition: st.cond, price: st.free ? 0 : +f.elements.price.value, image_urls: urls,
           address: loc.address, latitude: loc.lat, longitude: loc.lng, seller_name: name, seller_phone: phone,
           created_at: now, updated_at: now
-        }).select('id').single().then(function (r) {
-          if (r.error) throw r.error;
-          if (loc.newStreet) return addNewStreet(A, { street: loc.newStreet, cid: cid, itemId: r.data && r.data.id, type: 'second_hand' });
-        });
+        }).then(function (r) { if (r.error) throw r.error; });
       });
     }
 
@@ -282,8 +278,9 @@
 
   /* ════ כתובת כמו AddressLocationPicker באפליקציה ════
    * שדה אחד "רחוב ומספר", הצעות מ-search_streets (השכונה נקבעת לפי הרחוב — P-23),
-   * geocoding ב-Nominatim רק כשיש מספר בית (כמו CommunityGeocoder; ניסיון שני בלי המספר),
-   * ורחוב שלא במאגר → "רחוב חדש או שגיאת הקלדה?" → new_streets (pending). */
+   * geocoding ב-Nominatim רק כשיש מספר בית (כמו CommunityGeocoder; ניסיון שני בלי המספר).
+   * רחוב שלא במאגר — נשמר כמו שהוקלד, בלי שאלה (מדיניות 7.11): השרת מכניס אותו לבדיקה
+   * (trg_z_queue_unknown_address → new_streets, notes='auto'). האתר לא כותב ל-new_streets. */
   var cityCache = {};
   function cityOf(sb, cid) {
     if (cityCache[cid]) return cityCache[cid];
@@ -297,11 +294,10 @@
   }
   function addrBind(A, f, o) {
     var inp = f.elements[o.name], sug = f.querySelector('[data-sug="' + o.name + '"]'), hint = f.querySelector('[data-ahood="' + o.name + '"]');
-    var st = { pick: null, newOk: false }, t = null, seq = 0;
+    var st = { pick: null }, t = null, seq = 0;
     function say(x) { hint.textContent = x ? 'שכונה: ' + x.community_name + (x.community_id !== o.cid ? ' (יפורסם שם)' : '') : ''; }
     inp.addEventListener('input', function () {
       if (st.pick && streetPart(inp.value) !== st.pick.street_name) { st.pick = null; say(null); }
-      st.newOk = false;
       clearTimeout(t); var q = streetPart(inp.value);
       if (q.length < 2 || (st.pick && q === st.pick.street_name)) { sug.hidden = true; return; }
       t = setTimeout(function () {
@@ -339,36 +335,26 @@
       return new Promise(function (r) { setTimeout(r, 1000); }).then(function () { return one(noNum); });
     });
   }
-  /* בזמן שמירה: { address, lat, lng, cid, cname, newStreet } או { unknown: 'שם רחוב' } אם צריך אישור "רחוב חדש" */
+  /* בזמן שמירה: { address, lat, lng, cid, cname }.
+   * השכונה: לפי הרחוב שנבחר מההצעות; בלי בחירה — אם הרחוב קיים בשכונה של ההוספה, ממנה; אחרת נשאר בשכונה של ההוספה. */
   function addrResolve(A, st, o) {
     var address = st.input.value.trim().replace(/\s+/g, ' ');
     if (!address) return Promise.resolve({ address: null, lat: null, lng: null, cid: o.cid });
     var street = streetPart(address);
     var pickP = st.pick ? Promise.resolve(st.pick) : cityOf(A.sb, o.cid).then(function (c) {
       return A.sb.rpc('search_streets', { p_city: c.city || 'ירושלים', p_query: street, p_prefer_community: o.cid, p_limit: 10 }).then(function (r) {
-        var rows = ((r && r.data) || []).filter(function (x) { return x.street_name === street; });
-        var here = rows.filter(function (x) { return x.community_id === o.cid; })[0];
-        if (here || rows.length <= 1 || !o.f) return here || rows[0] || null;
-        // רחוב שעובר בכמה שכונות — "באיזו שכונה נמצא הרחוב?" (כמו באפליקציה)
-        return confirmIn(o.f, '<p>באיזו שכונה נמצא הרחוב?</p>', rows.map(function (x) { return x.community_name; })).then(function (k) { return rows[k]; });
+        return ((r && r.data) || []).filter(function (x) { return x.street_name === street && x.community_id === o.cid; })[0] || null;
       }, function () { return null; });
     });
     return pickP.then(function (x) {
       if (x) st.set(x);
-      if (!x && !st.newOk) return { unknown: street };
       var cid = x ? x.community_id : o.cid;
       return cityOf(A.sb, cid).then(function (c) {
-        var res = { address: address, lat: null, lng: null, cid: cid, cname: x ? x.community_name : c.neighborhood, newStreet: !x ? street : null };
+        var res = { address: address, lat: null, lng: null, cid: cid, cname: x ? x.community_name : c.neighborhood };
         if (!/\d/.test(address)) return res;
         return geocode(address, c.city).then(function (p) { if (p) { res.lat = p.lat; res.lng = p.lng; } return res; });
       });
     });
-  }
-  function addNewStreet(A, o) {
-    return cityOf(A.sb, o.cid).then(function (c) {
-      return A.sb.from('new_streets').insert({ street_name: o.street, neighborhood_id: o.cid, neighborhood_name: c.neighborhood || '', city_name: c.city || 'ירושלים',
-        related_item_id: o.itemId || null, related_item_type: o.type, submitted_by: A.user.id, status: 'pending' });
-    }).then(function () {}, function () {});
   }
   /* תיבת אישור בתוך הטופס (לא מחליפה את החלון, כדי לא לאבד את מה שהוקלד) */
   function confirmIn(f, html, buttons) {
@@ -378,9 +364,6 @@
       box.scrollIntoView({ block: 'center', behavior: 'smooth' });
       box.onclick = function (e) { var b = e.target.closest('[data-k]'); if (!b) return; box.innerHTML = ''; box.onclick = null; res(+b.getAttribute('data-k')); };
     });
-  }
-  function askNewStreet(f, street) {
-    return confirmIn(f, '<p>הרחוב "' + String(street).replace(/[<>&"]/g, '') + '" לא נמצא במאגר. האם זה רחוב חדש או שגיאת הקלדה?</p>', ['רחוב חדש — להמשיך', 'שגיאת הקלדה — לתקן']).then(function (k) { return k === 0; });
   }
   /* אימות טלפון ליצירת קשר ששונה מהטלפון המאומת (Helper.verifyPhoneIfNeeded) — קו נייח לא מאומת.
    * המשתמש כבר מאומת, ולכן verify-sms-code לא נוגע ב-userdata (scope=entity). */
@@ -423,7 +406,7 @@
 
   window.ShchunaPost = { form: form };
   window.ShchunaKit = { css: css, shrink: shrink, upload: upload, phoneOk: phoneOk, digits: digits, doneView: doneView, prefill: prefill, ilikeEsc: ilikeEsc, DOWNLOAD: DOWNLOAD,
-    addrHtml: addrHtml, addrBind: addrBind, addrResolve: addrResolve, addNewStreet: addNewStreet, askNewStreet: askNewStreet, confirmIn: confirmIn,
+    addrHtml: addrHtml, addrBind: addrBind, addrResolve: addrResolve, confirmIn: confirmIn,
     verifyContactPhone: verifyContactPhone, geocode: geocode, distM: distM, cityOf: cityOf };
   window.ShchunaForms = window.ShchunaForms || {};
   window.ShchunaForms.second = function (cid, A) { form('second', cid, A); };

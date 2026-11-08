@@ -1,6 +1,6 @@
 /* נדל"ן מהאתר — דירה למכירה (approve_property) ולהשכרה (approved_rental_properties), ופרסום מהיר למתווכים (AI).
  * אותם שדות וכללים כמו AddPropertyScreen / BrokerQuickListingScreen באפליקציה.
- * כתובת כמו AddressLocationPicker (ShchunaKit.addr*): הצעות מ-search_streets, השכונה לפי הרחוב (P-23), geocoding כשיש מספר בית, רחוב חדש → new_streets.
+ * כתובת כמו AddressLocationPicker (ShchunaKit.addr*): הצעות מ-search_streets, השכונה לפי הרחוב (P-23), geocoding כשיש מספר בית; רחוב לא מזוהה נשמר כמו שהוא.
  * תמונות: אחרי ה-insert, ב-images/properties/{sale|rental}/{id}/{i}.jpg, ואז update של image_urls.
  * מסלול המתווך: קריאה אוטומטית → הטופס המלא ממולא לבדיקה, כמו 'תיקון' / 'למילוי ידני' באפליקציה (AddPropertyScreen עם draft) — אותם כללים. */
 (function () {
@@ -91,7 +91,7 @@
     });
 
     var ad = K.addrBind(A, f, { name: 'addr', cid: cid });
-    // רחוב מה-AI — לזהות מראש (רחוב בכמה שכונות ייפתר בשמירה: "באיזו שכונה?")
+    // רחוב מה-AI — לזהות מראש בשכונה של ההוספה
     if (dr.street) K.addrResolve(A, ad, { cid: cid }).then(function () {}, function () {});
 
     var imgs = f.querySelector('[data-imgs]');
@@ -129,8 +129,7 @@
       var table = sale ? 'approve_property' : 'approved_rental_properties';
       A.busy(btn, true, 'בודקים…');
       var L;
-      K.addrResolve(A, ad, { cid: cid, f: f }).then(function (x) {
-        if (x.unknown) return K.askNewStreet(f, x.unknown).then(function (yes) { A.busy(btn, false); if (yes) { ad.newOk = true; f.requestSubmit ? f.requestSubmit() : btn.click(); } else ad.input.focus(); return 'stop'; });
+      K.addrResolve(A, ad, { cid: cid }).then(function (x) {
         L = x;
         return A.sb.from('userdata').select('owner_phone').eq('user_id', A.user.id).maybeSingle().then(function (ur) {
           var mine = K.digits(ur.data && ur.data.owner_phone);
@@ -180,7 +179,6 @@
       return A.sb.from(table).insert(row).select('id').single().then(function (r) {
         if (r.error) throw r.error;
         var id = r.data.id;
-        if (L.newStreet) K.addNewStreet(A, { street: L.newStreet, cid: cid, itemId: id, type: 'property' });
         if (!st.files.length) return;
         A.busy(btn, true, 'מעלים תמונות…');
         var dir = 'properties/' + (sale ? 'sale' : 'rental') + '/' + id + '/', v = Date.now();
