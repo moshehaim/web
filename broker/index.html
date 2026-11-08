@@ -89,7 +89,7 @@ function field(r,k,label,kind){
 }
 function message(){
   const L=[`פרטים לנכסים בשכונה (מ${meta.full}):`,''];
-  rows.forEach(r=>L.push(`${r.n}. ${r.street} ${r.rooms==='?'?'(חדרים ?)':r.rooms+' חד׳'} — מ"ר: ${r.area??'?'} | קומה: ${r.floor??'?'} | מעלית: ${yn(r.elevator)} | ממ"ד: ${yn(r.mamad)} | חניה: ${yn(r.parking)} | מחסן: ${yn(r.storage)}${r.note?' | הערה: '+r.note:''}`));
+  rows.forEach(r=>L.push(`${r.n}. ${r.street} ${(r.rooms==='?'||r.rooms==null)?'(חדרים ?)':r.rooms+' חד׳'} — מ"ר: ${r.area??'?'} | קומה: ${r.floor??'?'} | מעלית: ${yn(r.elevator)} | ממ"ד: ${yn(r.mamad)} | חניה: ${yn(r.parking)} | מחסן: ${yn(r.storage)}${r.note?' | הערה: '+r.note:''}`));
   return L.join('\n');
 }
 function render(){
@@ -101,7 +101,7 @@ function render(){
   list.innerHTML=shown.length?shown.map(r=>{const m=missing(r);
     const price=r.price==null?'מחיר: חסר':fmt(r.price)+' ₪'+(r.kind==='rental'?' לחודש':'');
     return `<section class="card ${m.length?'':'done'}"><div class="top"><span class="num">${r.n}</span>
-      <div class="ttl"><b>${esc(r.street)}</b><div>${r.rooms==='?'?'חדרים: ?':esc(r.rooms)+' חד׳'}${r.title?' · '+esc(r.title):''}</div></div>
+      <div class="ttl"><b>${esc(r.street)}</b><div>${(r.rooms==='?'||r.rooms==null)?'חדרים: ?':esc(r.rooms)+' חד׳'}${r.title?' · '+esc(r.title):''}</div></div>
       <span class="price">${price}</span><span class="chip">${m.length?'חסר: '+m.map(k=>LBL[k]).join(', '):'מלא'}</span></div>
       ${r.ask?`<div class="note">${esc(r.ask)}</div>`:''}
       <div class="grid">${field(r,'area','שטח בנוי (מ"ר)','num')}${field(r,'floor','קומה (קרקע = 0)','num')}${BOOLS.map(([k,l])=>field(r,k,l,'bool')).join('')}${field(r,'note','הערות','text')}</div></section>`}).join(''):'<p class="empty">הכול מלא ✓</p>';
