@@ -71,25 +71,26 @@
 </div>
 <script>
 const REQ=['area','floor','elevator','mamad'];
-const LBL={area:'שטח',floor:'קומה',elevator:'מעלית',mamad:'ממ"ד'};
+const LBL={area:'שטח',floor:'קומה',elevator:'מעלית',mamad:'ממ"ד',price:'מחיר',rooms:'חדרים'};
 const BOOLS=[['elevator','מעלית'],['mamad','ממ"ד'],['parking','חניה'],['storage','מחסן']];
 const list=document.getElementById('list');
 const key=(new URLSearchParams(location.search).get('b')||'').replace(/[^a-z0-9-]/gi,'');
 let rows=[], meta={}, onlyMissing=false;
 const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
-const missing=r=>REQ.filter(k=>r[k]===null||r[k]===undefined||r[k]==='');
+const empty=v=>v===null||v===undefined||v===''||v==='?';
+const missing=r=>[...(r.needPrice&&empty(r.price)?['price']:[]),...(r.needRooms&&empty(r.rooms)?['rooms']:[]),...REQ.filter(k=>empty(r[k]))];
 const fmt=n=>Number(n).toLocaleString('he-IL');
 const yn=v=>v===true?'כן':v===false?'לא':'?';
-function store(){try{const d={};rows.forEach(x=>d[x.id]={area:x.area,floor:x.floor,elevator:x.elevator,mamad:x.mamad,parking:x.parking,storage:x.storage,note:x.note});localStorage.setItem('draft-'+key,JSON.stringify(d))}catch(e){}}
+function store(){try{const d={};rows.forEach(x=>d[x.id]={price:x.price,rooms:x.rooms,area:x.area,floor:x.floor,elevator:x.elevator,mamad:x.mamad,parking:x.parking,storage:x.storage,note:x.note});localStorage.setItem('draft-'+key,JSON.stringify(d))}catch(e){}}
 function field(r,k,label,kind){
-  const need=REQ.includes(k)&&(r[k]===null||r[k]===undefined||r[k]==='');
+  const need=missing(r).includes(k);
   if(kind==='bool'){const v=r[k];return `<div class="f ${need?'need':''}"><span>${label}</span><div class="seg" data-id="${r.id}" data-k="${k}"><button type="button" aria-pressed="${v===true}" data-v="true">כן</button><button type="button" aria-pressed="${v===false}" data-v="false">לא</button></div></div>`}
   const t=kind==='text'?'text':'number';
   return `<label class="f ${need?'need':''} ${kind==='text'?'wide':''}"><span>${label}</span><input type="${t}" id="${r.id}-${k}" data-id="${r.id}" data-k="${k}" value="${esc(r[k])}" ${t==='number'?'inputmode="decimal" step="any"':''}></label>`;
 }
 function message(){
   const L=[`פרטים לנכסים בשכונה (מ${meta.full}):`,''];
-  rows.forEach(r=>L.push(`${r.n}. ${r.street} ${(r.rooms==='?'||r.rooms==null)?'(חדרים ?)':r.rooms+' חד׳'} — מ"ר: ${r.area??'?'} | קומה: ${r.floor??'?'} | מעלית: ${yn(r.elevator)} | ממ"ד: ${yn(r.mamad)} | חניה: ${yn(r.parking)} | מחסן: ${yn(r.storage)}${r.note?' | הערה: '+r.note:''}`));
+  rows.forEach(r=>L.push(`${r.n}. ${r.street} ${(r.rooms==='?'||r.rooms==null)?'(חדרים ?)':r.rooms+' חד׳'} —${r.needPrice?' מחיר: '+(empty(r.price)?'?':fmt(r.price))+' |':''} מ"ר: ${r.area??'?'} | קומה: ${r.floor??'?'} | מעלית: ${yn(r.elevator)} | ממ"ד: ${yn(r.mamad)} | חניה: ${yn(r.parking)} | מחסן: ${yn(r.storage)}${r.note?' | הערה: '+r.note:''}`));
   return L.join('\n');
 }
 function render(){
@@ -99,12 +100,12 @@ function render(){
   const shown=rows.filter(r=>!onlyMissing||missing(r).length);
   const focused=document.activeElement&&document.activeElement.id;
   list.innerHTML=shown.length?shown.map(r=>{const m=missing(r);
-    const price=r.price==null?'מחיר: חסר':fmt(r.price)+' ₪'+(r.kind==='rental'?' לחודש':'');
+    const price=empty(r.price)?'מחיר: חסר':fmt(r.price)+' ₪'+(r.kind==='rental'?' לחודש':'');
     return `<section class="card ${m.length?'':'done'}"><div class="top"><span class="num">${r.n}</span>
       <div class="ttl"><b>${esc(r.street)}</b><div>${(r.rooms==='?'||r.rooms==null)?'חדרים: ?':esc(r.rooms)+' חד׳'}${r.title?' · '+esc(r.title):''}</div></div>
       <span class="price">${price}</span><span class="chip">${m.length?'חסר: '+m.map(k=>LBL[k]).join(', '):'מלא'}</span></div>
       ${r.ask?`<div class="note">${esc(r.ask)}</div>`:''}
-      <div class="grid">${field(r,'area','שטח בנוי (מ"ר)','num')}${field(r,'floor','קומה (קרקע = 0)','num')}${BOOLS.map(([k,l])=>field(r,k,l,'bool')).join('')}${field(r,'note','הערות','text')}</div></section>`}).join(''):'<p class="empty">הכול מלא ✓</p>';
+      <div class="grid">${r.needPrice?field(r,'price',r.kind==='rental'?'שכר דירה לחודש (₪)':'מחיר (₪)','num'):''}${r.needRooms?field(r,'rooms','חדרים','num'):''}${field(r,'area','שטח בנוי (מ"ר)','num')}${field(r,'floor','קומה (קרקע = 0)','num')}${BOOLS.map(([k,l])=>field(r,k,l,'bool')).join('')}${field(r,'note','הערות','text')}</div></section>`}).join(''):'<p class="empty">הכול מלא ✓</p>';
   document.getElementById('wa').href='https://wa.me/972523114129?text='+encodeURIComponent(message());
   if(focused){const el=document.getElementById(focused);if(el){el.focus();try{const L=el.value.length;el.setSelectionRange(L,L)}catch(_){}}}
 }
@@ -114,7 +115,7 @@ list.addEventListener('change',e=>{const i=e.target.closest('input[data-k]');if(
 document.getElementById('onlyMissing').addEventListener('change',e=>{onlyMissing=e.target.checked;render()});
 (async()=>{
   if(!key){list.innerHTML='<p class="empty">הקישור לא שלם. בקשו ממשה קישור חדש.</p>';return}
-  try{const r=await fetch('d/'+key+'.json',{cache:'no-store'});if(!r.ok)throw 0;const d=await r.json();meta=d;rows=d.rows;}
+  try{const r=await fetch('d/'+key+'.json',{cache:'no-store'});if(!r.ok)throw 0;const d=await r.json();meta=d;rows=d.rows.map(r=>({...r,needPrice:r.needPrice??empty(r.price),needRooms:r.needRooms??empty(r.rooms)}));}
   catch(e){list.innerHTML='<p class="empty">לא מצאנו את הרשימה. בקשו ממשה קישור חדש.</p>';return}
   try{const d=JSON.parse(localStorage.getItem('draft-'+key)||'null');if(d)rows=rows.map(r=>({...r,...(d[r.id]||{})}))}catch(e){}
   document.getElementById('h1').textContent=`${meta.first}, חסרים לנו כמה פרטים`;
