@@ -1,8 +1,8 @@
 /* נדל"ן מהאתר — דירה למכירה (approve_property) ולהשכרה (approved_rental_properties), ופרסום מהיר למתווכים (AI).
  * אותם שדות וכללים כמו AddPropertyScreen / BrokerQuickListingScreen באפליקציה.
- * רחוב נבחר מרשימה (RPC search_streets) — השכונה נקבעת לפי הרחוב (P-23). בלי נקודה במפה: snap_location בשרת.
+ * כתובת כמו AddressLocationPicker (ShchunaKit.addr*): הצעות מ-search_streets, השכונה לפי הרחוב (P-23), geocoding כשיש מספר בית, רחוב חדש → new_streets.
  * תמונות: אחרי ה-insert, ב-images/properties/{sale|rental}/{id}/{i}.jpg, ואז update של image_urls.
- * מסלול המתווך באתר עובר אימות טלפון ובדיקת כפילות (באפליקציה הוא מדלג עליהם). */
+ * מסלול המתווך: קריאה אוטומטית → הטופס המלא ממולא לבדיקה, כמו 'תיקון' / 'למילוי ידני' באפליקציה (AddPropertyScreen עם draft) — אותם כללים. */
 (function () {
   var K = window.ShchunaKit;
   var TYPES = [['apartment', 'דירה'], ['cottage', 'קוטג׳'], ['duplex', 'דופלקס'], ['penthouse', 'פנטהאוז'], ['gardenApartment', 'דירת גן'], ['lot', 'מגרש'], ['business', 'עסק'], ['other', 'אחר']];
@@ -15,35 +15,6 @@
   function norm(s) { return String(s || '').toLowerCase().replace(/\s+/g, ''); }
   function num(v) { v = String(v == null ? '' : v).replace(/,/g, '').trim(); return v === '' ? null : +v; }
 
-  function communityInfo(sb, cid) {
-    return sb.from('community').select('neighborhood,city').eq('id', cid).maybeSingle().then(function (r) { return r.data || {}; }, function () { return {}; });
-  }
-
-  /* בוחר רחוב: הצעות מ-search_streets; בחירה קובעת שכונה. הקלדה חופשית — נשאר בשכונה של העמוד. */
-  function streetPicker(A, root, info, cid, onPick) {
-    var inp = root.querySelector('[name=street]'), sug = root.querySelector('[data-sug]'), t = null, seq = 0;
-    inp.addEventListener('input', function () {
-      onPick(null);
-      clearTimeout(t); var q = inp.value.trim();
-      if (q.length < 2) { sug.hidden = true; return; }
-      t = setTimeout(function () {
-        var my = ++seq;
-        A.sb.rpc('search_streets', { p_city: info.city || 'ירושלים', p_query: q, p_prefer_community: cid, p_limit: 12 }).then(function (r) {
-          if (my !== seq) return;
-          var rows = r.data || [];
-          if (!rows.length) { sug.hidden = true; return; }
-          sug.innerHTML = rows.map(function (x, i) { return '<button type="button" data-i="' + i + '">' + A.esc(x.street_name) + ' <small>· ' + A.esc(x.community_name || '') + '</small></button>'; }).join('');
-          sug.hidden = false;
-          sug.onclick = function (e) {
-            var b = e.target.closest('[data-i]'); if (!b) return;
-            var x = rows[+b.getAttribute('data-i')];
-            inp.value = x.street_name; sug.hidden = true; onPick(x);
-          };
-        });
-      }, 250);
-    });
-  }
-
   /* הטופס המלא. o: { sale, draft (שדות מה-AI), files (תמונות שכבר נבחרו), broker } */
   function propForm(cid, A, o) {
     K.css();
@@ -53,8 +24,7 @@
     var d = A.open('<h2 id="sa-h">' + (sale ? 'דירה למכירה' : 'דירה להשכרה') + '</h2>' +
       '<form class="sp-f" novalidate>' +
       '<label class="l">סוג נכס *<select name="ptype">' + types.map(function (t) { return '<option value="' + t[0] + '"' + (t[0] === st.type ? ' selected' : '') + '>' + t[1] + '</option>'; }).join('') + '</select></label>' +
-      '<div class="sp-sec"><span>כתובת</span><div class="sp-row"><div style="position:relative"><input type="text" name="street" maxlength="80" placeholder="התחל להקליד שם רחוב…" autocomplete="off" aria-label="רחוב"><div class="sp-sug" data-sug hidden></div></div>' +
-        '<input type="text" name="house" maxlength="10" placeholder="מספר" aria-label="מספר בית" inputmode="numeric"></div><p class="sp-hint" data-hood></p></div>' +
+      K.addrHtml('addr', 'מיקום הנכס', 'התחל להקליד שם רחוב…', false) +
       '<label class="l">' + (sale ? 'מחיר מבוקש' : 'שכר דירה חודשי') + ' (₪) *<input type="number" name="price" inputmode="numeric" min="1" dir="ltr"></label>' +
       '<div data-rooms class="sp-sec"><span>חדרים *</span><div class="sp-row" style="grid-template-columns:auto 1fr auto;align-items:center"><button type="button" class="sa-b" data-r="-1" style="width:50px">−</button><b data-rv style="text-align:center;font-size:20px"></b><button type="button" class="sa-b" data-r="1" style="width:50px">+</button></div></div>' +
       '<div class="sp-row"><label class="l">שטח (מ״ר) *<input type="number" name="area" inputmode="numeric" min="1" dir="ltr"></label>' +
@@ -78,8 +48,7 @@
     var f = d.querySelector('form'), E = f.elements, btn = f.querySelector('[type=submit]'), info = {};
 
     // מילוי מטיוטה (AI) או מהחשבון
-    if (dr.street) E.street.value = dr.street;
-    if (dr.house_number) E.house.value = dr.house_number;
+    if (dr.street) E.addr.value = dr.street + (dr.house_number ? ' ' + dr.house_number : '');
     if (dr.asking_price) E.price.value = dr.asking_price;
     if (dr.area_in_sqm) E.area.value = dr.area_in_sqm;
     if (dr.floor != null) E.floor.value = dr.floor;
@@ -113,7 +82,7 @@
       drawFeats();
       if (e.target.name === 'phone') st.phoneOk = false;
     });
-    f.addEventListener('input', function (e) { A.setErr(''); if (e.target.name === 'street' || e.target.name === 'house') { st.dupOk = false; f.querySelector('[data-dup]').innerHTML = ''; } });
+    f.addEventListener('input', function (e) { A.setErr(''); if (e.target.name === 'addr') { st.dupOk = false; f.querySelector('[data-dup]').innerHTML = ''; } });
     f.addEventListener('click', function (e) {
       var b = e.target.closest('button'); if (!b || b.type === 'submit') return;
       if (b.hasAttribute('data-r')) { st.rooms = Math.min(12, Math.max(1, st.rooms + 0.5 * +b.getAttribute('data-r'))); drawRooms(); }
@@ -121,19 +90,9 @@
       else if (b.hasAttribute('data-rm')) { st.files.splice(+b.getAttribute('data-rm'), 1); drawImgs(); }
     });
 
-    var hoodP = f.querySelector('[data-hood]');
-    communityInfo(A.sb, cid).then(function (x) { Object.assign(info, x); if (!st.street) hoodP.textContent = 'השכונה נקבעת לפי הרחוב שנבחר' + (x.neighborhood ? ' (כרגע: ' + x.neighborhood + ')' : ''); });
-    streetPicker(A, f, info, cid, function (x) {
-      st.street = x;
-      if (x) hoodP.textContent = 'שכונה: ' + x.community_name + (x.community_id !== cid ? ' (המודעה תתפרסם שם)' : '');
-    });
-    // אם יש רחוב מה-AI — לנסות לזהות אותו מראש
-    if (dr.street) A.sb.rpc('search_streets', { p_city: 'ירושלים', p_query: dr.street, p_prefer_community: cid, p_limit: 5 }).then(function (r) {
-      var rows = (r.data || []).filter(function (x) { return x.street_name === dr.street; });
-      var one = rows.filter(function (x) { return x.community_id === cid; })[0] || (rows.length === 1 ? rows[0] : null);
-      if (one) { st.street = one; hoodP.textContent = 'שכונה: ' + one.community_name + (one.community_id !== cid ? ' (המודעה תתפרסם שם)' : ''); }
-      else if (rows.length > 1) hoodP.textContent = 'הרחוב נמצא בכמה שכונות — בחרו אותו מהרשימה (הקלידו שוב את שם הרחוב)';
-    });
+    var ad = K.addrBind(A, f, { name: 'addr', cid: cid });
+    // רחוב מה-AI — לזהות מראש (רחוב בכמה שכונות ייפתר בשמירה: "באיזו שכונה?")
+    if (dr.street) K.addrResolve(A, ad, { cid: cid }).then(function () {}, function () {});
 
     var imgs = f.querySelector('[data-imgs]');
     function drawImgs() {
@@ -167,34 +126,40 @@
       if (!lotBiz && (floor == null || floor !== Math.round(floor))) return A.setErr(floor == null ? 'קומה: חובה' : 'קומה: יש להזין מספר שלם');
       var phone = E.phone.value.trim();
       if (phone && !PHONE_RE.test(phone.replace(/[\s\-()]/g, ''))) return A.setErr('מספר טלפון לא תקין');
-      var street = E.street.value.trim(), house = E.house.value.trim();
-      var addr = street ? (street + (house ? ' ' + house : '')) : '';
-      var finalCid = st.street ? st.street.community_id : cid;
       var table = sale ? 'approve_property' : 'approved_rental_properties';
       A.busy(btn, true, 'בודקים…');
-
-      A.sb.from('userdata').select('owner_phone').eq('user_id', A.user.id).maybeSingle().then(function (ur) {
-        var mine = K.digits(ur.data && ur.data.owner_phone);
-        if (phone && !st.phoneOk && mine && K.digits(phone) !== mine) {
-          return confirmBox('מספר הטלפון שהזנת שונה מהמספר שלך. להמשיך?', 'כן, להמשיך', function () { st.phoneOk = true; });
-        }
-        // כפילות: אותה כתובת בשכונה (באפליקציה גם 50 מ׳ + חדרים — כאן אין נקודה)
-        var dupQ = addr && !st.dupOk ? A.sb.from(table).select('full_address').eq('community_id', finalCid).limit(500) : Promise.resolve({ data: [] });
-        return dupQ.then(function (r) {
-          var hit = (r.data || []).some(function (x) { return x.full_address && norm(x.full_address) === norm(addr); });
-          if (hit) return confirmBox('כבר מפורסם נכס בכתובת "' + esc(addr) + '". להמשיך בכל זאת?', 'המשך בכל זאת', function () { st.dupOk = true; });
-          return save(t, lotBiz, price, area, floor, tf, addr, finalCid, table);
+      var L;
+      K.addrResolve(A, ad, { cid: cid, f: f }).then(function (x) {
+        if (x.unknown) return K.askNewStreet(f, x.unknown).then(function (yes) { A.busy(btn, false); if (yes) { ad.newOk = true; f.requestSubmit ? f.requestSubmit() : btn.click(); } else ad.input.focus(); return 'stop'; });
+        L = x;
+        return A.sb.from('userdata').select('owner_phone').eq('user_id', A.user.id).maybeSingle().then(function (ur) {
+          var mine = K.digits(ur.data && ur.data.owner_phone);
+          if (phone && !st.phoneOk && mine && K.digits(phone) !== mine) {
+            return confirmBox('מספר הטלפון שהזנת שונה מהמספר שלך. להמשיך?', 'כן, להמשיך', function () { st.phoneOk = true; });
+          }
+          if (st.dupOk) return save(t, lotBiz, price, area, floor, tf, L, table);
+          // כפילות כמו באפליקציה: אותה כתובת (בלי רווחים), או עד 50 מ׳ עם הפרש חדרים ≤ 0.5
+          return A.sb.from(table).select('full_address,latitude,longitude,num_rooms').eq('community_id', L.cid).limit(1000).then(function (r) {
+            var rooms = lotBiz ? 0 : st.rooms;
+            var hit = (r.data || []).some(function (x) {
+              if (L.address && x.full_address && norm(x.full_address) === norm(L.address)) return true;
+              return L.lat != null && x.latitude != null && K.distM(L.lat, L.lng, x.latitude, x.longitude) <= 50 && Math.abs((+x.num_rooms || 0) - rooms) <= 0.5;
+            });
+            if (hit) return confirmBox('נכס דומה כבר מפורסם בשכונה (באותה כתובת או קרוב מאוד, עם אותו מספר חדרים). להמשיך בכל זאת?', 'המשך בכל זאת', function () { st.dupOk = true; });
+            return save(t, lotBiz, price, area, floor, tf, L, table);
+          });
         });
       }).catch(function () { A.busy(btn, false); A.setErr('אין חיבור. נסו שוב'); });
     });
 
-    function save(t, lotBiz, price, area, floor, tf, addr, finalCid, table) {
+    function save(t, lotBiz, price, area, floor, tf, L, table) {
+      var finalCid = L.cid;
       A.busy(btn, true, 'מפרסמים…');
       var feat = function (k) { return !lotBiz && E[k].checked; };
       var c2n = E.cname2.value.trim(), c2p = E.phone2.value.trim();
       var contact = { name: E.cname.value.trim() || 'לא צוין', phone: E.phone.value.trim() };
       var row = {
-        full_address: addr || null, area_in_sqm: area, num_rooms: lotBiz ? 0 : st.rooms, floor: lotBiz ? 0 : floor, total_floors: lotBiz ? null : tf,
+        full_address: L.address || null, area_in_sqm: area, num_rooms: lotBiz ? 0 : st.rooms, floor: lotBiz ? 0 : floor, total_floors: lotBiz ? null : tf,
         description: E.desc.value.trim() || null, property_type: t, property_condition: t === 'lot' ? null : E.cond.value,
         available_date: t === 'lot' ? null : (E.avail.value || null),
         has_elevator: feat('elev'), has_parking: feat('park'), parking_spots: feat('park') ? (num(E.pspots.value) || 1) : null,
@@ -202,7 +167,7 @@
         has_sukkah_balcony: feat('sukka'), has_safe_room: feat('safe'),
         additional_contact: c2n && c2p ? { name: c2n, phone: c2p } : null,
         image_urls: [], listing_date: new Date().toISOString(), community_id: finalCid, user_id: A.user.id,
-        latitude: null, longitude: null, is_broker: E.broker.checked
+        latitude: L.lat, longitude: L.lng, is_broker: E.broker.checked
       };
       if (sale) {
         row.asking_price = price; row.seller_contact = contact;
@@ -215,6 +180,7 @@
       return A.sb.from(table).insert(row).select('id').single().then(function (r) {
         if (r.error) throw r.error;
         var id = r.data.id;
+        if (L.newStreet) K.addNewStreet(A, { street: L.newStreet, cid: cid, itemId: id, type: 'property' });
         if (!st.files.length) return;
         A.busy(btn, true, 'מעלים תמונות…');
         var dir = 'properties/' + (sale ? 'sale' : 'rental') + '/' + id + '/', v = Date.now();
@@ -226,7 +192,7 @@
         });
       }).then(function () {
         st.files.forEach(function (x) { URL.revokeObjectURL(x.url); });
-        var moved = finalCid !== cid && st.street ? ' המודעה פורסמה ב' + esc(st.street.community_name) + '.' : '';
+        var moved = finalCid !== cid && L.cname ? ' המודעה פורסמה ב' + esc(L.cname) + '.' : '';
         K.doneView(A, sale ? 'sale' : 'rent', { extra: moved + (failedImgs ? ' ' + failedImgs + ' תמונות לא הועלו — אפשר להוסיף אותן בעריכה באפליקציה.' : '') });
       }, function (e) {
         A.busy(btn, false);

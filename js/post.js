@@ -93,7 +93,7 @@
           '<div class="sp-sec"><span>מצב</span><div class="sp-seg" role="group" aria-label="מצב"><button type="button" data-cond="2" aria-pressed="true">משומש</button><button type="button" data-cond="1" aria-pressed="false">חדש</button></div></div>'
       ) +
       '<div class="sp-sec"><span>' + (lost ? 'תמונה' : 'תמונות <small style="font-weight:600;color:#8A94A6">(עד 5)</small>') + '</span><div class="sp-imgs" data-imgs></div></div>' +
-      (lost ? '' : '<label class="l">מקום איסוף <small>לא חובה</small><input type="text" name="addr" maxlength="120" placeholder="רחוב, מספר"></label>') +
+      (lost ? '' : addrHtml('addr', 'מקום איסוף', 'רחוב ומספר', false)) +
       '<label class="l">שם איש קשר *<input type="text" name="cname" maxlength="60" autocomplete="name" required></label>' +
       '<label class="l">טלפון *<input type="tel" name="phone" dir="ltr" inputmode="tel" autocomplete="tel-national" placeholder="050-0000000" required></label>' +
       (lost ? '<p class="sp-hint">* יש למלא לפחות שם פריט, תיאור או תמונה</p>' : '') +
@@ -103,6 +103,8 @@
       '<p class="sa-small">המודעה תופיע באפליקציה מיד, ובאתר תוך כשעה. עריכה ומחיקה — באפליקציה.</p>' +
       '</form>', true);
     var f = d.querySelector('form'), btn = f.querySelector('[type=submit]');
+    var ad = lost ? null : addrBind(A, f, { name: 'addr', cid: cid });
+    var loc = null;
 
     // מילוי מוקדם של פרטי הקשר מהחשבון (כמו באפליקציה)
     var meta = user.user_metadata || {};
@@ -165,7 +167,12 @@
       if (!phoneOk(phone)) return A.setErr('נא למלא מספר טלפון תקין');
       A.setErr(''); A.busy(btn, true, 'בודקים…');
 
-      checkDup(title).then(function (dup) {
+      (ad ? addrResolve(A, ad, { cid: cid }) : Promise.resolve({ cid: cid })).then(function (L) {
+        if (L.unknown) return askNewStreet(f, L.unknown).then(function (yes) { A.busy(btn, false); if (yes) { ad.newOk = true; f.requestSubmit ? f.requestSubmit() : btn.click(); } else ad.input.focus(); return 'stop'; });
+        loc = L;
+        return checkDup(title, L.cid);
+      }).then(function (dup) {
+        if (dup === 'stop') return;
         if (dup && lost) return fail((st.status === 'lost' ? 'אבידה' : 'מציאה') + ' בשם "' + title + '" כבר קיימת בשכונה');
         if (dup && !st.dupOk) {
           A.busy(btn, false);
@@ -181,11 +188,11 @@
       }).catch(function () { fail('אין חיבור. נסו שוב'); });
     });
 
-    function checkDup(title) {
+    function checkDup(title, fcid) {
       if (!title) return Promise.resolve(null);
       var q = lost
-        ? sb.from('lost_and_found').select('title').eq('community_id', cid).eq('status', st.status).ilike('title', title.replace(/[%_\\]/g, '\\$&'))
-        : sb.from('second_hand_items').select('name').eq('community_id', cid).eq('is_blocked', false).ilike('name', title.replace(/[%_\\]/g, '\\$&'));
+        ? sb.from('lost_and_found').select('title').eq('community_id', fcid).eq('status', st.status).ilike('title', title.replace(/[%_\\]/g, '\\$&'))
+        : sb.from('second_hand_items').select('name').eq('community_id', fcid).eq('is_blocked', false).ilike('name', title.replace(/[%_\\]/g, '\\$&'));
       return q.limit(1).then(function (r) { var x = r.data && r.data[0]; return x ? (x.title || x.name) : null; }, function () { return null; });
     }
 
@@ -200,13 +207,16 @@
         return Promise.all(blobs.map(function (b, i) { return upload(sb, 'secondhand/' + ts + '_' + i + '.jpg', b); }));
       }).then(function (urls) {
         A.busy(btn, true, 'מפרסמים…');
-        var now = new Date().toISOString(), addr = f.elements.addr.value.trim();
+        var now = new Date().toISOString();
         return sb.from('second_hand_items').insert({
-          community_id: cid, user_id: user.id, name: title, description: desc, category: st.cat,
+          community_id: loc.cid, user_id: user.id, name: title, description: desc, category: st.cat,
           is_free: st.free, condition: st.cond, price: st.free ? 0 : +f.elements.price.value, image_urls: urls,
-          address: addr || null, latitude: null, longitude: null, seller_name: name, seller_phone: phone,
+          address: loc.address, latitude: loc.lat, longitude: loc.lng, seller_name: name, seller_phone: phone,
           created_at: now, updated_at: now
-        }).then(function (r) { if (r.error) throw r.error; });
+        }).select('id').single().then(function (r) {
+          if (r.error) throw r.error;
+          if (loc.newStreet) return addNewStreet(A, { street: loc.newStreet, cid: cid, itemId: r.data && r.data.id, type: 'second_hand' });
+        });
       });
     }
 
@@ -270,8 +280,151 @@
   }
   function ilikeEsc(v) { return String(v).replace(/[%_\\]/g, '\\$&'); }
 
+  /* ════ כתובת כמו AddressLocationPicker באפליקציה ════
+   * שדה אחד "רחוב ומספר", הצעות מ-search_streets (השכונה נקבעת לפי הרחוב — P-23),
+   * geocoding ב-Nominatim רק כשיש מספר בית (כמו CommunityGeocoder; ניסיון שני בלי המספר),
+   * ורחוב שלא במאגר → "רחוב חדש או שגיאת הקלדה?" → new_streets (pending). */
+  var cityCache = {};
+  function cityOf(sb, cid) {
+    if (cityCache[cid]) return cityCache[cid];
+    return (cityCache[cid] = sb.from('community').select('id,neighborhood,city').eq('id', cid).maybeSingle().then(function (r) { return r.data || {}; }, function () { return {}; }));
+  }
+  function streetPart(v) { return String(v || '').replace(/^רחוב\s+/, '').replace(/\s+\d+.*$/, '').trim(); }
+  function addrHtml(name, label, hint, req) {
+    return '<div class="sp-sec"><span>' + label + (req ? ' *' : ' <small style="font-weight:600;color:#8A94A6">לא חובה</small>') + '</span><div style="position:relative">' +
+      '<input type="text" name="' + name + '" maxlength="150" autocomplete="off" placeholder="' + (hint || 'התחל להקליד שם רחוב…') + '">' +
+      '<div class="sp-sug" data-sug="' + name + '" hidden></div></div><p class="sp-hint" data-ahood="' + name + '"></p></div>';
+  }
+  function addrBind(A, f, o) {
+    var inp = f.elements[o.name], sug = f.querySelector('[data-sug="' + o.name + '"]'), hint = f.querySelector('[data-ahood="' + o.name + '"]');
+    var st = { pick: null, newOk: false }, t = null, seq = 0;
+    function say(x) { hint.textContent = x ? 'שכונה: ' + x.community_name + (x.community_id !== o.cid ? ' (יפורסם שם)' : '') : ''; }
+    inp.addEventListener('input', function () {
+      if (st.pick && streetPart(inp.value) !== st.pick.street_name) { st.pick = null; say(null); }
+      st.newOk = false;
+      clearTimeout(t); var q = streetPart(inp.value);
+      if (q.length < 2 || (st.pick && q === st.pick.street_name)) { sug.hidden = true; return; }
+      t = setTimeout(function () {
+        var my = ++seq;
+        cityOf(A.sb, o.cid).then(function (c) {
+          return A.sb.rpc('search_streets', { p_city: c.city || 'ירושלים', p_query: q, p_prefer_community: o.cid, p_limit: 12 });
+        }).then(function (r) {
+          if (my !== seq) return;
+          var rows = (r && r.data) || [];
+          if (!rows.length) { sug.hidden = true; return; }
+          sug.innerHTML = rows.map(function (x, i) { return '<button type="button" data-i="' + i + '">' + A.esc(x.street_name) + ' <small>· ' + A.esc(x.community_name || '') + '</small></button>'; }).join('');
+          sug.hidden = false;
+          sug.onclick = function (e) {
+            var b = e.target.closest('[data-i]'); if (!b) return;
+            var x = rows[+b.getAttribute('data-i')], num = (inp.value.match(/\s+(\d+[א-ת]?)\s*$/) || [])[1];
+            inp.value = x.street_name + (num ? ' ' + num : ' '); sug.hidden = true; st.pick = x; say(x); inp.focus();
+          };
+        });
+      }, 250);
+    });
+    inp.addEventListener('blur', function () { setTimeout(function () { sug.hidden = true; }, 200); });
+    st.set = function (x) { st.pick = x; say(x); };
+    st.input = inp; st.hint = hint;
+    return st;
+  }
+  function geocode(address, city) {
+    function one(q) {
+      return fetch('https://nominatim.openstreetmap.org/search?' + new URLSearchParams({ q: q + (city ? ', ' + city : '') + ', ישראל', format: 'json', limit: '1', countrycodes: 'il,ps', addressdetails: '1', 'accept-language': 'he' }))
+        .then(function (r) { return r.ok ? r.json() : []; }).then(function (j) { return j && j[0] ? { lat: +j[0].lat, lng: +j[0].lon } : null; }, function () { return null; });
+    }
+    return one(address).then(function (p) {
+      if (p) return p;
+      var noNum = address.replace(/\s*\d+[א-ת]?\s*$/, '').trim();
+      if (!noNum || noNum === address.trim()) return null;
+      return new Promise(function (r) { setTimeout(r, 1000); }).then(function () { return one(noNum); });
+    });
+  }
+  /* בזמן שמירה: { address, lat, lng, cid, cname, newStreet } או { unknown: 'שם רחוב' } אם צריך אישור "רחוב חדש" */
+  function addrResolve(A, st, o) {
+    var address = st.input.value.trim().replace(/\s+/g, ' ');
+    if (!address) return Promise.resolve({ address: null, lat: null, lng: null, cid: o.cid });
+    var street = streetPart(address);
+    var pickP = st.pick ? Promise.resolve(st.pick) : cityOf(A.sb, o.cid).then(function (c) {
+      return A.sb.rpc('search_streets', { p_city: c.city || 'ירושלים', p_query: street, p_prefer_community: o.cid, p_limit: 10 }).then(function (r) {
+        var rows = ((r && r.data) || []).filter(function (x) { return x.street_name === street; });
+        var here = rows.filter(function (x) { return x.community_id === o.cid; })[0];
+        if (here || rows.length <= 1 || !o.f) return here || rows[0] || null;
+        // רחוב שעובר בכמה שכונות — "באיזו שכונה נמצא הרחוב?" (כמו באפליקציה)
+        return confirmIn(o.f, '<p>באיזו שכונה נמצא הרחוב?</p>', rows.map(function (x) { return x.community_name; })).then(function (k) { return rows[k]; });
+      }, function () { return null; });
+    });
+    return pickP.then(function (x) {
+      if (x) st.set(x);
+      if (!x && !st.newOk) return { unknown: street };
+      var cid = x ? x.community_id : o.cid;
+      return cityOf(A.sb, cid).then(function (c) {
+        var res = { address: address, lat: null, lng: null, cid: cid, cname: x ? x.community_name : c.neighborhood, newStreet: !x ? street : null };
+        if (!/\d/.test(address)) return res;
+        return geocode(address, c.city).then(function (p) { if (p) { res.lat = p.lat; res.lng = p.lng; } return res; });
+      });
+    });
+  }
+  function addNewStreet(A, o) {
+    return cityOf(A.sb, o.cid).then(function (c) {
+      return A.sb.from('new_streets').insert({ street_name: o.street, neighborhood_id: o.cid, neighborhood_name: c.neighborhood || '', city_name: c.city || 'ירושלים',
+        related_item_id: o.itemId || null, related_item_type: o.type, submitted_by: A.user.id, status: 'pending' });
+    }).then(function () {}, function () {});
+  }
+  /* תיבת אישור בתוך הטופס (לא מחליפה את החלון, כדי לא לאבד את מה שהוקלד) */
+  function confirmIn(f, html, buttons) {
+    var box = f.querySelector('[data-dup]');
+    return new Promise(function (res) {
+      box.innerHTML = '<div class="sp-dup">' + html + buttons.map(function (b, i) { return '<button class="sa-b' + (i === 0 ? '' : '') + '" type="button" data-k="' + i + '">' + b + '</button>'; }).join('') + '</div>';
+      box.scrollIntoView({ block: 'center', behavior: 'smooth' });
+      box.onclick = function (e) { var b = e.target.closest('[data-k]'); if (!b) return; box.innerHTML = ''; box.onclick = null; res(+b.getAttribute('data-k')); };
+    });
+  }
+  function askNewStreet(f, street) {
+    return confirmIn(f, '<p>הרחוב "' + String(street).replace(/[<>&"]/g, '') + '" לא נמצא במאגר. האם זה רחוב חדש או שגיאת הקלדה?</p>', ['רחוב חדש — להמשיך', 'שגיאת הקלדה — לתקן']).then(function (k) { return k === 0; });
+  }
+  /* אימות טלפון ליצירת קשר ששונה מהטלפון המאומת (Helper.verifyPhoneIfNeeded) — קו נייח לא מאומת.
+   * המשתמש כבר מאומת, ולכן verify-sms-code לא נוגע ב-userdata (scope=entity). */
+  function verifyContactPhone(A, f, phone) {
+    var clean = String(phone || '').replace(/[\s\-]/g, '');
+    if (!clean) return Promise.resolve(true);
+    return A.sb.from('userdata').select('owner_phone').eq('user_id', A.user.id).maybeSingle().then(function (r) {
+      var mine = String((r.data && r.data.owner_phone) || '').replace(/[\s\-]/g, '');
+      if (mine && mine === clean) return true;
+      if (!/^(\+?972|0)5\d{8}$/.test(clean)) return true; // לא נייד → כמו קו נייח באפליקציה
+      var box = f.querySelector('[data-dup]');
+      return new Promise(function (res) {
+        function send() {
+          box.innerHTML = '<div class="sp-dup"><p>שולחים קוד אימות ל-' + clean + '…</p></div>';
+          A.sb.functions.invoke('send-verification-sms', { body: { phone: clean } }).then(function (x) {
+            if (x.error || (x.data && x.data.success === false)) { box.innerHTML = '<div class="sp-dup"><p>לא הצלחנו לשלוח קוד. נסו שוב.</p><button class="sa-b" type="button" data-again>שליחה חוזרת</button><button class="sa-b" type="button" data-cancel>ביטול</button></div>'; return; }
+            box.innerHTML = '<div class="sp-dup"><p>טלפון ליצירת קשר שונה מהטלפון שלך — יש לאמת אותו. הקלידו את הקוד שנשלח ב-SMS ל-' + clean + '</p>' +
+              '<input type="text" inputmode="numeric" dir="ltr" maxlength="6" data-code style="height:46px;border-radius:12px;border:1.5px solid #DCE2EC;padding:0 12px;font-size:18px;text-align:center;letter-spacing:4px">' +
+              '<button class="sa-b pri" type="button" data-ok>אימות</button><button class="sa-b" type="button" data-cancel>ביטול</button><p class="sp-hint" data-cerr></p></div>';
+            box.querySelector('[data-code]').focus();
+          });
+        }
+        box.onclick = function (e) {
+          if (e.target.closest('[data-again]')) return send();
+          if (e.target.closest('[data-cancel]')) { box.innerHTML = ''; box.onclick = null; return res(false); }
+          if (e.target.closest('[data-ok]')) {
+            var code = (box.querySelector('[data-code]').value || '').trim();
+            if (!/^\d{4,6}$/.test(code)) { box.querySelector('[data-cerr]').textContent = 'הקוד חייב להכיל 4-6 ספרות'; return; }
+            A.sb.functions.invoke('verify-sms-code', { body: { phone: clean, code: code } }).then(function (x) {
+              if (!x.error && x.data && x.data.success) { box.innerHTML = ''; box.onclick = null; return res(true); }
+              box.querySelector('[data-cerr]').textContent = (x.data && x.data.error) || 'הקוד שגוי, נסה שוב';
+            });
+          }
+        };
+        send();
+      });
+    });
+  }
+  function distM(a, b, c, d) { var R = 6371000, r = Math.PI / 180, x = (c - a) * r, y = (d - b) * r; var h = Math.sin(x / 2) * Math.sin(x / 2) + Math.cos(a * r) * Math.cos(c * r) * Math.sin(y / 2) * Math.sin(y / 2); return 2 * R * Math.asin(Math.sqrt(h)); }
+
   window.ShchunaPost = { form: form };
-  window.ShchunaKit = { css: css, shrink: shrink, upload: upload, phoneOk: phoneOk, digits: digits, doneView: doneView, prefill: prefill, ilikeEsc: ilikeEsc, DOWNLOAD: DOWNLOAD };
+  window.ShchunaKit = { css: css, shrink: shrink, upload: upload, phoneOk: phoneOk, digits: digits, doneView: doneView, prefill: prefill, ilikeEsc: ilikeEsc, DOWNLOAD: DOWNLOAD,
+    addrHtml: addrHtml, addrBind: addrBind, addrResolve: addrResolve, addNewStreet: addNewStreet, askNewStreet: askNewStreet, confirmIn: confirmIn,
+    verifyContactPhone: verifyContactPhone, geocode: geocode, distM: distM, cityOf: cityOf };
   window.ShchunaForms = window.ShchunaForms || {};
   window.ShchunaForms.second = function (cid, A) { form('second', cid, A); };
   window.ShchunaForms.lost = function (cid, A) { form('lost', cid, A); };

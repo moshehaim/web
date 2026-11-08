@@ -1,6 +1,6 @@
 /* דרושים, גמ"ח והתנדבות מהאתר — אותם שדות וכללים כמו באפליקציה (JobFormScreen, AddOrEditGmachScreen, VolunteerFormScreen).
- * נטען דרך auth.js אחרי התחברות + אימות טלפון. כתובת — טקסט חופשי (בלי נקודה במפה), כמו בהתנדבות באפליקציה.
- * הבדל מהאפליקציה: טלפון ליצירת קשר ששונה מהטלפון המאומת לא עובר אימות SMS נוסף. */
+ * נטען דרך auth.js אחרי התחברות + אימות טלפון. כתובת בדרושים ובגמ"ח — כמו AddressLocationPicker (ShchunaKit.addr*);
+ * בהתנדבות — טקסט חופשי, כמו באפליקציה. טלפון ליצירת קשר ששונה מהמאומת — אימות SMS (verifyPhoneIfNeeded). */
 (function () {
   var K = window.ShchunaKit;
   var JOB_CATS = [['education', 'חינוך והוראה'], ['healthcare', 'בריאות ורפואה'], ['retail', 'מכירות ושירות'], ['technology', 'טכנולוגיה והייטק'],
@@ -41,6 +41,7 @@
   function failer(A, btn) {
     return function (e) {
       A.busy(btn, false);
+      if (e === 'stop') return;
       var m = (e && (e.message || e.hint)) || '';
       if (/phone_not_verified|נדרש אימות טלפון/.test(m)) return A.reverify();
       A.setErr(e && e.userMsg ? e.userMsg : 'לא הצלחנו לפרסם. נסו שוב');
@@ -62,15 +63,15 @@
         inp('req', 'דרישות כלליות', { opt: 1, type: 'area', rows: 3, max: 1500 }) +
         '<div class="sp-row">' + inp('exp_req', 'ניסיון נדרש', { opt: 1, max: 100 }) + inp('edu', 'השכלה נדרשת', { opt: 1, max: 100 }) + '</div>' +
         inp('loc', 'שם המקום', { opt: 1, max: 100, ph: 'שם החברה או המוסד' }) +
-        inp('addr', 'כתובת', { opt: 1, max: 150, ph: 'הכתובת של מקום העבודה' }) +
+        K.addrHtml('addr', 'כתובת', 'הכתובת של מקום העבודה', false) +
         '<label class="sp-chk"><input type="checkbox" name="remote"> אפשרות לעבודה מרחוק</label>' +
         inp('cdesc', 'תיאור החברה / הארגון', { opt: 1, type: 'area', rows: 3, max: 1500 }) +
         inp('link', 'קישור להגשת מועמדות', { opt: 1, type: 'url', ltr: 1, max: 300 }) +
       '</div>' +
       '<div class="sp-row">' + inp('cname', 'איש קשר', { opt: 1, max: 60, extra: ' autocomplete="name"' }) + inp('phone', 'טלפון', { req: 1, type: 'tel', ltr: 1, extra: ' inputmode="tel"' }) + '</div>' +
       inp('email', 'אימייל', { opt: 1, type: 'email', ltr: 1, max: 120 }) +
-      expiry(30), 'פרסם משרה');
-    var btn = f.querySelector('[type=submit]'), E = f.elements;
+      expiry(30) + '<div data-dup></div>', 'פרסם משרה');
+    var btn = f.querySelector('[type=submit]'), E = f.elements, ad = K.addrBind(A, f, { name: 'addr', cid: cid });
     f.querySelector('[data-more]').addEventListener('click', function (e) { e.target.hidden = true; f.querySelector('[data-extra]').hidden = false; });
     K.prefill(A, E.cname, E.phone).then(function (u) { if (u.email && !E.email.value) E.email.value = u.email; });
     f.addEventListener('submit', function (ev) {
@@ -84,19 +85,30 @@
       if (v('email') && !EMAIL_RE.test(v('email'))) return A.setErr('כתובת אימייל לא תקינה');
       if (v('link') && !URL_RE.test(v('link'))) return A.setErr('כתובת URL לא תקינה');
       A.busy(btn, true, 'בודקים…');
-      A.sb.from('jobs').select('id').eq('community_id', cid).ilike('title', K.ilikeEsc(v('title'))).ilike('company_name', K.ilikeEsc(v('company'))).eq('is_active', true).limit(1).then(function (r) {
+      var L;
+      K.addrResolve(A, ad, { cid: cid }).then(function (x) {
+        if (x.unknown) return K.askNewStreet(f, x.unknown).then(function (yes) { if (yes) { ad.newOk = true; setTimeout(function () { f.requestSubmit ? f.requestSubmit() : btn.click(); }); } else ad.input.focus(); throw 'stop'; });
+        L = x;
+        return A.sb.from('jobs').select('id').eq('community_id', L.cid).ilike('title', K.ilikeEsc(v('title'))).ilike('company_name', K.ilikeEsc(v('company'))).eq('is_active', true).limit(1);
+      }).then(function (r) {
         if (r.data && r.data.length) throw userErr('משרה בשם "' + v('title') + '" כבר קיימת עבור "' + v('company') + '"');
+        return K.verifyContactPhone(A, f, v('phone'));
+      }).then(function (okPhone) {
+        if (!okPhone) throw userErr('יש לאמת את מספר הטלפון');
         A.busy(btn, true, 'מפרסמים…');
         var now = new Date().toISOString();
         return A.sb.from('jobs').insert({
           title: v('title'), description: v('desc'), job_type: 'paid', category: E.cat.value, employment_type: E.emp.value,
           salary_info: v('salary'), requirements: v('req'), experience_required: v('exp_req'), education_required: v('edu'),
-          volunteer_hours: null, volunteer_duration: null, location_name: v('loc'), location_address: v('addr'),
-          location_latitude: null, location_longitude: null, remote_option: E.remote.checked,
+          volunteer_hours: null, volunteer_duration: null, location_name: v('loc'), location_address: L.address || '',
+          location_latitude: L.lat, location_longitude: L.lng, remote_option: E.remote.checked,
           company_name: v('company'), company_description: v('cdesc'), contact_person: v('cname'), contact_phone: v('phone'),
-          contact_email: v('email'), application_link: v('link'), expires_at: expIso(f), community_id: cid,
+          contact_email: v('email'), application_link: v('link'), expires_at: expIso(f), community_id: L.cid,
           user_id: A.user.id, updated_at: now
-        }).then(function (x) { if (x.error) throw x.error; });
+        }).select('id').single().then(function (x) {
+          if (x.error) throw x.error;
+          if (L.newStreet) return K.addNewStreet(A, { street: L.newStreet, cid: cid, itemId: x.data && x.data.id, type: 'job' });
+        });
       }).then(function () { K.doneView(A, 'job'); }, failer(A, btn));
     });
   }
@@ -111,8 +123,8 @@
         '<input type="text" name="custom" maxlength="40" placeholder="קטגוריה אחרת? כתבו ולחצו Enter"></div>' +
       inp('desc', 'תיאור', { opt: 1, type: 'area', rows: 3, max: 1500 }) +
       '<div class="sp-row">' + inp('manager', 'שם המנהל', { req: 1, max: 60 }) + inp('phone', 'טלפון', { req: 1, type: 'tel', ltr: 1, extra: ' inputmode="tel"' }) + '</div>' +
-      inp('addr', 'כתובת', { opt: 1, max: 150, ph: 'רחוב ומספר' }), 'הוסף גמ״ח');
-    var btn = f.querySelector('[type=submit]'), E = f.elements, box = f.querySelector('[data-cats]');
+      K.addrHtml('addr', 'כתובת', 'רחוב ומספר (או רק רחוב)', false) + '<div data-dup></div>', 'הוסף גמ״ח');
+    var btn = f.querySelector('[type=submit]'), E = f.elements, box = f.querySelector('[data-cats]'), ad = K.addrBind(A, f, { name: 'addr', cid: cid });
     K.prefill(A, E.manager, E.phone);
     function toggle(c) {
       var i = cats.indexOf(c); if (i >= 0) cats.splice(i, 1); else cats.push(c);
@@ -137,15 +149,26 @@
       if (!v('manager')) return A.setErr('נא להזין שם מנהל');
       if (!v('phone')) return A.setErr('נא להזין מספר טלפון');
       A.busy(btn, true, 'בודקים…');
-      var q = A.sb.from('gmachim').select('id').eq('community_id', cid).ilike('name', K.ilikeEsc(v('name')));
-      if (v('addr')) q = q.ilike('address', K.ilikeEsc(v('addr')));
-      q.limit(1).then(function (r) {
+      var L;
+      K.addrResolve(A, ad, { cid: cid }).then(function (x) {
+        if (x.unknown) return K.askNewStreet(f, x.unknown).then(function (yes) { if (yes) { ad.newOk = true; setTimeout(function () { f.requestSubmit ? f.requestSubmit() : btn.click(); }); } else ad.input.focus(); throw 'stop'; });
+        L = x;
+        var q = A.sb.from('gmachim').select('id').eq('community_id', L.cid).ilike('name', K.ilikeEsc(v('name')));
+        if (L.address) q = q.ilike('address', K.ilikeEsc(L.address));
+        return q.limit(1);
+      }).then(function (r) {
         if (r.data && r.data.length) throw userErr('גמ״ח עם שם "' + v('name') + '" כבר קיים במערכת');
+        return K.verifyContactPhone(A, f, v('phone'));
+      }).then(function (okPhone) {
+        if (!okPhone) throw userErr('יש לאמת את מספר הטלפון');
         A.busy(btn, true, 'מפרסמים…');
         return A.sb.from('gmachim').insert({
-          community_id: cid, user_id: A.user.id, name: v('name'), categories: cats, manager: v('manager'), phone: v('phone'),
-          address: v('addr') || null, description: v('desc') || null, weekly_schedule: null, latitude: null, longitude: null
-        }).then(function (x) { if (x.error) throw x.error; });
+          community_id: L.cid, user_id: A.user.id, name: v('name'), categories: cats, manager: v('manager'), phone: v('phone'),
+          address: L.address || null, description: v('desc') || null, weekly_schedule: null, latitude: L.lat, longitude: L.lng
+        }).select('id').single().then(function (x) {
+          if (x.error) throw x.error;
+          if (L.newStreet) return K.addNewStreet(A, { street: L.newStreet, cid: cid, itemId: x.data && x.data.id, type: 'gmach' });
+        });
       }).then(function () { K.doneView(A, 'gmach', { text: 'הגמ״ח כבר באפליקציה, ויופיע כאן באתר תוך כשעה.', note: 'רוצים להוסיף שעות פעילות, לערוך או להסיר? זה באפליקציה, עם אותו חשבון.' }); }, failer(A, btn));
     });
   }
