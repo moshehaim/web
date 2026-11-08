@@ -10,7 +10,7 @@
     ['furniture', 'ריהוט ועיצוב'], ['baby', 'תינוקות'], ['other', 'שונות']
   ];
   var CSS = '' +
-    '.sp-f{display:flex;flex-direction:column;gap:14px}' +
+    '.sp-f{display:flex;flex-direction:column;gap:14px}.sp-f [hidden]{display:none!important}' +
     '.sp-f label.l{display:flex;flex-direction:column;gap:6px;font-weight:800;font-size:15px;color:#172F57}' +
     '.sp-f label.l small{font-weight:600;color:#8A94A6;font-size:13px}' +
     '.sp-f input[type=text],.sp-f input[type=tel],.sp-f input[type=number],.sp-f textarea{border-radius:14px;border:1.5px solid #DCE2EC;padding:12px 14px;font:inherit;font-size:16px;font-weight:400;color:#1C2B45;background:#fff;width:100%;box-sizing:border-box}' +

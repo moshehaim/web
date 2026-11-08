@@ -122,7 +122,7 @@
     });
 
     var hoodP = f.querySelector('[data-hood]');
-    communityInfo(A.sb, cid).then(function (x) { Object.assign(info, x); hoodP.textContent = 'שכונה: ' + (x.neighborhood || '') + ' — נקבעת לפי הרחוב שנבחר'; });
+    communityInfo(A.sb, cid).then(function (x) { Object.assign(info, x); if (!st.street) hoodP.textContent = 'השכונה נקבעת לפי הרחוב שנבחר' + (x.neighborhood ? ' (כרגע: ' + x.neighborhood + ')' : ''); });
     streetPicker(A, f, info, cid, function (x) {
       st.street = x;
       if (x) hoodP.textContent = 'שכונה: ' + x.community_name + (x.community_id !== cid ? ' (המודעה תתפרסם שם)' : '');
