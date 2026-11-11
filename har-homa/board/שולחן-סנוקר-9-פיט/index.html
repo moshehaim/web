@@ -438,7 +438,7 @@ footer .c{font-size:13px;color:#8A94A6}
 משטח שיש צפחה איכותי בעובי 4 ס״מ, חיתוך לייזר 5 חלקים. חורי כיס תפורים בעבודת יד.
 כולל סט אביזרים - 4 מקלות עם מעמד, חמור, משולש, סט כדורים ביליארד בלגי מקורי של חברת ארמיס, סט כדורים סנוקר מוגדל (22 כדורים) של חברת ארמיס הבלגית, מגש לכדורי סנוקר, כיסוי לשולחן PVC עמיד למזג אוויר. 
 נדרשת הובלה והרכבה בנפרד.</p></div>
-<div class="e-card"><h2>פרטים</h2><div class="e-chips"><span>sports</span><span>במצב טוב</span><span>לפני 2 ימים</span></div></div>
+<div class="e-card"><h2>פרטים</h2><div class="e-chips"><span>sports</span><span>במצב טוב</span><span>לפני 3 ימים</span></div></div>
 
 
 </div>
@@ -488,7 +488,11 @@ function count(){if(!API||sent)return;sent=1;try{fetch(API.url+'/rest/v1/rpc/inc
   headers:{'apikey':API.key,'Authorization':'Bearer '+API.key,'Content-Type':'application/json'},
   body:JSON.stringify({entity_id:el.getAttribute('data-id'),entity_table:el.getAttribute('data-t')})}).catch(function(){});}catch(_){}}
 var desk=window.matchMedia&&matchMedia('(hover: hover) and (pointer: fine)').matches;
+function cat(){if(!API)return;try{fetch(API.url+'/rest/v1/rpc/increment_catalog_click',{method:'POST',keepalive:true,
+  headers:{'apikey':API.key,'Authorization':'Bearer '+API.key,'Content-Type':'application/json'},
+  body:JSON.stringify({p_entity_id:el.getAttribute('data-id'),p_entity_table:el.getAttribute('data-t')})}).catch(function(){});}catch(_){}}
 document.addEventListener('click',function(ev){
+  if(ev.target.closest('.e-cat')){cat();return;}
   if(ev.target.closest('.e-wa')){count();return;}
   var a=ev.target.closest('.e-tel');if(!a)return;count();if(!desk)return;ev.preventDefault();
   var n=a.querySelector('.num'),l=a.querySelector('.lbl');

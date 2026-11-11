@@ -486,7 +486,11 @@ function count(){if(!API||sent)return;sent=1;try{fetch(API.url+'/rest/v1/rpc/inc
   headers:{'apikey':API.key,'Authorization':'Bearer '+API.key,'Content-Type':'application/json'},
   body:JSON.stringify({entity_id:el.getAttribute('data-id'),entity_table:el.getAttribute('data-t')})}).catch(function(){});}catch(_){}}
 var desk=window.matchMedia&&matchMedia('(hover: hover) and (pointer: fine)').matches;
+function cat(){if(!API)return;try{fetch(API.url+'/rest/v1/rpc/increment_catalog_click',{method:'POST',keepalive:true,
+  headers:{'apikey':API.key,'Authorization':'Bearer '+API.key,'Content-Type':'application/json'},
+  body:JSON.stringify({p_entity_id:el.getAttribute('data-id'),p_entity_table:el.getAttribute('data-t')})}).catch(function(){});}catch(_){}}
 document.addEventListener('click',function(ev){
+  if(ev.target.closest('.e-cat')){cat();return;}
   if(ev.target.closest('.e-wa')){count();return;}
   var a=ev.target.closest('.e-tel');if(!a)return;count();if(!desk)return;ev.preventDefault();
   var n=a.querySelector('.num'),l=a.querySelector('.lbl');
