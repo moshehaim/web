@@ -107,7 +107,9 @@
       sb.from('promotion_packages').select('total_promotions_bought,total_promotions_used,expires_at').eq('provider_id', biz.id),
       sb.from('coupons').select('id,status,quantity,start_date,expires_at').eq('provider_id', biz.id).neq('status', 'cancelled'),
       subQ('prominence'),
-      slugP
+      slugP,
+      // קטלוג בשכונה (טבלאות bizcat_* נפרדות) — רק קריאה, כדי להציג קישור למסך הניהול של הקטלוג
+      sb.from('bizcat_catalogs').select('slug,is_published').eq('entity_table', E().table).eq('entity_id', biz.id).maybeSingle().then(function (x) { return x; }, function () { return { data: null }; })
     ]).then(function (r) {
       var cfg = {}; (r[0].data || []).forEach(function (row) { var v = row.value; try { if (typeof v === 'string') v = JSON.parse(v); } catch (e) {} cfg[row.key] = v; });
       var nowD = new Date();
@@ -124,7 +126,8 @@
         coupons: (r[6].data || []).filter(function (c) { return ['expired', 'completed'].indexOf(c.status) < 0 && (!c.expires_at || new Date(c.expires_at) > nowD); }),
         promSub: r[7].data,
         hood: (r[8] || {}).hood || null,
-        slug: (r[8] || {}).slug || null
+        slug: (r[8] || {}).slug || null,
+        catalog: (r[9] && r[9].data) || null
       };
       render();
     }).catch(function () { showError(); });
@@ -169,7 +172,8 @@
       item({ act: 'details', icon: IC.store, color: C.navy, title: E().details, sub: biz.address || 'צפייה ועריכה' }),
       item({ act: 'hours', icon: IC.clock, color: C.hours, title: E().hours, sub: hasSchedule ? 'הוגדרו ' + E().hours : 'עוד לא הוגדרו — להגדרה', badge: hasSchedule ? null : 'חסר', badgeColor: '#F59E0B' }),
       item({ act: 'rec', icon: IC.heart, color: C.rec, title: 'בקש המלצות מלקוחות', sub: biz.recommend_count > 0 ? '❤ ' + biz.recommend_count + ' ממליצים' : 'עוד אין המלצות' }),
-      bizUrl() ? item({ act: 'page', icon: IC.link, color: C.site, title: 'העמוד שלכם באתר', sub: biz._k === 'business' ? 'כך השכנים רואים את העסק' : 'כך השכנים רואים את הכרטיס' }) : ''
+      bizUrl() ? item({ act: 'page', icon: IC.link, color: C.site, title: 'העמוד שלכם באתר', sub: biz._k === 'business' ? 'כך השכנים רואים את העסק' : 'כך השכנים רואים את הכרטיס' }) : '',
+      ctx.catalog ? item({ act: 'catalog', icon: 'M4 4h7v7H4zM13 4h7v7h-7zM4 13h7v7H4zM13 13h7v7h-7z', color: C.site, title: 'הקטלוג שלכם', sub: 'ניהול פריטים, מחירים ותמונות', badge: ctx.catalog.is_published ? null : 'טיוטה', badgeColor: '#F59E0B' }) : ''
     ].join('');
 
     // שירותים — כמו EntityServicesSection: מוחרג ממונטיזציה (מספרות) רואה רק תורים
@@ -229,6 +233,7 @@
     if (a === 'hours') return hoursView();
     if (a === 'rec') return recView();
     if (a === 'page') { location.href = bizUrl(); return; }
+    if (a === 'catalog') { location.href = '/catalog/manage/?c=' + encodeURIComponent(ctx.catalog.slug); return; }
     if (a.indexOf('svc:') === 0) return serviceView(a.slice(4));
   }
 
