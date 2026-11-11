@@ -78,6 +78,8 @@ const CSS = `${MAP_CSS}
 .prow2 .v small{font-size:13px;font-weight:600;color:var(--muted);margin-inline-start:6px}
 .prow2 .d{font-size:13px;color:var(--muted);text-align:left;white-space:nowrap}
 .prow2 .n{grid-column:1/-1;font-size:13px;color:var(--muted)}
+.prow2 .p-ed{grid-column:1/-1;justify-self:start;border:0;background:none;padding:2px 0;font:inherit;font-size:13px;font-weight:800;color:#2A6FB8;cursor:pointer}
+.p-add{display:inline-flex;align-items:center;gap:6px;margin-top:12px;border:1.5px dashed #B9C3D3;background:#F8FAFD;border-radius:999px;padding:9px 16px;font:inherit;font-weight:800;color:#2A6FB8;cursor:pointer}
 .side{display:flex;flex-direction:column;gap:14px}
 .info{background:#fff;border-radius:22px;padding:18px 20px;box-shadow:0 2px 12px rgba(0,0,0,.05);display:flex;flex-direction:column;gap:10px}
 .info h2{margin:0;font-size:18px;font-weight:800;color:var(--navy)}
@@ -204,6 +206,8 @@ export function synagoguePageNew({ vm, home, syn, prayers, lessons, zmanim, toda
   const nusach = nusachOf(syn);
   const sht = shtiblachText(syn.shtiblach);
   const sorted = sortPrayers(prayers, zmanim);
+  // עריכה מהאתר (js/prayer.js דרך auth.js): data-post="prayer" + data-x
+  const px = (o) => esc(JSON.stringify({ syn: syn.id, name: syn.name, nusach: syn.prayer_nusach || '', ...o }));
   const clockOf = {};               // שעה משוערת להיום לזמנים יחסיים (שקיעה, הנץ, פלג)
   for (const t of today.filter((x) => x.n === syn.name)) (clockOf[`${t.t}|${t.l}`] ||= t.c);
 
@@ -216,7 +220,7 @@ ${groups[type].map((p) => {
     const label = formatPrayerTime(p.set, p.time);
     const korb = p.is_open ? (type === 'שחרית' ? ' (קרבנות)' : type === 'מנחה' ? ' (פתיחה)' : '') : '';
     const approx = p.set !== 'בשעה' ? clockOf[`${p.type}|${p.set === 'צמוד' ? 'מיד אחרי מנחה' : label}`] : null;
-    return `<div class="prow2"><span class="v">${esc(label + korb)}${approx ? `<small>היום ≈ ${esc(approx)}</small>` : ''}</span><span class="d">${esc(formatSelectedDays(p.selected_days))}</span>${p.notes ? `<span class="n">${esc(p.notes)}</span>` : ''}</div>`;
+    return `<div class="prow2"><span class="v">${esc(label + korb)}${approx ? `<small>היום ≈ ${esc(approx)}</small>` : ''}</span><span class="d">${esc(formatSelectedDays(p.selected_days))}</span>${p.notes ? `<span class="n">${esc(p.notes)}</span>` : ''}<button type="button" class="p-ed" data-post="prayer" data-x="${px({ prayer: p.id })}" aria-label="עריכת ${esc(p.type)} ${esc(label)}">עריכה</button></div>`;
   }).join('')}
 </div>`).join('');
 
@@ -250,6 +254,7 @@ ${sht ? '<span class="mn-chip hi">שטיבלך</span>' : ''}${nusach ? `<span cl
 <h2>זמני <span class="em">תפילה</span></h2>
 ${sht ? `<p class="sht"><b>שטיבלך — מניינים מתחלפים:</b> ${esc(sht)}</p>` : ''}
 ${sorted.length ? sections : sht ? '' : '<p class="nempty">טרם נמסרו זמני תפילה לבית כנסת זה.</p>'}
+<button type="button" class="p-add" data-post="prayer" data-x="${px({ add: true })}">+ הוספת מניין</button>
 <a class="in-cta" href="/b/" data-cta="syn-times"><span>📍 הזמנים ב${esc(syn.name)} ובכל בתי הכנסת ב${esc(vm.name)}, תמיד איתך</span><b class="go">לאפליקציה</b></a>
 </section>
 <aside class="side">
@@ -259,7 +264,7 @@ ${syn.latitude ? `<div class="info"><h2>הגעה</h2>${syn.address ? `<p>${esc(s
 </div></div>` : ''}
 ${lessons.length ? `<div class="info"><h2>שיעורי תורה</h2>${lessons.map((l) => `<div class="lesson"><b>${esc(l.topic || 'שיעור')}</b><span>${esc([l.teacher, l.day && `יום ${l.day}`, l.start_time].filter(Boolean).join(' · '))}</span></div>`).join('')}</div>` : ''}
 ${syn.study_during_day_details ? `<div class="info"><h2>לימוד ביום</h2><p>${esc(syn.study_during_day_details)}</p></div>` : ''}
-<div class="info"><h2>שינוי בזמנים?</h2><p>הזמנים נמסרו על ידי מתפללים ועשויים להשתנות. כל משתמש רשום יכול לעדכן אותם.</p><div class="btns"><a class="b-map" href="${APP}">${svg('M4 20h4L19 9l-4-4L4 16zM14 6l4 4', 17, 'currentColor', 2)}עדכון זמנים</a></div></div>
+<div class="info"><h2>שינוי בזמנים?</h2><p>הזמנים נמסרו על ידי מתפללים ועשויים להשתנות. כל משתמש רשום יכול לעדכן אותם.</p><div class="btns"><a class="b-map" href="${APP}" data-post="prayer" data-x="${px({})}">${svg('M4 20h4L19 9l-4-4L4 16zM14 6l4 4', 17, 'currentColor', 2)}עדכון זמנים</a></div></div>
 </aside>
 </div>
 

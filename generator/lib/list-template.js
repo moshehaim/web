@@ -165,16 +165,16 @@ function hm(x){x=x%1440;return (x<600?'0':'')+Math.floor(x/60)+':'+(x%60<10?'0':
 var q=document.getElementById('dir-q'),cards=[].slice.call(document.querySelectorAll('.dcard')),
     chips=[].slice.call(document.querySelectorAll('.fchips button')),empty=document.getElementById('dir-empty'),g='',gk='',
     pbar=document.getElementById('post-bar'),epost=document.getElementById('dir-post');
-function run(){var t=(q.value||'').trim(),n=0,pk=pbar&&pbar.querySelector('[data-post="'+gk+'"]')?gk:'';
+function run(){var t=(q.value||'').trim(),n=0,pb=pbar&&pbar.querySelector('[data-k="'+gk+'"]'),pk=pb?gk:'';
   cards.forEach(function(c){var ok=(!g||c.getAttribute('data-group')===g)&&(!t||c.getAttribute('data-text').indexOf(t)>=0);c.hidden=!ok;if(ok)n++;});
   empty.hidden=n>0;
   // תחום בלי מודעות (למשל "דרושים" בלוח): הזמנה לפרסם במקום "לא מצאנו"
   if(!n&&cards.length){var none=g&&!t&&!cards.some(function(c){return c.getAttribute('data-group')===g;});
     empty.firstElementChild.textContent=none?'אין כרגע מודעות ב'+g:'לא מצאנו בשכונה את מה שחיפשת';
     empty.children[1].textContent=none?(pk?'היו הראשונים לפרסם — זה לוקח דקה.':'רוצים לפרסם? זה דרך האפליקציה.'):'נסו מילה אחרת, או בחרו "הכל".';}
-  // פרסום מהאתר: רק בתחומים שיש להם טופס (יד שנייה, אבידות)
-  if(pbar){[].forEach.call(pbar.querySelectorAll('[data-post]'),function(a){a.hidden=a.getAttribute('data-post')!==gk;});pbar.hidden=!pk||(!n&&!t);}
-  if(epost){epost.hidden=!(pk&&!n&&!t);if(pk){epost.setAttribute('data-post',pk);epost.setAttribute('data-c',pbar.getAttribute('data-c'));epost.textContent=pbar.querySelector('[data-post="'+pk+'"]').textContent;}}
+  // פרסום מהאתר: כפתור לפי התחום הנבחר (data-k = מפתח הלשונית, data-post = סוג הטופס)
+  if(pbar){[].forEach.call(pbar.querySelectorAll('[data-k]'),function(a){a.hidden=a.getAttribute('data-k')!==gk;});pbar.hidden=!pk||(!n&&!t);}
+  if(epost){epost.hidden=!(pk&&!n&&!t);if(pb){epost.setAttribute('data-post',pb.getAttribute('data-post'));epost.setAttribute('data-c',pbar.getAttribute('data-c'));epost.textContent=pb.textContent;}}
   if(window.__mapRefresh)window.__mapRefresh();}
 chips.forEach(function(b){b.addEventListener('click',function(){g=b.getAttribute('data-g');gk=b.getAttribute('data-k')||'';
   chips.forEach(function(x){x.setAttribute('aria-pressed',x===b);});run();});});
@@ -352,7 +352,7 @@ export function promosPage(vm, ls, { base, home }) {
   });
 }
 
-export function realEstatePage(vm, ls, { base, home }) {
+export function realEstatePage(vm, ls, { base, home, cid }) {
   const d = ls.realEstate;
   return collectionPage(vm, {
     base, home, slug: 'realestate', label: 'נדל״ן', groups: d.groups,
@@ -361,8 +361,9 @@ export function realEstatePage(vm, ls, { base, home }) {
     placeholder: 'רחוב, מספר חדרים, סוג נכס…',
     cards: d.items.map((r) => mediaCard({ ...r }, { tag: r.kind, price: r.price, lines: [r.meta, r.street], cta: 'לפרטים ויצירת קשר באפליקציה' })).join('\n'),
     emptyText: 'אין כרגע נכסים',
-    join: '<b>מוכרים או משכירים? <span class="em">פרסמו כאן.</span></b><span>מודעה עם תמונות, שמגיעה לשכנים.</span>',
+    join: '<b>מוכרים או משכירים? <span class="em">פרסמו כאן.</span></b><span>מודעה עם תמונות, שמגיעה לשכנים. מתווכים — מדביקים את המודעה והפרטים מתמלאים לבד.</span>',
     joinCta: 'לפרסום נכס',
+    joinActions: cid ? `<span class="post-acts">${[['sale', '+ דירה למכירה'], ['rent', '+ דירה להשכרה'], ['broker', '⚡ פרסום מהיר למתווכים']].map(([k, l]) => `<a class="pill btn-dark" href="${APP}" data-post="${k}" data-c="${esc(cid)}">${l}</a>`).join('')}</span>` : '',
   });
 }
 
@@ -378,9 +379,9 @@ ${x.img ? `<span class="bthumb"><img src="${esc(x.img)}" alt="${esc(x.t)}" loadi
     desc: `לוח המודעות של ${where(vm)}: דרושים, יד שנייה, גמ״חים, התנדבות ואבידות ומציאות.`,
     placeholder: 'עגלה, סייעת, שולחן…',
     cards: d.items.map(row).join('\n'),
-    join: '<b>יש לכם מה לפרסם? <span class="em">ללוח השכונה.</span></b><span>יד שנייה ואבידות — כאן באתר. דרושים, גמ״ח והתנדבות — דרך האפליקציה.</span>',
-    joinActions: cid ? `<span class="post-acts"><a class="pill btn-dark" href="${APP}" data-post="second" data-c="${esc(cid)}">+ יד שנייה</a><a class="pill btn-dark" href="${APP}" data-post="lost" data-c="${esc(cid)}">+ אבידה / מציאה</a><a class="pill" href="${APP}">לאפליקציה</a></span>` : '',
-    postbar: cid ? `<div class="post-bar" id="post-bar" data-c="${esc(cid)}" hidden><a class="pill btn-dark" href="${APP}" data-post="second" data-c="${esc(cid)}">+ פרסום מודעת יד שנייה</a><a class="pill btn-dark" href="${APP}" data-post="lost" data-c="${esc(cid)}">+ פרסום אבידה או מציאה</a></div>` : '',
+    join: '<b>יש לכם מה לפרסם? <span class="em">ללוח השכונה.</span></b><span>יד שנייה, אבידות, דרושים, גמ״ח והתנדבות — ישר מכאן, בדקה.</span>',
+    joinActions: cid ? `<span class="post-acts">${[['second', '+ יד שנייה'], ['lost', '+ אבידה / מציאה'], ['job', '+ דרושים'], ['gmach', '+ גמ״ח'], ['volunteer', '+ התנדבות']].map(([k, l]) => `<a class="pill btn-dark" href="${APP}" data-post="${k}" data-c="${esc(cid)}">${l}</a>`).join('')}</span>` : '',
+    postbar: cid ? `<div class="post-bar" id="post-bar" data-c="${esc(cid)}" hidden>${[['second', 'second', '+ פרסום מודעת יד שנייה'], ['lost', 'lost', '+ פרסום אבידה או מציאה'], ['jobs', 'job', '+ פרסום משרה'], ['gmach', 'gmach', '+ הוספת גמ״ח'], ['vol', 'volunteer', '+ פרסום התנדבות']].map(([k, f, l]) => `<a class="pill btn-dark" href="${APP}" data-k="${k}" data-post="${f}" data-c="${esc(cid)}">${l}</a>`).join('')}</div>` : '',
   });
 }
 
