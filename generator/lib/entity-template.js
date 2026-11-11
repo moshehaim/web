@@ -16,6 +16,7 @@ const ICON = {
   pin: 'M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21zM12 7a2.5 2.5 0 1 0 0 5a2.5 2.5 0 1 0 0-5',
   cal: 'M3 5h18v16H3zM3 10h18M8 3v4M16 3v4',
   heart: 'M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z',
+  book: 'M4 5a2 2 0 0 1 2-2h5v17H6a2 2 0 0 0-2 2zM20 5a2 2 0 0 0-2-2h-5v17h5a2 2 0 0 1 2 2zM11 3h2',
   share: 'M18 8a3 3 0 1 0 0-.1zM6 15a3 3 0 1 0 0-.1zM18 22a3 3 0 1 0 0-.1zM8.6 13.5l6.8 4M15.4 6.5l-6.8 4',
 };
 
@@ -154,6 +155,8 @@ export function detailPage(vm, e, { base, home, kind, listLabel, ldType, listHre
   // קביעת תור: ישר לעסק באתר הדינמי (/app/business/<id> → EntityLinkScreen עם "קבע תור")
   const bookPath = e.table === 'professionals' ? 'professional' : e.table === 'businesses' ? 'business' : null;
   if (d.booking) acts.push(`<a class="e-book" href="${APP}${bookPath && e.id ? `${bookPath}/${encodeURIComponent(e.id)}?book=1` : ''}">${svg(ICON.cal, 19, 'currentColor', 2)}קביעת תור</a>`);
+  // קטלוג העסק (קטלוג בשכונה, /catalog/<slug>/) — אותו כלל כמו באפליקציה; הלחיצה נספרת ב-increment_catalog_click
+  if (d.catalog) acts.push(`<a class="e-book e-cat" href="${esc(d.catalog)}">${svg(ICON.book, 19, 'currentColor', 2)}קטלוג</a>`);
   const noContact = !acts.length;
   // המלצה: באתר עצמו (/js/auth.js — התחברות + אימות טלפון + set_recommendation). בלי JS: לאפליקציה (?recommend=1)
   const recPath = e.table === 'professionals' ? 'professional' : e.table === 'businesses' ? 'business' : null;
@@ -166,7 +169,11 @@ function count(){if(!API||sent)return;sent=1;try{fetch(API.url+'/rest/v1/rpc/inc
   headers:{'apikey':API.key,'Authorization':'Bearer '+API.key,'Content-Type':'application/json'},
   body:JSON.stringify({entity_id:el.getAttribute('data-id'),entity_table:el.getAttribute('data-t')})}).catch(function(){});}catch(_){}}
 var desk=window.matchMedia&&matchMedia('(hover: hover) and (pointer: fine)').matches;
+function cat(){if(!API)return;try{fetch(API.url+'/rest/v1/rpc/increment_catalog_click',{method:'POST',keepalive:true,
+  headers:{'apikey':API.key,'Authorization':'Bearer '+API.key,'Content-Type':'application/json'},
+  body:JSON.stringify({p_entity_id:el.getAttribute('data-id'),p_entity_table:el.getAttribute('data-t')})}).catch(function(){});}catch(_){}}
 document.addEventListener('click',function(ev){
+  if(ev.target.closest('.e-cat')){cat();return;}
   if(ev.target.closest('.e-wa')){count();return;}
   var a=ev.target.closest('.e-tel');if(!a)return;count();if(!desk)return;ev.preventDefault();
   var n=a.querySelector('.num'),l=a.querySelector('.lbl');

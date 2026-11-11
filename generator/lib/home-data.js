@@ -274,14 +274,14 @@ export async function fetchDirectory(db, communityId) {
   const [businesses, professionals, businessTypes, businessCategories, profCategories, promos] = await Promise.all([
     q(db.from('businesses')
       .select('id,name,phone,address,image_url,business_type,recommend_count,latitude,longitude,image_women_only,content_audience,' +
-        'weekly_schedule,kosher_info,event_services_description,appointment_system_status,user_id,created_at')
+        'weekly_schedule,kosher_info,event_services_description,appointment_system_status,catalog_url,user_id,created_at')
       .eq('community_id', communityId).not('is_active', 'is', false)
       .order('is_prominent', { ascending: false, nullsFirst: false })
       .order('priority', { ascending: false, nullsFirst: false })
       .order('name')),
     q(db.from('professionals')
       .select('id,name,phone,main_category,sub_categories,image_url,recommend_count,image_women_only,content_audience,' +
-        'description,weekly_schedule,experience_years,price_range,provides_warranty,tags,address,latitude,longitude,appointment_system_status,user_id,created_at')
+        'description,weekly_schedule,experience_years,price_range,provides_warranty,tags,address,latitude,longitude,appointment_system_status,catalog_url,user_id,created_at')
       .eq('community_id', communityId).not('is_active', 'is', false)
       .order('is_prominent', { ascending: false, nullsFirst: false })
       .order('priority', { ascending: false, nullsFirst: false })
@@ -313,6 +313,9 @@ const QUIET_BIZ_TYPES = new Set(['clothing', 'shoes', 'cosmetics']);
 const QUIET_BIZ_CATS = new Set(['personal_care', 'sports_leisure']);
 const QUIET_PRO_CATS = new Set(['beauty']);
 
+// כפתור קטלוג: כמו באפליקציה (A-39) — רק כשיש catalog_url באתר שכונה ואין מערכת תורים פעילה (סטטוס 3)
+const catalogOf = (r) => (r.appointment_system_status !== 3 && /^https:\/\/(www\.)?shchuna\.co\.il\//.test(r.catalog_url || '') ? r.catalog_url : null);
+
 export function shapeDirectory(raw) {
   const promosOf = (id) => (raw.promos || []).filter((p) => p.provider_id === id)
     .map((p) => ({ title: p.title, img: p.image_women_only ? null : p.image_url, until: until(p.end_date) }));
@@ -334,7 +337,7 @@ export function shapeDirectory(raw) {
         rec: p.recommend_count || 0, where: p.address || '', phone: phoneLinks(p.phone),
         waze: p.latitude && p.longitude ? `https://waze.com/ul?ll=${p.latitude},${p.longitude}&navigate=yes` : null,
         owner: p.user_id ? 'owner' : 'team',
-        detail: { desc: p.description || '', schedule: p.weekly_schedule, booking: p.appointment_system_status === 3,
+        detail: { desc: p.description || '', schedule: p.weekly_schedule, booking: p.appointment_system_status === 3, catalog: catalogOf(p),
           facts: [p.experience_years ? `${p.experience_years} שנות ניסיון` : '', p.price_range || '', p.provides_warranty ? 'נותן אחריות' : '']
             .filter(Boolean), tags: [...subs.slice(3), ...(p.tags || [])], lat: p.latitude, lng: p.longitude,
           promos: promosOf(p.id) },
@@ -352,7 +355,7 @@ export function shapeDirectory(raw) {
         where: b.address || '', phone: phoneLinks(b.phone),
         waze: b.latitude && b.longitude ? `https://waze.com/ul?ll=${b.latitude},${b.longitude}&navigate=yes` : null,
         owner: b.user_id ? 'owner' : 'team',
-        detail: { desc: b.event_services_description || '', schedule: b.weekly_schedule, booking: b.appointment_system_status === 3,
+        detail: { desc: b.event_services_description || '', schedule: b.weekly_schedule, booking: b.appointment_system_status === 3, catalog: catalogOf(b),
           facts: [b.kosher_info ? `כשרות: ${b.kosher_info}` : ''].filter(Boolean), tags: [], lat: b.latitude, lng: b.longitude,
           promos: promosOf(b.id) },
       };
