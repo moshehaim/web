@@ -111,15 +111,32 @@
       (state.err ? '<p class="ferr" role="alert">' + esc(state.err) + '</p>' : '') +
       '<div class="atable"><div class="arow ahd"><span>תמונה</span><span>שם</span><span class="ct">קטגוריה</span><span>מחיר</span><span>מוצג</span><span></span></div>' +
       (rows.map(function (i) {
-        var im = imagesOf(i.id)[0], c = catOf(i.category_id);
+        var im = imagesOf(i.id)[0], c = catOf(i.category_id), sib = siblings(i), at = sib.indexOf(i);
         return '<div class="arow">' +
           '<span class="th" style="background:' + tintOf(i.category_id) + '">' + (im ? '<img src="' + esc(im.thumb_url) + '" alt="" loading="lazy">' : '') + '</span>' +
           '<span class="nm">' + esc(i.name) + (i.is_featured ? ' <span class="star">★ מבוקש</span>' : '') + (im ? '' : ' <span class="fhid">· בלי תמונה</span>') + '</span>' +
           '<span class="ct">' + esc(c ? c.name : '') + '</span>' +
           '<span class="pr">' + (i.price == null ? 'לפי פנייה' : fmt(i.price)) + '</span>' +
           '<button type="button" class="sw" role="switch" aria-checked="' + !i.is_hidden + '" aria-label="' + (i.is_hidden ? 'מוסתר' : 'מוצג') + ': ' + esc(i.name) + '" data-flip="' + i.id + '"><i></i></button>' +
-          '<button type="button" class="lnk" data-edit="' + i.id + '">עריכה</button></div>';
-      }).join('') || '<p class="aempty">' + (items.length ? 'אין פריטים שמתאימים לחיפוש.' : 'עדיין אין פריטים. לחצו "+ פריט חדש" כדי להתחיל.') + '</p>') + '</div>';
+          '<span class="racts">' + (q ? '' :
+            '<button type="button" class="mini" data-itemup="' + i.id + '" aria-label="הזזה למעלה: ' + esc(i.name) + '"' + (at === 0 ? ' disabled' : '') + '>▲</button>' +
+            '<button type="button" class="mini" data-itemdown="' + i.id + '" aria-label="הזזה למטה: ' + esc(i.name) + '"' + (at === sib.length - 1 ? ' disabled' : '') + '>▼</button>') +
+          '<button type="button" class="lnk" data-edit="' + i.id + '">עריכה</button></span></div>';
+      }).join('') || '<p class="aempty">' + (items.length ? 'אין פריטים שמתאימים לחיפוש.' : 'עדיין אין פריטים. לחצו "+ פריט חדש" כדי להתחיל.') + '</p>') + '</div>' +
+      (rows.length > 1 && !q ? '<p class="hint">החיצים מזיזים פריט בתוך הקטגוריה שלו. את סדר הקטגוריות משנים בלשונית "קטגוריות".</p>' : '');
+  }
+  /* הפריטים של אותה קטגוריה, לפי הסדר שבו הם מוצגים */
+  function siblings(it) { return items.filter(function (x) { return x.category_id === it.category_id; }).sort(bySort); }
+  function moveItem(id, dir) {
+    var it = itemOf(id); if (!it) return;
+    var sib = siblings(it), i = sib.indexOf(it), j = i + dir;
+    if (j < 0 || j >= sib.length) return;
+    sib[i] = sib[j]; sib[j] = it;
+    /* מספור מחדש של הקטגוריה כולה — הסדר נשמר גם אם היו מספרים זהים */
+    var base = sib.reduce(function (m, x) { return Math.min(m, x.sort_order || 0); }, Infinity), ups = [], t = now();
+    sib.forEach(function (x, n) { var so = base + n * 10; if (x.sort_order !== so) { x.sort_order = so; ups.push(sb.from('bizcat_items').update({ sort_order: so, updated_at: t }).eq('id', x.id)); } });
+    state.err = ''; render();
+    Promise.all(ups).then(function (rs) { rs.forEach(ok); }).catch(fail);
   }
   function itemForm() {
     var isNew = state.edit === 'new';
@@ -368,13 +385,15 @@
 
   document.addEventListener('click', function (e) {
     if (!C) return;
-    var t = e.target.closest('[data-tab],[data-new],[data-edit],[data-flip],[data-cancel],[data-del],[data-imgdel],[data-imgfirst],[data-catup],[data-catdown],[data-catedit],[data-catcancel],[data-catdel],[data-copyaddr],[data-logodel]');
+    var t = e.target.closest('[data-tab],[data-new],[data-edit],[data-flip],[data-itemup],[data-itemdown],[data-cancel],[data-del],[data-imgdel],[data-imgfirst],[data-catup],[data-catdown],[data-catedit],[data-catcancel],[data-catdel],[data-copyaddr],[data-logodel]');
     if (!t || t.disabled) return;
     var d = t.dataset;
     if (d.tab) { state.tab = d.tab; state.edit = null; state.err = ''; state.saved = ''; state.arm = null; state.catEdit = null; state.up = ''; render(); }
     else if (d.new) { state.edit = 'new'; state.err = ''; state.up = ''; render(); $('fName').focus(); window.scrollTo(0, 0); }
     else if (d.edit) { state.edit = d.edit; state.err = ''; state.arm = null; state.up = ''; render(); window.scrollTo(0, 0); }
     else if (d.flip) flipItem(d.flip);
+    else if (d.itemup) moveItem(d.itemup, -1);
+    else if (d.itemdown) moveItem(d.itemdown, 1);
     else if (d.cancel) { state.edit = null; state.err = ''; state.arm = null; render(); }
     else if (d.del) arm('item:' + d.del, function () { deleteItem(d.del); });
     else if (d.imgdel) arm('img:' + d.imgdel, function () { deleteImage(d.imgdel); });
