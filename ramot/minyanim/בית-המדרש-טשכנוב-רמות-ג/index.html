@@ -378,6 +378,8 @@ footer .c{font-size:13px;color:#8A94A6}
 .prow2 .v small{font-size:13px;font-weight:600;color:var(--muted);margin-inline-start:6px}
 .prow2 .d{font-size:13px;color:var(--muted);text-align:left;white-space:nowrap}
 .prow2 .n{grid-column:1/-1;font-size:13px;color:var(--muted)}
+.prow2 .p-ed{grid-column:1/-1;justify-self:start;border:0;background:none;padding:2px 0;font:inherit;font-size:13px;font-weight:800;color:#2A6FB8;cursor:pointer}
+.p-add{display:inline-flex;align-items:center;gap:6px;margin-top:12px;border:1.5px dashed #B9C3D3;background:#F8FAFD;border-radius:999px;padding:9px 16px;font:inherit;font-weight:800;color:#2A6FB8;cursor:pointer}
 .side{display:flex;flex-direction:column;gap:14px}
 .info{background:#fff;border-radius:22px;padding:18px 20px;box-shadow:0 2px 12px rgba(0,0,0,.05);display:flex;flex-direction:column;gap:10px}
 .info h2{margin:0;font-size:18px;font-weight:800;color:var(--navy)}
@@ -445,12 +447,12 @@ footer .c{font-size:13px;color:#8A94A6}
 <div class="hdr-actions">
 <button type="button" class="pill btn-ghost gs-open" aria-label="חיפוש"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 4a7 7 0 1 0 0 14a7 7 0 1 0 0-14zM20 20l-4-4"/></svg></button>
 <a class="pill btn-ghost acct" id="acct" href="/app/" aria-label="התחברות"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4a4 4 0 1 0 0 8a4 4 0 1 0 0-8zM4 21a8 8 0 0 1 16 0"/></svg><span class="lbl">התחברות</span></a>
-<a class="pill btn-post" href="/app/"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>פרסם</a>
+<a class="pill btn-post" href="/app/" data-post="pick" data-c="9ae42566-e7de-44b4-a94f-1ef4005f5927"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>פרסם</a>
 <a class="pill btn-dark" href="/b/">להורדת האפליקציה</a>
 </div>
 </div>
 <nav class="chips" aria-label="תחומים"><button type="button" class="cnav prev" aria-label="תחומים קודמים">→</button><button type="button" class="cnav next" aria-label="תחומים נוספים">←</button><div class="wrap">
-<a class="chip-post" href="/app/">+ פרסם</a><a href="/ramot/">דף השכונה</a><a href="/ramot/minyanim/" aria-current="page" class="on">מניינים ושיעורים</a><a href="/ramot/biz/">עסקים</a><a href="/ramot/pros/">בעלי מקצוע</a><a href="/ramot/board/#gmach">גמ״חים</a><a href="/ramot/board/#jobs">דרושים</a><a href="/ramot/board/#second">יד שנייה</a><a href="/ramot/board/#vol">התנדבות</a><a href="/ramot/board/#lost">אבידות ומציאות</a><a href="/ramot/events/">הכל לאירוע</a><a href="/ramot/education/">מוסדות חינוך</a><a href="/ramot/parks/">גנים ופארקים</a><a href="/ramot/services/">שירותי קהילה</a><a href="/ramot/health/">בריאות</a>
+<a class="chip-post" href="/app/" data-post="pick" data-c="9ae42566-e7de-44b4-a94f-1ef4005f5927">+ פרסם</a><a href="/ramot/">דף השכונה</a><a href="/ramot/minyanim/" aria-current="page" class="on">מניינים ושיעורים</a><a href="/ramot/biz/">עסקים</a><a href="/ramot/pros/">בעלי מקצוע</a><a href="/ramot/board/#gmach">גמ״חים</a><a href="/ramot/board/#jobs">דרושים</a><a href="/ramot/board/#second">יד שנייה</a><a href="/ramot/board/#vol">התנדבות</a><a href="/ramot/board/#lost">אבידות ומציאות</a><a href="/ramot/events/">הכל לאירוע</a><a href="/ramot/education/">מוסדות חינוך</a><a href="/ramot/parks/">גנים ופארקים</a><a href="/ramot/services/">שירותי קהילה</a><a href="/ramot/health/">בריאות</a>
 </div></nav></header>
 
 
@@ -469,12 +471,13 @@ footer .c{font-size:13px;color:#8A94A6}
 <h2>זמני <span class="em">תפילה</span></h2>
 
 <div class="pt"><h3>שחרית</h3>
-<div class="prow2"><span class="v">07:15</span><span class="d">ימי חול</span></div><div class="prow2"><span class="v">08:00</span><span class="d">שבת</span></div>
+<div class="prow2"><span class="v">07:15</span><span class="d">ימי חול</span><button type="button" class="p-ed" data-post="prayer" data-x="{&quot;syn&quot;:&quot;1381bbbf-5812-471e-aa4f-fedfd4f63a75&quot;,&quot;name&quot;:&quot;בית המדרש טשכנוב - רמות ג&#39;&quot;,&quot;nusach&quot;:&quot;&quot;,&quot;prayer&quot;:&quot;d5231cef-c77f-4ae0-9d79-e727743d9880&quot;}" aria-label="עריכת שחרית 07:15">עריכה</button></div><div class="prow2"><span class="v">08:00</span><span class="d">שבת</span><button type="button" class="p-ed" data-post="prayer" data-x="{&quot;syn&quot;:&quot;1381bbbf-5812-471e-aa4f-fedfd4f63a75&quot;,&quot;name&quot;:&quot;בית המדרש טשכנוב - רמות ג&#39;&quot;,&quot;nusach&quot;:&quot;&quot;,&quot;prayer&quot;:&quot;a5b0b993-a64b-43de-b0ae-6a4ba681941b&quot;}" aria-label="עריכת שחרית 08:00">עריכה</button></div>
 </div><div class="pt"><h3>מנחה</h3>
-<div class="prow2"><span class="v">40 דקות לפני השקיעה<small>היום ≈ 16:04</small></span><span class="d">שבת</span></div><div class="prow2"><span class="v">20 דקות לפני השקיעה<small>היום ≈ 16:24</small></span><span class="d">שישי</span></div><div class="prow2"><span class="v">15 דקות לפני השקיעה<small>היום ≈ 16:29</small></span><span class="d">א׳-ה׳</span></div>
+<div class="prow2"><span class="v">40 דקות לפני השקיעה<small>היום ≈ 16:04</small></span><span class="d">שבת</span><button type="button" class="p-ed" data-post="prayer" data-x="{&quot;syn&quot;:&quot;1381bbbf-5812-471e-aa4f-fedfd4f63a75&quot;,&quot;name&quot;:&quot;בית המדרש טשכנוב - רמות ג&#39;&quot;,&quot;nusach&quot;:&quot;&quot;,&quot;prayer&quot;:&quot;82a63373-e5a0-4db5-a1c7-0540435746c2&quot;}" aria-label="עריכת מנחה 40 דקות לפני השקיעה">עריכה</button></div><div class="prow2"><span class="v">20 דקות לפני השקיעה<small>היום ≈ 16:24</small></span><span class="d">שישי</span><button type="button" class="p-ed" data-post="prayer" data-x="{&quot;syn&quot;:&quot;1381bbbf-5812-471e-aa4f-fedfd4f63a75&quot;,&quot;name&quot;:&quot;בית המדרש טשכנוב - רמות ג&#39;&quot;,&quot;nusach&quot;:&quot;&quot;,&quot;prayer&quot;:&quot;2ebb35c6-69fc-4527-aeb3-a133c934838f&quot;}" aria-label="עריכת מנחה 20 דקות לפני השקיעה">עריכה</button></div><div class="prow2"><span class="v">15 דקות לפני השקיעה<small>היום ≈ 16:29</small></span><span class="d">א׳-ה׳</span><button type="button" class="p-ed" data-post="prayer" data-x="{&quot;syn&quot;:&quot;1381bbbf-5812-471e-aa4f-fedfd4f63a75&quot;,&quot;name&quot;:&quot;בית המדרש טשכנוב - רמות ג&#39;&quot;,&quot;nusach&quot;:&quot;&quot;,&quot;prayer&quot;:&quot;0a289095-be5d-47d6-966e-7f2a0f417c2b&quot;}" aria-label="עריכת מנחה 15 דקות לפני השקיעה">עריכה</button></div>
 </div><div class="pt"><h3>ערבית</h3>
-<div class="prow2"><span class="v">20 דקות אחרי השקיעה<small>היום ≈ 17:04</small></span><span class="d">א׳-ה׳</span></div><div class="prow2"><span class="v">50 דקות אחרי השקיעה<small>היום ≈ 17:34</small></span><span class="d">שבת</span></div><div class="prow2"><span class="v">21:10</span><span class="d">א׳, ב׳, ג׳, ד׳</span></div>
+<div class="prow2"><span class="v">20 דקות אחרי השקיעה<small>היום ≈ 17:04</small></span><span class="d">א׳-ה׳</span><button type="button" class="p-ed" data-post="prayer" data-x="{&quot;syn&quot;:&quot;1381bbbf-5812-471e-aa4f-fedfd4f63a75&quot;,&quot;name&quot;:&quot;בית המדרש טשכנוב - רמות ג&#39;&quot;,&quot;nusach&quot;:&quot;&quot;,&quot;prayer&quot;:&quot;dfee3098-4b78-4ef7-ad1c-4bf51dc326f7&quot;}" aria-label="עריכת ערבית 20 דקות אחרי השקיעה">עריכה</button></div><div class="prow2"><span class="v">50 דקות אחרי השקיעה<small>היום ≈ 17:34</small></span><span class="d">שבת</span><button type="button" class="p-ed" data-post="prayer" data-x="{&quot;syn&quot;:&quot;1381bbbf-5812-471e-aa4f-fedfd4f63a75&quot;,&quot;name&quot;:&quot;בית המדרש טשכנוב - רמות ג&#39;&quot;,&quot;nusach&quot;:&quot;&quot;,&quot;prayer&quot;:&quot;a79bb2e1-e9cc-4947-8a20-9d57032c1593&quot;}" aria-label="עריכת ערבית 50 דקות אחרי השקיעה">עריכה</button></div><div class="prow2"><span class="v">21:10</span><span class="d">א׳, ב׳, ג׳, ד׳</span><button type="button" class="p-ed" data-post="prayer" data-x="{&quot;syn&quot;:&quot;1381bbbf-5812-471e-aa4f-fedfd4f63a75&quot;,&quot;name&quot;:&quot;בית המדרש טשכנוב - רמות ג&#39;&quot;,&quot;nusach&quot;:&quot;&quot;,&quot;prayer&quot;:&quot;97e5daf4-fa4b-459c-8c13-520e861d7fb3&quot;}" aria-label="עריכת ערבית 21:10">עריכה</button></div>
 </div>
+<button type="button" class="p-add" data-post="prayer" data-x="{&quot;syn&quot;:&quot;1381bbbf-5812-471e-aa4f-fedfd4f63a75&quot;,&quot;name&quot;:&quot;בית המדרש טשכנוב - רמות ג&#39;&quot;,&quot;nusach&quot;:&quot;&quot;,&quot;add&quot;:true}">+ הוספת מניין</button>
 <a class="in-cta" href="/b/" data-cta="syn-times"><span>📍 הזמנים בבית המדרש טשכנוב - רמות ג&#39; ובכל בתי הכנסת ברמות, תמיד איתך</span><b class="go">לאפליקציה</b></a>
 </section>
 <aside class="side">
@@ -484,7 +487,7 @@ footer .c{font-size:13px;color:#8A94A6}
 </div></div>
 <div class="info"><h2>שיעורי תורה</h2><div class="lesson"><b>דף היומי</b><span>יום כל יום · 06:00</span></div><div class="lesson"><b>שיעור שבועי</b><span>הרב אשר וייס · יום חמישי · 21:00</span></div></div>
 
-<div class="info"><h2>שינוי בזמנים?</h2><p>הזמנים נמסרו על ידי מתפללים ועשויים להשתנות. כל משתמש רשום יכול לעדכן אותם.</p><div class="btns"><a class="b-map" href="/app/"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20h4L19 9l-4-4L4 16zM14 6l4 4"/></svg>עדכון זמנים</a></div></div>
+<div class="info"><h2>שינוי בזמנים?</h2><p>הזמנים נמסרו על ידי מתפללים ועשויים להשתנות. כל משתמש רשום יכול לעדכן אותם.</p><div class="btns"><a class="b-map" href="/app/" data-post="prayer" data-x="{&quot;syn&quot;:&quot;1381bbbf-5812-471e-aa4f-fedfd4f63a75&quot;,&quot;name&quot;:&quot;בית המדרש טשכנוב - רמות ג&#39;&quot;,&quot;nusach&quot;:&quot;&quot;}"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20h4L19 9l-4-4L4 16zM14 6l4 4"/></svg>עדכון זמנים</a></div></div>
 </aside>
 </div>
 
@@ -513,7 +516,7 @@ b.querySelector('.sa-close').addEventListener('click',function(){b.hidden=true;d
 <nav aria-label="קישורים"><a href="/">כל השכונות</a><a href="/my-business/">כניסה לבעלי עסקים</a><a href="/terms.html">תנאי שימוש</a><a href="/privacy.html">פרטיות</a></nav>
 <span class="c">© שכונה, כל הזכויות שמורות</span>
 </div></footer>
-<script src="/js/auth.js?v=9" defer></script>
+<script src="/js/auth.js?v=10" defer></script>
 <script src="/js/t.js?v=5" defer></script>
 
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"PlaceOfWorship","name":"בית המדרש טשכנוב - רמות ג'","url":"https://shchuna.co.il/ramot/minyanim/%D7%91%D7%99%D7%AA-%D7%94%D7%9E%D7%93%D7%A8%D7%A9-%D7%98%D7%A9%D7%9B%D7%A0%D7%95%D7%91-%D7%A8%D7%9E%D7%95%D7%AA-%D7%92/","address":{"@type":"PostalAddress","streetAddress":"שלום סיון 7","addressLocality":"ירושלים","addressCountry":"IL"},"geo":{"@type":"GeoCoordinates","latitude":31.81956,"longitude":35.19144}}</script>

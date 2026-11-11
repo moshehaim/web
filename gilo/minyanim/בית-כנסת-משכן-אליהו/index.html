@@ -378,6 +378,8 @@ footer .c{font-size:13px;color:#8A94A6}
 .prow2 .v small{font-size:13px;font-weight:600;color:var(--muted);margin-inline-start:6px}
 .prow2 .d{font-size:13px;color:var(--muted);text-align:left;white-space:nowrap}
 .prow2 .n{grid-column:1/-1;font-size:13px;color:var(--muted)}
+.prow2 .p-ed{grid-column:1/-1;justify-self:start;border:0;background:none;padding:2px 0;font:inherit;font-size:13px;font-weight:800;color:#2A6FB8;cursor:pointer}
+.p-add{display:inline-flex;align-items:center;gap:6px;margin-top:12px;border:1.5px dashed #B9C3D3;background:#F8FAFD;border-radius:999px;padding:9px 16px;font:inherit;font-weight:800;color:#2A6FB8;cursor:pointer}
 .side{display:flex;flex-direction:column;gap:14px}
 .info{background:#fff;border-radius:22px;padding:18px 20px;box-shadow:0 2px 12px rgba(0,0,0,.05);display:flex;flex-direction:column;gap:10px}
 .info h2{margin:0;font-size:18px;font-weight:800;color:var(--navy)}
@@ -445,12 +447,12 @@ footer .c{font-size:13px;color:#8A94A6}
 <div class="hdr-actions">
 <button type="button" class="pill btn-ghost gs-open" aria-label="חיפוש"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 4a7 7 0 1 0 0 14a7 7 0 1 0 0-14zM20 20l-4-4"/></svg></button>
 <a class="pill btn-ghost acct" id="acct" href="/app/" aria-label="התחברות"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4a4 4 0 1 0 0 8a4 4 0 1 0 0-8zM4 21a8 8 0 0 1 16 0"/></svg><span class="lbl">התחברות</span></a>
-<a class="pill btn-post" href="/app/"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>פרסם</a>
+<a class="pill btn-post" href="/app/" data-post="pick" data-c="3fd4bab3-3f58-49d8-a19d-c106cda128d7"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>פרסם</a>
 <a class="pill btn-dark" href="/b/">להורדת האפליקציה</a>
 </div>
 </div>
 <nav class="chips" aria-label="תחומים"><button type="button" class="cnav prev" aria-label="תחומים קודמים">→</button><button type="button" class="cnav next" aria-label="תחומים נוספים">←</button><div class="wrap">
-<a class="chip-post" href="/app/">+ פרסם</a><a href="/gilo/">דף השכונה</a><a href="/gilo/minyanim/" aria-current="page" class="on">מניינים ושיעורים</a><a href="/gilo/biz/">עסקים</a><a href="/gilo/pros/">בעלי מקצוע</a><a href="/gilo/promos/">מבצעים וקופונים</a><a href="/gilo/board/#gmach">גמ״חים</a><a href="/gilo/board/#jobs">דרושים</a><a href="/gilo/board/#second">יד שנייה</a><a href="/gilo/realestate/">נדל״ן</a><a href="/gilo/board/#vol">התנדבות</a><a href="/gilo/board/#lost">אבידות ומציאות</a><a href="/gilo/halls/">אולמות ואירוח</a><a href="/gilo/events/">הכל לאירוע</a><a href="/gilo/education/">מוסדות חינוך</a><a href="/gilo/parks/">גנים ופארקים</a><a href="/gilo/services/">שירותי קהילה</a><a href="/gilo/health/">בריאות</a>
+<a class="chip-post" href="/app/" data-post="pick" data-c="3fd4bab3-3f58-49d8-a19d-c106cda128d7">+ פרסם</a><a href="/gilo/">דף השכונה</a><a href="/gilo/minyanim/" aria-current="page" class="on">מניינים ושיעורים</a><a href="/gilo/biz/">עסקים</a><a href="/gilo/pros/">בעלי מקצוע</a><a href="/gilo/promos/">מבצעים וקופונים</a><a href="/gilo/board/#gmach">גמ״חים</a><a href="/gilo/board/#jobs">דרושים</a><a href="/gilo/board/#second">יד שנייה</a><a href="/gilo/realestate/">נדל״ן</a><a href="/gilo/board/#vol">התנדבות</a><a href="/gilo/board/#lost">אבידות ומציאות</a><a href="/gilo/halls/">אולמות ואירוח</a><a href="/gilo/events/">הכל לאירוע</a><a href="/gilo/education/">מוסדות חינוך</a><a href="/gilo/parks/">גנים ופארקים</a><a href="/gilo/services/">שירותי קהילה</a><a href="/gilo/health/">בריאות</a>
 </div></nav></header>
 
 
@@ -469,6 +471,7 @@ footer .c{font-size:13px;color:#8A94A6}
 <h2>זמני <span class="em">תפילה</span></h2>
 
 <p class="nempty">טרם נמסרו זמני תפילה לבית כנסת זה.</p>
+<button type="button" class="p-add" data-post="prayer" data-x="{&quot;syn&quot;:&quot;9a1b467a-c5a6-4112-9f25-e81392c18f00&quot;,&quot;name&quot;:&quot;בית כנסת משכן אליהו&quot;,&quot;nusach&quot;:&quot;edot_mizrach&quot;,&quot;add&quot;:true}">+ הוספת מניין</button>
 <a class="in-cta" href="/b/" data-cta="syn-times"><span>📍 הזמנים בבית כנסת משכן אליהו ובכל בתי הכנסת בגילה, תמיד איתך</span><b class="go">לאפליקציה</b></a>
 </section>
 <aside class="side">
@@ -478,7 +481,7 @@ footer .c{font-size:13px;color:#8A94A6}
 </div></div>
 
 
-<div class="info"><h2>שינוי בזמנים?</h2><p>הזמנים נמסרו על ידי מתפללים ועשויים להשתנות. כל משתמש רשום יכול לעדכן אותם.</p><div class="btns"><a class="b-map" href="/app/"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20h4L19 9l-4-4L4 16zM14 6l4 4"/></svg>עדכון זמנים</a></div></div>
+<div class="info"><h2>שינוי בזמנים?</h2><p>הזמנים נמסרו על ידי מתפללים ועשויים להשתנות. כל משתמש רשום יכול לעדכן אותם.</p><div class="btns"><a class="b-map" href="/app/" data-post="prayer" data-x="{&quot;syn&quot;:&quot;9a1b467a-c5a6-4112-9f25-e81392c18f00&quot;,&quot;name&quot;:&quot;בית כנסת משכן אליהו&quot;,&quot;nusach&quot;:&quot;edot_mizrach&quot;}"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20h4L19 9l-4-4L4 16zM14 6l4 4"/></svg>עדכון זמנים</a></div></div>
 </aside>
 </div>
 
@@ -507,7 +510,7 @@ b.querySelector('.sa-close').addEventListener('click',function(){b.hidden=true;d
 <nav aria-label="קישורים"><a href="/">כל השכונות</a><a href="/my-business/">כניסה לבעלי עסקים</a><a href="/terms.html">תנאי שימוש</a><a href="/privacy.html">פרטיות</a></nav>
 <span class="c">© שכונה, כל הזכויות שמורות</span>
 </div></footer>
-<script src="/js/auth.js?v=9" defer></script>
+<script src="/js/auth.js?v=10" defer></script>
 <script src="/js/t.js?v=5" defer></script>
 
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"PlaceOfWorship","name":"בית כנסת משכן אליהו","url":"https://shchuna.co.il/gilo/minyanim/%D7%91%D7%99%D7%AA-%D7%9B%D7%A0%D7%A1%D7%AA-%D7%9E%D7%A9%D7%9B%D7%9F-%D7%90%D7%9C%D7%99%D7%94%D7%95/","address":{"@type":"PostalAddress","streetAddress":"ורדינון","addressLocality":"ירושלים","addressCountry":"IL"},"geo":{"@type":"GeoCoordinates","latitude":31.7350512,"longitude":35.1983476}}</script>
