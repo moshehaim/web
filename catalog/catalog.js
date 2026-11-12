@@ -26,6 +26,8 @@
   };
   /* קטגוריה שאין לה ציור משלה מקבלת תיבה כללית */
   var ICON_DEFAULT = '<path d="M3.5 8L12 3.5 20.5 8v8L12 20.5 3.5 16z"/><path d="M3.5 8L12 12.5 20.5 8M12 12.5v8"/>';
+  /* בפלטת קרם־זהב הקטגוריות מקבלות גוונים חמים ושקטים במקום צבעי הפסטל */
+  var TINTS_WARM = ['#F3E3C3', '#EAD9BC', '#F5E9D2', '#E6D3B1', '#F0DFC6', '#EBDCC4', '#F7ECD9', '#E3D2B4'];
   var TINTS = ['#FFE08A', '#A8E0F5', '#D9C8FF', '#FFC2AE', '#F6D9C4', '#FFD1A8', '#B5EBD9', '#D4DCF2', '#C9D6FF', '#F1E3C8', '#E9E1D2', '#CFEBC9', '#E3E6EC'];
   var ALL = '__all';
   function ico(inner) { return '<svg class="ico" viewBox="0 0 24 24" aria-hidden="true">' + inner + '</svg>'; }
@@ -64,7 +66,8 @@
     } catch (e) { return null; }
   }
   function fetchCatalog(slug, token) {
-    var sel = 'id,slug,title,headline,description,service_area,whatsapp,phone,show_phone,palette,header_image_url,price_unit,items_word,is_published,' +
+    /* '*' ולא רשימת עמודות: כך עמודה חדשה בקטלוג (שאלות נפוצות, תמונת פתיחה) לא שוברת את העמוד לפני/אחרי העדכון */
+    var sel = '*,' +
       'bizcat_categories(id,name,sort_order,created_at),' +
       'bizcat_items(id,category_id,name,price,description,is_hidden,is_featured,sort_order,created_at,bizcat_images(image_url,thumb_url,sort_order,created_at))';
     return fetch(SB_URL + '/rest/v1/bizcat_catalogs?slug=eq.' + encodeURIComponent(slug) + '&select=' + encodeURIComponent(sel), {
@@ -90,7 +93,10 @@
   function prepare(row) {
     C = row;
     cats = (row.bizcat_categories || []).slice().sort(bySort);
-    cats.forEach(function (c, i) { c.tint = TINTS[i % TINTS.length]; catById[c.id] = c; });
+    var pv = new URLSearchParams(location.search).get('palette');   // ?palette=gold — הצצה בפלטה אחרת בלי לשמור
+    if (pv && /^[a-z]{2,12}$/.test(pv)) row.palette = pv;
+    var tints = row.palette === 'gold' ? TINTS_WARM : TINTS;
+    cats.forEach(function (c, i) { c.tint = tints[i % tints.length]; catById[c.id] = c; });
     items = (row.bizcat_items || []).filter(function (i) { return !i.is_hidden && catById[i.category_id]; });
     items.forEach(function (i) {
       i.cat = catById[i.category_id];
@@ -140,6 +146,21 @@
     var cs = $('circles').children;
     for (var i = 0; i < cs.length; i++) { var c = cats[i]; cs[i].hidden = !c; if (c) { cs[i].style.background = c.tint; cs[i].innerHTML = icon(c.name); } }
     $('preview').hidden = C.is_published !== false;
+    /* פתיחה כהה וממורכזת: בפלטת קרם־זהב, או כשהעסק העלה תמונת פתיחה */
+    var hero = document.querySelector('.banner'), img = C.hero_image_url || '';
+    hero.classList.toggle('hero-dark', C.palette === 'gold' || !!img);
+    hero.style.backgroundImage = img ? 'linear-gradient(rgba(22,17,12,.58), rgba(22,17,12,.7)), url("' + String(img).replace(/["\\\n]/g, '') + '")' : '';
+    /* איך זה עובד */
+    $('howSteps').innerHTML = [
+      ['בוחרים מהקטלוג', 'עוברים על ה' + W + ', ומסמנים "הוספה לרשימה" בכל מה שמתאים לכם.'],
+      ['שולחים בוואטסאפ', 'בלחיצה אחת הרשימה נשלחת אלינו בהודעה מסודרת, עם המחירים.'],
+      ['סוגרים ישירות איתנו', 'חוזרים אליכם, מתאמים תאריך ופרטים, וסוגרים. בלי תשלום דרך האתר.']
+    ].map(function (s, i) { return '<li><span class="num">' + (i + 1) + '</span><div><b>' + esc(s[0]) + '</b><p>' + esc(s[1]) + '</p></div></li>'; }).join('');
+    /* שאלות נפוצות — רק אם העסק מילא */
+    var faq = Array.isArray(C.faq) ? C.faq.filter(function (f) { return f && f.q && f.a; }) : [];
+    $('faq').hidden = !faq.length;
+    document.querySelectorAll('[data-go="faq"]').forEach(function (b) { b.hidden = !faq.length; });
+    $('faqList').innerHTML = faq.map(function (f) { return '<details><summary>' + esc(f.q) + '</summary><p>' + esc(f.a) + '</p></details>'; }).join('');
   }
 
   /* ── רשימות ── */

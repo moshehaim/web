@@ -115,3 +115,9 @@ label.aimg.add input { position: absolute; inset: 0; opacity: 0; cursor: pointer
 
 .racts { display: flex; align-items: center; gap: 6px; justify-content: flex-end; }
 .racts .lnk { margin-inline-start: 6px; }
+
+.hero-pv { width: 128px; height: 56px; border-radius: 12px; background: #3A2E22; overflow: hidden; flex: none; }
+.hero-pv img { width: 100%; height: 100%; object-fit: cover; display: block; }
+#faqRows { display: flex; flex-direction: column; gap: 10px; }
+.faqrow { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 6px 8px; padding: 12px; border: 1px solid var(--line); border-radius: 12px; background: #FAFBFD; }
+.faqrow .fq { grid-column: 1; } .faqrow .fa { grid-column: 1; } .faqrow .mini { grid-column: 2; grid-row: 1; }

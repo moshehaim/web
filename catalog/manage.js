@@ -8,7 +8,7 @@
   'use strict';
   var A, sb, user, C = null, cats = [], items = [], images = [];
   var TINTS = ['#FFE08A', '#A8E0F5', '#D9C8FF', '#FFC2AE', '#F6D9C4', '#FFD1A8', '#B5EBD9', '#D4DCF2', '#C9D6FF', '#F1E3C8', '#E9E1D2', '#CFEBC9', '#E3E6EC'];
-  var PALETTES = [['blue', 'כחול'], ['green', 'ירוק'], ['plum', 'סגול'], ['warm', 'חום־כתום']];
+  var PALETTES = [['blue', 'כחול'], ['gold', 'קרם־זהב'], ['green', 'ירוק'], ['plum', 'סגול'], ['warm', 'חום־כתום']];
   var MAX_IMAGES = 6, BUCKET = 'catalog';
   var state = { tab: 'items', q: '', cat: '', edit: null, err: '', saved: '', arm: null, busy: false, up: '', catEdit: null };
 
@@ -342,7 +342,22 @@
       '<div class="two"><div><label for="sUnit">המחירים הם…</label><input id="sUnit" maxlength="20" value="' + esc(C.price_unit) + '" placeholder="למשל: ליום"></div>' +
       '<div><label for="sWord">איך קוראים לפריטים</label><input id="sWord" maxlength="20" value="' + esc(C.items_word) + '" placeholder="פריטים / ציוד / מוצרים"></div></div>' +
       '<label for="sPal">צבע העמוד</label><select id="sPal">' + PALETTES.map(function (p) { return '<option value="' + p[0] + '"' + (p[0] === C.palette ? ' selected' : '') + '>' + p[1] + '</option>'; }).join('') + '</select>' +
+      ('hero_image_url' in C ? '<span class="flabel">תמונת פתיחה (לא חובה)</span><div class="logo-row"><span class="hero-pv">' + (C.hero_image_url ? '<img src="' + esc(C.hero_image_url) + '" alt="">' : '') + '</span>' +
+        '<label class="btn-sm filebtn">' + (C.hero_image_url ? 'החלפת תמונה' : 'העלאת תמונה') + '<input type="file" id="sHero" accept="image/*"></label>' +
+        (C.hero_image_url ? '<button type="button" class="btn-sm" data-herodel="1">הסרה</button>' : '') + '</div><span class="hint">תמונה רחבה של הציוד, בלי אנשים. מוצגת ברקע של ראש העמוד, מאחורי הכותרת.</span>' : '') +
+      ('faq' in C ? '<span class="flabel">שאלות נפוצות (לא חובה)</span><div id="faqRows">' + (Array.isArray(C.faq) ? C.faq : []).map(faqRow).join('') + '</div>' +
+        '<div><button type="button" class="btn-sm" data-faqadd="1">+ הוספת שאלה</button></div><span class="hint">למשל: האם יש משלוח? מה כולל המחיר? צריך פיקדון? מופיע בעמוד רק אם יש לפחות שאלה אחת עם תשובה.</span>' : '') +
       '<div class="facts"><button type="submit" class="btn-sm primary"' + (state.busy ? ' disabled' : '') + '>שמירה</button><span class="saved" role="status">' + esc(state.saved) + '</span></div></form>';
+  }
+  function faqRow(f) {
+    return '<div class="faqrow"><input class="fq" maxlength="120" placeholder="השאלה" aria-label="שאלה" value="' + esc(f && f.q) + '">' +
+      '<textarea class="fa" rows="2" maxlength="600" placeholder="התשובה" aria-label="תשובה">' + esc(f && f.a) + '</textarea>' +
+      '<button type="button" class="mini danger" data-faqdel="1" aria-label="הסרת השאלה">הסרה</button></div>';
+  }
+  function readFaq() {
+    return Array.prototype.map.call(document.querySelectorAll('#faqRows .faqrow'), function (r) {
+      return { q: r.querySelector('.fq').value.trim(), a: r.querySelector('.fa').value.trim() };
+    }).filter(function (f) { return f.q && f.a; });
   }
   function saveSettings() {
     var title = $('sTitle').value.trim(), wa = waIntl($('sWa').value);
@@ -350,6 +365,7 @@
     if (!/^[0-9]{9,15}$/.test(wa)) { state.err = 'צריך מספר וואטסאפ תקין, למשל 052-1234567.'; return render(); }
     var f = { title: title, headline: $('sHead').value.trim(), description: $('sDesc').value.trim(), service_area: $('sArea').value.trim(), whatsapp: wa, phone: $('sPhone').value.trim(),
       show_phone: $('sShow').checked, price_unit: $('sUnit').value.trim(), items_word: $('sWord').value.trim() || 'פריטים', palette: $('sPal').value, updated_at: now() };
+    if ('faq' in C) f.faq = readFaq();
     state.err = ''; state.saved = ''; state.busy = true; render();
     sb.from('bizcat_catalogs').update(f).eq('id', C.id).then(function (r) { ok(r); Object.assign(C, f); state.busy = false; state.saved = 'נשמר. השינוי מופיע בעמוד.'; render(); }).catch(fail);
   }
@@ -365,6 +381,23 @@
     state.err = ''; toast('מעלים את הלוגו…');
     scale(file, 400, 0.85).then(function (b) { return bucket.upload(path, b, { contentType: 'image/jpeg', upsert: false }); })
       .then(function (r) { ok(r); return setLogo(bucket.getPublicUrl(path).data.publicUrl, old); }).then(function () { toast('הלוגו עודכן ✓'); }).catch(fail);
+  }
+
+  function setHero(url, old) {
+    return sb.from('bizcat_catalogs').update({ hero_image_url: url, updated_at: now() }).eq('id', C.id).then(function (r) {
+      ok(r); C.hero_image_url = url;
+      var pv = document.querySelector('.hero-pv');   // בלי ציור מחדש — כדי לא לאבד שדות שעוד לא נשמרו
+      if (pv) { pv.innerHTML = url ? '<img src="' + esc(url) + '" alt="">' : ''; }
+      var p = old && pathOf(old); if (p) sb.storage.from(BUCKET).remove([p]).then(function () {}, function () {});
+    });
+  }
+  function uploadHero(file) {
+    if (!/^image\//.test(file.type)) { toast('נא לבחור קובץ תמונה'); return; }
+    var path = C.id + '/_hero/' + uuid() + '.jpg', bucket = sb.storage.from(BUCKET), old = C.hero_image_url;
+    toast('מעלים את התמונה…');
+    scale(file, 1920, 0.8).then(function (b) { return bucket.upload(path, b, { contentType: 'image/jpeg', upsert: false }); })
+      .then(function (r) { ok(r); return setHero(bucket.getPublicUrl(path).data.publicUrl, old); }).then(function () { toast('תמונת הפתיחה עודכנה ✓'); })
+      .catch(function () { toast('ההעלאה נכשלה. נסו שוב.'); });
   }
 
   /* ── ציור ── */
@@ -385,7 +418,7 @@
 
   document.addEventListener('click', function (e) {
     if (!C) return;
-    var t = e.target.closest('[data-tab],[data-new],[data-edit],[data-flip],[data-itemup],[data-itemdown],[data-cancel],[data-del],[data-imgdel],[data-imgfirst],[data-catup],[data-catdown],[data-catedit],[data-catcancel],[data-catdel],[data-copyaddr],[data-logodel]');
+    var t = e.target.closest('[data-tab],[data-new],[data-edit],[data-flip],[data-itemup],[data-itemdown],[data-cancel],[data-del],[data-imgdel],[data-imgfirst],[data-catup],[data-catdown],[data-catedit],[data-catcancel],[data-catdel],[data-copyaddr],[data-logodel],[data-herodel],[data-faqadd],[data-faqdel]');
     if (!t || t.disabled) return;
     var d = t.dataset;
     if (d.tab) { state.tab = d.tab; state.edit = null; state.err = ''; state.saved = ''; state.arm = null; state.catEdit = null; state.up = ''; render(); }
@@ -404,6 +437,9 @@
     else if (d.catcancel) { state.catEdit = null; state.err = ''; render(); }
     else if (d.catdel) arm('cat:' + d.catdel, function () { deleteCat(d.catdel); });
     else if (d.logodel) setLogo(null, C.header_image_url).catch(fail);
+    else if (d.herodel) setHero(null, C.hero_image_url).then(function () { toast('התמונה הוסרה. לחצו שמירה אם שיניתם עוד דברים.'); }).catch(fail);
+    else if (d.faqadd) { $('faqRows').insertAdjacentHTML('beforeend', faqRow(null)); var rows = document.querySelectorAll('#faqRows .fq'); rows[rows.length - 1].focus(); }
+    else if (d.faqdel) t.closest('.faqrow').remove();
     else if (d.copyaddr) { try { navigator.clipboard.writeText('https://shchuna.co.il/catalog/' + C.slug + '/').then(function () { t.textContent = 'הועתק ✓'; }, function () {}); } catch (err) {} }
   });
   document.addEventListener('submit', function (e) {
@@ -420,6 +456,7 @@
     if (e.target.id === 'acat') { state.cat = e.target.value; render(); }
     else if (e.target.id === 'fImgs' && e.target.files.length) addImages(e.target.files);
     else if (e.target.id === 'sLogo' && e.target.files.length) uploadLogo(e.target.files[0]);
+    else if (e.target.id === 'sHero' && e.target.files.length) uploadHero(e.target.files[0]);
   });
   document.addEventListener('shchuna:auth', function (e) {
     var u = e.detail && e.detail.user;
