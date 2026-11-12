@@ -278,3 +278,8 @@ a.phone { text-decoration: none; }
 .wrap[data-palette="slate"] .banner.hero-dark { background-image: linear-gradient(160deg, #171D27, #3A4556); }
 .wrap[data-palette="slate"] .banner.hero-dark .btn-blue { background: #fff; color: #1F2733; }
 .wrap[data-palette="slate"] .sec-h h2 { font-size: clamp(26px, 3.4vw, 34px); }
+
+/* ---- פס הדגמה ---- */
+.demobar { background: #14181F; color: #fff; text-align: center; font-size: 14px; padding: 9px 16px; }
+.demobar b { color: #FFD772; }
+.demobar a { color: #9CC4FF; font-weight: 700; white-space: nowrap; margin-inline-start: 8px; }

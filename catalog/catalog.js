@@ -45,10 +45,14 @@
 
   var C = null, cats = [], items = [], catById = {}, itemById = {};
   var state = { cat: ALL, q: '', picked: [], open: null, img: 0 };
-  var LIST_KEY = '';
+  var LIST_KEY = '', PLAN = 'plus';
+  /* מה כלול בכל מסלול (אותם מספרים גם ב-manage.js) */
+  var LIMITS = { basic: { items: 40, images: 3 }, plus: { items: 100000, images: 6 } };
 
   /* ── כתובת ── */
+  function meta(name) { var m = document.querySelector('meta[name="' + name + '"]'); return m ? m.getAttribute('content') || '' : ''; }
   function slugFromUrl() {
+    var fixed = meta('bizcat-slug'); if (fixed) return fixed.toLowerCase();   // עמוד הדגמה: הכתובת אינה ה-slug
     var q = new URLSearchParams(location.search).get('c');
     if (q) return q.toLowerCase();
     var parts = location.pathname.split('/').filter(Boolean);
@@ -96,19 +100,26 @@
   function prepare(row) {
     C = row;
     cats = (row.bizcat_categories || []).slice().sort(bySort);
+    /* מסלול: basic / plus. קטלוג בלי העמודה (לפני העדכון במסד) נחשב מורחב. בקטלוג ההדגמה העמוד עצמו קובע איזה מסלול להציג. */
+    PLAN = row.plan === 'basic' ? 'basic' : 'plus';
+    if (row.slug === 'demo' && /^(basic|plus)$/.test(meta('bizcat-plan'))) PLAN = meta('bizcat-plan');
     var pv = new URLSearchParams(location.search).get('palette');   // ?palette=gold — הצצה בפלטה אחרת בלי לשמור
     if (pv && /^[a-z]{2,12}$/.test(pv)) row.palette = pv;
+    if (PLAN === 'basic') { row.palette = 'blue'; row.hero_image_url = null; row.header_image_url = null; row.faq = []; }   // הבסיסי: סגנון אחד, בלי לוגו/תמונת פתיחה/שאלות
     var tints = row.palette === 'gold' ? TINTS_WARM : row.palette === 'slate' ? TINTS_COOL : TINTS;
     cats.forEach(function (c, i) { c.tint = tints[i % tints.length]; catById[c.id] = c; });
     items = (row.bizcat_items || []).filter(function (i) { return !i.is_hidden && catById[i.category_id]; });
     items.forEach(function (i) {
       i.cat = catById[i.category_id];
-      i.images = (i.bizcat_images || []).slice().sort(bySort);
+      i.images = (i.bizcat_images || []).slice().sort(bySort).slice(0, LIMITS[PLAN].images);
+      if (PLAN === 'basic') i.is_featured = false;
       i.desc = i.description || '';
       itemById[i.id] = i;
     });
     /* סדר התצוגה: לפי סדר הקטגוריות, ובתוך קטגוריה לפי סדר הפריטים */
     items.sort(function (a, b) { return a.cat === b.cat ? bySort(a, b) : bySort(a.cat, b.cat); });
+    items = items.slice(0, LIMITS[PLAN].items);
+    itemById = {}; items.forEach(function (i) { itemById[i.id] = i; });
     cats = cats.filter(function (c) { return items.some(function (i) { return i.category_id === c.id; }); });
     LIST_KEY = 'bizcat-list-' + row.slug;
     try { var s = JSON.parse(localStorage.getItem(LIST_KEY) || 'null'); if (Array.isArray(s)) state.picked = s.filter(function (id) { return itemById[id]; }); } catch (e) {}
@@ -149,6 +160,12 @@
     var cs = $('circles').children;
     for (var i = 0; i < cs.length; i++) { var c = cats[i]; cs[i].hidden = !c; if (c) { cs[i].style.background = c.tint; cs[i].innerHTML = icon(c.name); } }
     $('preview').hidden = C.is_published !== false;
+    /* פס הדגמה: רק בקטלוג ההדגמה, עם מעבר בין שני המסלולים */
+    if (C.slug === 'demo') {
+      var other = PLAN === 'basic' ? ['plus', 'המורחב'] : ['basic', 'הבסיסי'];
+      $('demoBar').hidden = false;
+      $('demoBar').innerHTML = 'זו הדגמה של <b>המסלול ' + (PLAN === 'basic' ? 'הבסיסי' : 'המורחב') + '</b> של קטלוג בשכונה. העסק והפריטים לדוגמה בלבד. <a href="/catalog/demo-' + other[0] + '/">לראות את המסלול ' + other[1] + ' ←</a>';
+    }
     /* פתיחה כהה וממורכזת: בפלטת קרם־זהב, או כשהעסק העלה תמונת פתיחה */
     var hero = document.querySelector('.banner'), img = C.hero_image_url || '';
     hero.classList.toggle('hero-dark', !!DARK_HERO[C.palette] || !!img);

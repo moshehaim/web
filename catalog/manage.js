@@ -25,7 +25,12 @@
       '<span class="pv' + (p.dark ? ' dark' : '') + '" aria-hidden="true"><i class="t"></i><i class="h"><b></b><em></em><u></u></i><i class="r"><s></s><s></s><s></s></i></span>' +
       '<span class="pn"><b>' + p.name + '</b><small>' + p.desc + '</small></span></button>';
   }
-  var MAX_IMAGES = 6, BUCKET = 'catalog';
+  var BUCKET = 'catalog';
+  /* מה כלול בכל מסלול (אותם מספרים גם ב-catalog.js). קטלוג בלי עמודת plan נחשב מורחב. */
+  var LIMITS = { basic: { items: 40, images: 3 }, plus: { items: 100000, images: 6 } };
+  function PLUS() { return !C || C.plan !== 'basic'; }
+  function lim() { return LIMITS[PLUS() ? 'plus' : 'basic']; }
+  var UPSELL = 'במסלול המורחב: פריטים בלי הגבלה, עד 6 תמונות לפריט, בחירה מ־8 סגנונות, לוגו, תמונת פתיחה, "הכי מבוקשים" ושאלות נפוצות. לשדרוג כתבו לנו: info@shchuna.co.il';
   var state = { tab: 'items', q: '', cat: '', edit: null, err: '', saved: '', arm: null, busy: false, up: '', catEdit: null };
 
   function $(id) { return document.getElementById(id); }
@@ -130,7 +135,7 @@
         var im = imagesOf(i.id)[0], c = catOf(i.category_id), sib = siblings(i), at = sib.indexOf(i);
         return '<div class="arow">' +
           '<span class="th" style="background:' + tintOf(i.category_id) + '">' + (im ? '<img src="' + esc(im.thumb_url) + '" alt="" loading="lazy">' : '') + '</span>' +
-          '<span class="nm">' + esc(i.name) + (i.is_featured ? ' <span class="star">★ מבוקש</span>' : '') + (im ? '' : ' <span class="fhid">· בלי תמונה</span>') + '</span>' +
+          '<span class="nm">' + esc(i.name) + (i.is_featured && PLUS() ? ' <span class="star">★ מבוקש</span>' : '') + (im ? '' : ' <span class="fhid">· בלי תמונה</span>') + '</span>' +
           '<span class="ct">' + esc(c ? c.name : '') + '</span>' +
           '<span class="pr">' + (i.price == null ? 'לפי פנייה' : fmt(i.price)) + '</span>' +
           '<button type="button" class="sw" role="switch" aria-checked="' + !i.is_hidden + '" aria-label="' + (i.is_hidden ? 'מוסתר' : 'מוצג') + ': ' + esc(i.name) + '" data-flip="' + i.id + '"><i></i></button>' +
@@ -168,15 +173,15 @@
       '<label for="fDesc">תיאור</label><textarea id="fDesc" rows="6">' + esc(it.description) + '</textarea>' +
       '<span class="hint">כל שורה מופיעה כשורה נפרדת בעמוד הפריט. בכרטיס מוצגת השורה הראשונה.</span>' +
       '<label class="chk"><input type="checkbox" id="fShow"' + (it.is_hidden ? '' : ' checked') + '> מוצג בקטלוג</label>' +
-      '<label class="chk"><input type="checkbox" id="fFeat"' + (it.is_featured ? ' checked' : '') + '> להציג גם ב"הכי מבוקשים" בראש העמוד</label>' +
-      '</div><div class="fcol"><span class="flabel">תמונות (עד ' + MAX_IMAGES + ')</span>' +
+      (PLUS() ? '<label class="chk"><input type="checkbox" id="fFeat"' + (it.is_featured ? ' checked' : '') + '> להציג גם ב"הכי מבוקשים" בראש העמוד</label>' : '') +
+      '</div><div class="fcol"><span class="flabel">תמונות (עד ' + lim().images + ')</span>' +
       (isNew ? '<p class="info" style="margin:0">קודם שומרים את הפריט, ואז אפשר להוסיף לו תמונות.</p>'
         : '<div class="aimgs">' + ims.map(function (m, n) {
             return '<span class="aimg"><img src="' + esc(m.thumb_url) + '" alt="תמונה ' + (n + 1) + '">' + (n === 0 ? '<span class="first">ראשית</span>' : '') +
               '<span class="ib">' + (n > 0 ? '<button type="button" data-imgfirst="' + m.id + '">ראשית</button>' : '') +
               '<button type="button" class="del" data-imgdel="' + m.id + '">' + (state.arm === 'img:' + m.id ? 'למחוק?' : 'מחיקה') + '</button></span></span>';
           }).join('') +
-          (ims.length < MAX_IMAGES ? '<label class="aimg add">+ הוספת תמונה<small>אפשר לבחור כמה</small><input type="file" id="fImgs" accept="image/*" multiple' + (state.busy ? ' disabled' : '') + '></label>' : '') + '</div>' +
+          (ims.length < lim().images ? '<label class="aimg add">+ הוספת תמונה<small>אפשר לבחור כמה</small><input type="file" id="fImgs" accept="image/*" multiple' + (state.busy ? ' disabled' : '') + '></label>' : '') + '</div>' +
           '<span class="upmsg" role="status">' + esc(state.up) + '</span>' +
           '<p class="imgnote">מעלים רק תמונות של הציוד, בלי אנשים. תמונה שמופיעים בה אנשים תוסר.</p>') +
       '</div></div><div class="facts">' +
@@ -189,7 +194,7 @@
     var name = $('fName').value.trim(), raw = $('fPrice').value.trim(), price = raw === '' ? null : Number(raw);
     if (!name) { state.err = 'צריך לכתוב שם לפריט.'; return render(); }
     if (price !== null && !(price >= 0)) { state.err = 'המחיר צריך להיות מספר, למשל 250. אפשר גם להשאיר ריק.'; return render(); }
-    var f = { name: name, price: price, category_id: $('fCat').value, description: $('fDesc').value.trim(), is_hidden: !$('fShow').checked, is_featured: $('fFeat').checked, updated_at: now() };
+    var f = { name: name, price: price, category_id: $('fCat').value, description: $('fDesc').value.trim(), is_hidden: !$('fShow').checked, is_featured: PLUS() ? $('fFeat').checked : !!(itemOf(state.edit) || {}).is_featured, updated_at: now() };
     state.err = ''; state.busy = true; render();
     var isNew = state.edit === 'new', p;
     if (isNew) {
@@ -253,7 +258,7 @@
     }).then(function (r) { images.push(ok(r)); });
   }
   function addImages(fileList) {
-    var id = state.edit, have = imagesOf(id), room = MAX_IMAGES - have.length;
+    var id = state.edit, have = imagesOf(id), room = lim().images - have.length;
     var files = Array.prototype.filter.call(fileList, function (f) { return /^image\//.test(f.type); });
     if (!files.length) { state.err = 'נא לבחור קובצי תמונה.'; return render(); }
     var skipped = Math.max(0, files.length - room); files = files.slice(0, room);
@@ -263,7 +268,7 @@
         state.busy = false;
         state.up = failed ? 'חלק מהתמונות לא עלו (' + failed + '). נסו שוב.' : '';
         if (!failed) toast(files.length === 1 ? 'התמונה נוספה ✓' : files.length + ' תמונות נוספו ✓');
-        if (skipped) state.err = 'אפשר עד ' + MAX_IMAGES + ' תמונות לפריט. ' + (skipped === 1 ? 'תמונה אחת לא נוספה.' : skipped + ' תמונות לא נוספו.');
+        if (skipped) state.err = 'אפשר עד ' + lim().images + ' תמונות לפריט. ' + (skipped === 1 ? 'תמונה אחת לא נוספה.' : skipped + ' תמונות לא נוספו.');
         return render();
       }
       state.up = 'מעלים תמונה ' + (done + failed + 1) + ' מתוך ' + files.length + '…'; render();
@@ -346,9 +351,9 @@
       (state.err ? '<p class="ferr" role="alert">' + esc(state.err) + '</p>' : '') +
       '<span class="flabel">כתובת העמוד</span><div class="addr"><span dir="ltr">' + esc(url) + '</span><button type="button" class="btn-sm" data-copyaddr="1">העתקה</button></div><span class="hint">הכתובת נקבעת בהקמה.</span>' +
       '<label for="sTitle">שם העסק בעמוד *</label><input id="sTitle" maxlength="60" value="' + esc(C.title) + '">' +
-      '<span class="flabel">לוגו (לא חובה)</span><div class="logo-row"><span class="logo-pv">' + (C.header_image_url ? '<img src="' + esc(C.header_image_url) + '" alt="">' : '') + '</span>' +
+      (!PLUS() ? '' : '<span class="flabel">לוגו (לא חובה)</span><div class="logo-row"><span class="logo-pv">' + (C.header_image_url ? '<img src="' + esc(C.header_image_url) + '" alt="">' : '') + '</span>' +
       '<label class="btn-sm filebtn">' + (C.header_image_url ? 'החלפת לוגו' : 'העלאת לוגו') + '<input type="file" id="sLogo" accept="image/*"></label>' +
-      (C.header_image_url ? '<button type="button" class="btn-sm" data-logodel="1">הסרה</button>' : '') + '</div><span class="hint">בלי לוגו מוצג ציור של הקטגוריה הראשונה.</span>' +
+      (C.header_image_url ? '<button type="button" class="btn-sm" data-logodel="1">הסרה</button>' : '') + '</div><span class="hint">בלי לוגו מוצג ציור של הקטגוריה הראשונה.</span>') +
       '<label for="sHead">כותרת ראשית</label><input id="sHead" maxlength="80" value="' + esc(C.headline) + '" placeholder="למשל: כל הציוד לאירוע שלכם, במקום אחד!"><span class="hint">מה שכתוב אחרי הפסיק האחרון מודגש בצבע.</span>' +
       '<label for="sDesc">תיאור קצר</label><input id="sDesc" maxlength="160" value="' + esc(C.description) + '">' +
       '<label for="sArea">אזור שירות</label><input id="sArea" maxlength="120" value="' + esc(C.service_area) + '" placeholder="למשל: ירושלים, מבשרת, מעלה אדומים וגוש עציון"><span class="hint">טקסט חופשי. אם ריק, לא מוצג בעמוד.</span>' +
@@ -357,13 +362,13 @@
       '<label class="chk"><input type="checkbox" id="sShow"' + (C.show_phone ? ' checked' : '') + '> להציג את מספר הטלפון בעמוד (אם לא מסומן, מופיע רק כפתור "חיוג")</label>' +
       '<div class="two"><div><label for="sUnit">המחירים הם…</label><input id="sUnit" maxlength="20" value="' + esc(C.price_unit) + '" placeholder="למשל: ליום"></div>' +
       '<div><label for="sWord">איך קוראים לפריטים</label><input id="sWord" maxlength="20" value="' + esc(C.items_word) + '" placeholder="פריטים / ציוד / מוצרים"></div></div>' +
-      '<span class="flabel" id="palL">סגנון וצבעי העמוד</span><input type="hidden" id="sPal" value="' + esc(C.palette) + '">' +
+      (!PLUS() ? '<input type="hidden" id="sPal" value="' + esc(C.palette) + '"><p class="info" style="margin:0">' + esc(UPSELL) + '</p>' : '<span class="flabel" id="palL">סגנון וצבעי העמוד</span><input type="hidden" id="sPal" value="' + esc(C.palette) + '">' +
       '<div class="pals" role="radiogroup" aria-labelledby="palL">' + PALETTES.map(function (p) { return paletteCard(p, p.id === C.palette); }).join('') + '</div>' +
-      '<span class="hint">הבחירה נשמרת בלחיצה על "שמירה". <a id="palPeek" href="/catalog/' + esc(C.slug) + '/?palette=' + esc(C.palette) + '" target="_blank" rel="noopener">הצצה בעמוד בסגנון שנבחר</a></span>' +
-      ('hero_image_url' in C ? '<span class="flabel">תמונת פתיחה (לא חובה)</span><div class="logo-row"><span class="hero-pv">' + (C.hero_image_url ? '<img src="' + esc(C.hero_image_url) + '" alt="">' : '') + '</span>' +
+      '<span class="hint">הבחירה נשמרת בלחיצה על "שמירה". <a id="palPeek" href="/catalog/' + esc(C.slug) + '/?palette=' + esc(C.palette) + '" target="_blank" rel="noopener">הצצה בעמוד בסגנון שנבחר</a></span>') +
+      (PLUS() && 'hero_image_url' in C ? '<span class="flabel">תמונת פתיחה (לא חובה)</span><div class="logo-row"><span class="hero-pv">' + (C.hero_image_url ? '<img src="' + esc(C.hero_image_url) + '" alt="">' : '') + '</span>' +
         '<label class="btn-sm filebtn">' + (C.hero_image_url ? 'החלפת תמונה' : 'העלאת תמונה') + '<input type="file" id="sHero" accept="image/*"></label>' +
         (C.hero_image_url ? '<button type="button" class="btn-sm" data-herodel="1">הסרה</button>' : '') + '</div><span class="hint">תמונה רחבה של הציוד, בלי אנשים. מוצגת ברקע של ראש העמוד, מאחורי הכותרת.</span>' : '') +
-      ('faq' in C ? '<span class="flabel">שאלות נפוצות (לא חובה)</span><div id="faqRows">' + (Array.isArray(C.faq) ? C.faq : []).map(faqRow).join('') + '</div>' +
+      (PLUS() && 'faq' in C ? '<span class="flabel">שאלות נפוצות (לא חובה)</span><div id="faqRows">' + (Array.isArray(C.faq) ? C.faq : []).map(faqRow).join('') + '</div>' +
         '<div><button type="button" class="btn-sm" data-faqadd="1">+ הוספת שאלה</button></div><span class="hint">למשל: האם יש משלוח? מה כולל המחיר? צריך פיקדון? מופיע בעמוד רק אם יש לפחות שאלה אחת עם תשובה.</span>' : '') +
       '<div class="facts"><button type="submit" class="btn-sm primary"' + (state.busy ? ' disabled' : '') + '>שמירה</button><span class="saved" role="status">' + esc(state.saved) + '</span></div></form>';
   }
@@ -383,7 +388,7 @@
     if (!/^[0-9]{9,15}$/.test(wa)) { state.err = 'צריך מספר וואטסאפ תקין, למשל 052-1234567.'; return render(); }
     var f = { title: title, headline: $('sHead').value.trim(), description: $('sDesc').value.trim(), service_area: $('sArea').value.trim(), whatsapp: wa, phone: $('sPhone').value.trim(),
       show_phone: $('sShow').checked, price_unit: $('sUnit').value.trim(), items_word: $('sWord').value.trim() || 'פריטים', palette: $('sPal').value, updated_at: now() };
-    if ('faq' in C) f.faq = readFaq();
+    if (PLUS() && 'faq' in C) f.faq = readFaq();
     state.err = ''; state.saved = ''; state.busy = true; render();
     sb.from('bizcat_catalogs').update(f).eq('id', C.id).then(function (r) { ok(r); Object.assign(C, f); state.busy = false; state.saved = 'נשמר. השינוי מופיע בעמוד.'; render(); }).catch(fail);
   }
@@ -425,6 +430,7 @@
     $('aTitle').textContent = C.title;
     $('aStatus').textContent = C.is_published ? 'מפורסם' : 'טיוטה — עוד לא פורסם';
     $('aStatus').className = 'badge' + (C.is_published ? '' : ' draft');
+    $('aPlan').hidden = !('plan' in C); $('aPlan').textContent = PLUS() ? 'מסלול מורחב' : 'מסלול בסיסי';
     $('viewPage').href = '/catalog/' + C.slug + '/';
     $('viewPage').textContent = C.is_published ? 'צפייה בעמוד' : 'תצוגה מקדימה';
     document.querySelectorAll('.atabs [data-tab]').forEach(function (b) { b.setAttribute('aria-selected', b.dataset.tab === state.tab); });
@@ -440,6 +446,7 @@
     if (!t || t.disabled) return;
     var d = t.dataset;
     if (d.tab) { state.tab = d.tab; state.edit = null; state.err = ''; state.saved = ''; state.arm = null; state.catEdit = null; state.up = ''; render(); }
+    else if (d.new && items.length >= lim().items) { state.err = 'המסלול הבסיסי כולל עד ' + lim().items + ' פריטים. ' + UPSELL; render(); }
     else if (d.new) { state.edit = 'new'; state.err = ''; state.up = ''; render(); $('fName').focus(); window.scrollTo(0, 0); }
     else if (d.edit) { state.edit = d.edit; state.err = ''; state.arm = null; state.up = ''; render(); window.scrollTo(0, 0); }
     else if (d.flip) flipItem(d.flip);

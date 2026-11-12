@@ -144,3 +144,5 @@ label.aimg.add input { position: absolute; inset: 0; opacity: 0; cursor: pointer
 .pn { display: flex; flex-direction: column; padding: 0 4px 2px; }
 .pn b { font-size: 15px; font-weight: 800; color: var(--navy); }
 .pn small { font-size: 12.5px; color: var(--ink-3); }
+
+.badge.plan { background: #E8EEFB; color: #1F3F8A; }
