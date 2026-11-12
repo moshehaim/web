@@ -8,7 +8,23 @@
   'use strict';
   var A, sb, user, C = null, cats = [], items = [], images = [];
   var TINTS = ['#FFE08A', '#A8E0F5', '#D9C8FF', '#FFC2AE', '#F6D9C4', '#FFD1A8', '#B5EBD9', '#D4DCF2', '#C9D6FF', '#F1E3C8', '#E9E1D2', '#CFEBC9', '#E3E6EC'];
-  var PALETTES = [['blue', 'כחול'], ['gold', 'קרם־זהב'], ['green', 'ירוק'], ['plum', 'סגול'], ['warm', 'חום־כתום']];
+  /* הפלטות של העמוד. הצבעים כאן הם להמחשה בבורר בלבד — ההגדרה עצמה ב-catalog.css (data-palette). */
+  var PALETTES = [
+    { id: 'blue',  name: 'כחול שכונה', desc: 'צעיר וצבעוני, עם דגלונים',        n: '#12305E', s: '#1A56C4', f: '#EEF4FF', p: '#FFFFFF' },
+    { id: 'gold',  name: 'קרם וזהב',   desc: 'חגיגי ואלגנטי, פתיחה כהה',        n: '#3A2E22', s: '#96620A', f: '#F6EBD7', p: '#FDFAF4', dark: 1 },
+    { id: 'slate', name: 'אפור פחם',   desc: 'נקי ועסקי, פתיחה כהה',            n: '#1F2733', s: '#3F4A5C', f: '#ECEFF3', p: '#FAFBFC', dark: 1 },
+    { id: 'teal',  name: 'טורקיז',     desc: 'רענן וקליל',                      n: '#0F3B44', s: '#0B7482', f: '#E3F4F6', p: '#FFFFFF' },
+    { id: 'green', name: 'ירוק',       desc: 'טבעי ורגוע',                      n: '#12402E', s: '#17794F', f: '#E9F6EF', p: '#FFFFFF' },
+    { id: 'plum',  name: 'סגול',       desc: 'עדין ומיוחד',                     n: '#35204F', s: '#6B3FA8', f: '#F3ECFA', p: '#FFFFFF' },
+    { id: 'rose',  name: 'ורוד עמוק',  desc: 'חם ונשי',                         n: '#4A1730', s: '#B3265A', f: '#FBE8EF', p: '#FFFFFF' },
+    { id: 'warm',  name: 'טרקוטה',     desc: 'חם וביתי',                        n: '#4A2413', s: '#B4481C', f: '#FBEFE6', p: '#FFFFFF' }
+  ];
+  /* כרטיס בבורר: המחשה קטנה של העמוד בצבעי הפלטה */
+  function paletteCard(p, on) {
+    return '<button type="button" class="pal" role="radio" aria-checked="' + on + '" data-pal="' + p.id + '" style="--n:' + p.n + ';--s:' + p.s + ';--f:' + p.f + ';--p:' + p.p + '">' +
+      '<span class="pv' + (p.dark ? ' dark' : '') + '" aria-hidden="true"><i class="t"></i><i class="h"><b></b><em></em><u></u></i><i class="r"><s></s><s></s><s></s></i></span>' +
+      '<span class="pn"><b>' + p.name + '</b><small>' + p.desc + '</small></span></button>';
+  }
   var MAX_IMAGES = 6, BUCKET = 'catalog';
   var state = { tab: 'items', q: '', cat: '', edit: null, err: '', saved: '', arm: null, busy: false, up: '', catEdit: null };
 
@@ -341,7 +357,9 @@
       '<label class="chk"><input type="checkbox" id="sShow"' + (C.show_phone ? ' checked' : '') + '> להציג את מספר הטלפון בעמוד (אם לא מסומן, מופיע רק כפתור "חיוג")</label>' +
       '<div class="two"><div><label for="sUnit">המחירים הם…</label><input id="sUnit" maxlength="20" value="' + esc(C.price_unit) + '" placeholder="למשל: ליום"></div>' +
       '<div><label for="sWord">איך קוראים לפריטים</label><input id="sWord" maxlength="20" value="' + esc(C.items_word) + '" placeholder="פריטים / ציוד / מוצרים"></div></div>' +
-      '<label for="sPal">צבע העמוד</label><select id="sPal">' + PALETTES.map(function (p) { return '<option value="' + p[0] + '"' + (p[0] === C.palette ? ' selected' : '') + '>' + p[1] + '</option>'; }).join('') + '</select>' +
+      '<span class="flabel" id="palL">סגנון וצבעי העמוד</span><input type="hidden" id="sPal" value="' + esc(C.palette) + '">' +
+      '<div class="pals" role="radiogroup" aria-labelledby="palL">' + PALETTES.map(function (p) { return paletteCard(p, p.id === C.palette); }).join('') + '</div>' +
+      '<span class="hint">הבחירה נשמרת בלחיצה על "שמירה". <a id="palPeek" href="/catalog/' + esc(C.slug) + '/?palette=' + esc(C.palette) + '" target="_blank" rel="noopener">הצצה בעמוד בסגנון שנבחר</a></span>' +
       ('hero_image_url' in C ? '<span class="flabel">תמונת פתיחה (לא חובה)</span><div class="logo-row"><span class="hero-pv">' + (C.hero_image_url ? '<img src="' + esc(C.hero_image_url) + '" alt="">' : '') + '</span>' +
         '<label class="btn-sm filebtn">' + (C.hero_image_url ? 'החלפת תמונה' : 'העלאת תמונה') + '<input type="file" id="sHero" accept="image/*"></label>' +
         (C.hero_image_url ? '<button type="button" class="btn-sm" data-herodel="1">הסרה</button>' : '') + '</div><span class="hint">תמונה רחבה של הציוד, בלי אנשים. מוצגת ברקע של ראש העמוד, מאחורי הכותרת.</span>' : '') +
@@ -418,7 +436,7 @@
 
   document.addEventListener('click', function (e) {
     if (!C) return;
-    var t = e.target.closest('[data-tab],[data-new],[data-edit],[data-flip],[data-itemup],[data-itemdown],[data-cancel],[data-del],[data-imgdel],[data-imgfirst],[data-catup],[data-catdown],[data-catedit],[data-catcancel],[data-catdel],[data-copyaddr],[data-logodel],[data-herodel],[data-faqadd],[data-faqdel]');
+    var t = e.target.closest('[data-tab],[data-new],[data-edit],[data-flip],[data-itemup],[data-itemdown],[data-cancel],[data-del],[data-imgdel],[data-imgfirst],[data-catup],[data-catdown],[data-catedit],[data-catcancel],[data-catdel],[data-copyaddr],[data-logodel],[data-herodel],[data-faqadd],[data-faqdel],[data-pal]');
     if (!t || t.disabled) return;
     var d = t.dataset;
     if (d.tab) { state.tab = d.tab; state.edit = null; state.err = ''; state.saved = ''; state.arm = null; state.catEdit = null; state.up = ''; render(); }
@@ -440,6 +458,11 @@
     else if (d.herodel) setHero(null, C.hero_image_url).then(function () { toast('התמונה הוסרה. לחצו שמירה אם שיניתם עוד דברים.'); }).catch(fail);
     else if (d.faqadd) { $('faqRows').insertAdjacentHTML('beforeend', faqRow(null)); var rows = document.querySelectorAll('#faqRows .fq'); rows[rows.length - 1].focus(); }
     else if (d.faqdel) t.closest('.faqrow').remove();
+    else if (d.pal) {   // בחירת פלטה: מסמנים בלי לצייר מחדש, כדי לא לאבד שדות שעוד לא נשמרו
+      $('sPal').value = d.pal;
+      document.querySelectorAll('.pals .pal').forEach(function (b) { b.setAttribute('aria-checked', b === t); });
+      $('palPeek').href = '/catalog/' + C.slug + '/?palette=' + d.pal;
+    }
     else if (d.copyaddr) { try { navigator.clipboard.writeText('https://shchuna.co.il/catalog/' + C.slug + '/').then(function () { t.textContent = 'הועתק ✓'; }, function () {}); } catch (err) {} }
   });
   document.addEventListener('submit', function (e) {

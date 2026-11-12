@@ -270,3 +270,11 @@ a.phone { text-decoration: none; }
 .wrap[data-palette="gold"] .banner.hero-dark .btn-blue { background: #C8901F; color: #241A10; }
 .wrap[data-palette="gold"] .card, .wrap[data-palette="gold"] .tile, .wrap[data-palette="gold"] .steps li { box-shadow: 0 2px 12px rgba(58,46,34,.07); }
 .wrap[data-palette="gold"] .search input { border-color: #D9CBB2; }
+
+/* ---- פלטות נוספות ---- */
+.wrap[data-palette="teal"]  { --soft: #E3F4F6; --soft-2: #F2FAFB; --navy: #0F3B44; --strong: #0B7482; --line: #D2E6E9; }
+.wrap[data-palette="rose"]  { --soft: #FBE8EF; --soft-2: #FDF4F7; --navy: #4A1730; --strong: #B3265A; --line: #F0D6E0; }
+.wrap[data-palette="slate"] { --soft: #ECEFF3; --soft-2: #F6F7F9; --navy: #1F2733; --strong: #3F4A5C; --line: #DADFE6; --page: #FAFBFC; background: #FAFBFC; }
+.wrap[data-palette="slate"] .banner.hero-dark { background-image: linear-gradient(160deg, #171D27, #3A4556); }
+.wrap[data-palette="slate"] .banner.hero-dark .btn-blue { background: #fff; color: #1F2733; }
+.wrap[data-palette="slate"] .sec-h h2 { font-size: clamp(26px, 3.4vw, 34px); }

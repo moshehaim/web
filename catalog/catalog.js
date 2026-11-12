@@ -28,6 +28,9 @@
   var ICON_DEFAULT = '<path d="M3.5 8L12 3.5 20.5 8v8L12 20.5 3.5 16z"/><path d="M3.5 8L12 12.5 20.5 8M12 12.5v8"/>';
   /* בפלטת קרם־זהב הקטגוריות מקבלות גוונים חמים ושקטים במקום צבעי הפסטל */
   var TINTS_WARM = ['#F3E3C3', '#EAD9BC', '#F5E9D2', '#E6D3B1', '#F0DFC6', '#EBDCC4', '#F7ECD9', '#E3D2B4'];
+  var TINTS_COOL = ['#E3E8EF', '#D6DDE7', '#ECEFF4', '#DCE2EA', '#E8ECF1', '#D0D8E2', '#F0F2F6', '#DFE5EC'];
+  /* פלטות שהפתיחה שלהן כהה וממורכזת */
+  var DARK_HERO = { gold: 1, slate: 1 };
   var TINTS = ['#FFE08A', '#A8E0F5', '#D9C8FF', '#FFC2AE', '#F6D9C4', '#FFD1A8', '#B5EBD9', '#D4DCF2', '#C9D6FF', '#F1E3C8', '#E9E1D2', '#CFEBC9', '#E3E6EC'];
   var ALL = '__all';
   function ico(inner) { return '<svg class="ico" viewBox="0 0 24 24" aria-hidden="true">' + inner + '</svg>'; }
@@ -95,7 +98,7 @@
     cats = (row.bizcat_categories || []).slice().sort(bySort);
     var pv = new URLSearchParams(location.search).get('palette');   // ?palette=gold — הצצה בפלטה אחרת בלי לשמור
     if (pv && /^[a-z]{2,12}$/.test(pv)) row.palette = pv;
-    var tints = row.palette === 'gold' ? TINTS_WARM : TINTS;
+    var tints = row.palette === 'gold' ? TINTS_WARM : row.palette === 'slate' ? TINTS_COOL : TINTS;
     cats.forEach(function (c, i) { c.tint = tints[i % tints.length]; catById[c.id] = c; });
     items = (row.bizcat_items || []).filter(function (i) { return !i.is_hidden && catById[i.category_id]; });
     items.forEach(function (i) {
@@ -148,7 +151,7 @@
     $('preview').hidden = C.is_published !== false;
     /* פתיחה כהה וממורכזת: בפלטת קרם־זהב, או כשהעסק העלה תמונת פתיחה */
     var hero = document.querySelector('.banner'), img = C.hero_image_url || '';
-    hero.classList.toggle('hero-dark', C.palette === 'gold' || !!img);
+    hero.classList.toggle('hero-dark', !!DARK_HERO[C.palette] || !!img);
     hero.style.backgroundImage = img ? 'linear-gradient(rgba(22,17,12,.58), rgba(22,17,12,.7)), url("' + String(img).replace(/["\\\n]/g, '') + '")' : '';
     /* איך זה עובד */
     $('howSteps').innerHTML = [
