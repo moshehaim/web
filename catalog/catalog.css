@@ -283,3 +283,11 @@ a.phone { text-decoration: none; }
 .demobar { background: #14181F; color: #fff; text-align: center; font-size: 14px; padding: 9px 16px; }
 .demobar b { color: #FFD772; }
 .demobar a { color: #9CC4FF; font-weight: 700; white-space: nowrap; margin-inline-start: 8px; }
+
+/* ---- מבצעים ---- */
+.saletag { position: absolute; top: 10px; right: 10px; background: #C8102E; color: #fff; font-size: 13px; font-weight: 800; padding: 3px 12px; border-radius: 999px; box-shadow: 0 2px 6px rgba(0,0,0,.2); z-index: 1; }
+.cprice.sale b, .dialog .pr s { }
+.cprice s, .dialog .pr s { color: var(--ink-3); font-size: 15px; font-weight: 500; text-decoration-thickness: 1.5px; margin-inline-start: 2px; }
+.cprice.sale b { color: #B00E28; }
+.tile.sale .disc { background: #FDE3E7; color: #B00E28; }
+.tile.sale .disc .ico { stroke: #B00E28; }

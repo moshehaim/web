@@ -29,6 +29,8 @@
   /* מה כלול בכל מסלול (אותם מספרים גם ב-catalog.js). קטלוג בלי עמודת plan נחשב מורחב. */
   var LIMITS = { basic: { items: 40, images: 3 }, plus: { items: 100000, images: 6 } };
   function PLUS() { return !C || C.plan !== 'basic'; }
+  /* עמודת מחיר המבצע קיימת במסד? (לפני העדכון במסד השדה פשוט לא מוצג) */
+  function hasSale() { return !items.length || 'sale_price' in items[0]; }
   function lim() { return LIMITS[PLUS() ? 'plus' : 'basic']; }
   var UPSELL = 'במסלול המורחב: פריטים בלי הגבלה, עד 6 תמונות לפריט, בחירה מ־8 סגנונות, לוגו, תמונת פתיחה, "הכי מבוקשים" ושאלות נפוצות. לשדרוג כתבו לנו: info@shchuna.co.il';
   var state = { tab: 'items', q: '', cat: '', edit: null, err: '', saved: '', arm: null, busy: false, up: '', catEdit: null };
@@ -137,7 +139,7 @@
           '<span class="th" style="background:' + tintOf(i.category_id) + '">' + (im ? '<img src="' + esc(im.thumb_url) + '" alt="" loading="lazy">' : '') + '</span>' +
           '<span class="nm">' + esc(i.name) + (i.is_featured && PLUS() ? ' <span class="star">★ מבוקש</span>' : '') + (im ? '' : ' <span class="fhid">· בלי תמונה</span>') + '</span>' +
           '<span class="ct">' + esc(c ? c.name : '') + '</span>' +
-          '<span class="pr">' + (i.price == null ? 'לפי פנייה' : fmt(i.price)) + '</span>' +
+          '<span class="pr">' + (i.price == null ? 'לפי פנייה' : i.sale_price != null ? fmt(i.sale_price) + ' <span class="saleb">מבצע</span>' : fmt(i.price)) + '</span>' +
           '<button type="button" class="sw" role="switch" aria-checked="' + !i.is_hidden + '" aria-label="' + (i.is_hidden ? 'מוסתר' : 'מוצג') + ': ' + esc(i.name) + '" data-flip="' + i.id + '"><i></i></button>' +
           '<span class="racts">' + (q ? '' :
             '<button type="button" class="mini" data-itemup="' + i.id + '" aria-label="הזזה למעלה: ' + esc(i.name) + '"' + (at === 0 ? ' disabled' : '') + '>▲</button>' +
@@ -169,6 +171,8 @@
       '<label for="fName">שם הפריט *</label><input id="fName" maxlength="80" value="' + esc(it.name) + '">' +
       '<div class="two"><div><label for="fCat">קטגוריה *</label><select id="fCat">' + cats.map(function (c) { return '<option value="' + c.id + '"' + (c.id === it.category_id ? ' selected' : '') + '>' + esc(c.name) + '</option>'; }).join('') + '</select></div>' +
       '<div><label for="fPrice">מחיר' + esc(U) + ' (₪)</label><input id="fPrice" type="number" min="0" step="any" inputmode="decimal" value="' + (it.price == null ? '' : esc(it.price)) + '"></div></div>' +
+      (!hasSale() ? '' : '<label for="fSale">מחיר מבצע (₪) — לא חובה</label><input id="fSale" type="number" min="0" step="any" inputmode="decimal" value="' + (it.sale_price == null ? '' : esc(it.sale_price)) + '">' +
+      '<span class="hint">כשממלאים, הפריט מסומן "מבצע": המחיר הרגיל מוצג מחוק ולידו מחיר המבצע. כדי לסיים את המבצע מוחקים את השדה.</span>') +
       '<span class="hint">אם משאירים את המחיר ריק, בעמוד יופיע "מחיר לפי פנייה".</span>' +
       '<label for="fDesc">תיאור</label><textarea id="fDesc" rows="6">' + esc(it.description) + '</textarea>' +
       '<span class="hint">כל שורה מופיעה כשורה נפרדת בעמוד הפריט. בכרטיס מוצגת השורה הראשונה.</span>' +
@@ -194,7 +198,11 @@
     var name = $('fName').value.trim(), raw = $('fPrice').value.trim(), price = raw === '' ? null : Number(raw);
     if (!name) { state.err = 'צריך לכתוב שם לפריט.'; return render(); }
     if (price !== null && !(price >= 0)) { state.err = 'המחיר צריך להיות מספר, למשל 250. אפשר גם להשאיר ריק.'; return render(); }
+    var rawS = hasSale() ? $('fSale').value.trim() : '', sale = rawS === '' ? null : Number(rawS);
+    if (sale !== null && price === null) { state.err = 'כדי להגדיר מחיר מבצע צריך למלא גם את המחיר הרגיל.'; return render(); }
+    if (sale !== null && !(sale >= 0 && sale < price)) { state.err = 'מחיר המבצע צריך להיות נמוך מהמחיר הרגיל.'; return render(); }
     var f = { name: name, price: price, category_id: $('fCat').value, description: $('fDesc').value.trim(), is_hidden: !$('fShow').checked, is_featured: PLUS() ? $('fFeat').checked : !!(itemOf(state.edit) || {}).is_featured, updated_at: now() };
+    if (hasSale()) f.sale_price = sale;
     state.err = ''; state.busy = true; render();
     var isNew = state.edit === 'new', p;
     if (isNew) {
@@ -430,7 +438,7 @@
     $('aTitle').textContent = C.title;
     $('aStatus').textContent = C.is_published ? 'מפורסם' : 'טיוטה — עוד לא פורסם';
     $('aStatus').className = 'badge' + (C.is_published ? '' : ' draft');
-    $('aPlan').hidden = !('plan' in C); $('aPlan').textContent = PLUS() ? 'מסלול מורחב' : 'מסלול בסיסי';
+    $('aPlan').hidden = PLUS(); $('aPlan').textContent = 'מסלול בסיסי';   // כרגע מסלול אחיד — התווית מופיעה רק אם קטלוג הוגדר בסיסי
     $('viewPage').href = '/catalog/' + C.slug + '/';
     $('viewPage').textContent = C.is_published ? 'צפייה בעמוד' : 'תצוגה מקדימה';
     document.querySelectorAll('.atabs [data-tab]').forEach(function (b) { b.setAttribute('aria-selected', b.dataset.tab === state.tab); });

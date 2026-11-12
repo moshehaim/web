@@ -32,7 +32,8 @@
   /* פלטות שהפתיחה שלהן כהה וממורכזת */
   var DARK_HERO = { gold: 1, slate: 1 };
   var TINTS = ['#FFE08A', '#A8E0F5', '#D9C8FF', '#FFC2AE', '#F6D9C4', '#FFD1A8', '#B5EBD9', '#D4DCF2', '#C9D6FF', '#F1E3C8', '#E9E1D2', '#CFEBC9', '#E3E6EC'];
-  var ALL = '__all';
+  var ALL = '__all', SALE = '__sale';
+  var ICON_SALE = '<path d="M20 12l-8 8-9-9V3h8z"/><circle cx="7.5" cy="7.5" r="1.5"/>';
   function ico(inner) { return '<svg class="ico" viewBox="0 0 24 24" aria-hidden="true">' + inner + '</svg>'; }
   function icon(name) { return ico(ICONS[name] || ICON_DEFAULT); }
   var SVG_PLUS = ico('<path d="M12 5v14M5 12h14"/>'), SVG_CHECK = ico('<path d="M5 12.5l4.5 4.5L19 7.5"/>');
@@ -76,7 +77,7 @@
     /* '*' ולא רשימת עמודות: כך עמודה חדשה בקטלוג (שאלות נפוצות, תמונת פתיחה) לא שוברת את העמוד לפני/אחרי העדכון */
     var sel = '*,' +
       'bizcat_categories(id,name,sort_order,created_at),' +
-      'bizcat_items(id,category_id,name,price,description,is_hidden,is_featured,sort_order,created_at,bizcat_images(image_url,thumb_url,sort_order,created_at))';
+      'bizcat_items(*,bizcat_images(image_url,thumb_url,sort_order,created_at))';
     return fetch(SB_URL + '/rest/v1/bizcat_catalogs?slug=eq.' + encodeURIComponent(slug) + '&select=' + encodeURIComponent(sel), {
       headers: { apikey: SB_KEY, Authorization: 'Bearer ' + (token || SB_KEY) }
     }).then(function (r) {
@@ -100,9 +101,8 @@
   function prepare(row) {
     C = row;
     cats = (row.bizcat_categories || []).slice().sort(bySort);
-    /* מסלול: basic / plus. קטלוג בלי העמודה (לפני העדכון במסד) נחשב מורחב. בקטלוג ההדגמה העמוד עצמו קובע איזה מסלול להציג. */
+    /* מסלול: basic / plus. קטלוג בלי העמודה (לפני העדכון במסד) נחשב מורחב. כרגע כל הקטלוגים במסלול אחיד (plus); הענף הבסיסי נשאר לשימוש עתידי. */
     PLAN = row.plan === 'basic' ? 'basic' : 'plus';
-    if (row.slug === 'demo' && /^(basic|plus)$/.test(meta('bizcat-plan'))) PLAN = meta('bizcat-plan');
     var pv = new URLSearchParams(location.search).get('palette');   // ?palette=gold — הצצה בפלטה אחרת בלי לשמור
     if (pv && /^[a-z]{2,12}$/.test(pv)) row.palette = pv;
     if (PLAN === 'basic') { row.palette = 'blue'; row.hero_image_url = null; row.header_image_url = null; row.faq = []; }   // הבסיסי: סגנון אחד, בלי לוגו/תמונת פתיחה/שאלות
@@ -114,6 +114,9 @@
       i.images = (i.bizcat_images || []).slice().sort(bySort).slice(0, LIMITS[PLAN].images);
       if (PLAN === 'basic') i.is_featured = false;
       i.desc = i.description || '';
+      /* מבצע: מחיר מבצע נמוך מהמחיר הרגיל. eff = המחיר שמשלמים בפועל */
+      i.sale = i.price != null && i.sale_price != null && Number(i.sale_price) < Number(i.price);
+      i.eff = i.sale ? Number(i.sale_price) : i.price;
       itemById[i.id] = i;
     });
     /* סדר התצוגה: לפי סדר הקטגוריות, ובתוך קטגוריה לפי סדר הפריטים */
@@ -161,11 +164,7 @@
     for (var i = 0; i < cs.length; i++) { var c = cats[i]; cs[i].hidden = !c; if (c) { cs[i].style.background = c.tint; cs[i].innerHTML = icon(c.name); } }
     $('preview').hidden = C.is_published !== false;
     /* פס הדגמה: רק בקטלוג ההדגמה, עם מעבר בין שני המסלולים */
-    if (C.slug === 'demo') {
-      var other = PLAN === 'basic' ? ['plus', 'המורחב'] : ['basic', 'הבסיסי'];
-      $('demoBar').hidden = false;
-      $('demoBar').innerHTML = 'זו הדגמה של <b>המסלול ' + (PLAN === 'basic' ? 'הבסיסי' : 'המורחב') + '</b> של קטלוג בשכונה. העסק והפריטים לדוגמה בלבד. <a href="/catalog/demo-' + other[0] + '/">לראות את המסלול ' + other[1] + ' ←</a>';
-    }
+    if (C.slug === 'demo') { $('demoBar').hidden = false; $('demoBar').innerHTML = 'זו <b>הדגמה</b> של קטלוג בשכונה. העסק והפריטים לדוגמה בלבד.'; }
     /* פתיחה כהה וממורכזת: בפלטת קרם־זהב, או כשהעסק העלה תמונת פתיחה */
     var hero = document.querySelector('.banner'), img = C.hero_image_url || '';
     hero.classList.toggle('hero-dark', !!DARK_HERO[C.palette] || !!img);
@@ -186,6 +185,8 @@
   /* ── רשימות ── */
   function renderCats() {
     var html = '<button type="button" class="tile" data-cat="' + ALL + '" aria-pressed="' + (state.cat === ALL) + '"><span class="disc" style="background:var(--soft)">' + icon('הכל') + '</span>הכל</button>';
+    if (items.some(function (i) { return i.sale; })) html += '<button type="button" class="tile sale" data-cat="' + SALE + '" aria-pressed="' + (state.cat === SALE) + '"><span class="disc">' + ico(ICON_SALE) + '</span>מבצעים</button>';
+    else if (state.cat === SALE) state.cat = ALL;
     html += cats.map(function (c) {
       return '<button type="button" class="tile" data-cat="' + c.id + '" aria-pressed="' + (c.id === state.cat) + '"><span class="disc" style="background:' + c.tint + '">' + icon(c.name) + '</span>' + esc(c.name) + '</button>';
     }).join('');
@@ -193,14 +194,14 @@
   }
   function priceHTML(it, U) {
     return it.price == null ? '<div class="cprice ask"><b>מחיר לפי פנייה</b></div>'
-      : '<div class="cprice"><b>' + fmt(it.price) + '</b>' + (U ? '<span>' + esc(U) + '</span>' : '') + '</div>';
+      : '<div class="cprice' + (it.sale ? ' sale' : '') + '"><b>' + fmt(it.eff) + '</b>' + (it.sale ? '<s><span class="sr">במקום </span>' + fmt(it.price) + '</s>' : '') + (U ? '<span>' + esc(U) + '</span>' : '') + '</div>';
   }
   function cardHTML(it) {
     var on = state.picked.indexOf(it.id) >= 0, im = it.images[0];
     var pic = im ? '<img src="' + esc(im.thumb_url || im.image_url) + '" alt="" loading="lazy" decoding="async">' + (it.images.length > 1 ? '<span class="more">' + it.images.length + ' תמונות</span>' : '') : icon(it.cat.name);
     return '<article class="card">' +
       '<button type="button" class="open" data-open="' + it.id + '" aria-label="פרטים על ' + esc(it.name) + '">' +
-      '<div class="pic" style="background:' + it.cat.tint + '">' + pic + '</div>' +
+      '<div class="pic" style="background:' + it.cat.tint + '">' + pic + (it.sale ? '<span class="saletag">מבצע</span>' : '') + '</div>' +
       '<div class="cbody"><h3>' + esc(it.name) + '</h3><p>' + esc(it.desc.split('\n')[0]) + '</p></div>' + priceHTML(it, C.price_unit) +
       '</button>' +
       '<div class="cfoot"><button type="button" class="add" data-add="' + it.id + '" aria-pressed="' + on + '">' + (on ? SVG_CHECK + 'נבחר' : SVG_PLUS + 'הוספה לרשימה') + '</button></div>' +
@@ -209,13 +210,13 @@
   function renderGrid() {
     var q = state.q.trim().toLowerCase(), W = C.items_word || 'פריטים';
     var list = items.filter(function (it) {
-      return (state.cat === ALL || it.category_id === state.cat) &&
+      return (state.cat === ALL || (state.cat === SALE ? it.sale : it.category_id === state.cat)) &&
         (!q || it.name.toLowerCase().indexOf(q) >= 0 || it.desc.toLowerCase().indexOf(q) >= 0 || it.cat.name.toLowerCase().indexOf(q) >= 0);
     });
     var feat = items.filter(function (i) { return i.is_featured; });
     $('featuredSec').hidden = !!q || state.cat !== ALL || !feat.length;
     $('featured').innerHTML = feat.map(cardHTML).join('');
-    $('heading').textContent = q ? 'תוצאות עבור "' + state.q.trim() + '"' : state.cat === ALL ? 'כל ה' + W : catById[state.cat].name;
+    $('heading').textContent = q ? 'תוצאות עבור "' + state.q.trim() + '"' : state.cat === ALL ? 'כל ה' + W : state.cat === SALE ? 'מבצעים' : catById[state.cat].name;
     $('count').textContent = list.length === 1 ? 'פריט אחד' : list.length + ' פריטים';
     $('grid').innerHTML = list.length ? list.map(cardHTML).join('')
       : '<p class="empty">' + (items.length ? 'לא נמצאו פריטים. נסו מילה אחרת, או כתבו לנו בוואטסאפ ונבדוק.' : 'הקטלוג עדיין ריק. בקרוב יופיעו כאן פריטים.') + '</p>';
@@ -223,7 +224,7 @@
   function pickedItems() { return state.picked.map(function (id) { return itemById[id]; }).filter(Boolean); }
   function renderBar() {
     var picked = pickedItems(), total = 0, ask = 0;
-    picked.forEach(function (i) { if (i.price == null) ask++; else total += Number(i.price); });
+    picked.forEach(function (i) { if (i.price == null) ask++; else total += Number(i.eff); });
     $('bar').hidden = !picked.length;
     $('barTitle').textContent = picked.length === 1 ? 'פריט אחד ברשימה' : picked.length + ' פריטים ברשימה';
     $('chips').innerHTML = picked.map(function (i) {
@@ -233,7 +234,7 @@
     $('total').textContent = totalTxt;
     var U = C.price_unit ? ' ' + C.price_unit : '';
     var msg = 'שלום, הגעתי מהקטלוג שלכם ב"שכונה". אשמח לבדוק את הפריטים הבאים:\n' +
-      picked.map(function (i, n) { return (n + 1) + '. ' + i.name + ' – ' + (i.price == null ? 'מחיר לפי פנייה' : fmt(i.price) + U); }).join('\n') +
+      picked.map(function (i, n) { return (n + 1) + '. ' + i.name + ' – ' + (i.price == null ? 'מחיר לפי פנייה' : fmt(i.eff) + U + (i.sale ? ' (מבצע)' : '')); }).join('\n') +
       '\nסה"כ משוער: ' + totalTxt + '\nתאריך מבוקש: \nמיקום: ';
     $('send').href = waUrl(msg);
   }
@@ -250,10 +251,10 @@
         (n > 1 ? '<button type="button" class="gnav prev" data-img="-1" aria-label="התמונה הקודמת">' + SVG_PREV + '</button><button type="button" class="gnav next" data-img="1" aria-label="התמונה הבאה">' + SVG_NEXT + '</button>' +
           '<div class="gdots" aria-hidden="true">' + it.images.map(function (_, i) { return '<i class="' + (i === state.img ? 'on' : '') + '"></i>'; }).join('') + '</div>' : '')
       : icon(it.cat.name);
-    $('dCat').textContent = it.cat.name;
     $('dTitle').textContent = it.name;
     $('dPr').className = 'pr' + (it.price == null ? ' ask' : '');
-    $('dPrice').textContent = it.price == null ? 'מחיר לפי פנייה' : fmt(it.price);
+    $('dPrice').innerHTML = it.price == null ? 'מחיר לפי פנייה' : fmt(it.eff) + (it.sale ? ' <s><span class="sr">במקום </span>' + fmt(it.price) + '</s>' : '');
+    $('dCat').textContent = it.cat.name + (it.sale ? ' · מבצע' : '');
     $('dUnit').hidden = it.price == null || !C.price_unit;
     $('dDesc').textContent = it.desc; $('dDesc').hidden = !it.desc;
     $('dAdd').innerHTML = on ? SVG_CHECK + 'נבחר (ברשימה)' : SVG_PLUS + 'הוספה לרשימה';

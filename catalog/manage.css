@@ -146,3 +146,5 @@ label.aimg.add input { position: absolute; inset: 0; opacity: 0; cursor: pointer
 .pn small { font-size: 12.5px; color: var(--ink-3); }
 
 .badge.plan { background: #E8EEFB; color: #1F3F8A; }
+
+.saleb { display: inline-block; background: #FDE3E7; color: #B00E28; font-size: 11px; font-weight: 800; padding: 1px 7px; border-radius: 999px; vertical-align: 2px; }
