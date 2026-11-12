@@ -17,7 +17,7 @@ export const APP = '/app/';
 const LOGIN = '/app/';
 // בעלי עסקים — לעמוד ניהול העסק באתר (/my-business/, js/manage.js)
 const BIZ_PORTAL = '/my-business/';
-const DOWNLOAD = '/b/';
+const DOWNLOAD = '/s/';
 let MINYANIM = '/har-homa/minyanim/';
 /** השכונה שנבנית עכשיו — קובע את כתובת המניינים בכל התבניות (הבנייה רצה שכונה אחרי שכונה) */
 let CID = '';

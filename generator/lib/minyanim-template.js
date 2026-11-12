@@ -98,7 +98,7 @@ const CSS = `${MAP_CSS}
 
 const nav = (home) => navChips(home, 'minyanim');
 
-const appCta = `<div class="app-cta"><div style="min-width:0;flex:1 1 300px"><b>המניין הקרוב אליך, עכשיו</b><span>באפליקציה: כל המניינים לפי מרחק ולפי השעה, בלחיצה אחת.</span></div><a class="pill btn-dark" href="/b/">להורדת האפליקציה</a></div>`;
+const appCta = `<div class="app-cta"><div style="min-width:0;flex:1 1 300px"><b>המניין הקרוב אליך, עכשיו</b><span>באפליקציה: כל המניינים לפי מרחק ולפי השעה, בלחיצה אחת.</span></div><a class="pill btn-dark" href="/s/">להורדת האפליקציה</a></div>`;
 
 /* ── אינדקס ───────────────────────────────────────────────────── */
 
@@ -255,7 +255,7 @@ ${sht ? '<span class="mn-chip hi">שטיבלך</span>' : ''}${nusach ? `<span cl
 ${sht ? `<p class="sht"><b>שטיבלך — מניינים מתחלפים:</b> ${esc(sht)}</p>` : ''}
 ${sorted.length ? sections : sht ? '' : '<p class="nempty">טרם נמסרו זמני תפילה לבית כנסת זה.</p>'}
 <button type="button" class="p-add" data-post="prayer" data-x="${px({ add: true })}">+ הוספת מניין</button>
-<a class="in-cta" href="/b/" data-cta="syn-times"><span>📍 הזמנים ב${esc(syn.name)} ובכל בתי הכנסת ב${esc(vm.name)}, תמיד איתך</span><b class="go">לאפליקציה</b></a>
+<a class="in-cta" href="/s/" data-cta="syn-times"><span>📍 הזמנים ב${esc(syn.name)} ובכל בתי הכנסת ב${esc(vm.name)}, תמיד איתך</span><b class="go">לאפליקציה</b></a>
 </section>
 <aside class="side">
 ${syn.latitude ? `<div class="info"><h2>הגעה</h2>${syn.address ? `<p>${esc(syn.address)}</p>` : ''}<div class="btns">
