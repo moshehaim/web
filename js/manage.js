@@ -1,4 +1,5 @@
 /* שכונה — ניהול העסק באתר (/my-business/). שלב 1: פרטים, תמונה, שעות, בקשת המלצות, מצב השירותים.
+ * שלב 2: מבצעים (js/manage-promos.js, נטען לפי דרישה).
  * שומר בדיוק כמו האפליקציה (BusinessManagementScreen / BusinessAddScreen), אבל רק את השדות שנערכו (update חלקי):
  *  - שעות: weekly_schedule = { sunday..saturday: null (סגור) | [{start:"HH:MM", end:"HH:MM"}] }
  *  - תמונה: bucket images, businesses/profiles/{id}.jpg (JPEG), URL עם ?v=, ואז image_url. מודרציה — טריגר בשרת.
@@ -449,11 +450,11 @@
   }
 
   // כיווץ כמו באפליקציה (1920px, איכות 85, JPEG)
-  function toJpeg(fileObj) {
+  function toJpeg(fileObj, maxPx) {
     return new Promise(function (res, rej) {
       var url = URL.createObjectURL(fileObj), im = new Image();
       im.onload = function () {
-        var max = 1920, w = im.naturalWidth, h = im.naturalHeight, k = Math.min(1, max / Math.max(w, h));
+        var max = maxPx || 1920, w = im.naturalWidth, h = im.naturalHeight, k = Math.min(1, max / Math.max(w, h));
         var c = document.createElement('canvas'); c.width = Math.round(w * k); c.height = Math.round(h * k);
         var g = c.getContext('2d'); g.fillStyle = '#fff'; g.fillRect(0, 0, c.width, c.height); g.drawImage(im, 0, 0, c.width, c.height);
         URL.revokeObjectURL(url);
@@ -659,7 +660,18 @@
 
   /* ── שירותים: שלב 1 — מצב בלבד; הניהול באתר בשלבים הבאים ── */
   var SVC = { promotions: 'מבצעים', coupons: 'קופונים', appointments: 'מערכת התורים', prominence: 'הבלטה' };
+  var PROMOS_JS = '/js/manage-promos.js?v=1', promosP = null;
+  function promosView() {
+    promosP = promosP || new Promise(function (res, rej) {
+      var s = document.createElement('script'); s.src = PROMOS_JS; s.onload = function () { res(window.ShchunaPromos); };
+      s.onerror = function () { promosP = null; rej(new Error('load')); }; document.head.appendChild(s);
+    });
+    promosP.then(function (P) {
+      P({ A: A, sb: sb, biz: biz, esc: esc, dlg: dlg, msg: msg, toJpeg: toJpeg, onChange: function () { loadBiz(); } });
+    }).catch(function () { A.toast('הטעינה נכשלה. נסו שוב'); });
+  }
   function serviceView(k) {
+    if (k === 'promotions') return promosView();
     var d = dlg('<h2 id="sa-h">' + SVC[k] + '</h2><p>ניהול ' + SVC[k] + ' יגיע לכאן בקרוב. בינתיים אפשר לנהל אותו באפליקציה, והשינויים יופיעו גם כאן.</p>' +
       '<a class="sa-b pri" href="/app/">לאפליקציה</a><button class="sa-b" type="button" data-c>סגירה</button>');
     d.querySelector('[data-c]').addEventListener('click', A.close);
