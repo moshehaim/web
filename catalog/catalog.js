@@ -33,6 +33,8 @@
   var DARK_HERO = { gold: 1, slate: 1 };
   var TINTS = ['#FFE08A', '#A8E0F5', '#D9C8FF', '#FFC2AE', '#F6D9C4', '#FFD1A8', '#B5EBD9', '#D4DCF2', '#C9D6FF', '#F1E3C8', '#E9E1D2', '#CFEBC9', '#E3E6EC'];
   var ALL = '__all', SALE = '__sale';
+  /* מבצעים כבויים כרגע (הוחלט 15.11). כדי להחזיר: true כאן וב-manage.js. העמודה sale_price נשארת במסד. */
+  var SALES_ON = false;
   var ICON_SALE = '<path d="M20 12l-8 8-9-9V3h8z"/><circle cx="7.5" cy="7.5" r="1.5"/>';
   function ico(inner) { return '<svg class="ico" viewBox="0 0 24 24" aria-hidden="true">' + inner + '</svg>'; }
   function icon(name) { return ico(ICONS[name] || ICON_DEFAULT); }
@@ -115,7 +117,7 @@
       if (PLAN === 'basic') i.is_featured = false;
       i.desc = i.description || '';
       /* מבצע: מחיר מבצע נמוך מהמחיר הרגיל. eff = המחיר שמשלמים בפועל */
-      i.sale = i.price != null && i.sale_price != null && Number(i.sale_price) < Number(i.price);
+      i.sale = SALES_ON && i.price != null && i.sale_price != null && Number(i.sale_price) < Number(i.price);
       i.eff = i.sale ? Number(i.sale_price) : i.price;
       itemById[i.id] = i;
     });

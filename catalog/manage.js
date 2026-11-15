@@ -30,7 +30,9 @@
   var LIMITS = { basic: { items: 40, images: 3 }, plus: { items: 100000, images: 6 } };
   function PLUS() { return !C || C.plan !== 'basic'; }
   /* עמודת מחיר המבצע קיימת במסד? (לפני העדכון במסד השדה פשוט לא מוצג) */
-  function hasSale() { return !items.length || 'sale_price' in items[0]; }
+  /* מבצעים כבויים כרגע (הוחלט 15.11). כדי להחזיר: true כאן וב-catalog.js. */
+  var SALES_ON = false;
+  function hasSale() { return SALES_ON && (!items.length || 'sale_price' in items[0]); }
   function lim() { return LIMITS[PLUS() ? 'plus' : 'basic']; }
   var UPSELL = 'במסלול המורחב: פריטים בלי הגבלה, עד 6 תמונות לפריט, בחירה מ־8 סגנונות, לוגו, תמונת פתיחה, "הכי מבוקשים" ושאלות נפוצות. לשדרוג כתבו לנו: info@shchuna.co.il';
   var state = { tab: 'items', q: '', cat: '', edit: null, err: '', saved: '', arm: null, busy: false, up: '', catEdit: null };
@@ -139,7 +141,7 @@
           '<span class="th" style="background:' + tintOf(i.category_id) + '">' + (im ? '<img src="' + esc(im.thumb_url) + '" alt="" loading="lazy">' : '') + '</span>' +
           '<span class="nm">' + esc(i.name) + (i.is_featured && PLUS() ? ' <span class="star">★ מבוקש</span>' : '') + (im ? '' : ' <span class="fhid">· בלי תמונה</span>') + '</span>' +
           '<span class="ct">' + esc(c ? c.name : '') + '</span>' +
-          '<span class="pr">' + (i.price == null ? 'לפי פנייה' : i.sale_price != null ? fmt(i.sale_price) + ' <span class="saleb">מבצע</span>' : fmt(i.price)) + '</span>' +
+          '<span class="pr">' + (i.price == null ? 'לפי פנייה' : SALES_ON && i.sale_price != null ? fmt(i.sale_price) + ' <span class="saleb">מבצע</span>' : fmt(i.price)) + '</span>' +
           '<button type="button" class="sw" role="switch" aria-checked="' + !i.is_hidden + '" aria-label="' + (i.is_hidden ? 'מוסתר' : 'מוצג') + ': ' + esc(i.name) + '" data-flip="' + i.id + '"><i></i></button>' +
           '<span class="racts">' + (q ? '' :
             '<button type="button" class="mini" data-itemup="' + i.id + '" aria-label="הזזה למעלה: ' + esc(i.name) + '"' + (at === 0 ? ' disabled' : '') + '>▲</button>' +
