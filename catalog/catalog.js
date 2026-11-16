@@ -229,9 +229,15 @@
     picked.forEach(function (i) { if (i.price == null) ask++; else total += Number(i.eff); });
     $('bar').hidden = !picked.length;
     $('barTitle').textContent = picked.length === 1 ? 'פריט אחד ברשימה' : picked.length + ' פריטים ברשימה';
+    var U0 = C.price_unit ? ' ' + C.price_unit : '';
     $('chips').innerHTML = picked.map(function (i) {
-      return '<button type="button" class="chip" data-remove="' + i.id + '" aria-label="הסרה מהרשימה: ' + esc(i.name) + '" style="background:' + i.cat.tint + '">' + esc(i.name) + ' <span aria-hidden="true">×</span></button>';
+      return '<div class="lrow"><i aria-hidden="true" style="background:' + i.cat.tint + '"></i>' +
+        '<button type="button" class="ln" data-open="' + i.id + '">' + esc(i.name) + '</button>' +
+        '<span class="lp">' + (i.price == null ? 'לפי פנייה' : fmt(i.eff) + U0) + '</span>' +
+        '<button type="button" class="lx" data-remove="' + i.id + '" aria-label="הסרה מהרשימה: ' + esc(i.name) + '"><span aria-hidden="true">×</span></button></div>';
     }).join('');
+    document.querySelector('main').classList.toggle('side-on', !!picked.length);
+    if (!picked.length) setBarOpen(false);
     var totalTxt = fmt(total) + (ask ? ' + ' + (ask === 1 ? 'פריט אחד' : ask + ' פריטים') + ' לפי פנייה' : '');
     $('total').textContent = totalTxt;
     var U = C.price_unit ? ' ' + C.price_unit : '';
@@ -239,6 +245,30 @@
       picked.map(function (i, n) { return (n + 1) + '. ' + i.name + ' – ' + (i.price == null ? 'מחיר לפי פנייה' : fmt(i.eff) + U + (i.sale ? ' (מבצע)' : '')); }).join('\n') +
       '\nסה"כ משוער: ' + totalTxt + '\nתאריך מבוקש: \nמיקום: ';
     $('send').href = waUrl(msg);
+    syncBar();
+  }
+  /* הרשימה: עמודת צד במסך רחב, פס תחתון מצומצם בטלפון */
+  function setupBar() {
+    var bar = $('bar');
+    bar.className = 'bar';
+    bar.setAttribute('aria-label', 'הרשימה שלי');
+    bar.innerHTML = '<button type="button" class="btoggle" id="barToggle" aria-expanded="false" aria-controls="chips"><strong id="barTitle"></strong>' +
+      '<svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 15l6-6 6 6"/></svg></button>' +
+      '<div class="chips" id="chips"></div>' +
+      '<div class="sum"><span>סה״כ משוער: <b id="total"></b></span><a class="btn btn-wa" id="send" href="#" target="_blank" rel="noopener">שליחת הרשימה לוואטסאפ</a></div>';
+    document.querySelector('main').appendChild(bar);
+    $('barToggle').addEventListener('click', function () { setBarOpen(!bar.classList.contains('open')); });
+    window.addEventListener('resize', syncBar);
+  }
+  function setBarOpen(on) {
+    $('bar').classList.toggle('open', on); $('barToggle').setAttribute('aria-expanded', on); syncBar();
+  }
+  /* בטלפון הפס צף מעל העמוד: משאירים מתחת לתחתית רווח בגובה שלו, כדי שלא יכסה אותה */
+  var barH = 0;
+  function syncBar() {
+    var bar = $('bar'), fixed = !bar.hidden && getComputedStyle(bar).position === 'fixed';
+    if (fixed && !bar.classList.contains('open')) barH = bar.offsetHeight;
+    $('wrap').style.paddingBottom = fixed ? barH + 'px' : '';
   }
   function renderDialog() {
     var it = state.open && itemById[state.open];
@@ -322,8 +352,8 @@
     if (!/^[a-z0-9][a-z0-9-]{1,39}$/.test(slug)) return showState('הקטלוג לא נמצא', 'הכתובת לא מובילה לקטלוג קיים.', true);
     fetchCatalog(slug, sessionToken()).then(function (row) {
       if (!row) return showState('הקטלוג לא נמצא', 'ייתכן שהוא עדיין לא פורסם, או שהכתובת השתנתה.', true);
-      prepare(row); renderFrame(); renderCats(); renderGrid(); renderBar(); bind();
-      $('state').hidden = true; $('siteView').hidden = false;
+      prepare(row); setupBar(); renderFrame(); renderCats(); renderGrid(); renderBar(); bind();
+      $('state').hidden = true; $('siteView').hidden = false; syncBar();
       fromHash();
     }).catch(function () {
       showState('לא הצלחנו לטעון את הקטלוג', 'בדקו את החיבור לאינטרנט ונסו לרענן את העמוד.', false);
