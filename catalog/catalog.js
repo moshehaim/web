@@ -236,7 +236,6 @@
         '<span class="lp">' + (i.price == null ? 'לפי פנייה' : fmt(i.eff) + U0) + '</span>' +
         '<button type="button" class="lx" data-remove="' + i.id + '" aria-label="הסרה מהרשימה: ' + esc(i.name) + '"><span aria-hidden="true">×</span></button></div>';
     }).join('');
-    document.querySelector('main').classList.toggle('side-on', !!picked.length);
     if (!picked.length) setBarOpen(false);
     var totalTxt = fmt(total) + (ask ? ' + ' + (ask === 1 ? 'פריט אחד' : ask + ' פריטים') + ' לפי פנייה' : '');
     $('total').textContent = totalTxt;
@@ -247,7 +246,7 @@
     $('send').href = waUrl(msg);
     syncBar();
   }
-  /* הרשימה: עמודת צד במסך רחב, פס תחתון מצומצם בטלפון */
+  /* הרשימה: פס תחתון בטלפון, כרטיס צף בפינה במסך רחב. נפתחת בלחיצה ולא משנה את פריסת העמוד */
   function setupBar() {
     var bar = $('bar');
     bar.className = 'bar';
@@ -266,9 +265,9 @@
   /* בטלפון הפס צף מעל העמוד: משאירים מתחת לתחתית רווח בגובה שלו, כדי שלא יכסה אותה */
   var barH = 0;
   function syncBar() {
-    var bar = $('bar'), fixed = !bar.hidden && getComputedStyle(bar).position === 'fixed';
-    if (fixed && !bar.classList.contains('open')) barH = bar.offsetHeight;
-    $('wrap').style.paddingBottom = fixed ? barH + 'px' : '';
+    var bar = $('bar'), on = !bar.hidden, docked = on && bar.offsetWidth >= innerWidth - 2;
+    if (docked && !bar.classList.contains('open')) barH = bar.offsetHeight;
+    $('wrap').style.paddingBottom = docked ? barH + 'px' : '';
   }
   function renderDialog() {
     var it = state.open && itemById[state.open];

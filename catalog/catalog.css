@@ -183,18 +183,10 @@ main .inner { padding-block: 24px 120px; display: flex; flex-direction: column; 
 .bar .sum span { color: var(--ink-2); font-size: 14px; }
 .bar .sum b { font-size: 19px; font-weight: 900; color: var(--strong); font-variant-numeric: tabular-nums; }
 .bar .btn-wa { flex-basis: 100%; min-height: 46px; justify-content: center; }
+/* במסך רחב: כרטיס צף בפינה, בלי לשנות את פריסת העמוד */
 @media (min-width: 1000px) {
-  main.side-on { display: grid; grid-template-columns: minmax(0, 1fr) 320px; gap: 28px; align-items: start; max-width: 1232px; margin-inline: auto; }
-  main.side-on > .inner { max-width: none; margin: 0; }
-  .bar { position: sticky; inset: 16px auto auto auto; z-index: 1; margin-block: 24px; padding: 16px; border: 1px solid var(--line); border-top: 4px solid var(--sun); border-radius: 16px; box-shadow: 0 8px 24px rgba(20,24,31,.08);
-    flex-direction: column; flex-wrap: nowrap; align-items: stretch; gap: 12px; max-height: calc(100vh - 32px); }
-  .btoggle { flex: 0 0 auto; cursor: default; pointer-events: none; min-height: 0; }
-  .btoggle strong { font-size: 18px; }
-  .btoggle .ico { display: none; }
-  .chips { order: 0; display: flex; flex: 1 1 auto; min-height: 0; max-height: none; flex-basis: auto; border-bottom: 0; padding-bottom: 0; border-top: 1px solid var(--line); }
-  .bar .sum { display: flex; flex-direction: column; gap: 12px; flex-shrink: 0; border-top: 1px solid var(--line); padding-top: 12px; }
-  .bar .sum span { display: flex; justify-content: space-between; align-items: baseline; font-size: 15px; }
-  .bar .btn-wa { flex-basis: auto; }
+  .bar { inset: auto auto 20px 20px; width: 380px; padding: 14px 16px; border: 1px solid var(--line); border-top: 4px solid var(--sun); border-radius: 16px; box-shadow: 0 12px 32px rgba(20,24,31,.18); }
+  .chips { max-height: min(46vh, 420px); }
 }
 
 @media (max-width: 860px) {
