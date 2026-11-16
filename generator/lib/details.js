@@ -56,6 +56,23 @@ export function shabbatTimes(lat, lng, now = new Date()) {
 }
 
 /**
+ * חלונות סגירה לקטלוגים שסגורים בשבתות ובחגים: [[כניסה, יציאה], …] ב-ISO, לפי זמני ירושלים.
+ * מהדלקת הנרות הראשונה ועד ההבדלה שאחריה (כך שחג הצמוד לשבת הוא חלון אחד). נכתב ל-/catalog/closed.json.
+ */
+export function closedWindows(now = new Date(), days = 150) {
+  const loc = new Location(31.778, 35.235, true, 'Asia/Jerusalem', 'Jerusalem', 'IL');
+  const start = new Date(now.getTime() - 3 * 86400000), end = new Date(now.getTime() + days * 86400000);
+  const ev = HebrewCalendar.calendar({ start, end, location: loc, candlelighting: true, candleLightingMins: 40, havdalahDeg: 8.5, il: true });
+  const out = []; let open = null;
+  for (const e of ev) {
+    const d = e.getDesc();
+    if (d === 'Candle lighting' && !open) open = e.eventTime;
+    else if (d === 'Havdalah' && open) { if (e.eventTime > now) out.push([open.toISOString(), e.eventTime.toISOString()]); open = null; }
+  }
+  return out;
+}
+
+/**
  * השבת / החג הקרוב לעמוד הבית: { title, candle: {t, d, iso}, havdalah: {t, d, iso} }.
  * מתחלף רק אחרי צאת השבת — כך שהבנייה השעתית לא משנה את העמוד בלי סיבה.
  */

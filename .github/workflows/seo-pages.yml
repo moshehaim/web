@@ -36,7 +36,7 @@ jobs:
           git config user.email "bot@users.noreply.github.com"
           # כל השכונות שנבנות (generator/communities.js, build: true)
           HOODS=$(node -e "import('./generator/communities.js').then(m=>console.log(m.COMMUNITIES.filter(c=>c.build).map(c=>c.slug).join(' ')))")
-          git add -A -- minyanim-har-homa my-business sitemap.xml robots.txt hoods.json $HOODS
+          git add -A -- minyanim-har-homa my-business catalog/closed.json sitemap.xml robots.txt hoods.json $HOODS
           if git diff --staged --quiet; then
             echo "אין שינויים"
           else

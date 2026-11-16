@@ -348,15 +348,45 @@
   }
   function fromHash() { var h = location.hash.slice(1); if (itemById[h]) openItem(h); }
 
+  /* ── סגירה בשבתות ובחגים ──
+     נקבע לכל קטלוג בהרשמה (closed_on_shabbat, רק מהשרת). הזמנים ב-/catalog/closed.json, שנכתב בבניית האתר לפי זמני ירושלים.
+     אם הקובץ לא נטען, הקטלוג נשאר פתוח. */
+  var WINDOWS = [];
+  function closedCheck(row) {
+    if (!row.closed_on_shabbat) return Promise.resolve();
+    return fetch('/catalog/closed.json', { cache: 'no-cache' }).then(function (r) { return r.ok ? r.json() : null; }).then(function (j) {
+      WINDOWS = ((j && j.windows) || []).map(function (w) { return [Date.parse(w[0]), Date.parse(w[1])]; }).filter(function (w) { return w[0] && w[1]; });
+    }).catch(function () { WINDOWS = []; });
+  }
+  function closedNow() {
+    var t = Date.now();
+    for (var i = 0; i < WINDOWS.length; i++) if (t >= WINDOWS[i][0] && t < WINDOWS[i][1]) return WINDOWS[i];
+    return null;
+  }
+  function showClosed() {
+    var w = closedNow(); if (!w) return;
+    var end = new Date(w[1]), o = { timeZone: 'Asia/Jerusalem' };
+    var when = end.toLocaleTimeString('he-IL', { timeZone: o.timeZone, hour: '2-digit', minute: '2-digit' });
+    $('bar').hidden = true; $('shade').hidden = true; document.body.style.overflow = ''; $('wrap').style.paddingBottom = '';
+    showState('הקטלוג סגור בשבתות ובחגים', 'נשוב לפעול בצאת השבת או החג, בשעה ' + when + '.', false);
+  }
+
   /* ── התחלה ── */
   function start() {
     var slug = slugFromUrl();
     if (!/^[a-z0-9][a-z0-9-]{1,39}$/.test(slug)) return showState('הקטלוג לא נמצא', 'הכתובת לא מובילה לקטלוג קיים.', true);
     fetchCatalog(slug, sessionToken()).then(function (row) {
       if (!row) return showState('הקטלוג לא נמצא', 'ייתכן שהוא עדיין לא פורסם, או שהכתובת השתנתה.', true);
-      prepare(row); setupBar(); renderFrame(); renderCats(); renderGrid(); renderBar(); bind();
-      $('state').hidden = true; $('siteView').hidden = false; syncBar();
-      fromHash();
+      return closedCheck(row).then(function () {
+        if (closedNow()) return showClosed();
+        prepare(row); setupBar(); renderFrame(); renderCats(); renderGrid(); renderBar(); bind();
+        $('state').hidden = true; $('siteView').hidden = false; syncBar();
+        fromHash();
+        if (WINDOWS.length) {   // העמוד נשאר פתוח עד כניסת השבת: נסגר לבד
+          setInterval(function () { if (closedNow()) showClosed(); }, 60000);
+          document.addEventListener('visibilitychange', function () { if (!document.hidden && closedNow()) showClosed(); });
+        }
+      });
     }).catch(function () {
       showState('לא הצלחנו לטעון את הקטלוג', 'בדקו את החיבור לאינטרנט ונסו לרענן את העמוד.', false);
     });

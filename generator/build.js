@@ -23,7 +23,7 @@ import { homePage, HIDDEN_NAV, navChips, setSiteHome } from './lib/home-template
 import { setMinyanimSection } from './lib/minyanim-template.js';
 import { COMMUNITIES, slugById } from './communities.js';
 import { entityPage, detailPage } from './lib/entity-template.js';
-import { fetchDetails, shapeDetails, shabbatTimes, nextShabbat } from './lib/details.js';
+import { fetchDetails, shapeDetails, shabbatTimes, nextShabbat, closedWindows } from './lib/details.js';
 import { isIsraeliDST } from './lib/season.js';
 import { managePage } from './lib/manage-template.js';
 import { compactHours, listPage, promosPage, realEstatePage, boardPage, lessonsPage, hallsPage, hostingPage, eduPage, parksPage, servicesPage, healthPage, eventsPage, happeningsPage } from './lib/list-template.js';
@@ -264,6 +264,8 @@ const writeHome = (raw, dirRaw, lsRaw, moreRaw, synSlugs, detRaw) => {
   write(path.join(HOME, 'index.html'), homePage(vm, { base: BASE, path: home, shabbat, fresh: dir ? freshItems(dir, allDetails, detRaw, hrefById) : [], discover: discoverItems(allDetails) }));
   // ניהול העסק (שלד; הלוגיקה ב-/js/manage.js) — noindex, לא ב-sitemap. עמוד אחד לכל האתר
   if (PRIMARY) write(path.join('my-business', 'index.html'), managePage(vm, { base: BASE, home }));
+  // קטלוגים שסגורים בשבתות ובחגים קוראים מכאן את זמני הסגירה (ראו catalog/catalog.js)
+  if (PRIMARY) write(path.join('catalog', 'closed.json'), JSON.stringify({ tz: 'Asia/Jerusalem', windows: closedWindows() }));
   console.log(`  ${HOME}/  · ${vm.promos.length} מבצעים · ${vm.professionals.length} בעלי מקצוע · ` +
     `${vm.businesses.length} עסקים · ${vm.realEstate.length} נכסים · ${vm.prayers.length} מניינים היום`);
 
