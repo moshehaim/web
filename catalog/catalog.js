@@ -190,7 +190,10 @@
     if (items.some(function (i) { return i.sale; })) html += '<button type="button" class="tile sale" data-cat="' + SALE + '" aria-pressed="' + (state.cat === SALE) + '"><span class="disc">' + ico(ICON_SALE) + '</span>מבצעים</button>';
     else if (state.cat === SALE) state.cat = ALL;
     html += cats.map(function (c) {
-      return '<button type="button" class="tile" data-cat="' + c.id + '" aria-pressed="' + (c.id === state.cat) + '"><span class="disc" style="background:' + c.tint + '">' + icon(c.name) + '</span>' + esc(c.name) + '</button>';
+      /* תמונת הקטגוריה: התמונה הראשית של הפריט הראשון בקטגוריה שיש לו תמונה. אין כזה: אייקון */
+      var first = items.filter(function (i) { return i.category_id === c.id && i.images.length; })[0], im = first && first.images[0];
+      return '<button type="button" class="tile" data-cat="' + c.id + '" aria-pressed="' + (c.id === state.cat) + '"><span class="disc' + (im ? ' photo' : '') + '" style="background:' + c.tint + '">' +
+        (im ? '<img src="' + esc(im.thumb_url || im.image_url) + '" alt="" loading="lazy" decoding="async">' : icon(c.name)) + '</span>' + esc(c.name) + '</button>';
     }).join('');
     $('cats').innerHTML = html;
   }
