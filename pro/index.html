@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>בעלי מקצוע | שכונה</title>
+<link rel="canonical" href="https://shchuna.co.il/pro/">
+<meta name="description" content="בעל מקצוע בירושלים או בגבעת זאב? תושבי השכונה מחפשים אותך באפליקציית שכונה. כרטיס קבוע בשכונה, פניות ישירות לטלפון והמלצות משכנים. הכרטיס ללא תשלום.">
+<meta property="og:title" content="בעל מקצוע? תושבי השכונה מחפשים אותך | שכונה">
+<meta property="og:description" content="כרטיס קבוע בשכונה, פניות ישירות לטלפון והמלצות משכנים. הכרטיס ללא תשלום.">
+<meta property="og:url" content="https://shchuna.co.il/pro/">
+<meta property="og:image" content="https://shchuna.co.il/app_icon.png">
+<meta name="theme-color" content="#16294d">
+<link rel="icon" href="/app_icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Assistant:wght@400;600;700;800&family=Secular+One&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body { font-family: 'Assistant', -apple-system, 'Segoe UI', sans-serif; background: #16294d; color: #fff; }
+  a { color: inherit; text-decoration: none; }
+  @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+
+  .page { position: relative; overflow: hidden; background: radial-gradient(120% 60% at 82% -8%, #2f5aa0 0%, #1a3563 42%, #16294d 100%); }
+  .dots { position: absolute; inset: 0; pointer-events: none; background-image: radial-gradient(rgba(255,255,255,0.05) 1px, transparent 1px); background-size: 26px 26px; opacity: 0.45; }
+  .wrap { position: relative; max-width: 860px; margin: 0 auto; padding: 0 20px; }
+
+  .top { display: flex; align-items: center; justify-content: space-between; padding: 18px 0; }
+  .brand { display: flex; align-items: center; gap: 10px; font-family: 'Secular One', sans-serif; font-size: 22px; }
+  .brand img { width: 40px; height: 40px; border-radius: 11px; }
+  .top .home { font-size: 14.5px; font-weight: 600; color: rgba(255,255,255,0.75); border-bottom: 1px solid rgba(255,255,255,0.3); }
+
+  .hero { text-align: center; padding: 34px 0 30px; }
+  .eyebrow { display: inline-block; background: rgba(240,169,45,0.14); border: 1px solid rgba(240,169,45,0.42); color: #f6c56a; font-weight: 700; font-size: 14px; border-radius: 999px; padding: 6px 16px; margin-bottom: 18px; }
+  h1 { font-family: 'Secular One', sans-serif; font-weight: 400; font-size: clamp(34px, 6vw, 52px); line-height: 1.12; margin-bottom: 16px; }
+  h1 .accent { color: #f0a92d; }
+  .lead { font-size: clamp(17px, 2.4vw, 20px); line-height: 1.65; color: rgba(255,255,255,0.78); max-width: 34em; margin: 0 auto 26px; }
+  .cta-row { display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; }
+  .btn { display: inline-flex; align-items: center; justify-content: center; gap: 9px; border-radius: 14px; padding: 14px 24px; font-weight: 800; font-size: 16.5px; transition: transform .15s; }
+  .btn:hover { transform: translateY(-2px); }
+  .btn-gold { background: #f0a92d; color: #2a1a02; box-shadow: 0 12px 26px rgba(0,0,0,0.25); }
+  .btn-white { background: #fff; color: #16294d; box-shadow: 0 12px 26px rgba(0,0,0,0.25); }
+  .btn-line { border: 1.5px solid rgba(255,255,255,0.85); color: #fff; }
+
+  section { padding: 30px 0; }
+  h2 { font-family: 'Secular One', sans-serif; font-weight: 400; font-size: clamp(26px, 4vw, 34px); margin-bottom: 18px; text-align: center; }
+
+  .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  .card { background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12); border-radius: 20px; padding: 22px 22px 20px; }
+  .card .ic { font-size: 28px; margin-bottom: 8px; }
+  .card h3 { font-size: 19px; font-weight: 800; margin-bottom: 6px; }
+  .card p { font-size: 16px; line-height: 1.6; color: rgba(255,255,255,0.74); }
+
+  .price { background: linear-gradient(135deg, rgba(240,169,45,0.20), rgba(240,169,45,0.05)); border: 1px solid rgba(240,169,45,0.42); border-radius: 22px; padding: 26px 24px; text-align: center; }
+  .price h2 { margin-bottom: 10px; }
+  .price p { font-size: 17px; line-height: 1.7; color: rgba(255,255,255,0.85); max-width: 32em; margin: 0 auto; }
+  .price .gift { display: inline-block; margin-top: 14px; background: rgba(0,0,0,0.18); border-radius: 999px; padding: 7px 16px; font-weight: 700; color: #f6c56a; font-size: 15px; }
+
+  .steps { list-style: none; counter-reset: s; display: grid; gap: 12px; }
+  .steps li { counter-increment: s; display: grid; grid-template-columns: 46px 1fr; gap: 14px; align-items: start; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12); border-radius: 18px; padding: 18px; }
+  .steps li::before { content: counter(s); width: 46px; height: 46px; border-radius: 50%; background: #f0a92d; color: #2a1a02; font-weight: 800; font-size: 22px; display: flex; align-items: center; justify-content: center; }
+  .steps b { display: block; font-size: 18px; margin-bottom: 4px; }
+  .steps span { font-size: 16px; line-height: 1.6; color: rgba(255,255,255,0.76); }
+  .after { text-align: center; margin-top: 14px; color: rgba(255,255,255,0.65); font-size: 15px; line-height: 1.6; }
+
+  details { background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12); border-radius: 16px; padding: 16px 18px; margin-bottom: 10px; }
+  summary { cursor: pointer; font-weight: 800; font-size: 17px; list-style: none; }
+  summary::-webkit-details-marker { display: none; }
+  summary::after { content: '+'; float: left; font-size: 22px; line-height: 1; color: #f6c56a; }
+  details[open] summary::after { content: '–'; }
+  details p { margin-top: 10px; font-size: 16px; line-height: 1.65; color: rgba(255,255,255,0.78); }
+
+  .final { text-align: center; padding: 34px 0 50px; }
+  .final p { color: rgba(255,255,255,0.75); font-size: 17px; margin-bottom: 18px; }
+  .final .cta-row { margin-bottom: 16px; }
+  .final .web { font-size: 15px; color: rgba(255,255,255,0.75); border-bottom: 1px solid rgba(255,255,255,0.35); }
+
+  footer { border-top: 1px solid rgba(255,255,255,0.12); padding: 20px 0 34px; font-size: 14px; color: rgba(255,255,255,0.6); display: flex; flex-wrap: wrap; gap: 8px 20px; justify-content: center; }
+
+  @media (max-width: 640px) {
+    .grid { grid-template-columns: 1fr; }
+    .cta-row .btn { flex: 1 1 100%; }
+    .hero { padding-top: 18px; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+  <div class="dots" aria-hidden="true"></div>
+  <div class="wrap">
+
+    <header class="top">
+      <a class="brand" href="/"><img src="/app_icon.png" alt="">שכונה</a>
+      <a class="home" href="/">לאתר שכונה</a>
+    </header>
+
+    <div class="hero">
+      <span class="eyebrow">לבעלי מקצוע בירושלים ובגבעת זאב</span>
+      <h1>תושבי השכונה<br><span class="accent">מחפשים אותך.</span></h1>
+      <p class="lead">"שכונה" היא אפליקציה שכונתית. כשמישהו בשכונה צריך חשמלאי, אינסטלטור, מורה פרטי או הנדימן — הוא מחפש אצלנו, ומוצא את בעלי המקצוע שעובדים לידו.</p>
+      <div class="cta-row">
+        <a class="btn btn-gold" href="#start">איך מצטרפים? 3 צעדים</a>
+        <a class="btn btn-line" href="https://wa.me/972523114129?text=%D7%94%D7%99%D7%99%2C%20%D7%90%D7%A0%D7%99%20%D7%91%D7%A2%D7%9C%20%D7%9E%D7%A7%D7%A6%D7%95%D7%A2%20%D7%95%D7%90%D7%A9%D7%9E%D7%97%20%D7%9C%D7%A2%D7%96%D7%A8%D7%94%20%D7%91%D7%94%D7%A8%D7%A9%D7%9E%D7%94" target="_blank" rel="noopener">💬 שאלה? וואטסאפ</a>
+      </div>
+    </div>
+
+    <section>
+      <h2>מה מקבלים</h2>
+      <div class="grid">
+        <div class="card"><div class="ic">📇</div><h3>כרטיס קבוע בשכונה</h3><p>לא נעלם כמו פוסט בקבוצה. תושב שמחפש את המקצוע שלך בשכונה — מגיע לכרטיס שלך, היום וגם בעוד חודש.</p></div>
+        <div class="card"><div class="ic">📞</div><h3>פניות ישירות אליך</h3><p>חיוג ווואטסאפ בלחיצה מהכרטיס. בלי מתווך, בלי עמלה על עבודה, בלי מכרז מול עשרה אחרים.</p></div>
+        <div class="card"><div class="ic">⭐</div><h3>המלצות משכנים</h3><p>לקוחות מרוצים ממליצים עליך בלחיצה, וההמלצות מוצגות על הכרטיס. שכן סומך על המלצה של שכן.</p></div>
+        <div class="card"><div class="ic">🏷️</div><h3>מבצעים בשכונה</h3><p>יש לך הנחה או שירות מיוחד? מפרסמים מבצע, והוא מופיע בדף המבצעים של השכונה.</p></div>
+      </div>
+    </section>
+
+    <section>
+      <div class="price">
+        <h2>כמה זה עולה?</h2>
+        <p>הכרטיס שלך בשכונה — ללא תשלום, לפחות לשנה הקרובה.<br>משלמים רק אם רוצים תוספות: פרסום מבצעים, הבלטה או מערכת תורים.</p>
+        <span class="gift">🎁 מתנת הצטרפות: 90 יום פרסום מבצעים ו-90 יום מערכת תורים · בלי כרטיס אשראי</span>
+      </div>
+    </section>
+
+    <section id="start">
+      <h2>איך מצטרפים</h2>
+      <ol class="steps">
+        <li><div><b>מורידים את "שכונה" ומתחברים עם גוגל</b><span>מהחנות בטלפון, או דרך האתר (shchuna.co.il/app). בוחרים את השכונה שבה עובדים.</span></div></li>
+        <li><div><b>לוחצים "+ פרסם" ← "בעל מקצוע"</b><span>שם, מקצוע, טלפון ותמונה (או לוגו). כמה מילים על השירות. אימות טלפון חד־פעמי ב-SMS — כדי שהכרטיסים יהיו של אנשים אמיתיים.</span></div></li>
+        <li><div><b>שולחים את הכרטיס ל-3 לקוחות מרוצים</b><span>ומבקשים מהם המלצה. כרטיס עם המלצות מעורר אמון, ושכנים שרואים אותו פונים בביטחון.</span></div></li>
+      </ol>
+      <p class="after">⏱️ בערך 5 דקות. נתקעת? שלח לנו וואטסאפ ונעזור — או שנרשום אותך.</p>
+    </section>
+
+    <section>
+      <h2>שאלות שחוזרות</h2>
+      <details><summary>יש לי כבר עמוד בפייסבוק. למה גם פה?</summary><p>בקבוצות הפוסט יורד למטה תוך שעה. ב"שכונה" הכרטיס נשאר במקום, וכשתושב מחפש בעל מקצוע בשכונה שלו — הוא רואה אותו.</p></details>
+      <details><summary>אני עובד בכמה שכונות. מה בוחרים?</summary><p>בוחרים את השכונה העיקרית שבה אתה עובד. "שכונה" פועלת בשכונות ירושלים ובגבעת זאב — אם תרצה להופיע במקום נוסף, דבר איתנו.</p></details>
+      <details><summary>מי רואה את הטלפון שלי?</summary><p>הטלפון שמופיע בכרטיס הוא זה שבחרת לפרסם, כדי שלקוחות יוכלו להתקשר. אימות ה-SMS נועד רק לוודא שהכרטיס שלך.</p></details>
+      <details><summary>אפשר לערוך או להסיר את הכרטיס?</summary><p>כן, מתי שרוצים — מתוך האפליקציה, במסך הניהול של הכרטיס.</p></details>
+    </section>
+
+    <div class="final">
+      <h2>מתחילים?</h2>
+      <p>הורדה, "+ פרסם", "בעל מקצוע" — וזהו.</p>
+      <div class="cta-row">
+        <a class="btn btn-white" href="https://apps.apple.com/il/app/id6785217131?pt=129097185&ct=pro&mt=8"> App Store</a>
+        <a class="btn btn-line" href="https://play.google.com/store/apps/details?id=com.shchuna.app&referrer=utm_source%3Dpro%26utm_medium%3Dpage">Google Play</a>
+      </div>
+      <a class="web" href="/app/">או הרשמה דרך האתר</a>
+    </div>
+
+    <footer>
+      <span>שכונה · info@shchuna.co.il</span>
+      <a href="/terms.html">תנאי שימוש</a>
+      <a href="/privacy.html">פרטיות</a>
+    </footer>
+  </div>
+</div>
+<script src="/js/t.js?v=6" defer></script>
+</body>
+</html>

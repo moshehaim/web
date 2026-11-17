@@ -6,7 +6,7 @@
   var URL = 'https://mebomrqnfnbqijiuawdh.supabase.co/rest/v1/rpc/log_web_event';
   var KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1lYm9tcnFuZm5icWlqaXVhd2RoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzkxOTc3MDEsImV4cCI6MjA1NDc3MzcwMX0.OSpzG4pnsgIiOEefWK0Z29ZHOo12bIhp0QXTdk2Hsg4';
   var SK = 'sb-mebomrqnfnbqijiuawdh-auth-token';
-  var NOT_HOOD = { b: 1, w: 1, app: 1, js: 1, img: 1, 'my-business': 1, 'minyanim-har-homa': 1 };
+  var NOT_HOOD = { b: 1, w: 1, app: 1, js: 1, img: 1, 'my-business': 1, pro: 1, 'minyanim-har-homa': 1 };
 
   function ls(fn) { try { return fn(window.localStorage); } catch (e) { return null; } }
   window.shchunaTrack = function () {};

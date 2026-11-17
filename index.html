@@ -145,9 +145,26 @@
     .biz-cta { justify-self: center; }
     .close-box .store-row { justify-content: center; }
   }
+  @media (max-width: 860px) {
+    /* mobile hero order: title → phone video → store buttons → secondary links */
+    .hero { gap: 0; padding: 18px 0 36px; }
+    .hero-inner { display: contents; }
+    .hero-inner > .brand-block { order: 1; margin-inline: auto; gap: 16px; margin-bottom: 16px; }
+    .hero-inner > h1 { order: 2; }
+    .hero-inner > .hero-copy { order: 3; margin-bottom: 22px; }
+    .hero > .phone-wrap { order: 4; margin-bottom: 26px; }
+    .hero-inner > .store-block { order: 5; }
+    .hero-inner > .hero-proof { order: 6; }
+    .brand-icon { width: 84px; height: 84px; border-radius: 20px; }
+    .phone { width: min(236px, 62vw); border-radius: 36px; padding: 9px; }
+    .phone .screen { border-radius: 28px; }
+  }
   @media (max-width: 520px) {
     .feat-grid, .testi-grid { grid-template-columns: 1fr; }
     .store-row a.btn-store { flex: 1 1 100%; justify-content: center; }
+    .hero .store-row { flex-wrap: nowrap; gap: 10px; width: 100%; }
+    .hero .store-row a.btn-store { flex: 1 1 0; padding: 12px 10px; gap: 8px; }
+    .hero .store-block { width: 100%; }
   }
 </style>
 </head>
