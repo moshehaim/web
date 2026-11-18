@@ -5,7 +5,7 @@
  *    text_trial_purchase, text_publish_notices, limit_promotions, vat_enabled/vat_rate, features_monetization).
  *  - ביטול חידוש: cancel-subscription. חידוש מנוי שבוטל ועדיין בתוקף: renew-subscription (הפעלה מחדש, בלי חיוב).
  *  - לפני רכישה ראשונה: פרטים לקבלה (business_registration_type + tax_id בטבלת הישות, כמו BusinessRegistrationSheet).
- *  - סיכום הזמנה (PaymentSummarySheet). התשלום עצמו — שלב ב' (create-payment במצב web); עד אז מפנה לאפליקציה.
+ *  - סיכום הזמנה ותשלום (PaymentSummarySheet): create-payment במצב web → דף הסליקה → payment-success-web.html.
  *  - ביטול רכישה בתקופת ניסיון (החזר) — באפליקציה.
  */
 (function () {
@@ -341,12 +341,49 @@
         '<div class="mb-field"><label for="by-p">טלפון</label><input id="by-p" type="tel" dir="ltr" value="' + esc(phone) + '"></div>' +
         '<p class="mb-note">סוג רישום: ' + esc(regLabel(reg)) + (needTax && st.ent.tax_id ? ' · ' + (reg === 'company' ? 'ח.פ.' : reg === 'nonprofit' ? 'מספר עמותה' : 'מספר עוסק') + ': ' + esc(st.ent.tax_id) : '') + '</p></div>' +
         (isSub ? '<p class="mb-note">פרטי הכרטיס ישמרו לחיוב חודשי אוטומטי</p>' : '') +
-        '<div class="by-note"><b style="font-size:14px">התשלום מהאתר — בקרוב</b>בינתיים משלימים את התשלום באפליקציה, באותו חשבון.</div>' +
-        '<a class="sa-b pri" href="/app/">להשלמת התשלום באפליקציה</a>' +
-        '<p class="sa-msg" hidden></p><button class="sa-b" type="button" id="by-sb">ביטול</button></div>', true);
+        '<p class="sa-msg" hidden></p><button class="sa-b pri" type="button" id="by-pay">לתשלום ₪' + fmt(n + vat) + '</button>' +
+        '<button class="sa-b" type="button" id="by-sb">ביטול</button></div>', true);
+      d.querySelector('#by-pay').addEventListener('click', function () {
+        pay(d, { isSub: isSub, desc: desc, amount: n, useTok: !!(tok && d.querySelector('#by-tok') && d.querySelector('#by-tok').checked),
+          name: d.querySelector('#by-n').value.trim(), email: d.querySelector('#by-e').value.trim(), phone: d.querySelector('#by-p').value.trim() });
+      });
       var t = d.querySelector('#by-tok');
       if (t) { var sync = function () { d.querySelector('#by-rcpt').hidden = t.checked; d.querySelector('#by-tokn').textContent = t.checked ? 'לחיוב עם כרטיס אחר כבה את המתג' : 'יפתח דף תשלום להזנת כרטיס חדש'; }; t.addEventListener('change', sync); sync(); }
       d.querySelector('#by-sb').addEventListener('click', main);
+    });
+  }
+
+  /* ── תשלום (PaymentSummarySheet._onPay + PaymentService.createPayment) ──
+   * create-payment מחשב את הסכום בשרת לפי המחירון ובודק שהמשתמש בעל הישות.
+   * מנוי: save_token=true (חיוב חודשי), charge_with_token כשיש כרטיס שמור והמתג דולק — החיוב מיידי, בלי דף סליקה.
+   * אחרת: web_return=true → מעבר לדף הסליקה של Invoice4U, והחזרה ל-payment-success-web.html?order_id=… */
+  function pay(d, o) {
+    var btn = d.querySelector('#by-pay'), label = btn.textContent;
+    api.msg(d, ''); btn.disabled = true; btn.textContent = o.useTok ? 'מחייבים…' : 'מעבירים לתשלום…';
+    var body = {
+      entity_id: biz.id, entity_type: kind, user_id: api.user.id,
+      customer_name: o.name, customer_email: o.email, customer_phone: o.phone,
+      business_registration_type: st.ent.business_registration_type || null, tax_id: st.ent.tax_id || null,
+      amount: o.amount, payment_type: o.isSub ? 'promotions_subscription' : 'promotions_package', description: o.desc,
+      payments_num: 1, save_token: o.isSub, charge_with_token: o.isSub && o.useTok,
+      community_id: biz.community_id || null, coupon_id: null, web_return: true
+    };
+    sb.functions.invoke('create-payment', { body: body }).then(function (r) {
+      var data = r.data;
+      if (!data && r.error && r.error.context && r.error.context.json) return r.error.context.json().then(function (j) { return { data: j }; }, function () { return { data: null }; });
+      return { data: data };
+    }).then(function (r) {
+      var x = r.data || {};
+      if (body.charge_with_token) {
+        if (x.success) { A.toast('התשלום בוצע בהצלחה! המנוי פעיל. הקבלה נשלחה למייל'); return reload(); }
+        throw new Error(x.error || x.message || 'החיוב נכשל');
+      }
+      if (!x.success || !x.clearing_url) throw new Error(x.error || 'שגיאה ביצירת התשלום');
+      try { sessionStorage.setItem('shchuna.pay', JSON.stringify({ b: biz.id, o: x.order_id || '', t: Date.now() })); } catch (e) {}
+      location.href = x.clearing_url;
+    }).catch(function (e) {
+      btn.disabled = false; btn.textContent = label;
+      api.msg(d, (e && e.message && !/^(Failed|NetworkError|Load failed)/.test(e.message)) ? e.message : 'שגיאה ביצירת התשלום. נסו שוב.');
     });
   }
 

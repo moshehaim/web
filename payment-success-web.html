@@ -183,5 +183,49 @@
         document.getElementById('orderIdWrap').style.display = 'inline-block';
     }
 </script>
+<script>
+/* רכישה מהאתר (ניהול העסק, js/manage-buy.js): הדף נפתח אחרי דף הסליקה. אם הגיעו מהאתר (sessionStorage 'shchuna.pay'):
+ * בודקים את סטטוס התשלום בטבלת payments (RLS: רק התשלומים של המשתמש) — payment-callback בשרת מעדכן אותו —
+ * ומחזירים לניהול המבצעים של העסק. בלי הסימון (האפליקציה בגרסת הדפדפן) — הדף נשאר כמו שהיה. */
+(function () {
+  var info = null;
+  try { info = JSON.parse(sessionStorage.getItem('shchuna.pay') || 'null'); } catch (e) {}
+  if (!info || !info.b || Date.now() - (info.t || 0) > 3 * 3600e3) return;
+  var SB = { url: 'https://mebomrqnfnbqijiuawdh.supabase.co', key: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1lYm9tcnFuZm5icWlqaXVhd2RoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzkxOTc3MDEsImV4cCI6MjA1NDc3MzcwMX0.OSpzG4pnsgIiOEefWK0Z29ZHOo12bIhp0QXTdk2Hsg4' };
+  var h1 = document.querySelector('h1'), sub = document.querySelector('.subtitle'), note = document.querySelector('.receipt-note'),
+      icon = document.querySelector('.icon-wrap'), btn = document.querySelector('.btn-primary');
+  btn.href = '/my-business/?id=' + encodeURIComponent(info.b) + '&open=promos';
+  btn.textContent = 'חזרה לניהול העסק';
+  var tok = null;
+  try { var s = JSON.parse(localStorage.getItem('sb-mebomrqnfnbqijiuawdh-auth-token') || 'null'); tok = s && (s.access_token || (s.currentSession && s.currentSession.access_token)); } catch (e) {}
+  if (!orderId || !tok) return;
+  h1.textContent = 'בודקים את התשלום…'; sub.innerHTML = 'זה לוקח כמה שניות.'; note.style.display = 'none'; icon.style.visibility = 'hidden';
+  var tries = 0;
+  function done(st) {
+    icon.style.visibility = '';
+    if (st === 'completed') {
+      try { sessionStorage.removeItem('shchuna.pay'); } catch (e) {}
+      h1.textContent = 'התשלום התקבל!'; sub.innerHTML = 'הרכישה בוצעה בהצלחה.<br>הקבלה נשלחה לכתובת המייל שלך.';
+      note.textContent = '✓ המנוי / החבילה פעילים — אפשר לפרסם מבצע'; note.style.display = '';
+    } else if (st === 'failed') {
+      icon.style.background = 'linear-gradient(135deg,#F87171,#DC2626)'; icon.style.boxShadow = '0 8px 24px rgba(220,38,38,.3)';
+      icon.querySelector('svg').innerHTML = '<path d="M7 7 L17 17 M17 7 L7 17"/>';
+      h1.textContent = 'התשלום לא הושלם'; sub.innerHTML = 'לא בוצע חיוב. אפשר לנסות שוב ממסך ניהול העסק.';
+    } else {
+      h1.textContent = 'התשלום בעיבוד'; sub.innerHTML = 'המנוי / החבילה יופעלו תוך מספר דקות.<br>הקבלה תישלח לכתובת המייל שלך.';
+    }
+  }
+  function poll() {
+    fetch(SB.url + '/rest/v1/payments?select=status&order_id=eq.' + encodeURIComponent(orderId), { headers: { apikey: SB.key, Authorization: 'Bearer ' + tok } })
+      .then(function (r) { return r.ok ? r.json() : []; }).then(function (rows) {
+        var st = rows && rows[0] && rows[0].status;
+        if (st === 'completed' || st === 'failed') return done(st);
+        if (++tries >= 15) return done('pending');
+        setTimeout(poll, 2000);
+      }, function () { if (++tries >= 15) return done('pending'); setTimeout(poll, 2000); });
+  }
+  poll();
+})();
+</script>
 </body>
 </html>
