@@ -642,7 +642,11 @@ function count(card){if(!API||!card)return;var id=card.getAttribute('data-id'),t
     headers:{'apikey':API.key,'Authorization':'Bearer '+API.key,'Content-Type':'application/json'},
     body:JSON.stringify({entity_id:id,entity_table:t})}).catch(function(){});}catch(_){}}
 var desk=window.matchMedia&&matchMedia('(hover: hover) and (pointer: fine)').matches;
+function cat(card){if(!API||!card)return;try{fetch(API.url+'/rest/v1/rpc/increment_catalog_click',{method:'POST',keepalive:true,
+  headers:{'apikey':API.key,'Authorization':'Bearer '+API.key,'Content-Type':'application/json'},
+  body:JSON.stringify({p_entity_id:card.getAttribute('data-id'),p_entity_table:card.getAttribute('data-t')})}).catch(function(){});}catch(_){}}
 document.addEventListener('click',function(e){
+  var ct=e.target.closest('.a-cat');if(ct){cat(ct.closest('.dcard'));return;}
   var wa=e.target.closest('.a-wa');if(wa){count(wa.closest('.dcard'));return;}
   var a=e.target.closest('.a-tel');if(!a)return;
   count(a.closest('.dcard'));
