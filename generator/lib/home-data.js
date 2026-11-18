@@ -313,8 +313,8 @@ const QUIET_BIZ_TYPES = new Set(['clothing', 'shoes', 'cosmetics']);
 const QUIET_BIZ_CATS = new Set(['personal_care', 'sports_leisure']);
 const QUIET_PRO_CATS = new Set(['beauty']);
 
-// כפתור קטלוג: כמו באפליקציה (A-39) — רק כשיש catalog_url באתר שכונה ואין מערכת תורים פעילה (סטטוס 3)
-const catalogOf = (r) => (r.appointment_system_status !== 3 && /^https:\/\/(www\.)?shchuna\.co\.il\//.test(r.catalog_url || '') ? r.catalog_url : null);
+// כפתור קטלוג: כמו באפליקציה (A-39) — כל קישור catalog_url (גם חיצוני), רק כשאין מערכת תורים פעילה (סטטוס 3)
+const catalogOf = (r) => (r.appointment_system_status !== 3 && /^https?:\/\/\S+$/i.test((r.catalog_url || '').trim()) ? r.catalog_url.trim() : null);
 
 export function shapeDirectory(raw) {
   const promosOf = (id) => (raw.promos || []).filter((p) => p.provider_id === id)

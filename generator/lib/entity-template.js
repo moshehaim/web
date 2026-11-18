@@ -155,8 +155,10 @@ export function detailPage(vm, e, { base, home, kind, listLabel, ldType, listHre
   // קביעת תור: ישר לעסק באתר הדינמי (/app/business/<id> → EntityLinkScreen עם "קבע תור")
   const bookPath = e.table === 'professionals' ? 'professional' : e.table === 'businesses' ? 'business' : null;
   if (d.booking) acts.push(`<a class="e-book" href="${APP}${bookPath && e.id ? `${bookPath}/${encodeURIComponent(e.id)}?book=1` : ''}">${svg(ICON.cal, 19, 'currentColor', 2)}קביעת תור</a>`);
-  // קטלוג העסק (קטלוג בשכונה, /catalog/<slug>/) — אותו כלל כמו באפליקציה; הלחיצה נספרת ב-increment_catalog_click
-  if (d.catalog) acts.push(`<a class="e-book e-cat" href="${esc(d.catalog)}">${svg(ICON.book, 19, 'currentColor', 2)}קטלוג</a>`);
+  // קטלוג העסק (קטלוג בשכונה /catalog/<slug>/ או אתר חיצוני) — אותו כלל כמו באפליקציה; הלחיצה נספרת ב-increment_catalog_click
+  // קישור חיצוני נפתח בלשונית חדשה, בלי להעביר דירוג (nofollow)
+  const catExt = d.catalog && !/^https:\/\/(www\.)?shchuna\.co\.il\//.test(d.catalog);
+  if (d.catalog) acts.push(`<a class="e-book e-cat" href="${esc(d.catalog)}"${catExt ? ' target="_blank" rel="noopener nofollow"' : ''}>${svg(ICON.book, 19, 'currentColor', 2)}קטלוג</a>`);
   const noContact = !acts.length;
   // המלצה: באתר עצמו (/js/auth.js — התחברות + אימות טלפון + set_recommendation). בלי JS: לאפליקציה (?recommend=1)
   const recPath = e.table === 'professionals' ? 'professional' : e.table === 'businesses' ? 'business' : null;
