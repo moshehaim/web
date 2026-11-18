@@ -660,14 +660,14 @@
 
   /* ── שירותים: שלב 1 — מצב בלבד; הניהול באתר בשלבים הבאים ── */
   var SVC = { promotions: 'מבצעים', coupons: 'קופונים', appointments: 'מערכת התורים', prominence: 'הבלטה' };
-  var PROMOS_JS = '/js/manage-promos.js?v=1', promosP = null;
+  var PROMOS_JS = '/js/manage-promos.js?v=2', promosP = null;
   function promosView() {
     promosP = promosP || new Promise(function (res, rej) {
       var s = document.createElement('script'); s.src = PROMOS_JS; s.onload = function () { res(window.ShchunaPromos); };
       s.onerror = function () { promosP = null; rej(new Error('load')); }; document.head.appendChild(s);
     });
     promosP.then(function (P) {
-      P({ A: A, sb: sb, biz: biz, esc: esc, dlg: dlg, msg: msg, toJpeg: toJpeg, onChange: function () { loadBiz(); } });
+      P({ A: A, sb: sb, biz: biz, user: user, kind: biz._k, table: E().table, esc: esc, dlg: dlg, msg: msg, toJpeg: toJpeg, onChange: function () { loadBiz(); } });
     }).catch(function () { A.toast('הטעינה נכשלה. נסו שוב'); });
   }
   function serviceView(k) {

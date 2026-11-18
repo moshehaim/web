@@ -179,7 +179,8 @@
         (isUpcoming(u) ? '<button class="sa-b red" type="button" data-cx="' + esc(u.id) + '">מחק</button>' : '') + '</div>';
     }
     if (acc) h += '<button class="sa-b pri" type="button" data-new>' + (a ? 'מבצע חדש (יחליף או יתוזמן אחרי הנוכחי)' : 'צור מבצע חדש') + '</button>';
-    else h += '<p class="mb-note">רכישת מנוי או חבילת מבצעים — כרגע באפליקציה. אחרי הרכישה אפשר לפרסם ולנהל מבצעים גם כאן.</p><a class="sa-b pri" href="/app/">לרכישה באפליקציה</a>';
+    else h += '<button class="sa-b pri" type="button" data-buy>לרכישת מנוי או חבילה</button>';
+    if (acc) h += '<button class="sa-b" type="button" data-buy>מנוי וחבילות</button>';
     h += '<h3 class="pm-h">היסטוריה</h3>' + (st.history.length ? st.history.map(function (p) {
       return card(p, { old: true }) + '<button class="sa-b red" type="button" data-del="' + esc(p.id) + '">מחיקה</button>'; }).join('') +
       (st.history.length === 3 ? '<p class="pm-empty">מוצגים 3 המבצעים האחרונים שפג תוקפם</p>' : '') : '<p class="pm-empty">אין מבצעים בהיסטוריה</p>');
@@ -188,6 +189,7 @@
     var byId = function (id) { return [a, u].concat(st.history).filter(function (p) { return p && p.id === id; })[0]; };
     d.querySelectorAll('[data-ed]').forEach(function (b) { b.addEventListener('click', function () { form(byId(b.dataset.ed)); }); });
     var nb = d.querySelector('[data-new]'); if (nb) nb.addEventListener('click', function () { form(null); });
+    d.querySelectorAll('[data-buy]').forEach(function (b) { b.addEventListener('click', buy); });
     d.querySelectorAll('[data-cx]').forEach(function (b) { b.addEventListener('click', function () { confirmBox(d, b, byId(b.dataset.cx), 'cancel'); }); });
     d.querySelectorAll('[data-del]').forEach(function (b) { b.addEventListener('click', function () { confirmBox(d, b, byId(b.dataset.del), 'delete'); }); });
   }
@@ -428,6 +430,19 @@
         w.querySelectorAll('[data-r]').forEach(function (b) { b.addEventListener('click', function () { var r = b.dataset.r || null; w.innerHTML = ''; resolve(r); }); });
       });
     }
+  }
+
+  // מסך מנוי וחבילות (manage-buy.js) — כמו PurchasePromotionPackageScreen
+  var BUY_JS = '/js/manage-buy.js?v=1', buyP = null;
+  function buy() {
+    buyP = buyP || new Promise(function (res, rej) {
+      var s = document.createElement('script'); s.src = BUY_JS; s.onload = function () { res(window.ShchunaBuy); };
+      s.onerror = function () { buyP = null; rej(new Error('load')); }; document.head.appendChild(s);
+    });
+    buyP.then(function (B) {
+      B({ A: A, sb: sb, biz: biz, user: api.user, kind: api.kind || biz._k, table: api.table, esc: esc, dlg: api.dlg, msg: api.msg,
+        back: function () { refresh(); }, onChange: api.onChange });
+    }).catch(function () { A.toast('הטעינה נכשלה. נסו שוב'); });
   }
 
   function rpc(promo, res) {
