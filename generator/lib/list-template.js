@@ -11,6 +11,7 @@ const ICON_WA = 'M4 20l1.3-4A8 8 0 1 1 8 18.7zM9 9.5c.3 2 2.3 4.2 4.5 4.6l1-1.2 
 const ICON_WAZE = 'M12 3l7 18-7-4-7 4z';
 const ICON_HEART = 'M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z';
 const ICON_CAL = 'M3 5h18v16H3zM3 10h18M8 3v4M16 3v4';
+const ICON_BOOK = 'M4 5a2 2 0 0 1 2-2h5v17H6a2 2 0 0 0-2 2zM20 5a2 2 0 0 0-2-2h-5v17h5a2 2 0 0 1 2 2zM11 3h2';
 
 /* כרטיס בלי תמונה: אייקון התחום על רקע בצבע התחום (כמו באפליקציה — לוגו / אייקון קטגוריה) */
 import { CAT_ICON } from './cat-icons.js';
@@ -198,7 +199,11 @@ function count(card){if(!API||!card)return;var id=card.getAttribute('data-id'),t
     headers:{'apikey':API.key,'Authorization':'Bearer '+API.key,'Content-Type':'application/json'},
     body:JSON.stringify({entity_id:id,entity_table:t})}).catch(function(){});}catch(_){}}
 var desk=window.matchMedia&&matchMedia('(hover: hover) and (pointer: fine)').matches;
+function cat(card){if(!API||!card)return;try{fetch(API.url+'/rest/v1/rpc/increment_catalog_click',{method:'POST',keepalive:true,
+  headers:{'apikey':API.key,'Authorization':'Bearer '+API.key,'Content-Type':'application/json'},
+  body:JSON.stringify({p_entity_id:card.getAttribute('data-id'),p_entity_table:card.getAttribute('data-t')})}).catch(function(){});}catch(_){}}
 document.addEventListener('click',function(e){
+  var ct=e.target.closest('.a-cat');if(ct){cat(ct.closest('.dcard'));return;}
   var wa=e.target.closest('.a-wa');if(wa){count(wa.closest('.dcard'));return;}
   var a=e.target.closest('.a-tel');if(!a)return;
   count(a.closest('.dcard'));
@@ -224,6 +229,11 @@ function card(p, kind) {
   const acts = [];
   // מערכת תורים פעילה (סטטוס 2/3) — כפתור ישר לעסק באתר הדינמי
   if (p.detail?.booking && p.id) acts.push(`<a class="a-book" href="${APP}${p.table === 'professionals' ? 'professional' : 'business'}/${encodeURIComponent(p.id)}?book=1" title="קביעת תור">${svg(ICON_CAL, 18, 'currentColor', 2.2)}<span>קביעת תור</span></a>`);
+  // קטלוג — כמו buildBookOrCatalogSlot באפליקציה (A-39): במקום "קביעת תור", אף פעם לא שניהם
+  else if (p.detail?.catalog) {
+    const ext = !/^https:\/\/(www\.)?shchuna\.co\.il\//.test(p.detail.catalog);
+    acts.push(`<a class="a-book a-cat" href="${esc(p.detail.catalog)}"${ext ? ' target="_blank" rel="noopener nofollow"' : ''} title="קטלוג">${svg(ICON_BOOK, 18, 'currentColor', 2.2)}<span>קטלוג</span></a>`);
+  }
   if (p.phone) acts.push(`<a class="a-tel" href="${esc(p.phone.tel)}" data-num="${esc(p.phone.display)}" aria-label="טלפון של ${esc(p.name)}" title="טלפון">${svg(ICON_PHONE, 19, 'currentColor', 2.2)}<span class="ld"></span></a>`);
   if (p.phone?.wa) acts.push(`<a class="a-wa" href="${esc(p.phone.wa)}" target="_blank" rel="noopener" aria-label="WhatsApp ל${esc(p.name)}" title="WhatsApp">${svg(ICON_WA, 20, 'currentColor', 2)}</a>`);
   if (p.waze) acts.push(`<a class="a-waze" href="${esc(p.waze)}" target="_blank" rel="noopener" aria-label="ניווט ל${esc(p.name)} ב-Waze" title="ניווט ב-Waze"><img src="/img/waze.png" alt="" width="44" height="44"></a>`);
