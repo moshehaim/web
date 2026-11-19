@@ -3,7 +3,7 @@
  *  - 5 מצבים: ניסיון פעיל (>7 ימים), ניסיון מסתיים (≤7), אין רכישה, מנוי פעיל (כולל מבוטל בתוקף), חבילה פעילה.
  *  - מחירים מ-pricing_plans (pricing_plan_id של העסק), חבילות וטקסטים מ-app_config (text_promotion_packages,
  *    text_trial_purchase, text_publish_notices, limit_promotions, vat_enabled/vat_rate, features_monetization).
- *  - ביטול חידוש: cancel-subscription. חידוש מנוי שבוטל ועדיין בתוקף: renew-subscription (הפעלה מחדש, בלי חיוב).
+ *  - ביטול חידוש: cancel-subscription. חידוש: renew-subscription (בתוקף → הפעלה מחדש; אחרת חיוב או דף סליקה).
  *  - לפני רכישה ראשונה: פרטים לקבלה (business_registration_type + tax_id בטבלת הישות, כמו BusinessRegistrationSheet).
  *  - סיכום הזמנה ותשלום (PaymentSummarySheet): create-payment במצב web → דף הסליקה → payment-success-web.html.
  *  - ביטול רכישה בתקופת ניסיון (החזר) — באפליקציה.
@@ -12,8 +12,6 @@
   'use strict';
   var api, A, sb, biz, esc, kind, table, st = {};
   var TERMS_URL = 'https://shchuna.co.il/terms.html';
-  // כמו ב-auth.js (מפתח anon ציבורי) — ל-fetch ישיר ל-renew-subscription
-  var SB = { url: 'https://mebomrqnfnbqijiuawdh.supabase.co', key: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1lYm9tcnFuZm5icWlqaXVhd2RoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzkxOTc3MDEsImV4cCI6MjA1NDc3MzcwMX0.OSpzG4pnsgIiOEefWK0Z29ZHOo12bIhp0QXTdk2Hsg4' };
   var REG = [
     ['individual', 'יחיד', ''], ['exempt', 'עוסק פטור', ''], ['licensed', 'עוסק מורשה', 'מספר עוסק מורשה'],
     ['company', 'חברה בע"מ', 'ח.פ. (חברה פרטית)'], ['nonprofit', 'עמותה / מלכ"ר', 'מספר עמותה']
@@ -265,18 +263,22 @@
       renew(st.sub.id).then(function (res) {
         if (res && res.success && res.action === 'reactivated') { A.toast('המנוי הופעל מחדש בהצלחה'); return reload(); }
         if (res && res.success && res.action === 'charged') { A.toast('המנוי חודש בהצלחה'); return reload(); }
-        // needs_payment / failed — התשלום מהאתר בשלב הבא
+        if (res && res.success && res.action === 'needs_payment' && res.clearing_url) {
+          // אין כרטיס שמור (או שהחיוב בו נכשל) → דף הסליקה; payment-success-web.html מקבל order_id מ-create-payment
+          try { sessionStorage.setItem('shchuna.pay', JSON.stringify({ b: biz.id, o: '', t: Date.now() })); } catch (e) {}
+          location.href = res.clearing_url; return;
+        }
         throw new Error((res && res.error) || 'fail');
-      }).catch(function () { y.disabled = false; y.textContent = 'חדש מנוי'; api.msg(d, 'לא הצלחנו לחדש מכאן. אפשר לחדש באפליקציה, או לנסות שוב.'); });
+      }).catch(function (e) { y.disabled = false; y.textContent = 'חדש מנוי'; api.msg(d, e && e.message && e.message !== 'fail' ? e.message : 'שגיאה בחידוש המנוי. נסו שוב.'); });
     });
   }
   // renew-subscription מאפשר רק Content-Type/Authorization/apikey בכותרות — לכן fetch ישיר (supabase-js מוסיף x-client-info)
+  // renew-subscription v27: בודקת משתמש ובעלות; web_return → אם צריך תשלום חדש, החזרה לאתר אחרי הסליקה
   function renew(id) {
-    return sb.auth.getSession().then(function (s) {
-      var tok = s.data && s.data.session && s.data.session.access_token;
-      return fetch(SB.url + '/functions/v1/renew-subscription', { method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + tok, 'apikey': SB.key },
-        body: JSON.stringify({ subscription_id: id }) }).then(function (r) { return r.json(); });
+    return sb.functions.invoke('renew-subscription', { body: { subscription_id: id, web_return: true } }).then(function (r) {
+      if (r.data) return r.data;
+      if (r.error && r.error.context && r.error.context.json) return r.error.context.json().catch(function () { return null; });
+      return null;
     });
   }
   function reload() { return load().then(main, function () { A.toast('שגיאה בטעינה'); }).then(function () { if (api.onChange) api.onChange(); }); }
