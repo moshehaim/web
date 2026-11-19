@@ -433,7 +433,7 @@
   }
 
   // מסך מנוי וחבילות (manage-buy.js) — כמו PurchasePromotionPackageScreen
-  var BUY_JS = '/js/manage-buy.js?v=1', buyP = null;
+  var BUY_JS = '/js/manage-buy.js?v=2', buyP = null;
   function buy() {
     buyP = buyP || new Promise(function (res, rej) {
       var s = document.createElement('script'); s.src = BUY_JS; s.onload = function () { res(window.ShchunaBuy); };

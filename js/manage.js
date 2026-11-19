@@ -10,7 +10,7 @@
  */
 (function () {
   'use strict';
-  var A, sb, user, list = [], biz = null, ctx = {};
+  var A, sb, user, list = [], biz = null, ctx = {}, autoOpened = false;
   var $ = function (s, r) { return (r || document).querySelector(s); };
   function esc(s) { return String(s == null ? '' : s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
 
@@ -131,6 +131,8 @@
         catalog: (r[9] && r[9].data) || null
       };
       render();
+      // חזרה מדף התשלום (payment-success-web.html → ?id=<עסק>&open=promos): פותחים ישר את ניהול המבצעים
+      if (!autoOpened && new URLSearchParams(location.search).get('open') === 'promos') { autoOpened = true; promosView(); }
     }).catch(function () { showError(); });
   }
 
@@ -660,7 +662,7 @@
 
   /* ── שירותים: שלב 1 — מצב בלבד; הניהול באתר בשלבים הבאים ── */
   var SVC = { promotions: 'מבצעים', coupons: 'קופונים', appointments: 'מערכת התורים', prominence: 'הבלטה' };
-  var PROMOS_JS = '/js/manage-promos.js?v=2', promosP = null;
+  var PROMOS_JS = '/js/manage-promos.js?v=3', promosP = null;
   function promosView() {
     promosP = promosP || new Promise(function (res, rej) {
       var s = document.createElement('script'); s.src = PROMOS_JS; s.onload = function () { res(window.ShchunaPromos); };
