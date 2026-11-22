@@ -342,6 +342,7 @@ footer .c{font-size:13px;color:#8A94A6}
 .e-acts a{height:50px;border-radius:14px;display:flex;align-items:center;justify-content:center;gap:8px;font-weight:800;font-size:16px;text-decoration:none}
 .e-tel{background:var(--navy);color:#fff}.e-tel:hover{color:#fff;background:#0F1F3B}
 .e-tel .num{font-variant-numeric:tabular-nums}
+[aria-busy=true]{opacity:.6;pointer-events:none}
 .e-wa{background:#E7F7EC;color:#14532D}.e-wa:hover{color:#14532D}
 .e-waze{background:#E3F4FB;color:#0E7FAE}.e-waze:hover{color:#0E7FAE}
 .e-map{background:#EFF4FF;color:var(--navy)}.e-map:hover{color:var(--navy)}
@@ -423,7 +424,7 @@ footer .c{font-size:13px;color:#8A94A6}
 </div></nav></header>
 
 
-<main id="main" data-entity data-id="37b5ed17-0494-41b7-a35e-990f8a28ac57" data-t="gmachim">
+<main id="main" data-entity data-id="37b5ed17-0494-41b7-a35e-990f8a28ac57" data-t="gmachim" data-ct="phone" data-ctt="gmachim">
 <section class="e-hero" aria-label="כותרת"><div class="wrap">
 <nav class="crumb" aria-label="פירורי לחם"><a href="/ramot/">רמות</a> · <a href="/ramot/board/#gmach">לוח השכונה</a> · גמ&quot;ח תרופות</nav>
 <h1>גמ&quot;ח תרופות</h1>
@@ -440,7 +441,7 @@ footer .c{font-size:13px;color:#8A94A6}
 
 </div>
 <aside class="e-side">
-<div class="e-card"><h2>יצירת קשר</h2><div class="e-acts"><a class="e-map" href="/app/">ליצירת קשר באפליקציה</a></div></div>
+<div class="e-card"><h2>יצירת קשר</h2><div class="e-acts"><a class="e-tel" href="/app/" role="button" data-ct="tel"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2"/></svg><span class="lbl">התקשרו</span><span class="num" dir="ltr" hidden></span></a><a class="e-wa" href="/app/" role="button" data-ct="wa"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20l1.3-4A8 8 0 1 1 8 18.7zM9 9.5c.3 2 2.3 4.2 4.5 4.6l1-1.2 1.8.8-.4 1.6c-3.3.2-7-3.4-7-6.8l1.5-.5.8 1.8z"/></svg>WhatsApp</a></div></div>
 
 <div class="e-card"><h2>הגעה</h2><p class="e-addr">מורגנטאו הנרי 34</p><div class="e-acts"><a class="e-waze" href="https://waze.com/ul?ll=31.812638,35.20368&amp;navigate=yes" target="_blank" rel="nofollow noopener"><img src="/img/waze.png" alt="" width="24" height="24" style="display:block">ניווט ב-Waze</a><a class="e-map" href="https://www.google.com/maps/search/?api=1&amp;query=31.812638,35.20368" target="_blank" rel="nofollow noopener"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21zM12 7a2.5 2.5 0 1 0 0 5a2.5 2.5 0 1 0 0-5"/></svg>פתיחה במפות</a></div></div>
 
@@ -481,14 +482,38 @@ b.querySelector('.sa-close').addEventListener('click',function(){b.hidden=true;d
 <script>window.__SB={"url":"https://mebomrqnfnbqijiuawdh.supabase.co","key":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1lYm9tcnFuZm5icWlqaXVhd2RoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzkxOTc3MDEsImV4cCI6MjA1NDc3MzcwMX0.OSpzG4pnsgIiOEefWK0Z29ZHOo12bIhp0QXTdk2Hsg4"};</script>
 <script>(function(){
 var API=window.__SB||null,el=document.querySelector('[data-entity]'),sent=0;
-function count(){if(!API||sent)return;sent=1;try{fetch(API.url+'/rest/v1/rpc/increment_entity_contact',{method:'POST',keepalive:true,
+function count(){if(!API||sent||!el.getAttribute('data-t'))return;sent=1;try{fetch(API.url+'/rest/v1/rpc/increment_entity_contact',{method:'POST',keepalive:true,
   headers:{'apikey':API.key,'Authorization':'Bearer '+API.key,'Content-Type':'application/json'},
   body:JSON.stringify({entity_id:el.getAttribute('data-id'),entity_table:el.getAttribute('data-t')})}).catch(function(){});}catch(_){}}
 var desk=window.matchMedia&&matchMedia('(hover: hover) and (pointer: fine)').matches;
 function cat(){if(!API)return;try{fetch(API.url+'/rest/v1/rpc/increment_catalog_click',{method:'POST',keepalive:true,
   headers:{'apikey':API.key,'Authorization':'Bearer '+API.key,'Content-Type':'application/json'},
   body:JSON.stringify({p_entity_id:el.getAttribute('data-id'),p_entity_table:el.getAttribute('data-t')})}).catch(function(){});}catch(_){}}
+var CT=el.getAttribute('data-ct'),got=null;
+function contact(){if(got)return got;
+  got=fetch(API.url+'/rest/v1/'+el.getAttribute('data-ctt')+'?id=eq.'+encodeURIComponent(el.getAttribute('data-id'))+'&select='+CT,{headers:{'apikey':API.key,'Authorization':'Bearer '+API.key}})
+  .then(function(r){if(!r.ok)throw 0;return r.json();}).then(function(rows){
+    var v=((rows||[])[0]||{})[CT],d=String((v&&typeof v==='object'?v.phone:v)||'').replace(/[^0-9]/g,'');if(d.indexOf('972')===0)d='0'+d.slice(3);
+    if(d.length<9)throw 0;
+    return {tel:d,show:d.length===10?d.slice(0,3)+'-'+d.slice(3):d.slice(0,2)+'-'+d.slice(2),wa:d.indexOf('05')===0?'https://wa.me/972'+d.slice(1)+'?text='+encodeURIComponent('שלום, ראיתי בשכונה את המודעה: '+document.querySelector('h1').textContent+'\n'+location.href.split('#')[0]):null};
+  });
+  got.catch(function(){got=null;});return got;}
+function reveal(c){var a=document.querySelector('.e-tel[data-ct]'),n=a.querySelector('.num');n.textContent=c.show;n.hidden=false;a.querySelector('.lbl').hidden=true;a.title='לחיצה מעתיקה';}
+function live(a,ev){
+  if(!API||!CT)return;ev.preventDefault();
+  var kind=a.getAttribute('data-ct'),n=a.querySelector('.num'),app=a.getAttribute('href'),w=null;
+  if(kind==='tel'&&desk&&n&&!n.hidden){if(navigator.clipboard){var t=n.textContent;navigator.clipboard.writeText(t).then(function(){n.textContent='הועתק ✓';setTimeout(function(){n.textContent=t;},1500);},function(){});}return;}
+  count();
+  if(kind==='wa'&&desk){try{w=window.open('about:blank','_blank');if(w)w.opener=null;}catch(_){}}
+  a.setAttribute('aria-busy','true');
+  contact().then(function(c){a.removeAttribute('aria-busy');
+    if(kind==='wa'&&c.wa){if(w)w.location.href=c.wa;else location.href=c.wa;return;}
+    if(w)w.close();
+    if(desk)reveal(c);else location.href='tel:'+c.tel;
+  },function(){a.removeAttribute('aria-busy');if(w)w.close();location.href=app;});
+}
 document.addEventListener('click',function(ev){
+  var ct=ev.target.closest('[data-ct][role=button]');if(ct){live(ct,ev);return;}
   if(ev.target.closest('.e-cat')){cat();return;}
   if(ev.target.closest('.e-wa')){count();return;}
   var a=ev.target.closest('.e-tel');if(!a)return;count();if(!desk)return;ev.preventDefault();
