@@ -329,7 +329,7 @@
   /* ── פרסום ועריכה מהאתר — כל טופס בקובץ משלו, נטען רק כשצריך.
    * post.js (יד שנייה, אבידות + ערכת כלים משותפת ShchunaKit) נטען תמיד ראשון; שאר הקבצים נשענים עליו.
    * כל קובץ רושם window.ShchunaForms[kind] = function (cid, A, extra). */
-  var FORM_JS = { post: '/js/post.js?v=3', forms: '/js/forms.js?v=1', property: '/js/property.js?v=1', prayer: '/js/prayer.js?v=1' };
+  var FORM_JS = { post: '/js/post.js?v=3', forms: '/js/forms.js?v=1', property: '/js/property.js?v=2', prayer: '/js/prayer.js?v=1' };
   var KINDS = {
     second: { js: 'post', why: 'כדי לפרסם מודעה צריך להתחבר. הטופס ייפתח מיד אחרי ההתחברות.' },
     lost: { js: 'post', why: 'כדי לפרסם אבידה או מציאה צריך להתחבר. הטופס ייפתח מיד אחרי ההתחברות.' },

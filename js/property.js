@@ -190,6 +190,7 @@
         });
       }).then(function () {
         st.files.forEach(function (x) { URL.revokeObjectURL(x.url); });
+        try { if (window.__SHCHUNA_WA_DONE) { window.__SHCHUNA_WA_DONE(); window.__SHCHUNA_WA_DONE = null; } } catch (e) {}
         var moved = finalCid !== cid && L.cname ? ' המודעה פורסמה ב' + esc(L.cname) + '.' : '';
         K.doneView(A, sale ? 'sale' : 'rent', { extra: moved + (failedImgs ? ' ' + failedImgs + ' תמונות לא הועלו — אפשר להוסיף אותן בעריכה באפליקציה.' : '') });
       }, function (e) {
@@ -204,7 +205,10 @@
   /* פרסום מהיר למתווכים — מדביקים מודעה (ופוסטר), ה-AI ממלא, ואז הטופס המלא לבדיקה ופרסום */
   function broker(cid, A) {
     K.css();
-    var st = { files: [], poster: -1 };
+    /* נכס שהגיע מוואטסאפ (עמוד /catalog/wa/): הטקסט והתמונות כבר כאן, וכשהנכס מתפרסם מודיעים לעמוד כדי שיסגור את הטיוטה */
+    var pre = window.__SHCHUNA_WA || null; window.__SHCHUNA_WA = null;
+    window.__SHCHUNA_WA_DONE = pre && pre.onDone ? pre.onDone : null;
+    var st = { files: pre ? (pre.files || []).slice(0, MAXI).map(function (x) { return { file: x, url: URL.createObjectURL(x) }; }) : [], poster: -1 };
     var d = A.open('<h2 id="sa-h">פרסום מהיר למתווכים</h2>' +
       '<p>מדביקים את המודעה כמו שהיא מוואטסאפ, ומוסיפים תמונות. אפשר לסמן תמונה אחת כ"פוסטר עם פרטים". הפרטים יתמלאו אוטומטית, ותוכלו לבדוק לפני הפרסום.</p>' +
       '<form class="sp-f" novalidate><textarea name="txt" rows="8" maxlength="6000" placeholder="הדביקו כאן את טקסט המודעה…" style="min-height:160px"></textarea>' +
@@ -212,6 +216,7 @@
       '<p class="sa-msg" hidden></p><button class="sa-b pri" type="submit">קריאה אוטומטית</button>' +
       '<button class="sa-b" type="button" data-manual>למילוי ידני</button></form>', true);
     var f = d.querySelector('form'), btn = f.querySelector('[type=submit]'), imgs = f.querySelector('[data-imgs]');
+    if (pre && pre.text) f.elements.txt.value = String(pre.text).slice(0, 6000);
     function drawImgs() {
       imgs.innerHTML = st.files.map(function (x, i) {
         return '<span class="sp-th" data-pi="' + i + '" style="cursor:pointer' + (st.poster === i ? ';outline:3px solid #2A6FB8' : '') + '"><img src="' + x.url + '" alt="">' + (st.poster === i ? '<i style="position:absolute;bottom:2px;right:2px;background:#2A6FB8;color:#fff;font-style:normal;font-size:11px;font-weight:800;padding:1px 6px;border-radius:6px">פוסטר</i>' : '') + '<button type="button" data-rm="' + i + '" aria-label="הסרת תמונה">×</button></span>';

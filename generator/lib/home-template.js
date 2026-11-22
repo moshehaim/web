@@ -757,7 +757,7 @@ export function siteFooter() {
 <nav aria-label="קישורים"><a href="/">כל השכונות</a><a href="${BIZ_PORTAL}">כניסה לבעלי עסקים</a><a href="/terms.html">תנאי שימוש</a><a href="/privacy.html">פרטיות</a></nav>
 <span class="c">© שכונה, כל הזכויות שמורות</span>
 </div></footer>
-<script src="/js/auth.js?v=10" defer></script>
+<script src="/js/auth.js?v=11" defer></script>
 <script src="/js/t.js?v=5" defer></script>`;
 }
 
