@@ -56,8 +56,11 @@
     if (sale.length && rent.length) { bits.push(sale.length + ' למכירה'); bits.push(rent.length + ' להשכרה'); }
     var lic = (C.license_no || '').trim(); if (lic) bits.push('רישיון תיווך ' + lic);
     var area = (C.service_area || '').trim();
-    $('heroArea').hidden = false;
-    $('heroArea').textContent = (area ? area + ' · ' : '') + bits.join(' · ');
+    /* בעמוד מתווך אין פתיח גדול: שורת פרטים קצרה, ומיד הנכסים (כמו בעמודי משרדים בלוחות הנדל"ן) */
+    var banner = document.querySelector('.banner'); if (banner) banner.hidden = true;
+    var intro = document.createElement('div'); intro.className = 'pintro';
+    intro.innerHTML = (C.description ? '<p>' + esc(C.description) + '</p>' : '') + '<p class="pstats">' + esc((area ? area + ' · ' : '') + bits.join(' · ')) + '</p>';
+    var all = $('all'); all.parentNode.insertBefore(intro, all);
     $('howSteps').innerHTML = [
       ['בוחרים נכס', 'עוברים על הנכסים, ומסננים לפי חדרים, מחיר וגודל.'],
       ['שולחים הודעה', 'בלחיצה אחת נפתחת הודעת וואטסאפ עם פרטי הנכס שמעניין אתכם.'],

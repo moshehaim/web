@@ -342,3 +342,8 @@ a.phone { text-decoration: none; }
 @media (max-width: 760px) { .pdlg .acts { bottom: -18px; padding-bottom: 18px; margin-bottom: -18px; } }
 .pclear { align-self: end; min-height: 44px; padding: 0 16px; border: 2px solid var(--line); border-radius: 12px; background: #fff; color: var(--strong); font: inherit; font-size: 15px; font-weight: 800; cursor: pointer; }
 .pclear[hidden] { display: none; }
+.banner[hidden] { display: none; }
+.pintro { margin-top: 22px; display: flex; flex-direction: column; gap: 6px; }
+.pintro p { margin: 0; font-size: 17px; color: var(--ink-2); max-width: 70ch; }
+.pintro .pstats { font-size: 15px; font-weight: 700; color: var(--navy); }
+.pintro + #all .pbar { margin-top: 18px; }
