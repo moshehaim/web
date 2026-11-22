@@ -347,3 +347,16 @@ a.phone { text-decoration: none; }
 .pintro p { margin: 0; font-size: 17px; color: var(--ink-2); max-width: 70ch; }
 .pintro .pstats { font-size: 15px; font-weight: 700; color: var(--navy); }
 .pintro + #all .pbar { margin-top: 18px; }
+
+/* ── עמוד מתווך: צוות המשרד והסוכן של הנכס ── */
+.pav { flex: 0 0 auto; width: 44px; height: 44px; border-radius: 50%; display: grid; place-items: center; background: var(--soft); color: var(--navy); font-weight: 800; font-size: 18px; }
+.pwho { min-width: 0; display: flex; flex-direction: column; }
+.pwho b { font-weight: 700; overflow-wrap: anywhere; }
+.pwho small { color: var(--ink-3); font-size: 13px; }
+.pmembers { margin-top: 16px; display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 12px; }
+.pmember { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; padding: 14px; border: 1px solid var(--line); border-radius: 14px; background: #fff; }
+.pmember .pwho { flex: 1 1 120px; }
+.pmacts { display: flex; gap: 8px; flex: 1 1 100%; }
+.pmacts button, .pmacts a { flex: 1 1 0; min-height: 40px; display: grid; place-items: center; border-radius: 10px; border: 1px solid var(--line); background: #fff; color: inherit; font: inherit; font-size: 14px; font-weight: 600; text-decoration: none; cursor: pointer; }
+.pmacts a { background: var(--wa); border-color: var(--wa); color: #fff; }
+.pagent { display: flex; align-items: center; gap: 12px; margin: 14px 0 0; padding: 12px; border-radius: 12px; background: var(--soft-2); border: 1px solid var(--line); }

@@ -2,12 +2,13 @@
  * הדירות אינן נשמרות בקטלוג: הן נקראות חי מטבלאות האפליקציה (approve_property, approved_rental_properties)
  * דרך הפונקציה bizcat_properties(slug), שמחזירה את הנכסים של בעל הקטלוג. כך דירה שעולה באפליקציה או באתר מופיעה כאן מיד.
  * אין רשימת בחירה: הלקוח פונה על נכס מסוים בוואטסאפ.
+ * משרד עם צוות: הפונקציה מחזירה גם את חברי הצוות (team) ואת הסוכן של כל נכס (agent). פנייה על נכס של סוכן נשלחת לוואטסאפ של הסוכן.
  * נטען מ-catalog.js רק כשסוג הקטלוג הוא properties.
  */
 (function () {
   'use strict';
-  var H, C, sale = [], rent = [], byId = {};
-  var st = { tab: 'sale', type: '', rooms: '', maxPrice: '', minArea: '', sort: 'new', open: null, img: 0 };
+  var H, C, sale = [], rent = [], byId = {}, team = [], tById = {};
+  var st = { tab: 'sale', type: '', rooms: '', maxPrice: '', minArea: '', agent: '', sort: 'new', open: null, img: 0 };
   var TYPES = { apartment: 'דירה', cottage: 'קוטג׳', duplex: 'דופלקס', penthouse: 'פנטהאוז', gardenApartment: 'דירת גן', lot: 'מגרש', business: 'נכס מסחרי', other: 'נכס' };
   var HOUSE = '<path d="M3 11.5L12 4l9 7.5"/><path d="M5.5 10v9.5h13V10"/><path d="M10 19.5v-5h4v5"/>';
   function $(id) { return document.getElementById(id); }
@@ -21,6 +22,11 @@
   function placeOf(p) { var a = (p.address || '').trim(), h = (p.hood || '').trim(); return a && h && a.indexOf(h) < 0 ? a + ', ' + h : (a || h); }
   function imgs(p) { return Array.isArray(p.images) ? p.images.filter(Boolean) : []; }
   function list() { return st.tab === 'sale' ? sale : rent; }
+  function agentOf(p) { return p && p.agent ? tById[p.agent] || null : null; }
+  function hasTeam() { return team.length > 1; }
+  function countOf(id) { return sale.concat(rent).filter(function (p) { return p.agent === id; }).length; }
+  function waOf(m, text) { var d = String(m.phone || '').replace(/[^0-9]/g, ''); if (d.indexOf('0') === 0) d = '972' + d.slice(1); return 'https://wa.me/' + d + '?text=' + encodeURIComponent(text); }
+  function initial(m) { return (m.name || '').trim().charAt(0); }
 
   function load() {
     return fetch(H.SB_URL + '/rest/v1/rpc/bizcat_properties', {
@@ -31,6 +37,7 @@
       j = j || {};
       sale = (j.sale || []).map(function (p) { p.rent = false; return p; });
       rent = (j.rent || []).map(function (p) { p.rent = true; return p; });
+      team = j.team || []; team.forEach(function (m) { tById[m.id] = m; });
       sale.concat(rent).forEach(function (p) { byId[p.id] = p; });
       if (!sale.length && rent.length) st.tab = 'rent';
     });
@@ -61,6 +68,16 @@
     var intro = document.createElement('div'); intro.className = 'pintro';
     intro.innerHTML = (C.description ? '<p>' + esc(C.description) + '</p>' : '') + '<p class="pstats">' + esc((area ? area + ' · ' : '') + bits.join(' · ')) + '</p>';
     var all = $('all'); all.parentNode.insertBefore(intro, all);
+    if (hasTeam()) {
+      var ts = document.createElement('section'); ts.id = 'pteam'; ts.setAttribute('aria-labelledby', 'pteamH');
+      ts.innerHTML = '<div class="sec-h"><h2 id="pteamH">הצוות שלנו</h2><span class="rule"></span></div><div class="pmembers">' + team.map(function (m) {
+        var n = countOf(m.id);
+        return '<div class="pmember"><span class="pav" aria-hidden="true">' + esc(initial(m)) + '</span><div class="pwho"><b>' + esc(m.name) + '</b>' + (m.title ? '<small>' + esc(m.title) + '</small>' : '') + '</div>' +
+          '<div class="pmacts">' + (n ? '<button type="button" data-pagent="' + esc(m.id) + '">' + (n === 1 ? 'נכס אחד' : n + ' נכסים') + '</button>' : '') +
+          '<a href="' + esc(waOf(m, 'שלום ' + m.name + ', הגעתי מהעמוד של ' + C.title + ' ב"שכונה".')) + '" target="_blank" rel="noopener">וואטסאפ</a></div></div>';
+      }).join('') + '</div>';
+      all.parentNode.insertBefore(ts, all.nextSibling);
+    }
     $('howSteps').innerHTML = [
       ['בוחרים נכס', 'עוברים על הנכסים, ומסננים לפי חדרים, מחיר וגודל.'],
       ['שולחים הודעה', 'בלחיצה אחת נפתחת הודעת וואטסאפ עם פרטי הנכס שמעניין אתכם.'],
@@ -77,12 +94,14 @@
   function renderBar() {
     var types = {}; list().forEach(function (p) { if (p.type) types[p.type] = 1; });
     var tk = Object.keys(types);
+    var ags = hasTeam() ? team.filter(function (m) { return list().some(function (p) { return p.agent === m.id; }); }) : [];
     $('pbar').innerHTML =
       (sale.length && rent.length ? '<div class="ptabs" role="tablist">' +
         '<button type="button" role="tab" data-ptab="sale" aria-selected="' + (st.tab === 'sale') + '">מכירה <span>' + sale.length + '</span></button>' +
         '<button type="button" role="tab" data-ptab="rent" aria-selected="' + (st.tab === 'rent') + '">השכרה <span>' + rent.length + '</span></button></div>' : '') +
       '<div class="pfilters">' +
       (tk.length > 1 ? '<label>סוג נכס<select data-pf="type">' + opt('', 'הכל', st.type) + tk.map(function (t) { return opt(t, TYPES[t] || t, st.type); }).join('') + '</select></label>' : '') +
+      (ags.length > 1 ? '<label>סוכן<select data-pf="agent">' + opt('', 'הכל', st.agent) + ags.map(function (m) { return opt(m.id, esc(m.name), st.agent); }).join('') + '</select></label>' : '') +
       '<label>חדרים<select data-pf="rooms">' + opt('', 'הכל', st.rooms) + [2, 3, 4, 5, 6].map(function (n) { return opt(n, n + '+', st.rooms); }).join('') + '</select></label>' +
       '<label>מחיר עד (₪)<input type="number" inputmode="numeric" min="0" data-pf="maxPrice" value="' + esc(st.maxPrice) + '" dir="ltr"></label>' +
       '<label>שטח מינימלי (מ״ר)<input type="number" inputmode="numeric" min="0" data-pf="minArea" value="' + esc(st.minArea) + '" dir="ltr"></label>' +
@@ -93,7 +112,7 @@
   function filtered() {
     var mp = num(st.maxPrice), ma = num(st.minArea), mr = num(st.rooms);
     var out = list().filter(function (p) {
-      return (!st.type || p.type === st.type) && (!mr || num(p.rooms) >= mr) &&
+      return (!st.type || p.type === st.type) && (!st.agent || p.agent === st.agent) && (!mr || num(p.rooms) >= mr) &&
         (!mp || (num(p.price) && num(p.price) <= mp)) && (!ma || (num(p.area) && num(p.area) >= ma));
     });
     if (st.sort !== 'new') out = out.slice().sort(function (a, b) {
@@ -109,7 +128,7 @@
       (facts.length ? '<div class="pfacts">' + facts.map(function (f) { return '<span>' + esc(f) + '</span>'; }).join('') + '</div>' : '') + '</div>' +
       '<div class="cprice' + (num(p.price) ? '' : ' ask') + '"><b>' + esc(priceTxt(p)) + '</b></div></button></article>';
   }
-  function filtering() { return !!(st.type || st.rooms || st.maxPrice || st.minArea); }
+  function filtering() { return !!(st.type || st.agent || st.rooms || st.maxPrice || st.minArea); }
   function renderGrid() {
     var l = filtered(), all = list();
     var cl = document.querySelector('[data-pclear]'); if (cl) cl.hidden = !filtering();
@@ -128,6 +147,7 @@
     sh.hidden = !p; document.body.style.overflow = p ? 'hidden' : '';
     if (!p) return;
     var im = imgs(p); if (st.img >= im.length) st.img = 0;
+    var ag = agentOf(p), waHref = ag ? waOf(ag, waText(p)) : (C.whatsapp ? H.waUrl(waText(p)) : '');
     var facts = [['חדרים', num(p.rooms) || ''], ['שטח', num(p.area) ? num(p.area) + ' מ״ר' : ''], ['קומה', floorTxt(p).replace(/^קומה /, '')], ['מצב', p.condition || ''],
       [p.rent ? 'כניסה' : 'פינוי', p.available ? new Date(p.available).toLocaleDateString('he-IL') : ''],
       ['ארנונה', p.rent && num(p.tax) ? H.fmt(num(p.tax)) + ' לחודש' : ''], ['ועד בית', p.rent && num(p.fees) ? H.fmt(num(p.fees)) + ' לחודש' : '']
@@ -147,7 +167,8 @@
       (facts.length ? '<dl class="pdl">' + facts.map(function (f) { return '<div><dt>' + esc(f[0]) + '</dt><dd>' + esc(f[1]) + '</dd></div>'; }).join('') + '</dl>' : '') +
       (feats.length ? '<div class="pfeats">' + feats.map(function (f) { return '<span>' + esc(f) + '</span>'; }).join('') + '</div>' : '') +
       (p.description ? '<p class="desc">' + esc(p.description) + '</p>' : '') +
-      '<div class="acts">' + (C.whatsapp ? '<a class="add pwa" href="' + esc(H.waUrl(waText(p))) + '" target="_blank" rel="noopener">שאלה על הנכס בוואטסאפ</a>' : '') +
+      (ag ? '<div class="pagent"><span class="pav" aria-hidden="true">' + esc(initial(ag)) + '</span><div class="pwho"><b>' + esc(ag.name) + '</b><small>' + esc(ag.title || 'הסוכן של הנכס') + '</small></div></div>' : '') +
+      '<div class="acts">' + (waHref ? '<a class="add pwa" href="' + esc(waHref) + '" target="_blank" rel="noopener">' + (ag ? 'וואטסאפ ל' + esc(ag.name.split(' ')[0]) : 'שאלה על הנכס בוואטסאפ') + '</a>' : '') +
       '<button class="share" type="button" data-pshare>' + H.ico('<circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="M8.6 13.5l6.8 4M15.4 6.5l-6.8 4"/>') + '<span>העתקת קישור</span></button></div></div>';
   }
   function openProp(id) { if (!byId[id]) return; st.open = id; st.img = 0; renderDialog(); try { history.replaceState(null, '', '#' + id); } catch (e) {} }
@@ -155,11 +176,16 @@
 
   function bind() {
     document.addEventListener('click', function (e) {
-      var t = e.target.closest('[data-ptab],[data-popen],[data-pclose],[data-pimg],[data-pshare],[data-pclear],[data-go]');
+      var t = e.target.closest('[data-ptab],[data-popen],[data-pclose],[data-pimg],[data-pshare],[data-pclear],[data-pagent],[data-go]');
       if (!t) { if (e.target.id === 'pshade') closeProp(); return; }
       var d = t.dataset;
-      if (d.ptab) { st.tab = d.ptab; st.type = ''; renderBar(); renderGrid(); }
-      else if (d.pclear) { st.type = ''; st.rooms = ''; st.maxPrice = ''; st.minArea = ''; renderBar(); renderGrid(); }
+      if (d.ptab) { st.tab = d.ptab; st.type = ''; st.agent = ''; renderBar(); renderGrid(); }
+      else if (d.pagent) {
+        st.type = ''; st.rooms = ''; st.maxPrice = ''; st.minArea = ''; st.agent = d.pagent;
+        if (!list().some(function (p) { return p.agent === d.pagent; })) st.tab = st.tab === 'sale' ? 'rent' : 'sale';
+        renderBar(); renderGrid(); $('all').scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+      else if (d.pclear) { st.type = ''; st.agent = ''; st.rooms = ''; st.maxPrice = ''; st.minArea = ''; renderBar(); renderGrid(); }
       else if (d.popen) openProp(d.popen);
       else if ('pclose' in d) closeProp();
       else if (d.pimg) { var n = imgs(byId[st.open]).length; st.img = (st.img + Number(d.pimg) + n) % n; renderDialog(); }
