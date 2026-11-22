@@ -393,11 +393,11 @@
       '<label for="sTitle">שם העסק בעמוד *</label><input id="sTitle" maxlength="60" value="' + esc(C.title) + '">' +
       (!PLUS() ? '' : '<span class="flabel">לוגו (לא חובה)</span><div class="logo-row"><span class="logo-pv">' + (C.header_image_url ? '<img src="' + esc(C.header_image_url) + '" alt="">' : '') + '</span>' +
       '<label class="btn-sm filebtn">' + (C.header_image_url ? 'החלפת לוגו' : 'העלאת לוגו') + '<input type="file" id="sLogo" accept="image/*"></label>' +
-      (C.header_image_url ? '<button type="button" class="btn-sm" data-logodel="1">הסרה</button>' : '') + '</div><span class="hint">בלי לוגו מוצג ציור של הקטגוריה הראשונה.</span>') +
-      '<label for="sHead">כותרת ראשית</label><input id="sHead" maxlength="80" value="' + esc(C.headline) + '" placeholder="למשל: כל הציוד לאירוע שלכם, במקום אחד!"><span class="hint">מה שכתוב אחרי הפסיק האחרון מודגש בצבע.</span>' +
+      (C.header_image_url ? '<button type="button" class="btn-sm" data-logodel="1">הסרה</button>' : '') + '</div><span class="hint">' + (PROPS() ? 'בלי לוגו מוצג ציור של בית.' : 'בלי לוגו מוצג ציור של הקטגוריה הראשונה.') + '</span>') +
+      '<label for="sHead">כותרת ראשית</label><input id="sHead" maxlength="80" value="' + esc(C.headline) + '" placeholder="' + (PROPS() ? 'למשל: הנכסים שלנו, בשכונה שלכם' : 'למשל: כל הציוד לאירוע שלכם, במקום אחד!') + '"><span class="hint">מה שכתוב אחרי הפסיק האחרון מודגש בצבע.</span>' +
       '<label for="sDesc">תיאור קצר</label><input id="sDesc" maxlength="160" value="' + esc(C.description) + '">' +
       '<label for="sArea">אזור שירות</label><input id="sArea" maxlength="120" value="' + esc(C.service_area) + '" placeholder="למשל: ירושלים, מבשרת, מעלה אדומים וגוש עציון"><span class="hint">טקסט חופשי. אם ריק, לא מוצג בעמוד.</span>' +
-      '<div class="two"><div><label for="sWa">וואטסאפ להזמנות *</label><input id="sWa" dir="ltr" inputmode="tel" value="' + esc(waLocal(C.whatsapp)) + '"></div>' +
+      '<div class="two"><div><label for="sWa">' + (PROPS() ? 'וואטסאפ לפניות' : 'וואטסאפ להזמנות') + ' *</label><input id="sWa" dir="ltr" inputmode="tel" value="' + esc(waLocal(C.whatsapp)) + '"></div>' +
       '<div><label for="sPhone">טלפון</label><input id="sPhone" dir="ltr" inputmode="tel" value="' + esc(C.phone) + '"></div></div>' +
       '<label class="chk"><input type="checkbox" id="sShow"' + (C.show_phone ? ' checked' : '') + '> להציג את מספר הטלפון בעמוד (אם לא מסומן, מופיע רק כפתור "חיוג")</label>' +
       (PROPS() ? '<label for="sLic">מספר רישיון תיווך (לא חובה)</label><input id="sLic" maxlength="20" dir="ltr" inputmode="numeric" value="' + esc(C.license_no) + '"><span class="hint">אם ממלאים, המספר מוצג בראש העמוד.</span>' : '') +
@@ -408,9 +408,9 @@
       '<span class="hint">הבחירה נשמרת בלחיצה על "שמירה". <a id="palPeek" href="/catalog/' + esc(C.slug) + '/?palette=' + esc(C.palette) + '" target="_blank" rel="noopener">הצצה בעמוד בסגנון שנבחר</a></span>') +
       (PLUS() && 'hero_image_url' in C ? '<span class="flabel">תמונת פתיחה (לא חובה)</span><div class="logo-row"><span class="hero-pv">' + (C.hero_image_url ? '<img src="' + esc(C.hero_image_url) + '" alt="">' : '') + '</span>' +
         '<label class="btn-sm filebtn">' + (C.hero_image_url ? 'החלפת תמונה' : 'העלאת תמונה') + '<input type="file" id="sHero" accept="image/*"></label>' +
-        (C.hero_image_url ? '<button type="button" class="btn-sm" data-herodel="1">הסרה</button>' : '') + '</div><span class="hint">תמונה רחבה של הציוד, בלי אנשים. מוצגת ברקע של ראש העמוד, מאחורי הכותרת.</span>' : '') +
+        (C.hero_image_url ? '<button type="button" class="btn-sm" data-herodel="1">הסרה</button>' : '') + '</div><span class="hint">' + (PROPS() ? 'תמונה רחבה, למשל של השכונה או של נכס, בלי אנשים.' : 'תמונה רחבה של הציוד, בלי אנשים.') + ' מוצגת ברקע של ראש העמוד, מאחורי הכותרת.</span>' : '') +
       (PLUS() && 'faq' in C ? '<span class="flabel">שאלות נפוצות (לא חובה)</span><div id="faqRows">' + (Array.isArray(C.faq) ? C.faq : []).map(faqRow).join('') + '</div>' +
-        '<div><button type="button" class="btn-sm" data-faqadd="1">+ הוספת שאלה</button></div><span class="hint">למשל: האם יש משלוח? מה כולל המחיר? צריך פיקדון? מופיע בעמוד רק אם יש לפחות שאלה אחת עם תשובה.</span>' : '') +
+        '<div><button type="button" class="btn-sm" data-faqadd="1">+ הוספת שאלה</button></div><span class="hint">' + (PROPS() ? 'למשל: באילו שכונות אתם פועלים? כמה דמי התיווך? איך מתאמים ביקור בנכס?' : 'למשל: האם יש משלוח? מה כולל המחיר? צריך פיקדון?') + ' מופיע בעמוד רק אם יש לפחות שאלה אחת עם תשובה.</span>' : '') +
       '<div class="facts"><button type="submit" class="btn-sm primary"' + (state.busy ? ' disabled' : '') + '>שמירה</button><span class="saved" role="status">' + esc(state.saved) + '</span></div></form>';
   }
   function faqRow(f) {
