@@ -38,7 +38,7 @@
   var state = { tab: 'items', q: '', cat: '', edit: null, err: '', saved: '', arm: null, busy: false, up: '', catEdit: null };
 
   /* קטלוג מסוג "דירות" (עמוד מתווך): הנכסים אינם בטבלאות הקטלוג אלא באפליקציה. כאן רק מציגים אותם ומפנים לטופס הפרסום הקיים של האתר. */
-  var props = { sale: [], rent: [] }, propCid = '';
+  var props = { sale: [], rent: [] }, propCid = '', team = [], joinCode = '';
   function PROPS() { return !!C && C.kind === 'properties'; }
   var PTYPES = { apartment: 'דירה', cottage: 'קוטג׳', duplex: 'דופלקס', penthouse: 'פנטהאוז', gardenApartment: 'דירת גן', lot: 'מגרש', business: 'נכס מסחרי', other: 'נכס' };
   function $(id) { return document.getElementById(id); }
@@ -101,21 +101,67 @@
     }
     return Promise.all([
       sb.from('businesses').select('id').eq('user_id', user.id).eq('is_locked', true).eq('is_active', true),
-      sb.from('professionals').select('id').eq('user_id', user.id).eq('is_active', true)
+      sb.from('professionals').select('id').eq('user_id', user.id).eq('is_active', true),
+      sb.from('bizcat_members').select('catalog_id').eq('user_id', user.id).eq('role', 'manager')   /* מנהל במשרד שאינו בעל העסק */
     ]).then(function (rs) {
       var ids = ok(rs[0]).concat(ok(rs[1])).map(function (x) { return x.id; });
-      if (!ids.length) return [];
-      return sb.from('bizcat_catalogs').select('*').in('entity_id', ids).order('created_at', { ascending: true }).then(ok);
+      var mine = (rs[2].error ? [] : rs[2].data || []).map(function (x) { return x.catalog_id; });
+      return Promise.all([
+        ids.length ? sb.from('bizcat_catalogs').select('*').in('entity_id', ids).order('created_at', { ascending: true }).then(ok) : [],
+        mine.length ? sb.from('bizcat_catalogs').select('*').in('id', mine).then(ok) : []
+      ]).then(function (ls) {
+        var out = ls[0].slice();
+        ls[1].forEach(function (c) { if (!out.some(function (x) { return x.id === c.id; })) out.push(c); });
+        return out;
+      });
     });
   }
   function loadProps() {
     return sb.rpc('bizcat_properties', { p_slug: C.slug }).then(function (r) { var j = ok(r) || {}; props = { sale: j.sale || [], rent: j.rent || [] }; });
   }
+  function loadTeam() {
+    return sb.from('bizcat_members').select('*').eq('catalog_id', C.id).then(function (r) {
+      team = (r.error ? [] : r.data || []).sort(function (a, b) { return ((b.role === 'manager') - (a.role === 'manager')) || bySort(a, b); });
+    });
+  }
+  function memberOf(id) { for (var i = 0; i < team.length; i++) if (team[i].id === id) return team[i]; return null; }
+  function joinUrl() { return 'https://shchuna.co.il/catalog/join/?c=' + encodeURIComponent(C.slug) + '&k=' + joinCode; }
+  function loadJoinCode() { return sb.rpc('bizcat_join_code', { p_catalog_id: C.id }).then(function (r) { joinCode = ok(r) || ''; }); }
+  function rotateJoin() {
+    sb.rpc('bizcat_rotate_join_code', { p_catalog_id: C.id }).then(function (r) { joinCode = ok(r) || ''; state.arm = null; render(); toast('הקישור הוחלף. הקישור הקודם כבר לא פעיל.'); }).catch(fail);
+  }
+  function removeMember(id) {
+    sb.rpc('bizcat_remove_member', { p_member_id: id }).then(function (r) {
+      ok(r); state.arm = null;
+      return Promise.all([loadTeam(), loadProps()]);
+    }).then(function () { render(); toast('הסוכן הוסר מהצוות'); }).catch(fail);
+  }
+  function viewTeam() {
+    var all = props.sale.concat(props.rent);
+    var msg = 'הצטרפות לצוות של ' + C.title + ' בשכונה:\n' + joinUrl();
+    return (state.err ? '<p class="ferr" role="alert">' + esc(state.err) + '</p>' : '') +
+      '<div class="aform"><h2>צירוף סוכן למשרד</h2>' +
+      '<p class="info" style="margin:0">שולחים לסוכן את הקישור. הוא נכנס עם החשבון שלו בשכונה, מאשר את השם שיוצג, ומצטרף. מאותו רגע הנכסים שהוא מפרסם בשכונה מופיעים בעמוד המשרד, עם השם והוואטסאפ שלו.</p>' +
+      (joinCode ? '<label for="jLink">קישור הצטרפות</label><input id="jLink" readonly dir="ltr" value="' + esc(joinUrl()) + '">' +
+        '<div class="atool"><button type="button" class="btn-sm primary" data-joincopy="1">העתקת הקישור</button>' +
+        '<a class="btn-sm" href="https://wa.me/?text=' + encodeURIComponent(msg) + '" target="_blank" rel="noopener">שליחה בוואטסאפ</a>' +
+        '<button type="button" class="btn-sm danger push" data-joinrotate="1">' + (state.arm === 'rotate' ? 'לחצו שוב כדי להחליף' : 'החלפת הקישור') + '</button></div>' +
+        '<span class="hint">מי שמחזיק בקישור יכול להצטרף לצוות. אם הקישור הגיע למי שלא צריך, מחליפים אותו והקודם מפסיק לעבוד.</span>'
+        : '<p class="aempty">לא הצלחנו לטעון את קישור ההצטרפות. נסו לרענן את העמוד.</p>') + '</div>' +
+      '<div class="atable" style="margin-top:16px"><div class="arow ahd trow"><span>שם</span><span class="ct">תפקיד</span><span class="ct">נכסים</span><span></span></div>' +
+      (team.map(function (m) {
+        var n = all.filter(function (p) { return p.agent === m.id; }).length;
+        return '<div class="arow trow"><span class="nm">' + esc(m.display_name) + '<br><small dir="ltr">' + esc(m.phone) + '</small></span>' +
+          '<span class="ct">' + (m.role === 'manager' ? 'מנהל' : esc(m.title || 'סוכן')) + '</span><span class="ct">' + n + '</span>' +
+          '<span>' + (m.role === 'agent' ? '<button type="button" class="btn-sm danger" data-memberdel="' + esc(m.id) + '">' + (state.arm === 'member:' + m.id ? 'לחצו שוב להסרה' : 'הסרה') + '</button>' : '') + '</span></div>';
+      }).join('') || '<p class="aempty">עדיין אין חברי צוות. שלחו את קישור ההצטרפות לסוכנים של המשרד.</p>') + '</div>' +
+      '<p class="info">הסרת סוכן מורידה את הנכסים שלו מעמוד המשרד. הנכסים עצמם נשארים אצלו בשכונה. מנהלים נקבעים על ידי שכונה: להוספה או להסרה של מנהל כתבו לנו, <a href="mailto:info@shchuna.co.il">info@shchuna.co.il</a></p>';
+  }
   function openCatalog(c) {
     C = c;
     if (PROPS()) {
       /* השכונה של העסק — נדרשת לטופס הפרסום (השכונה של הנכס עצמו נקבעת לפי הרחוב) */
-      return Promise.all([loadProps(), sb.from(C.entity_table === 'professionals' ? 'professionals' : 'businesses').select('community_id').eq('id', C.entity_id).maybeSingle()]).then(function (rs) {
+      return Promise.all([loadProps(), sb.from(C.entity_table === 'professionals' ? 'professionals' : 'businesses').select('community_id').eq('id', C.entity_id).maybeSingle(), loadTeam(), loadJoinCode().catch(function () { joinCode = ''; })]).then(function (rs) {
         propCid = (ok(rs[1]) || {}).community_id || '';
         $('gate').hidden = true; $('adminView').hidden = false; render();
       });
@@ -144,12 +190,12 @@
     return '<div class="atool">' + (propCid ? post('broker', 'פרסום מהיר מטקסט') + post('sale', '+ נכס למכירה') + post('rent', '+ נכס להשכרה') : '') +
       '<button class="btn-sm push" type="button" data-reload="1">רענון הרשימה</button></div>' +
       (state.err ? '<p class="ferr" role="alert">' + esc(state.err) + '</p>' : '') +
-      '<p class="info">הנכסים כאן הם הנכסים שפרסמתם בשכונה עם החשבון הזה. נכס חדש מופיע מיד בעמוד שלכם ובאפליקציה. עריכה והסרה של נכס: באפליקציה, עם אותו חשבון.</p>' +
+      '<p class="info">' + (team.length ? 'הנכסים כאן הם של המשרד ושל חברי הצוות. כל אחד מפרסם עם החשבון שלו בשכונה, והנכס מופיע מיד בעמוד המשרד ובאפליקציה. עריכה והסרה של נכס: באפליקציה, בחשבון של מי שפרסם אותו.' : 'הנכסים כאן הם הנכסים שפרסמתם בשכונה עם החשבון הזה. נכס חדש מופיע מיד בעמוד שלכם ובאפליקציה. עריכה והסרה של נכס: באפליקציה, עם אותו חשבון.') + '</p>' +
       '<div class="atable"><div class="arow ahd prow"><span>תמונה</span><span>נכס</span><span class="ct">סוג</span><span>מחיר</span></div>' +
       (all.map(function (x) {
         var p = x.p, im = Array.isArray(p.images) && p.images[0];
         return '<div class="arow prow"><span class="th">' + (im ? '<img src="' + esc(im) + '" alt="" loading="lazy">' : '') + '</span>' +
-          '<span class="nm">' + esc((PTYPES[p.type] || 'נכס') + (p.rooms ? ', ' + p.rooms + ' חדרים' : '')) + '<br><small>' + esc([p.address, p.hood].filter(Boolean).join(', ')) + '</small></span>' +
+          '<span class="nm">' + esc((PTYPES[p.type] || 'נכס') + (p.rooms ? ', ' + p.rooms + ' חדרים' : '')) + '<br><small>' + esc([p.address, p.hood].filter(Boolean).join(', ')) + (memberOf(p.agent) ? ' · ' + esc(memberOf(p.agent).display_name) : '') + '</small></span>' +
           '<span class="ct">' + (x.rent ? 'השכרה' : 'מכירה') + '</span>' +
           '<span class="pr">' + (p.price ? fmt(p.price) + (x.rent ? ' לחודש' : '') : 'לא צוין') + '</span></div>';
       }).join('') || '<p class="aempty">עדיין אין נכסים בחשבון הזה. לחצו "פרסום מהיר מטקסט" כדי לפרסם את הראשון.</p>') + '</div>';
@@ -480,18 +526,23 @@
     var tabItems = document.querySelector('.atabs [data-tab="items"]'), tabCats = document.querySelector('.atabs [data-tab="cats"]');
     tabCats.hidden = PROPS(); tabItems.firstChild.nodeValue = PROPS() ? 'נכסים ' : 'פריטים ';
     if (PROPS() && state.tab === 'cats') state.tab = 'items';
+    var tabTeam = document.querySelector('.atabs [data-tab="team"]'); tabTeam.hidden = !PROPS(); if (!PROPS() && state.tab === 'team') state.tab = 'items';
+    $('tTeam').textContent = '(' + team.length + ')';
     $('tItems').textContent = '(' + (PROPS() ? props.sale.length + props.rent.length : items.length) + ')'; $('tCats').textContent = '(' + cats.length + ')';
-    $('abody').innerHTML = state.tab === 'items' ? (PROPS() ? viewProps() : viewItems()) : state.tab === 'cats' ? viewCats() : viewSettings();
+    $('abody').innerHTML = state.tab === 'items' ? (PROPS() ? viewProps() : viewItems()) : state.tab === 'cats' ? viewCats() : state.tab === 'team' ? viewTeam() : viewSettings();
     if (keep && $(keep) && $(keep).type !== 'file') { $(keep).focus(); try { if (pos != null) $(keep).setSelectionRange(pos, pos); } catch (e) {} }
   }
   function arm(key, fn) { if (state.arm !== key) { state.arm = key; render(); } else fn(); }
 
   document.addEventListener('click', function (e) {
     if (!C) return;
-    var t = e.target.closest('[data-tab],[data-new],[data-edit],[data-flip],[data-itemup],[data-itemdown],[data-cancel],[data-del],[data-imgdel],[data-imgfirst],[data-catup],[data-catdown],[data-catedit],[data-catcancel],[data-catdel],[data-copyaddr],[data-logodel],[data-herodel],[data-faqadd],[data-faqdel],[data-pal],[data-reload]');
+    var t = e.target.closest('[data-tab],[data-new],[data-edit],[data-flip],[data-itemup],[data-itemdown],[data-cancel],[data-del],[data-imgdel],[data-imgfirst],[data-catup],[data-catdown],[data-catedit],[data-catcancel],[data-catdel],[data-copyaddr],[data-logodel],[data-herodel],[data-faqadd],[data-faqdel],[data-pal],[data-reload],[data-joincopy],[data-joinrotate],[data-memberdel]');
     if (!t || t.disabled) return;
     var d = t.dataset;
     if (d.reload) { state.err = ''; loadProps().then(function () { render(); toast('הרשימה עודכנה'); }).catch(fail); return; }
+    if (d.joincopy) { try { navigator.clipboard.writeText(joinUrl()).then(function () { t.textContent = 'הועתק ✓'; }, function () { $('jLink').select(); }); } catch (err) { $('jLink').select(); } return; }
+    if (d.joinrotate) { arm('rotate', rotateJoin); return; }
+    if (d.memberdel) { arm('member:' + d.memberdel, function () { removeMember(d.memberdel); }); return; }
     if (d.tab) { state.tab = d.tab; state.edit = null; state.err = ''; state.saved = ''; state.arm = null; state.catEdit = null; state.up = ''; render(); }
     else if (d.new && items.length >= lim().items) { state.err = 'המסלול הבסיסי כולל עד ' + lim().items + ' פריטים. ' + UPSELL; render(); }
     else if (d.new) { state.edit = 'new'; state.err = ''; state.up = ''; render(); $('fName').focus(); window.scrollTo(0, 0); }

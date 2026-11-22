@@ -155,3 +155,17 @@ label.aimg.add input { position: absolute; inset: 0; opacity: 0; cursor: pointer
 .arow.prow .nm small { color: var(--ink-3); font-weight: 400; }
 .arow.prow .th { background: var(--soft); }
 @media (max-width: 760px) { .arow.prow { grid-template-columns: 44px minmax(0, 1fr) auto; } .arow.prow .ct { display: none; } }
+
+/* צוות משרד */
+.arow.trow { grid-template-columns: minmax(0, 1fr) 110px 70px 130px; }
+.arow.trow .nm small { color: var(--ink-3); font-weight: 400; }
+.arow.trow > span:last-child { text-align: end; }
+@media (max-width: 760px) { .arow.trow { grid-template-columns: minmax(0, 1fr) auto auto; } .arow.trow .ct:nth-child(3) { display: none; } }
+/* עמוד הצטרפות לצוות */
+.gate.join { text-align: start; align-items: stretch; }
+.gate.join h1, .gate.join .lead { text-align: center; }
+.gate.join label { font-size: 14px; font-weight: 700; margin-top: 4px; }
+.gate.join input { width: 100%; min-height: 46px; border-radius: 10px; border: 1px solid #C9D1DC; padding: 10px 12px; background: #fff; font-size: 16px; }
+.gate.join input[readonly] { background: var(--soft-2); color: var(--ink-2); }
+.gate.join .btn { width: 100%; }
+.gate.join .linkbtn { background: none; border: 0; padding: 8px; color: #A0262B; font-weight: 700; cursor: pointer; text-decoration: underline; align-self: center; }
