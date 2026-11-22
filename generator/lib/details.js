@@ -166,7 +166,8 @@ export function shapeDetails(raw, community) {
         CONDITION[r.property_condition], r.available_date && `כניסה: ${dateHe(r.available_date)}`, r.is_broker ? 'באמצעות תיווך' : '',
         r.municipal_tax > 0 && `ארנונה ${ils(r.municipal_tax)}`, r.maintenance_fees > 0 && `ועד ${ils(r.maintenance_fees)}`].filter(Boolean),
       sections: [{ title: 'מה יש בנכס', chips: [yes(r.has_elevator, 'מעלית'), yes(r.has_parking, r.parking_spots > 1 ? `${r.parking_spots} חניות` : 'חניה'), yes(r.has_storage, 'מחסן'), yes(r.has_balcony, r.balcony_area_in_sqm ? `מרפסת ${r.balcony_area_in_sqm} מ״ר` : 'מרפסת'), yes(r.has_sukkah_balcony, 'מרפסת סוכה'), yes(r.has_safe_room, 'ממ״ד'), yes(r.has_rental_units, 'יחידת דיור'), yes(r.includes_furniture, 'מרוהטת')].filter(Boolean) }],
-      where: r.full_address || community.neighborhood, lat: r.latitude, lng: r.longitude, owner: 'user', appOnly: true });
+      where: r.full_address || community.neighborhood, lat: r.latitude, lng: r.longitude, owner: 'user', appOnly: true,
+      contactCol: kind === 'להשכרה' ? 'renter_contact' : 'seller_contact' });
   };
   raw.sale.forEach((r) => home(r, 'למכירה', r.asking_price));
   raw.rent.forEach((r) => home(r, 'להשכרה', r.monthly_rent));

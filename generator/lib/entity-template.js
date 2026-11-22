@@ -61,6 +61,7 @@ const CSS = `
 .e-acts a{height:50px;border-radius:14px;display:flex;align-items:center;justify-content:center;gap:8px;font-weight:800;font-size:16px;text-decoration:none}
 .e-tel{background:var(--navy);color:#fff}.e-tel:hover{color:#fff;background:#0F1F3B}
 .e-tel .num{font-variant-numeric:tabular-nums}
+[aria-busy=true]{opacity:.6;pointer-events:none}
 .e-wa{background:#E7F7EC;color:#14532D}.e-wa:hover{color:#14532D}
 .e-waze{background:#E3F4FB;color:#0E7FAE}.e-waze:hover{color:#0E7FAE}
 .e-map{background:#EFF4FF;color:var(--navy)}.e-map:hover{color:var(--navy)}
@@ -151,6 +152,11 @@ export function detailPage(vm, e, { base, home, kind, listLabel, ldType, listHre
   const acts = [];
   if (e.phone && !e.appOnly) acts.push(`<a class="e-tel" href="${esc(e.phone.tel)}" data-num="${esc(e.phone.display)}">${svg(ICON.phone, 19, 'currentColor', 2.2)}<span class="lbl">התקשרו</span><span class="num" dir="ltr" hidden>${esc(e.phone.display)}</span></a>`);
   if (e.phone?.wa && !e.appOnly) acts.push(`<a class="e-wa" href="${esc(e.phone.wa)}" target="_blank" rel="noopener">${svg(ICON.wa, 19, 'currentColor', 2)}WhatsApp</a>`);
+  // מודעות של משתמשים (נכסים): המספר לא נכתב בעמוד. הוא נקרא מהשרת רק בלחיצה על הכפתור (ראו contact() בסקריפט למטה).
+  if (e.contactCol) {
+    acts.push(`<a class="e-tel" href="${APP}" role="button" data-ct="tel">${svg(ICON.phone, 19, 'currentColor', 2.2)}<span class="lbl">התקשרו</span><span class="num" dir="ltr" hidden></span></a>`);
+    acts.push(`<a class="e-wa" href="${APP}" role="button" data-ct="wa">${svg(ICON.wa, 19, 'currentColor', 2)}WhatsApp</a>`);
+  }
   if (e.providerHref) acts.push(`<a class="e-map" href="${esc(e.providerHref)}">לעמוד העסק</a>`);
   // קביעת תור: ישר לעסק באתר הדינמי (/app/business/<id> → EntityLinkScreen עם "קבע תור")
   const bookPath = e.table === 'professionals' ? 'professional' : e.table === 'businesses' ? 'business' : null;
@@ -174,7 +180,31 @@ var desk=window.matchMedia&&matchMedia('(hover: hover) and (pointer: fine)').mat
 function cat(){if(!API)return;try{fetch(API.url+'/rest/v1/rpc/increment_catalog_click',{method:'POST',keepalive:true,
   headers:{'apikey':API.key,'Authorization':'Bearer '+API.key,'Content-Type':'application/json'},
   body:JSON.stringify({p_entity_id:el.getAttribute('data-id'),p_entity_table:el.getAttribute('data-t')})}).catch(function(){});}catch(_){}}
+var CT=el.getAttribute('data-ct'),got=null;
+function contact(){if(got)return got;
+  got=fetch(API.url+'/rest/v1/'+el.getAttribute('data-t')+'?id=eq.'+encodeURIComponent(el.getAttribute('data-id'))+'&select='+CT,{headers:{'apikey':API.key,'Authorization':'Bearer '+API.key}})
+  .then(function(r){if(!r.ok)throw 0;return r.json();}).then(function(rows){
+    var d=String((((rows||[])[0]||{})[CT]||{}).phone||'').replace(/[^0-9]/g,'');if(d.indexOf('972')===0)d='0'+d.slice(3);
+    if(d.length<9)throw 0;
+    return {tel:d,show:d.length===10?d.slice(0,3)+'-'+d.slice(3):d.slice(0,2)+'-'+d.slice(2),wa:/^05[0-9]{8}$/.test(d)?'https://wa.me/972'+d.slice(1)+'?text='+encodeURIComponent('שלום, ראיתי בשכונה את המודעה: '+document.querySelector('h1').textContent+'\\n'+location.href.split('#')[0]):null};
+  });
+  got.catch(function(){got=null;});return got;}
+function reveal(c){var a=document.querySelector('.e-tel[data-ct]'),n=a.querySelector('.num');n.textContent=c.show;n.hidden=false;a.querySelector('.lbl').hidden=true;a.title='לחיצה מעתיקה';}
+function live(a,ev){
+  if(!API||!CT)return;ev.preventDefault();
+  var kind=a.getAttribute('data-ct'),n=a.querySelector('.num'),app=a.getAttribute('href'),w=null;
+  if(kind==='tel'&&desk&&n&&!n.hidden){if(navigator.clipboard){var t=n.textContent;navigator.clipboard.writeText(t).then(function(){n.textContent='הועתק ✓';setTimeout(function(){n.textContent=t;},1500);},function(){});}return;}
+  count();
+  if(kind==='wa'&&desk){try{w=window.open('about:blank','_blank');if(w)w.opener=null;}catch(_){}}
+  a.setAttribute('aria-busy','true');
+  contact().then(function(c){a.removeAttribute('aria-busy');
+    if(kind==='wa'&&c.wa){if(w)w.location.href=c.wa;else location.href=c.wa;return;}
+    if(w)w.close();
+    if(desk)reveal(c);else location.href='tel:'+c.tel;
+  },function(){a.removeAttribute('aria-busy');if(w)w.close();location.href=app;});
+}
 document.addEventListener('click',function(ev){
+  var ct=ev.target.closest('[data-ct][role=button]');if(ct){live(ct,ev);return;}
   if(ev.target.closest('.e-cat')){cat();return;}
   if(ev.target.closest('.e-wa')){count();return;}
   var a=ev.target.closest('.e-tel');if(!a)return;count();if(!desk)return;ev.preventDefault();
@@ -190,7 +220,7 @@ var r=document.querySelector('.hrow[data-d="'+dow+'"]');if(r)r.classList.add('to
 
 ${siteHeader(vm, home, navChips(home, kind))}
 
-<main id="main" data-entity data-id="${esc(e.id)}" data-t="${esc(e.table)}">
+<main id="main" data-entity data-id="${esc(e.id)}" data-t="${esc(e.table)}"${e.contactCol ? ` data-ct="${esc(e.contactCol)}"` : ''}>
 <section class="e-hero" aria-label="כותרת"><div class="wrap">
 <nav class="crumb" aria-label="פירורי לחם"><a href="${home}">${esc(vm.name)}</a> · <a href="${listHref || `${home}${kind}/`}">${esc(listLabel)}</a> · ${esc(e.name)}</nav>
 <h1>${esc(e.name)}</h1>${e.price ? `<span class="e-price">${esc(e.price)}</span>` : ''}
