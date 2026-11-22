@@ -38,6 +38,13 @@
 
   /* ── מסגרת: מסתירים את חלקי קטלוג המוצרים ומוסיפים לשוניות וסינון ── */
   function frame() {
+    /* ניסוחים שמתאימים למתווך במקום לקטלוג מוצרים */
+    document.title = C.title + ' | נכסים בשכונה';
+    var md = document.querySelector('meta[name=description]'); if (md) md.setAttribute('content', (C.description || C.title) + ' — עמוד מתווך בשכונה');
+    var topr = document.querySelector('.topr span'); if (topr) topr.textContent = 'עמוד מתווך בשכונה';
+    var pv = $('preview'); if (pv && pv.firstChild) pv.firstChild.nodeValue = 'תצוגה מקדימה — העמוד עדיין לא פורסם, ורק אתם רואים אותו. ';
+    var db = $('demoBar'); if (db && !db.hidden) db.innerHTML = 'זו <b>הדגמה</b> של עמוד מתווך בשכונה. המשרד לדוגמה בלבד.';
+    document.querySelectorAll('[data-wa]').forEach(function (a) { if (C.whatsapp) a.href = H.waUrl('שלום, הגעתי מהעמוד שלכם ב"שכונה".'); });
     if (!C.header_image_url) ['logoMark', 'logoMark2'].forEach(function (id) { $(id).innerHTML = H.ico(HOUSE); });
     ['cats', 'featuredSec', 'note'].forEach(function (id) { var el = $(id); if (el) el.hidden = true; });
     var s = document.querySelector('.search'); if (s) s.hidden = true;
