@@ -337,3 +337,6 @@ a.phone { text-decoration: none; }
 .pdlg .gcount { position: absolute; bottom: 12px; left: 50%; transform: translateX(-50%); background: rgba(18,24,48,.72); color: #fff; font-size: 13px; font-weight: 700; padding: 3px 12px; border-radius: 999px; font-variant-numeric: tabular-nums; }
 .pdlg .acts .pwa { display: inline-flex; align-items: center; justify-content: center; text-decoration: none; background: #17794F; color: #fff; border: 0; border-radius: 999px; font-weight: 800; padding: 0 20px; }
 @media (max-width: 760px) { .pfilters { grid-template-columns: 1fr 1fr; } .ptabs { align-self: stretch; } .ptabs button { flex: 1; justify-content: center; } }
+/* בתיאור ארוך כפתור הוואטסאפ נשאר גלוי בתחתית החלון */
+.pdlg .acts { position: sticky; bottom: -26px; background: #fff; padding: 12px 0 26px; margin-bottom: -26px; }
+@media (max-width: 760px) { .pdlg .acts { bottom: -18px; padding-bottom: 18px; margin-bottom: -18px; } }
