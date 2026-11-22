@@ -140,8 +140,8 @@
   }
   function viewProps() {
     var all = props.sale.map(function (p) { return { p: p, rent: false }; }).concat(props.rent.map(function (p) { return { p: p, rent: true }; }));
-    var post = function (k, label) { return '<button class="btn-sm' + (k === 'broker' ? '' : ' primary') + '" type="button" data-post="' + k + '" data-c="' + esc(propCid) + '">' + label + '</button>'; };
-    return '<div class="atool">' + (propCid ? post('sale', '+ נכס למכירה') + post('rent', '+ נכס להשכרה') + post('broker', 'פרסום מהיר מטקסט') : '') +
+    var post = function (k, label) { return '<button class="btn-sm' + (k === 'broker' ? ' primary' : '') + '" type="button" data-post="' + k + '" data-c="' + esc(propCid) + '">' + label + '</button>'; };
+    return '<div class="atool">' + (propCid ? post('broker', 'פרסום מהיר מטקסט') + post('sale', '+ נכס למכירה') + post('rent', '+ נכס להשכרה') : '') +
       '<button class="btn-sm push" type="button" data-reload="1">רענון הרשימה</button></div>' +
       (state.err ? '<p class="ferr" role="alert">' + esc(state.err) + '</p>' : '') +
       '<p class="info">הנכסים כאן הם הנכסים שפרסמתם בשכונה עם החשבון הזה. נכס חדש מופיע מיד בעמוד שלכם ובאפליקציה. עריכה והסרה של נכס: באפליקציה, עם אותו חשבון.</p>' +
@@ -152,7 +152,7 @@
           '<span class="nm">' + esc((PTYPES[p.type] || 'נכס') + (p.rooms ? ', ' + p.rooms + ' חדרים' : '')) + '<br><small>' + esc([p.address, p.hood].filter(Boolean).join(', ')) + '</small></span>' +
           '<span class="ct">' + (x.rent ? 'השכרה' : 'מכירה') + '</span>' +
           '<span class="pr">' + (p.price ? fmt(p.price) + (x.rent ? ' לחודש' : '') : 'לא צוין') + '</span></div>';
-      }).join('') || '<p class="aempty">עדיין אין נכסים בחשבון הזה. לחצו "+ נכס למכירה" או "+ נכס להשכרה" כדי לפרסם את הראשון.</p>') + '</div>';
+      }).join('') || '<p class="aempty">עדיין אין נכסים בחשבון הזה. לחצו "פרסום מהיר מטקסט" כדי לפרסם את הראשון.</p>') + '</div>';
   }
   function viewItems() {
     if (state.edit) return itemForm();

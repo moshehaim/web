@@ -340,3 +340,5 @@ a.phone { text-decoration: none; }
 /* בתיאור ארוך כפתור הוואטסאפ נשאר גלוי בתחתית החלון */
 .pdlg .acts { position: sticky; bottom: -26px; background: #fff; padding: 12px 0 26px; margin-bottom: -26px; }
 @media (max-width: 760px) { .pdlg .acts { bottom: -18px; padding-bottom: 18px; margin-bottom: -18px; } }
+.pclear { align-self: end; min-height: 44px; padding: 0 16px; border: 2px solid var(--line); border-radius: 12px; background: #fff; color: var(--strong); font: inherit; font-size: 15px; font-weight: 800; cursor: pointer; }
+.pclear[hidden] { display: none; }

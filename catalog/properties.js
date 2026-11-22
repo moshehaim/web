@@ -77,6 +77,7 @@
       '<label>מחיר עד (₪)<input type="number" inputmode="numeric" min="0" data-pf="maxPrice" value="' + esc(st.maxPrice) + '" dir="ltr"></label>' +
       '<label>שטח מינימלי (מ״ר)<input type="number" inputmode="numeric" min="0" data-pf="minArea" value="' + esc(st.minArea) + '" dir="ltr"></label>' +
       '<label>מיון<select data-pf="sort">' + opt('new', 'חדשים קודם', st.sort) + opt('cheap', 'מחיר: מהנמוך', st.sort) + opt('dear', 'מחיר: מהגבוה', st.sort) + '</select></label>' +
+      '<button type="button" class="pclear" data-pclear="1" hidden>ביטול סינון</button>' +
       '</div>';
   }
   function filtered() {
@@ -98,8 +99,10 @@
       (facts.length ? '<div class="pfacts">' + facts.map(function (f) { return '<span>' + esc(f) + '</span>'; }).join('') + '</div>' : '') + '</div>' +
       '<div class="cprice' + (num(p.price) ? '' : ' ask') + '"><b>' + esc(priceTxt(p)) + '</b></div></button></article>';
   }
+  function filtering() { return !!(st.type || st.rooms || st.maxPrice || st.minArea); }
   function renderGrid() {
     var l = filtered(), all = list();
+    var cl = document.querySelector('[data-pclear]'); if (cl) cl.hidden = !filtering();
     $('heading').textContent = sale.length && rent.length ? (st.tab === 'sale' ? 'נכסים למכירה' : 'נכסים להשכרה') : rent.length ? 'נכסים להשכרה' : 'נכסים למכירה';
     $('count').textContent = l.length === 1 ? 'נכס אחד' : l.length + ' נכסים';
     $('grid').innerHTML = l.length ? l.map(card).join('')
@@ -142,10 +145,11 @@
 
   function bind() {
     document.addEventListener('click', function (e) {
-      var t = e.target.closest('[data-ptab],[data-popen],[data-pclose],[data-pimg],[data-pshare],[data-go]');
+      var t = e.target.closest('[data-ptab],[data-popen],[data-pclose],[data-pimg],[data-pshare],[data-pclear],[data-go]');
       if (!t) { if (e.target.id === 'pshade') closeProp(); return; }
       var d = t.dataset;
       if (d.ptab) { st.tab = d.ptab; st.type = ''; renderBar(); renderGrid(); }
+      else if (d.pclear) { st.type = ''; st.rooms = ''; st.maxPrice = ''; st.minArea = ''; renderBar(); renderGrid(); }
       else if (d.popen) openProp(d.popen);
       else if ('pclose' in d) closeProp();
       else if (d.pimg) { var n = imgs(byId[st.open]).length; st.img = (st.img + Number(d.pimg) + n) % n; renderDialog(); }
