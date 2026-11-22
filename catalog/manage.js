@@ -37,6 +37,10 @@
   var UPSELL = 'במסלול המורחב: פריטים בלי הגבלה, עד 6 תמונות לפריט, בחירה מ־8 סגנונות, לוגו, תמונת פתיחה, "הכי מבוקשים" ושאלות נפוצות. לשדרוג כתבו לנו: info@shchuna.co.il';
   var state = { tab: 'items', q: '', cat: '', edit: null, err: '', saved: '', arm: null, busy: false, up: '', catEdit: null };
 
+  /* קטלוג מסוג "דירות" (עמוד מתווך): הנכסים אינם בטבלאות הקטלוג אלא באפליקציה. כאן רק מציגים אותם ומפנים לטופס הפרסום הקיים של האתר. */
+  var props = { sale: [], rent: [] }, propCid = '';
+  function PROPS() { return !!C && C.kind === 'properties'; }
+  var PTYPES = { apartment: 'דירה', cottage: 'קוטג׳', duplex: 'דופלקס', penthouse: 'פנטהאוז', gardenApartment: 'דירת גן', lot: 'מגרש', business: 'נכס מסחרי', other: 'נכס' };
   function $(id) { return document.getElementById(id); }
   function esc(s) { return String(s == null ? '' : s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
   function fmt(n) { return Number(n).toLocaleString('he-IL') + ' ₪'; }
@@ -104,8 +108,18 @@
       return sb.from('bizcat_catalogs').select('*').in('entity_id', ids).order('created_at', { ascending: true }).then(ok);
     });
   }
+  function loadProps() {
+    return sb.rpc('bizcat_properties', { p_slug: C.slug }).then(function (r) { var j = ok(r) || {}; props = { sale: j.sale || [], rent: j.rent || [] }; });
+  }
   function openCatalog(c) {
     C = c;
+    if (PROPS()) {
+      /* השכונה של העסק — נדרשת לטופס הפרסום (השכונה של הנכס עצמו נקבעת לפי הרחוב) */
+      return Promise.all([loadProps(), sb.from(C.entity_table === 'professionals' ? 'professionals' : 'businesses').select('community_id').eq('id', C.entity_id).maybeSingle()]).then(function (rs) {
+        propCid = (ok(rs[1]) || {}).community_id || '';
+        $('gate').hidden = true; $('adminView').hidden = false; render();
+      });
+    }
     return Promise.all([
       sb.from('bizcat_categories').select('*').eq('catalog_id', C.id),
       sb.from('bizcat_items').select('*').eq('catalog_id', C.id),
@@ -123,6 +137,22 @@
       var ca = catOf(a.category_id), cb = catOf(b.category_id);
       return a.category_id === b.category_id ? bySort(a, b) : bySort(ca || { sort_order: 1e9 }, cb || { sort_order: 1e9 });
     });
+  }
+  function viewProps() {
+    var all = props.sale.map(function (p) { return { p: p, rent: false }; }).concat(props.rent.map(function (p) { return { p: p, rent: true }; }));
+    var post = function (k, label) { return '<button class="btn-sm' + (k === 'broker' ? '' : ' primary') + '" type="button" data-post="' + k + '" data-c="' + esc(propCid) + '">' + label + '</button>'; };
+    return '<div class="atool">' + (propCid ? post('sale', '+ נכס למכירה') + post('rent', '+ נכס להשכרה') + post('broker', 'פרסום מהיר מטקסט') : '') +
+      '<button class="btn-sm push" type="button" data-reload="1">רענון הרשימה</button></div>' +
+      (state.err ? '<p class="ferr" role="alert">' + esc(state.err) + '</p>' : '') +
+      '<p class="info">הנכסים כאן הם הנכסים שפרסמתם בשכונה עם החשבון הזה. נכס חדש מופיע מיד בעמוד שלכם ובאפליקציה. עריכה והסרה של נכס: באפליקציה, עם אותו חשבון.</p>' +
+      '<div class="atable"><div class="arow ahd prow"><span>תמונה</span><span>נכס</span><span class="ct">סוג</span><span>מחיר</span></div>' +
+      (all.map(function (x) {
+        var p = x.p, im = Array.isArray(p.images) && p.images[0];
+        return '<div class="arow prow"><span class="th">' + (im ? '<img src="' + esc(im) + '" alt="" loading="lazy">' : '') + '</span>' +
+          '<span class="nm">' + esc((PTYPES[p.type] || 'נכס') + (p.rooms ? ', ' + p.rooms + ' חדרים' : '')) + '<br><small>' + esc([p.address, p.hood].filter(Boolean).join(', ')) + '</small></span>' +
+          '<span class="ct">' + (x.rent ? 'השכרה' : 'מכירה') + '</span>' +
+          '<span class="pr">' + (p.price ? fmt(p.price) + (x.rent ? ' לחודש' : '') : 'לא צוין') + '</span></div>';
+      }).join('') || '<p class="aempty">עדיין אין נכסים בחשבון הזה. לחצו "+ נכס למכירה" או "+ נכס להשכרה" כדי לפרסם את הראשון.</p>') + '</div>';
   }
   function viewItems() {
     if (state.edit) return itemForm();
@@ -370,8 +400,9 @@
       '<div class="two"><div><label for="sWa">וואטסאפ להזמנות *</label><input id="sWa" dir="ltr" inputmode="tel" value="' + esc(waLocal(C.whatsapp)) + '"></div>' +
       '<div><label for="sPhone">טלפון</label><input id="sPhone" dir="ltr" inputmode="tel" value="' + esc(C.phone) + '"></div></div>' +
       '<label class="chk"><input type="checkbox" id="sShow"' + (C.show_phone ? ' checked' : '') + '> להציג את מספר הטלפון בעמוד (אם לא מסומן, מופיע רק כפתור "חיוג")</label>' +
-      '<div class="two"><div><label for="sUnit">המחירים הם…</label><input id="sUnit" maxlength="20" value="' + esc(C.price_unit) + '" placeholder="למשל: ליום"></div>' +
-      '<div><label for="sWord">איך קוראים לפריטים</label><input id="sWord" maxlength="20" value="' + esc(C.items_word) + '" placeholder="פריטים / ציוד / מוצרים"></div></div>' +
+      (PROPS() ? '<label for="sLic">מספר רישיון תיווך (לא חובה)</label><input id="sLic" maxlength="20" dir="ltr" inputmode="numeric" value="' + esc(C.license_no) + '"><span class="hint">אם ממלאים, המספר מוצג בראש העמוד.</span>' : '') +
+      (PROPS() ? '' : '<div class="two"><div><label for="sUnit">המחירים הם…</label><input id="sUnit" maxlength="20" value="' + esc(C.price_unit) + '" placeholder="למשל: ליום"></div>' +
+      '<div><label for="sWord">איך קוראים לפריטים</label><input id="sWord" maxlength="20" value="' + esc(C.items_word) + '" placeholder="פריטים / ציוד / מוצרים"></div></div>') +
       (!PLUS() ? '<input type="hidden" id="sPal" value="' + esc(C.palette) + '"><p class="info" style="margin:0">' + esc(UPSELL) + '</p>' : '<span class="flabel" id="palL">סגנון וצבעי העמוד</span><input type="hidden" id="sPal" value="' + esc(C.palette) + '">' +
       '<div class="pals" role="radiogroup" aria-labelledby="palL">' + PALETTES.map(function (p) { return paletteCard(p, p.id === C.palette); }).join('') + '</div>' +
       '<span class="hint">הבחירה נשמרת בלחיצה על "שמירה". <a id="palPeek" href="/catalog/' + esc(C.slug) + '/?palette=' + esc(C.palette) + '" target="_blank" rel="noopener">הצצה בעמוד בסגנון שנבחר</a></span>') +
@@ -397,7 +428,9 @@
     if (!title) { state.err = 'צריך לכתוב את שם העסק.'; return render(); }
     if (!/^[0-9]{9,15}$/.test(wa)) { state.err = 'צריך מספר וואטסאפ תקין, למשל 052-1234567.'; return render(); }
     var f = { title: title, headline: $('sHead').value.trim(), description: $('sDesc').value.trim(), service_area: $('sArea').value.trim(), whatsapp: wa, phone: $('sPhone').value.trim(),
-      show_phone: $('sShow').checked, price_unit: $('sUnit').value.trim(), items_word: $('sWord').value.trim() || 'פריטים', palette: $('sPal').value, updated_at: now() };
+      show_phone: $('sShow').checked, palette: $('sPal').value, updated_at: now() };
+    if (PROPS()) f.license_no = $('sLic').value.trim() || null;
+    else { f.price_unit = $('sUnit').value.trim(); f.items_word = $('sWord').value.trim() || 'פריטים'; }
     if (PLUS() && 'faq' in C) f.faq = readFaq();
     state.err = ''; state.saved = ''; state.busy = true; render();
     sb.from('bizcat_catalogs').update(f).eq('id', C.id).then(function (r) { ok(r); Object.assign(C, f); state.busy = false; state.saved = 'נשמר. השינוי מופיע בעמוד.'; render(); }).catch(fail);
@@ -444,17 +477,21 @@
     $('viewPage').href = '/catalog/' + C.slug + '/';
     $('viewPage').textContent = C.is_published ? 'צפייה בעמוד' : 'תצוגה מקדימה';
     document.querySelectorAll('.atabs [data-tab]').forEach(function (b) { b.setAttribute('aria-selected', b.dataset.tab === state.tab); });
-    $('tItems').textContent = '(' + items.length + ')'; $('tCats').textContent = '(' + cats.length + ')';
-    $('abody').innerHTML = state.tab === 'items' ? viewItems() : state.tab === 'cats' ? viewCats() : viewSettings();
+    var tabItems = document.querySelector('.atabs [data-tab="items"]'), tabCats = document.querySelector('.atabs [data-tab="cats"]');
+    tabCats.hidden = PROPS(); tabItems.firstChild.nodeValue = PROPS() ? 'נכסים ' : 'פריטים ';
+    if (PROPS() && state.tab === 'cats') state.tab = 'items';
+    $('tItems').textContent = '(' + (PROPS() ? props.sale.length + props.rent.length : items.length) + ')'; $('tCats').textContent = '(' + cats.length + ')';
+    $('abody').innerHTML = state.tab === 'items' ? (PROPS() ? viewProps() : viewItems()) : state.tab === 'cats' ? viewCats() : viewSettings();
     if (keep && $(keep) && $(keep).type !== 'file') { $(keep).focus(); try { if (pos != null) $(keep).setSelectionRange(pos, pos); } catch (e) {} }
   }
   function arm(key, fn) { if (state.arm !== key) { state.arm = key; render(); } else fn(); }
 
   document.addEventListener('click', function (e) {
     if (!C) return;
-    var t = e.target.closest('[data-tab],[data-new],[data-edit],[data-flip],[data-itemup],[data-itemdown],[data-cancel],[data-del],[data-imgdel],[data-imgfirst],[data-catup],[data-catdown],[data-catedit],[data-catcancel],[data-catdel],[data-copyaddr],[data-logodel],[data-herodel],[data-faqadd],[data-faqdel],[data-pal]');
+    var t = e.target.closest('[data-tab],[data-new],[data-edit],[data-flip],[data-itemup],[data-itemdown],[data-cancel],[data-del],[data-imgdel],[data-imgfirst],[data-catup],[data-catdown],[data-catedit],[data-catcancel],[data-catdel],[data-copyaddr],[data-logodel],[data-herodel],[data-faqadd],[data-faqdel],[data-pal],[data-reload]');
     if (!t || t.disabled) return;
     var d = t.dataset;
+    if (d.reload) { state.err = ''; loadProps().then(function () { render(); toast('הרשימה עודכנה'); }).catch(fail); return; }
     if (d.tab) { state.tab = d.tab; state.edit = null; state.err = ''; state.saved = ''; state.arm = null; state.catEdit = null; state.up = ''; render(); }
     else if (d.new && items.length >= lim().items) { state.err = 'המסלול הבסיסי כולל עד ' + lim().items + ' פריטים. ' + UPSELL; render(); }
     else if (d.new) { state.edit = 'new'; state.err = ''; state.up = ''; render(); $('fName').focus(); window.scrollTo(0, 0); }

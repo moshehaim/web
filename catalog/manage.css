@@ -148,3 +148,10 @@ label.aimg.add input { position: absolute; inset: 0; opacity: 0; cursor: pointer
 .badge.plan { background: #E8EEFB; color: #1F3F8A; }
 
 .saleb { display: inline-block; background: #FDE3E7; color: #B00E28; font-size: 11px; font-weight: 800; padding: 1px 7px; border-radius: 999px; vertical-align: 2px; }
+
+/* קטלוג מסוג "דירות" */
+.atabs button[hidden] { display: none; }
+.arow.prow { grid-template-columns: 56px minmax(0, 1fr) 80px 160px; }
+.arow.prow .nm small { color: var(--ink-3); font-weight: 400; }
+.arow.prow .th { background: var(--soft); }
+@media (max-width: 760px) { .arow.prow { grid-template-columns: 44px minmax(0, 1fr) auto; } .arow.prow .ct { display: none; } }

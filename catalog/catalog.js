@@ -371,6 +371,27 @@
     showState('הקטלוג סגור בשבתות ובחגים', 'נשוב לפעול בצאת השבת או החג, בשעה ' + when + '.', false);
   }
 
+  /* ── קטלוג מסוג "דירות" (עמוד מתווך) ──
+     אותה מסגרת (שם, לוגו, צבעים, יצירת קשר, סגירה בשבת), אבל במקום פריטים מוצגים הנכסים של בעל הקטלוג מהאפליקציה.
+     הלוגיקה ב-/catalog/properties.js, שנטען רק כאן. */
+  var PROPS_JS = '/catalog/properties.js?v=1';
+  function loadScript(src) {
+    return new Promise(function (res, rej) { var s = document.createElement('script'); s.src = src; s.onload = res; s.onerror = function () { rej(new Error('load')); }; document.head.appendChild(s); });
+  }
+  function startProps(row) {
+    row.bizcat_items = []; row.bizcat_categories = [];
+    prepare(row); setupBar(); renderFrame(); $('bar').hidden = true;
+    return loadScript(PROPS_JS).then(function () {
+      return window.BizcatProps.start(row, { SB_URL: SB_URL, SB_KEY: SB_KEY, token: sessionToken(), esc: esc, fmt: fmt, ico: ico, waUrl: waUrl });
+    }).then(function () {
+      $('state').hidden = true; $('siteView').hidden = false;
+      if (WINDOWS.length) {
+        setInterval(function () { if (closedNow()) showClosed(); }, 60000);
+        document.addEventListener('visibilitychange', function () { if (!document.hidden && closedNow()) showClosed(); });
+      }
+    });
+  }
+
   /* ── התחלה ── */
   function start() {
     var slug = slugFromUrl();
@@ -379,6 +400,7 @@
       if (!row) return showState('הקטלוג לא נמצא', 'ייתכן שהוא עדיין לא פורסם, או שהכתובת השתנתה.', true);
       return closedCheck(row).then(function () {
         if (closedNow()) return showClosed();
+        if (row.kind === 'properties') return startProps(row);
         prepare(row); setupBar(); renderFrame(); renderCats(); renderGrid(); renderBar(); bind();
         $('state').hidden = true; $('siteView').hidden = false; syncBar();
         fromHash();

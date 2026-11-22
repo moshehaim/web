@@ -308,3 +308,32 @@ a.phone { text-decoration: none; }
 .cprice.sale b { color: #B00E28; }
 .tile.sale .disc { background: #FDE3E7; color: #B00E28; }
 .tile.sale .disc .ico { stroke: #B00E28; }
+
+/* ── קטלוג מסוג "דירות" (עמוד מתווך) — ראו properties.js ── */
+.pbar { display: flex; flex-direction: column; gap: 14px; margin: 26px 0 6px; }
+.ptabs { display: inline-flex; align-self: flex-start; gap: 4px; padding: 4px; background: var(--soft); border-radius: 999px; }
+.ptabs button { min-height: 44px; padding: 0 22px; border: 0; border-radius: 999px; background: none; cursor: pointer; font: inherit; font-size: 16px; font-weight: 800; color: var(--navy); display: inline-flex; align-items: center; gap: 8px; }
+.ptabs button span { font-size: 13px; font-weight: 700; background: #fff; border-radius: 999px; padding: 1px 9px; font-variant-numeric: tabular-nums; }
+.ptabs button[aria-selected="true"] { background: var(--navy); color: #fff; }
+.ptabs button[aria-selected="true"] span { background: rgba(255,255,255,.2); color: #fff; }
+.pfilters { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px 12px; }
+.pfilters label { display: flex; flex-direction: column; gap: 4px; font-size: 13px; font-weight: 700; color: var(--ink-2); }
+.pfilters select, .pfilters input { min-height: 44px; padding: 0 12px; border: 1px solid var(--line); border-radius: 12px; background: #fff; font: inherit; font-size: 16px; color: var(--navy); width: 100%; }
+.pcard .pic { background: var(--soft); }
+.pcard .cbody { text-align: start; }
+.pcard .cbody p { white-space: normal; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
+.pfacts { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 4px; }
+.pfacts span, .pfeats span { font-size: 13px; font-weight: 700; background: var(--soft); color: var(--navy); border-radius: 999px; padding: 3px 10px; }
+.pcard .cprice { text-align: start; padding-bottom: 14px; }
+.pcard .cprice b { font-size: 22px; }
+.pdlg .pplace { margin: -8px 0 0; color: var(--ink-2); font-size: 16px; }
+.pdl { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 10px; margin: 0; border-top: 1px solid var(--line); padding-top: 14px; }
+.pdl div { display: flex; flex-direction: column; gap: 1px; }
+.pdl dt { font-size: 13px; color: var(--ink-3); }
+.pdl dd { margin: 0; font-size: 16px; font-weight: 800; color: var(--navy); }
+.pfeats { display: flex; flex-wrap: wrap; gap: 6px; }
+.pfeats span { font-size: 14px; padding: 5px 12px; }
+.pdlg .dpic.has { background: #14181F; }
+.pdlg .gcount { position: absolute; bottom: 12px; left: 50%; transform: translateX(-50%); background: rgba(18,24,48,.72); color: #fff; font-size: 13px; font-weight: 700; padding: 3px 12px; border-radius: 999px; font-variant-numeric: tabular-nums; }
+.pdlg .acts .pwa { display: inline-flex; align-items: center; justify-content: center; text-decoration: none; background: #17794F; color: #fff; border: 0; border-radius: 999px; font-weight: 800; padding: 0 20px; }
+@media (max-width: 760px) { .pfilters { grid-template-columns: 1fr 1fr; } .ptabs { align-self: stretch; } .ptabs button { flex: 1; justify-content: center; } }
