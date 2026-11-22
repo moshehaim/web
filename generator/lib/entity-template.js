@@ -152,10 +152,10 @@ export function detailPage(vm, e, { base, home, kind, listLabel, ldType, listHre
   const acts = [];
   if (e.phone && !e.appOnly) acts.push(`<a class="e-tel" href="${esc(e.phone.tel)}" data-num="${esc(e.phone.display)}">${svg(ICON.phone, 19, 'currentColor', 2.2)}<span class="lbl">התקשרו</span><span class="num" dir="ltr" hidden>${esc(e.phone.display)}</span></a>`);
   if (e.phone?.wa && !e.appOnly) acts.push(`<a class="e-wa" href="${esc(e.phone.wa)}" target="_blank" rel="noopener">${svg(ICON.wa, 19, 'currentColor', 2)}WhatsApp</a>`);
-  // מודעות של משתמשים (נכסים): המספר לא נכתב בעמוד. הוא נקרא מהשרת רק בלחיצה על הכפתור (ראו contact() בסקריפט למטה).
-  if (e.contactCol) {
+  // מודעות של משתמשים (נכסים, דרושים, יד שנייה ועוד): המספר לא נכתב בעמוד. הוא נקרא מהשרת רק בלחיצה על הכפתור (ראו contact() בסקריפט למטה).
+  if (e.contact) {
     acts.push(`<a class="e-tel" href="${APP}" role="button" data-ct="tel">${svg(ICON.phone, 19, 'currentColor', 2.2)}<span class="lbl">התקשרו</span><span class="num" dir="ltr" hidden></span></a>`);
-    acts.push(`<a class="e-wa" href="${APP}" role="button" data-ct="wa">${svg(ICON.wa, 19, 'currentColor', 2)}WhatsApp</a>`);
+    if (e.contact.wa) acts.push(`<a class="e-wa" href="${APP}" role="button" data-ct="wa">${svg(ICON.wa, 19, 'currentColor', 2)}WhatsApp</a>`);
   }
   if (e.providerHref) acts.push(`<a class="e-map" href="${esc(e.providerHref)}">לעמוד העסק</a>`);
   // קביעת תור: ישר לעסק באתר הדינמי (/app/business/<id> → EntityLinkScreen עם "קבע תור")
@@ -173,7 +173,7 @@ export function detailPage(vm, e, { base, home, kind, listLabel, ldType, listHre
 
   const JS = `(function(){
 var API=window.__SB||null,el=document.querySelector('[data-entity]'),sent=0;
-function count(){if(!API||sent)return;sent=1;try{fetch(API.url+'/rest/v1/rpc/increment_entity_contact',{method:'POST',keepalive:true,
+function count(){if(!API||sent||!el.getAttribute('data-t'))return;sent=1;try{fetch(API.url+'/rest/v1/rpc/increment_entity_contact',{method:'POST',keepalive:true,
   headers:{'apikey':API.key,'Authorization':'Bearer '+API.key,'Content-Type':'application/json'},
   body:JSON.stringify({entity_id:el.getAttribute('data-id'),entity_table:el.getAttribute('data-t')})}).catch(function(){});}catch(_){}}
 var desk=window.matchMedia&&matchMedia('(hover: hover) and (pointer: fine)').matches;
@@ -182,11 +182,11 @@ function cat(){if(!API)return;try{fetch(API.url+'/rest/v1/rpc/increment_catalog_
   body:JSON.stringify({p_entity_id:el.getAttribute('data-id'),p_entity_table:el.getAttribute('data-t')})}).catch(function(){});}catch(_){}}
 var CT=el.getAttribute('data-ct'),got=null;
 function contact(){if(got)return got;
-  got=fetch(API.url+'/rest/v1/'+el.getAttribute('data-t')+'?id=eq.'+encodeURIComponent(el.getAttribute('data-id'))+'&select='+CT,{headers:{'apikey':API.key,'Authorization':'Bearer '+API.key}})
+  got=fetch(API.url+'/rest/v1/'+el.getAttribute('data-ctt')+'?id=eq.'+encodeURIComponent(el.getAttribute('data-id'))+'&select='+CT,{headers:{'apikey':API.key,'Authorization':'Bearer '+API.key}})
   .then(function(r){if(!r.ok)throw 0;return r.json();}).then(function(rows){
-    var d=String((((rows||[])[0]||{})[CT]||{}).phone||'').replace(/[^0-9]/g,'');if(d.indexOf('972')===0)d='0'+d.slice(3);
+    var v=((rows||[])[0]||{})[CT],d=String((v&&typeof v==='object'?v.phone:v)||'').replace(/[^0-9]/g,'');if(d.indexOf('972')===0)d='0'+d.slice(3);
     if(d.length<9)throw 0;
-    return {tel:d,show:d.length===10?d.slice(0,3)+'-'+d.slice(3):d.slice(0,2)+'-'+d.slice(2),wa:/^05[0-9]{8}$/.test(d)?'https://wa.me/972'+d.slice(1)+'?text='+encodeURIComponent('שלום, ראיתי בשכונה את המודעה: '+document.querySelector('h1').textContent+'\\n'+location.href.split('#')[0]):null};
+    return {tel:d,show:d.length===10?d.slice(0,3)+'-'+d.slice(3):d.slice(0,2)+'-'+d.slice(2),wa:d.indexOf('05')===0?'https://wa.me/972'+d.slice(1)+'?text='+encodeURIComponent('שלום, ראיתי בשכונה את המודעה: '+document.querySelector('h1').textContent+'\\n'+location.href.split('#')[0]):null};
   });
   got.catch(function(){got=null;});return got;}
 function reveal(c){var a=document.querySelector('.e-tel[data-ct]'),n=a.querySelector('.num');n.textContent=c.show;n.hidden=false;a.querySelector('.lbl').hidden=true;a.title='לחיצה מעתיקה';}
@@ -220,7 +220,7 @@ var r=document.querySelector('.hrow[data-d="'+dow+'"]');if(r)r.classList.add('to
 
 ${siteHeader(vm, home, navChips(home, kind))}
 
-<main id="main" data-entity data-id="${esc(e.id)}" data-t="${esc(e.table)}"${e.contactCol ? ` data-ct="${esc(e.contactCol)}"` : ''}>
+<main id="main" data-entity data-id="${esc(e.id)}" data-t="${esc(e.table)}"${e.contact ? ` data-ct="${esc(e.contact.col)}" data-ctt="${esc(e.contact.table)}"` : ''}>
 <section class="e-hero" aria-label="כותרת"><div class="wrap">
 <nav class="crumb" aria-label="פירורי לחם"><a href="${home}">${esc(vm.name)}</a> · <a href="${listHref || `${home}${kind}/`}">${esc(listLabel)}</a> · ${esc(e.name)}</nav>
 <h1>${esc(e.name)}</h1>${e.price ? `<span class="e-price">${esc(e.price)}</span>` : ''}

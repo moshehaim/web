@@ -24,22 +24,22 @@ export async function fetchDetails(db, communityId) {
   const nowIso = new Date().toISOString();
   const [halls, hosting, edu, parks, services, health, sale, rent, promos, jobs, second, gmachim, vol, lost] = await Promise.all([
     q(by('halls', 'id,name,address,phone,images,capacity,description,price,has_catering,allow_external_catering,has_kitchenette,has_water_heater,has_fridge,can_reheat_food,has_projector,parking_spaces,has_disabled_access,kosher_certificate,latitude,longitude,user_id').eq('is_active', true)),
-    q(by('hospitality', 'id,name,address,images,description,type,number_of_rooms_text,max_guests_text,number_of_beds,has_kitchen,has_air_conditioning,has_wifi,has_parking,has_washer,has_dryer,available_for_events,has_disabled_access,has_elevator,floor_number,house_rules,price_per_shabbat,latitude,longitude,user_id').eq('is_active', true)),
+    q(by('hospitality', 'id,phone,name,address,images,description,type,number_of_rooms_text,max_guests_text,number_of_beds,has_kitchen,has_air_conditioning,has_wifi,has_parking,has_washer,has_dryer,available_for_events,has_disabled_access,has_elevator,floor_number,house_rules,price_per_shabbat,latitude,longitude,user_id').eq('is_active', true)),
     q(by('education_institution', 'id,name,address,phone,image_url,description,institution_type,category,subcategory,affiliation,network,ownership_type,age_groups,gender_type,latitude,longitude,user_id')),
     q(by('parks', 'id,name,description,location,image,park_type,facilities,has_restrooms,has_picnic_area,has_parking,is_accessible,latitude,longitude,user_id')),
     q(by('community_services', 'id,name,type,address,phone,notes,image_url,image_gallery,lat,lng,user_id').eq('is_active', true)),
     q(by('healthcare_facility', 'id,name,facility_type,address,phone,image_url,services,is_24_7,has_parking,has_accessibility,has_emergency,network,weekly_schedule,latitude,longitude,user_id').not('is_active', 'is', false)),
-    q(by('approve_property', 'id,created_at,full_address,asking_price,area_in_sqm,num_rooms,floor,total_floors,description,property_type,property_condition,available_date,has_elevator,has_parking,parking_spots,has_storage,has_balcony,balcony_area_in_sqm,has_sukkah_balcony,has_safe_room,has_rental_units,image_urls,latitude,longitude,is_broker')),
-    q(by('approved_rental_properties', 'id,created_at,full_address,monthly_rent,area_in_sqm,num_rooms,floor,total_floors,description,property_type,property_condition,available_date,has_elevator,has_parking,has_storage,has_balcony,has_sukkah_balcony,has_safe_room,includes_furniture,municipal_tax,maintenance_fees,image_urls,latitude,longitude,is_broker')),
+    q(by('approve_property', 'id,created_at,full_address,asking_price,area_in_sqm,num_rooms,floor,total_floors,description,property_type,property_condition,available_date,has_elevator,has_parking,parking_spots,has_storage,has_balcony,balcony_area_in_sqm,has_sukkah_balcony,has_safe_room,has_rental_units,image_urls,latitude,longitude,is_broker,seller_contact')),
+    q(by('approved_rental_properties', 'id,created_at,full_address,monthly_rent,area_in_sqm,num_rooms,floor,total_floors,description,property_type,property_condition,available_date,has_elevator,has_parking,has_storage,has_balcony,has_sukkah_balcony,has_safe_room,includes_furniture,municipal_tax,maintenance_fees,image_urls,latitude,longitude,is_broker,renter_contact')),
     q(by('promotions', 'id,created_at,title,description,content,image_url,end_date,terms_and_conditions,provider_id,provider_name,image_women_only')
       .eq('is_active', true).lte('start_date', nowIL()).or(`end_date.is.null,end_date.gte."${nowIL()}"`)),
-    q(by('jobs', 'id,title,description,job_type,category,employment_type,salary_info,requirements,experience_required,education_required,location_name,location_address,remote_option,company_name,company_description,created_at')
+    q(by('jobs', 'id,contact_phone,title,description,job_type,category,employment_type,salary_info,requirements,experience_required,education_required,location_name,location_address,remote_option,company_name,company_description,created_at')
       .not('is_active', 'is', false).or(`expires_at.is.null,expires_at.gt."${nowIso}"`)),
-    q(by('second_hand_items', 'id,name,description,price,is_free,category,condition,address,image_urls,created_at')),
-    q(by('gmachim', 'id,created_at,name,address,description,categories,weekly_schedule,latitude,longitude')),
-    q(by('volunteering', 'id,title,description,organization_name,organization_description,volunteer_hours,frequency,location_name,location_address,created_at')
+    q(by('second_hand_items', 'id,seller_phone,name,description,price,is_free,category,condition,address,image_urls,created_at')),
+    q(by('gmachim', 'id,phone,created_at,name,address,description,categories,weekly_schedule,latitude,longitude')),
+    q(by('volunteering', 'id,contact_phone,title,description,organization_name,organization_description,volunteer_hours,frequency,location_name,location_address,created_at')
       .not('is_active', 'is', false).or(`expires_at.is.null,expires_at.gt."${nowIso}"`)),
-    q(by('lost_and_found', 'id,status,title,description,image_url,created_at')),
+    q(by('lost_and_found', 'id,contact_phone,status,title,description,image_url,created_at')),
   ]);
   return { halls, hosting, edu, parks, services, health, sale, rent, promos, jobs, second, gmachim, vol, lost };
 }
@@ -119,6 +119,12 @@ const ago = (iso) => {
 export function shapeDetails(raw, community) {
   const out = [];
   const add = (x) => out.push({ gallery: [], facts: [], sections: [], phone: null, ...x });
+  /* מודעות של משתמשים: המספר עצמו לא נכנס לעמוד. כאן רק קובעים אם יש מספר ואם הוא נייד (אותו כלל של האפליקציה: 05x / 9725x → יש WhatsApp);
+     הכפתור קורא את המספר מהשרת ברגע הלחיצה (entity-template.js). */
+  const live = (table, col, raw) => {
+    const d = String((raw && typeof raw === 'object' ? raw.phone : raw) || '').replace(/\D/g, '');
+    return d.length >= 9 ? { table, col, wa: d.startsWith('05') || d.startsWith('9725') } : null;
+  };
 
   for (const h of raw.halls) add({ seg: 'halls', list: 'אולמות', ld: 'EventVenue', id: h.id, table: 'halls', cat: 'hall',
     name: h.name, kicker: 'אולם', img: first(h.images)[0], gallery: first(h.images).slice(1), desc: h.description,
@@ -131,7 +137,7 @@ export function shapeDetails(raw, community) {
     facts: [h.number_of_rooms_text && `${h.number_of_rooms_text} חדרים`, h.max_guests_text && `עד ${h.max_guests_text} אורחים`, h.number_of_beds && `${h.number_of_beds} מיטות`, h.price_per_shabbat > 0 && `${ils(h.price_per_shabbat)} לשבת`, h.floor_number != null && `קומה ${h.floor_number}`].filter(Boolean),
     sections: [{ title: 'מה יש במקום', chips: [yes(h.has_kitchen, 'מטבח'), yes(h.has_air_conditioning, 'מיזוג'), yes(h.has_wifi, 'WiFi'), yes(h.has_parking, 'חניה'), yes(h.has_washer, 'מכונת כביסה'), yes(h.has_dryer, 'מייבש'), yes(h.has_elevator, 'מעלית'), yes(h.has_disabled_access, 'נגיש'), yes(h.available_for_events, 'מתאים לאירועים')].filter(Boolean) },
       ...(h.house_rules ? [{ title: 'כללי הבית', text: h.house_rules }] : [])],
-    where: h.address, lat: h.latitude, lng: h.longitude, owner: h.user_id ? 'owner' : 'team', appOnly: true });
+    where: h.address, lat: h.latitude, lng: h.longitude, owner: h.user_id ? 'owner' : 'team', appOnly: true, contact: live('hospitality', 'phone', h.phone) });
 
   for (const e of raw.edu) add({ seg: 'education', list: 'מוסדות חינוך', ld: 'School', id: e.id, table: 'education_institution', cat: 'edu',
     name: e.name, kicker: e.institution_type || e.category || 'מוסד חינוך', img: e.image_url, desc: e.description,
@@ -167,7 +173,7 @@ export function shapeDetails(raw, community) {
         r.municipal_tax > 0 && `ארנונה ${ils(r.municipal_tax)}`, r.maintenance_fees > 0 && `ועד ${ils(r.maintenance_fees)}`].filter(Boolean),
       sections: [{ title: 'מה יש בנכס', chips: [yes(r.has_elevator, 'מעלית'), yes(r.has_parking, r.parking_spots > 1 ? `${r.parking_spots} חניות` : 'חניה'), yes(r.has_storage, 'מחסן'), yes(r.has_balcony, r.balcony_area_in_sqm ? `מרפסת ${r.balcony_area_in_sqm} מ״ר` : 'מרפסת'), yes(r.has_sukkah_balcony, 'מרפסת סוכה'), yes(r.has_safe_room, 'ממ״ד'), yes(r.has_rental_units, 'יחידת דיור'), yes(r.includes_furniture, 'מרוהטת')].filter(Boolean) }],
       where: r.full_address || community.neighborhood, lat: r.latitude, lng: r.longitude, owner: 'user', appOnly: true,
-      contactCol: kind === 'להשכרה' ? 'renter_contact' : 'seller_contact' });
+      contact: kind === 'להשכרה' ? live('approved_rental_properties', 'renter_contact', r.renter_contact) : live('approve_property', 'seller_contact', r.seller_contact) });
   };
   raw.sale.forEach((r) => home(r, 'למכירה', r.asking_price));
   raw.rent.forEach((r) => home(r, 'להשכרה', r.monthly_rent));
@@ -183,24 +189,24 @@ export function shapeDetails(raw, community) {
     sections: [...(j.requirements ? [{ title: 'דרישות', text: j.requirements }] : []),
       ...(j.experience_required || j.education_required ? [{ title: 'ניסיון והשכלה', chips: [j.experience_required, j.education_required].filter(Boolean) }] : []),
       ...(j.company_description ? [{ title: 'על החברה', text: j.company_description }] : [])],
-    where: j.location_address, owner: 'user', appOnly: true });
+    where: j.location_address, owner: 'user', appOnly: true, contact: live('jobs', 'contact_phone', j.contact_phone) });
 
   for (const s of raw.second) { const imgs = first(s.image_urls); add({ seg: 'board', list: 'לוח השכונה', ld: 'Product', id: s.id, table: 'second_hand_items', cat: 'retail', boardKey: 'second',
     name: s.name, kicker: 'יד שנייה', img: imgs[0], gallery: imgs.slice(1), desc: s.description,
     price: s.is_free || !s.price ? 'למסירה' : ils(s.price), facts: [s.category, SH_CONDITION[s.condition], ago(s.created_at)].filter(Boolean),
-    owner: 'user', appOnly: true }); }
+    owner: 'user', appOnly: true, contact: live('second_hand_items', 'seller_phone', s.seller_phone) }); }
 
   for (const g of raw.gmachim) add({ seg: 'board', list: 'לוח השכונה', ld: 'NGO', id: g.id, table: 'gmachim', cat: 'health_parenting', boardKey: 'gmach',
     name: g.name, kicker: 'גמ״ח', desc: g.description, sections: first(g.categories).length ? [{ title: 'מה יש בגמ״ח', chips: first(g.categories) }] : [],
-    schedule: g.weekly_schedule, where: g.address, lat: g.latitude, lng: g.longitude, owner: 'team', appOnly: true });
+    schedule: g.weekly_schedule, where: g.address, lat: g.latitude, lng: g.longitude, owner: 'team', appOnly: true, contact: live('gmachim', 'phone', g.phone) });
 
   for (const v of raw.vol) add({ seg: 'board', list: 'לוח השכונה', ld: 'VolunteerAction', id: v.id, table: 'volunteering', cat: 'counseling', boardKey: 'vol',
     name: v.title, kicker: 'התנדבות', desc: v.description, facts: [v.organization_name, v.frequency, v.volunteer_hours, v.location_name, ago(v.created_at)].filter(Boolean),
-    sections: v.organization_description ? [{ title: 'על הארגון', text: v.organization_description }] : [], where: v.location_address, owner: 'user', appOnly: true });
+    sections: v.organization_description ? [{ title: 'על הארגון', text: v.organization_description }] : [], where: v.location_address, owner: 'user', appOnly: true, contact: live('volunteering', 'contact_phone', v.contact_phone) });
 
   for (const l of raw.lost) add({ seg: 'board', list: 'לוח השכונה', ld: 'Thing', id: l.id, table: null, cat: 'other', boardKey: 'lost',
     name: l.title, kicker: l.status === 'lost' ? 'אבידה' : 'מציאה', img: l.image_url, desc: l.description, facts: [ago(l.created_at)],
-    owner: 'user', appOnly: true });
+    owner: 'user', appOnly: true, contact: live('lost_and_found', 'contact_phone', l.contact_phone) });
 
   for (const d of out) d.waze = waze(d.lat, d.lng);
   return out;
