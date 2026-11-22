@@ -19,6 +19,16 @@ export function slugify(name) {
     .replace(/-+/g, '-')
     .replace(/^-|-$/g, '');
 }
+/**
+ * האם הטקסט נראה כמו כתובת מייל (או slug שנבנה ממנה, כמו "namegmailcom").
+ * שם כזה לא מתפרסם באתר: לא בכותרת, לא בכתובת העמוד ולא בחיפוש.
+ */
+const MAIL_HOSTS = /(gmail|googlemail|hotmail|outlook|icloud|yahoo|walla|live\.?com|012\.?net|bezeqint|netvision)/i;
+export function looksLikeEmail(name) {
+  const s = String(name || '');
+  return s.includes('@') || MAIL_HOSTS.test(s);
+}
+
 export class SlugStore {
   constructor(file) {
     this.file = file;
@@ -31,9 +41,11 @@ export class SlugStore {
 
   /** מחזיר slug קיים, או מקצה חדש עם שובר-שוויון על התנגשות. */
   get(id, name) {
+    // החריג היחיד ל"slug יציב לנצח": slug שמור שנראה כמו מייל מוחלף, כדי שהמייל לא יישאר בכתובת העמוד
+    if (this.map[id] && looksLikeEmail(this.map[id])) delete this.map[id];
     if (this.map[id]) return this.map[id];
 
-    const base = slugify(name) || 'ללא-שם';
+    const base = (looksLikeEmail(name) ? '' : slugify(name)) || `ללא-שם-${String(id).slice(0, 6)}`;
     const taken = new Set(Object.values(this.map));
 
     let slug = base;

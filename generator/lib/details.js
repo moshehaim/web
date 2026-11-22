@@ -7,6 +7,7 @@
  * יצירת קשר עם אנשים פרטיים עוברת באפליקציה.
  */
 
+import { looksLikeEmail } from './slugs.js';
 import { Location, Zmanim, HebrewCalendar } from '@hebcal/core';
 import { phoneLinks } from './home-data.js';
 
@@ -180,8 +181,8 @@ export function shapeDetails(raw, community) {
 
   for (const p of raw.promos) add({ seg: 'promos', list: 'מבצעים וקופונים', ld: 'Offer', id: p.id, table: null, cat: 'retail',
     name: p.title, kicker: 'מבצע', img: p.image_women_only ? null : p.image_url, desc: [p.description, p.content].filter(Boolean).join('\n\n'),
-    facts: [p.provider_name, p.end_date && `בתוקף עד ${dateHe(p.end_date)}`].filter(Boolean),
-    sections: p.terms_and_conditions ? [{ title: 'תנאים', text: p.terms_and_conditions }] : [], providerId: p.provider_id, provider: p.provider_name || '', owner: 'owner', appOnly: true });
+    facts: [looksLikeEmail(p.provider_name) ? '' : p.provider_name, p.end_date && `בתוקף עד ${dateHe(p.end_date)}`].filter(Boolean),
+    sections: p.terms_and_conditions ? [{ title: 'תנאים', text: p.terms_and_conditions }] : [], providerId: p.provider_id, provider: looksLikeEmail(p.provider_name) ? '' : (p.provider_name || ''), owner: 'owner', appOnly: true });
 
   for (const j of raw.jobs) add({ seg: 'board', list: 'לוח השכונה', ld: 'JobPosting', id: j.id, table: 'jobs', cat: 'other', boardKey: 'jobs',
     name: j.title, kicker: 'דרושים', desc: j.description,

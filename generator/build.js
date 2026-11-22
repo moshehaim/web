@@ -206,7 +206,7 @@ const writeHome = (raw, dirRaw, lsRaw, moreRaw, synSlugs, detRaw) => {
     const store = new SlugStore(path.join(OUT, HOME, kind, 'slugs.json'));
     const keep = new Set();
     for (const e of dir[kind].items) {
-      e.slug = store.get(e.id, e.name); keep.add(e.slug);
+      e.slug = store.get(e.id, e.slugName || e.name); keep.add(e.slug);
       e.href = hrefById[e.id] = `${home}${kind}/${encodeURIComponent(e.slug)}/`;
     }
     // "עוד באותו תחום": 4 מאותה קבוצה (עם תמונה קודם), בלי הדף עצמו

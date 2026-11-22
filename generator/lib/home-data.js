@@ -15,6 +15,7 @@
  *  - recommend_count בלבד (entity_recommendations לא קריא ל-anon).
  */
 
+import { looksLikeEmail } from './slugs.js';
 import { computeZmanim, sortKey, formatPrayerTime } from './prayers.js';
 import { isPrayerInSeason } from './season.js';
 
@@ -323,6 +324,12 @@ export function shapeDirectory(raw) {
   const bc = Object.fromEntries(raw.businessCategories.map((c) => [c.id, c]));
   const pc = Object.fromEntries(raw.profCategories.map((c) => [c.id, c]));
   const byImageThenOrder = (a, b) => (!!b.img - !!a.img) || (a.i - b.i);
+  /* שם שהוא כתובת מייל לא מתפרסם: במקומו מוצג התחום, וכתובת העמוד נבנית מהתחום ומקיצור המזהה (slugName) */
+  const safeName = (name, field, id, fallback) => {
+    if (!looksLikeEmail(name)) return { name };
+    const shown = field || fallback;
+    return { name: shown, slugName: `${shown} ${String(id).slice(0, 6)}` };
+  };
   const groupsOf = (rows, order) => [...new Set(rows.map((r) => r.group).filter(Boolean))]
     .sort((a, b) => (order[a] ?? 99) - (order[b] ?? 99));
 
@@ -330,7 +337,7 @@ export function shapeDirectory(raw) {
     .map((p, i) => {
       const subs = String(p.sub_categories || '').split(',').map((s) => s.trim()).filter(Boolean);
       return {
-        i, id: p.id, table: 'professionals', created: p.created_at || null, quiet: QUIET_PRO_CATS.has(p.main_category), name: p.name, cat: p.main_category || 'other', group: pc[p.main_category]?.name_he || 'אחר',
+        i, id: p.id, table: 'professionals', created: p.created_at || null, quiet: QUIET_PRO_CATS.has(p.main_category), ...safeName(p.name, subs[0] || pc[p.main_category]?.name_he, p.id, 'בעל מקצוע'), cat: p.main_category || 'other', group: pc[p.main_category]?.name_he || 'אחר',
         field: subs.slice(0, 3).join(' · ') || pc[p.main_category]?.name_he || '',
         // תמונה לנשים בלבד: הכרטיס מוצג, רק בלי התמונה
         img: p.image_women_only ? null : p.image_url,
@@ -349,7 +356,7 @@ export function shapeDirectory(raw) {
       const t = bt[b.business_type];
       return {
         i, id: b.id, table: 'businesses', created: b.created_at || null,
-        quiet: QUIET_BIZ_TYPES.has(b.business_type) || QUIET_BIZ_CATS.has(t?.category_id), name: b.name, cat: t?.category_id || 'other', group: bc[t?.category_id]?.name_he || 'שונות', field: t?.name_he || '',
+        quiet: QUIET_BIZ_TYPES.has(b.business_type) || QUIET_BIZ_CATS.has(t?.category_id), ...safeName(b.name, t?.name_he, b.id, 'עסק'), cat: t?.category_id || 'other', group: bc[t?.category_id]?.name_he || 'שונות', field: t?.name_he || '',
         img: b.image_women_only ? null : b.image_url,
         rec: b.recommend_count || 0,
         where: b.address || '', phone: phoneLinks(b.phone),
@@ -366,7 +373,7 @@ export function shapeDirectory(raw) {
   return {
     pros: { items: pros, groups: groupsOf(pros, proOrder) },
     biz: { items: biz, groups: groupsOf(biz, bizOrder) },
-    promos: (raw.promos || []).map((p) => ({ id: p.id, title: p.title, provider: p.provider_name || '', providerId: p.provider_id,
+    promos: (raw.promos || []).map((p) => ({ id: p.id, title: p.title, provider: looksLikeEmail(p.provider_name) ? '' : (p.provider_name || ''), providerId: p.provider_id,
       img: p.image_women_only ? null : p.image_url, created: p.created_at || null })),
   };
 }
