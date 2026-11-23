@@ -364,27 +364,8 @@
    "needRooms": false
   },
   {
-   "id": "t37043",
-   "n": 20,
-   "street": "בית הדפוס",
-   "rooms": null,
-   "title": "משק/נחלה/להשקעה · גבעת שאול · מס׳ 37043",
-   "price": null,
-   "kind": "sale",
-   "area": 350,
-   "floor": 1,
-   "elevator": false,
-   "mamad": null,
-   "parking": true,
-   "storage": null,
-   "note": null,
-   "ask": "בניין להשקעה — לכתוב בהערה תיאור קצר.",
-   "needPrice": true,
-   "needRooms": true
-  },
-  {
    "id": "t37024",
-   "n": 21,
+   "n": 20,
    "street": "כנפי נשרים",
    "rooms": 5,
    "title": "דירה · גבעת שאול · מס׳ 37024",
@@ -403,7 +384,7 @@
   },
   {
    "id": "t37025",
-   "n": 22,
+   "n": 21,
    "street": "פיק חיים",
    "rooms": 4,
    "title": "דירה · קרית משה · מס׳ 37025",
@@ -422,7 +403,7 @@
   },
   {
    "id": "t37031",
-   "n": 23,
+   "n": 22,
    "street": "הלוי אליעזר",
    "rooms": 4,
    "title": "דירה · קרית משה · מס׳ 37031",
@@ -440,27 +421,8 @@
    "needRooms": false
   },
   {
-   "id": "t4284",
-   "n": 24,
-   "street": "התנופה",
-   "rooms": null,
-   "title": "נכס · תלפיות · מס׳ 4284",
-   "price": null,
-   "kind": "sale",
-   "area": 140,
-   "floor": null,
-   "elevator": null,
-   "mamad": null,
-   "parking": true,
-   "storage": null,
-   "note": null,
-   "ask": "נכס מסחרי — למכירה או להשכרה? מה סוג הנכס? (לכתוב בהערה)",
-   "needPrice": true,
-   "needRooms": true
-  },
-  {
    "id": "t9180",
-   "n": 25,
+   "n": 23,
    "street": "ירמיהו",
    "rooms": 3,
    "title": "נכס · רוממה · מס׳ 9180",
@@ -479,7 +441,7 @@
   },
   {
    "id": "t9189",
-   "n": 26,
+   "n": 24,
    "street": "קצנלבוגן",
    "rooms": 6,
    "title": "נכס · הר נוף · מס׳ 9189",
@@ -498,7 +460,7 @@
   },
   {
    "id": "t9192",
-   "n": 27,
+   "n": 25,
    "street": "שאולזון",
    "rooms": null,
    "title": "נכס · הר נוף · מס׳ 9192",
@@ -517,7 +479,7 @@
   },
   {
    "id": "t9187",
-   "n": 28,
+   "n": 26,
    "street": "תורה מציון",
    "rooms": null,
    "title": "נכס · רוממה · מס׳ 9187",
