@@ -166,7 +166,7 @@
     for (var i = 0; i < cs.length; i++) { var c = cats[i]; cs[i].hidden = !c; if (c) { cs[i].style.background = c.tint; cs[i].innerHTML = icon(c.name); } }
     $('preview').hidden = C.is_published !== false;
     /* פס הדגמה: רק בקטלוג ההדגמה, עם מעבר בין שני המסלולים */
-    if (C.slug === 'demo') { $('demoBar').hidden = false; $('demoBar').innerHTML = 'זו <b>הדגמה</b> של קטלוג בשכונה. העסק והפריטים לדוגמה בלבד.'; }
+    if (C.is_demo || C.slug === 'demo') { $('demoBar').hidden = false; $('demoBar').innerHTML = 'זו <b>הדגמה</b> של קטלוג בשכונה. העסק והפריטים לדוגמה בלבד.'; }
     /* פתיחה כהה וממורכזת: בפלטת קרם־זהב, או כשהעסק העלה תמונת פתיחה */
     var hero = document.querySelector('.banner'), img = C.hero_image_url || '';
     hero.classList.toggle('hero-dark', !!DARK_HERO[C.palette] || !!img);
@@ -374,7 +374,7 @@
   /* ── קטלוג מסוג "דירות" (עמוד מתווך) ──
      אותה מסגרת (שם, לוגו, צבעים, יצירת קשר, סגירה בשבת), אבל במקום פריטים מוצגים הנכסים של בעל הקטלוג מהאפליקציה.
      הלוגיקה ב-/catalog/properties.js, שנטען רק כאן. */
-  var PROPS_JS = '/catalog/properties.js?v=5';
+  var PROPS_JS = '/catalog/properties.js?v=6';
   function loadScript(src) {
     return new Promise(function (res, rej) { var s = document.createElement('script'); s.src = src; s.onload = res; s.onerror = function () { rej(new Error('load')); }; document.head.appendChild(s); });
   }

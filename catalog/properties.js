@@ -29,11 +29,12 @@
   function initial(m) { return (m.name || '').trim().charAt(0); }
 
   function load() {
-    return fetch(H.SB_URL + '/rest/v1/rpc/bizcat_properties', {
+    /* עמוד הדגמה: נכסים וצוות לדוגמה מקובץ באתר, לא מהאפליקציה */
+    return (C.is_demo ? fetch('/catalog/' + encodeURIComponent(C.slug) + '/data.json') : fetch(H.SB_URL + '/rest/v1/rpc/bizcat_properties', {
       method: 'POST',
       headers: { apikey: H.SB_KEY, Authorization: 'Bearer ' + (H.token || H.SB_KEY), 'Content-Type': 'application/json' },
       body: JSON.stringify({ p_slug: C.slug })
-    }).then(function (r) { if (!r.ok) throw new Error('http ' + r.status); return r.json(); }).then(function (j) {
+    })).then(function (r) { if (!r.ok) throw new Error('http ' + r.status); return r.json(); }).then(function (j) {
       j = j || {};
       sale = (j.sale || []).map(function (p) { p.rent = false; return p; });
       rent = (j.rent || []).map(function (p) { p.rent = true; return p; });
@@ -50,7 +51,7 @@
     var md = document.querySelector('meta[name=description]'); if (md) md.setAttribute('content', (C.description || C.title) + ' — עמוד מתווך בשכונה');
     var topr = document.querySelector('.topr span'); if (topr) topr.textContent = 'עמוד מתווך בשכונה';
     var pv = $('preview'); if (pv && pv.firstChild) pv.firstChild.nodeValue = 'תצוגה מקדימה — העמוד עדיין לא פורסם, ורק אתם רואים אותו. ';
-    var db = $('demoBar'); if (db && !db.hidden) db.innerHTML = 'זו <b>הדגמה</b> של עמוד מתווך בשכונה. המשרד לדוגמה בלבד.';
+    var db = $('demoBar'); if (db && !db.hidden) db.innerHTML = 'זו <b>הדגמה</b> של עמוד מתווך בשכונה. המשרד, הסוכנים והנכסים לדוגמה בלבד.';
     document.querySelectorAll('[data-wa]').forEach(function (a) { if (C.whatsapp) a.href = H.waUrl('שלום, הגעתי מהעמוד שלכם ב"שכונה".'); });
     if (!C.header_image_url) ['logoMark', 'logoMark2'].forEach(function (id) { $(id).innerHTML = H.ico(HOUSE); });
     ['cats', 'featuredSec', 'note'].forEach(function (id) { var el = $(id); if (el) el.hidden = true; });

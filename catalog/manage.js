@@ -117,6 +117,7 @@
     });
   }
   function loadProps() {
+    if (C.is_demo) return fetch('/catalog/' + encodeURIComponent(C.slug) + '/data.json').then(function (r) { return r.json(); }).then(function (j) { props = { sale: j.sale || [], rent: j.rent || [] }; }, function () { props = { sale: [], rent: [] }; });   /* הדגמה: נכסים לדוגמה מקובץ באתר */
     return sb.rpc('bizcat_properties', { p_slug: C.slug }).then(function (r) { var j = ok(r) || {}; props = { sale: j.sale || [], rent: j.rent || [] }; });
   }
   function loadTeam() {
