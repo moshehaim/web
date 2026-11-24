@@ -814,7 +814,7 @@ ${siteHeader(vm, pagePath, navChips(pagePath, 'home'))}
 <div class="hero-text">
 <span class="now"><span class="dot"></span><span data-day>${esc(vm.name)}</span> · <span data-greet>ברוכים הבאים</span></span>
 <div class="h-row"><h1>מה חדש <span class="emd">ב${esc(vm.name)}</span></h1>
-<p>מניינים, עסקים, בעלי מקצוע, מבצעים וגמ״חים — מעודכנים על ידי השכנים והעסקים עצמם.</p></div>
+<p>מניינים, עסקים, בעלי מקצוע, מבצעים וגמ״חים. הכול מתעדכן על ידי השכנים והעסקים עצמם.</p></div>
 ${shabbatCard(shabbat)}
 </div>
 <a class="pill btn-sky dl m-only" href="${DOWNLOAD}">להורדת האפליקציה</a>
