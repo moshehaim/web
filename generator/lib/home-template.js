@@ -685,7 +685,7 @@ export function pageHead({ title, desc, url, base, css = '' }) {
 export function siteHeader(vm, pagePath, navChips) {
   return `<header class="hdr">
 <div class="wrap hdr-row">
-<a class="logo" href="/" aria-label="שכונה — דף הבית"><img src="/app_icon.png" alt="" width="52" height="52"><span class="brand"><b>שכונה</b><small>הכל בשכונה, במקום אחד</small></span></a>
+<a class="logo" href="/" aria-label="שכונה, דף הבית"><img src="/app_icon.png" alt="" width="52" height="52"><span class="brand"><b>שכונה</b><small>הכל בשכונה, במקום אחד</small></span></a>
 <div class="hdr-mid">
 <div class="hood">
 <button type="button" class="hood-btn" id="hood-btn" aria-haspopup="dialog" aria-expanded="false" aria-controls="hood-pop">
@@ -799,8 +799,8 @@ function phonesStrip() {
 export function homePage(vm, { base, path: pagePath, shabbat = null, fresh = [], discover = [] }) {
   vm.fresh = fresh;
   const url = `${base}${pagePath}`;
-  const title = `${vm.name}${vm.alias ? ` (${vm.alias})` : ''} — שכונה | מניינים, עסקים, גמ״חים ומבצעים`;
-  const desc = `כל מה שקורה ב${vm.name}${vm.alias ? ` (${vm.alias})` : ''}, ${vm.city}: זמני תפילה, בעלי מקצוע, עסקים, מבצעים, נדל״ן, דרושים, יד שנייה וגמ״חים — מעודכן על ידי השכנים.`;
+  const title = `${vm.name}${vm.alias ? ` (${vm.alias})` : ''} · שכונה | מניינים, עסקים, גמ״חים ומבצעים`;
+  const desc = `כל מה שקורה ב${vm.name}${vm.alias ? ` (${vm.alias})` : ''}, ${vm.city}: זמני תפילה, בעלי מקצוע, עסקים, מבצעים, נדל״ן, דרושים, יד שנייה וגמ״חים. הכול מעודכן על ידי השכנים.`;
 
   return `${pageHead({ title, desc, url, base })}<a href="#main" class="sr">דלג לתוכן</a>
 
@@ -814,7 +814,7 @@ ${siteHeader(vm, pagePath, navChips(pagePath, 'home'))}
 <div class="hero-text">
 <span class="now"><span class="dot"></span><span data-day>${esc(vm.name)}</span> · <span data-greet>ברוכים הבאים</span></span>
 <div class="h-row"><h1>מה חדש <span class="emd">ב${esc(vm.name)}</span></h1>
-<p>מניינים, עסקים, בעלי מקצוע, מבצעים וגמ״חים — מעודכנים על ידי השכנים והעסקים עצמם.</p></div>
+<p>מניינים, עסקים, בעלי מקצוע, מבצעים וגמ״חים. הכול מתעדכן על ידי השכנים והעסקים עצמם.</p></div>
 ${shabbatCard(shabbat)}
 </div>
 <a class="pill btn-sky dl m-only" href="${DOWNLOAD}">להורדת האפליקציה</a>
@@ -841,7 +841,7 @@ ${ZONES.filter((z) => !HIDDEN_NAV.has(z[4] || zoneKey(z[3]))).map(([n, d, c, hre
 <div class="txt">
 <span style="font-size:15px;font-weight:800;color:var(--sky)">לבעלי עסקים ובעלי מקצוע</span>
 <h2>השכנים כבר <span class="emd">מחפשים אותך.</span></h2>
-<p>פרופיל עסק, מבצעים וקופונים והמלצות מלקוחות — במקום אחד. ההרשמה בחינם.</p>
+<p>פרופיל עסק, מבצעים וקופונים והמלצות מלקוחות, הכול במקום אחד. ההרשמה בחינם.</p>
 <div style="display:flex;gap:12px;flex-wrap:wrap"><a class="pill btn-sky" href="${APP}">להרשמת עסק בחינם</a><a class="pill btn-out" href="${DOWNLOAD}">להורדת האפליקציה</a></div>
 <a href="${BIZ_PORTAL}" style="color:var(--sky);font-weight:800;font-size:15px">כבר רשומים? לכניסה ולניהול העסק ←</a>
 </div>
